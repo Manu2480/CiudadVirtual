@@ -1,11 +1,11 @@
 
-class EstacionBomberos extends EdificioServicio {
+class EstacionBombero extends EdificioServicio {
 
     static contador = 0;
 
     constructor(ubicacion) {
 
-        EstacionBomberos.contador += 1;
+        EstacionBombero.contador += 1;
         const idEstacionBomberos = "estacionBomberos" + EstacionBomberos.contador;
 
         super(idEstacionBomberos, 4000, ubicacion, 0); 

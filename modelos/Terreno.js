@@ -19,26 +19,6 @@ class Terreno{
             }
     }
 
-    capacidadEmpleos(){
-        let contador = 0;
-        this._edificios.forEach(edificio => {
-            if (edificio instanceof EdificioComercial){ //Valida que el edificio contenga empleados para agregar su capacidad al contador
-                contador += edificio.capacidadEmpleos;
-            }
-        });
-        return contador;
-    }
-
-    capacidadViviendas(){
-        let contador = 0;
-        this._edificios.forEach(edificio => {
-            if (edificio instanceof EdificioResidencial){//Valida que el edificio contenga inquilinos para agregar al contador su capacidad
-                contador += edificio.capacidadViviendas;
-            }
-        });
-        return contador;
-        }
-
     eliminarInfraestructura(columna,fila){
         let edificio = this._mapa[columna][fila];//seleccionamos la referencia del edificio
         if (edificio){ //si el edificio existe
@@ -54,6 +34,84 @@ class Terreno{
             this._edificios = this._edificios.filter(construcciones => construcciones !== edificio); //la eliminamos de la lista de edificios creando una nueva lista con los edificios que no sean el seleccionado
             this._mapa[columna][fila] = null; //la eliminamos del mapa cuando ya no necesitemos al edificio
         }
+    }
+
+    capacidadTotalEmpleos(){
+        let contador = 0;
+        this._edificios.forEach(edificio => {
+            if (edificio instanceof EdificioComercial){ //Valida que el edificio contenga empleados para agregar su capacidad al contador
+                contador += edificio.capacidadEmpleos;
+            }
+        });
+        return contador;
+    }
+
+    capacidadTotalViviendas(){
+        let contador = 0;
+        this._edificios.forEach(edificio => {
+            if (edificio instanceof EdificioResidencial){//Valida que el edificio contenga inquilinos para agregar al contador su capacidad
+                contador += edificio.capacidadViviendas;
+            }
+        });
+        return contador;
+    }
+
+    //METODOS PARA VALIDAR SI HAY VIVIENDAS Y EMPLEOS PARA CREAR CIUDADANOS
+    empleosDisponibles() {
+        let contador = 0; //numero de empleos disponibles
+        let edificiosConDisponibilidad = [];//edificios donde hay empleos disponibles
+
+        this._edificios.forEach(edificio => {//recorro la lista de edificios
+            if (edificio instanceof EdificioResidencial || edificio instanceof EdificioIndustrial) {//valido que sean de tipo comercial o industrial
+
+                const disponibles = edificio.capacidadViviendas - edificio.ciudadanos.length;//calculo la disponibilidad de empleo restandole a la capacidad el numero de ciudadanos que ya estan en el array de eseedificio
+
+                if (disponibles > 0) { //si hay empleos disponibles, las sumo al contador total de viviendas disponibles y agrego el edificio a la lista de edificios con disponibilidad para crear ciudadanos
+                    contador += disponibles;
+                    edificiosConDisponibilidad.push(edificio);
+                }
+            }
+        });
+
+        //retorno un objeto con la cantidad total de viviendas disponibles y la lista de edificios con disponibilidad para crear ciudadanos porque en js no existen las tuplas simples
+        return {
+            totalDisponibles: contador,
+            edificios: edificiosConDisponibilidad
+        };
+    }
+
+    viviendasDisponibles() {
+        let contador = 0; //numero de viviendas disponibles
+        let edificiosConDisponibilidad = [];//edificios donde hay viviendas disponibles
+
+        this._edificios.forEach(edificio => {//recorro la lista de edificios
+            if (edificio instanceof EdificioResidencial) {//valido que sean de tipo residencial
+
+                const disponibles = edificio.capacidadViviendas - edificio.ciudadanos.length;//conto la cantidad de viviendas disponibles restando la capacidad total de viviendas del edificio con la cantidad de ciudadanos que ya viven en ese edificio
+
+                if (disponibles > 0) { //si hay viviendas disponibles, las sumo al contador total de viviendas disponibles y agrego el edificio a la lista de edificios con disponibilidad para crear ciudadanos
+                    contador += disponibles;
+                    edificiosConDisponibilidad.push(edificio);
+                }
+            }
+        });
+
+        //retorno un objeto con la cantidad total de viviendas disponibles y la lista de edificios con disponibilidad para crear ciudadanos porque en js no existen las tuplas simples
+        return {
+            totalDisponibles: contador,
+            edificios: edificiosConDisponibilidad
+        };
+    }
+
+    //METODOS PARA CALCULAR LA FELICIDAD TOTAL POR LAS NFRAESTRUCTURAS 
+    felicidadPorInfraestructura() {
+
+        let felicidadTotal = 0;
+        for (const edificio of this._edificios) {
+            // ?. evita error si recursosEdificio es undefined || 0 hace que si no existe "felicidad", sume 0
+            felicidadTotal += edificio.recursosEdificio?.felicidad || 0;
+        }
+        return felicidadTotal;
     }
 
     setMapa(mapa){
@@ -79,9 +137,5 @@ class Terreno{
     getEdificios(){
         return this._edificios;
     }
-
-
-
-    
     
 }
