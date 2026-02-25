@@ -11,12 +11,6 @@ class Ciudadano{
         this._consumoCiudadano[recurso] = valor;
     }
 
-    consumir(recursos){
-        for(const [clave] of Object.entries(recursos)){
-            recursos[clave] -= this._consumoCiudadano[clave]
-        }
-    }
-
     calcularFelicidad(felicidadGeneral){
         this._felicidad = felicidadGeneral
         this._felicidad += this._vivienda ? 20 : -20

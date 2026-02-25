@@ -110,6 +110,53 @@ class Ciudad {
         
     }
 
+    // Metodo que modificar los recursos segun el consumo de los ciudadanos, se llama una vez en cada turno
+    consumoCiudadanos() {
+        this.ciudadanos.forEach(ciudadano => {
+            let consumo = ciudadano._consumoCiudadano;
+            for (const recurso in consumo) {
+                // Suma (porque asumimos que el recurso esta en negativo al ser de consumo)
+                // el consumo del ciudadano al recurso correspondiente en la ciudad
+                this.modificarRecurso(recurso, consumo[recurso]); 
+            }
+        });
+    }
+
+    // Metodo que calcula los recursos proporcionados o gastados por los edificios, se llama una vez en cada turno
+    recursosPorEdificios() {
+        this.mapa._edificios.forEach(edificio => {
+            let recursos = edificio.recursosEdificio;
+            for (const recurso in recursos) {
+                // suma(producción)/resta(consumo) el recurso correspondiente 
+                this.modificarRecurso(recurso, consumo[recurso]); 
+            }
+        });
+
+    }
+
+    // Metodo para saber si hay recursos negativos lo que indica gameover y penitencias en la puntuación final
+    recursosNegativos() {
+
+        let negativos = [];
+        for (const [recurso, valor] of Object.entries(this.estadoRecursos)) {
+            if (valor < 0) {
+                negativos.push(recurso);
+            }
+        }
+        return negativos;
+    }
+
+    pasarTurno(){
+
+        if (this.recursosNegativos().length > 0) {
+            console.log("Game Over. Recursos negativos");
+            return false; // Indica que el juego ha terminado
+        }else {
+            return true; // Indica que podemos pasar al siguiente turno
+        }
+
+    }
+
 
 
 }
