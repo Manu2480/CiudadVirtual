@@ -15,7 +15,7 @@ class Ciudad {
         this.latitud = latitud;
         this.longitud = longitud;
         this.mapa = new Terreno(vias, mapa, edificios);
-        this.tiempoTurno = tiempoTurno;
+        this.tiempoTurno = tiempoTurno; //Debe estar en milisegundos para usarlo con setInterval
 
         this.ciudadanos = ciudadanos;
         estadoRecursos = estadoRecursos;
@@ -163,6 +163,11 @@ class Ciudad {
     // como consumir recursos por parte de los ciudadanos, calcular los recursos proporcionados o gastados
     // por los edificios, y aumentar la población si se cumplen las condiciones necesarias.
     ejecutarTurno(){
+        //En cada turno se calcula nuevamente la felicidad inicial (hace referencia a la infraestructura que aumenta la felicidad)
+        //Ya que pueden haber estructuras nuevas o eliminadas que afectan la felicidad y la condición de vivienda y empleo de los ciudadanos.
+        this.mapa.ciudadanos.forEach (ciudadano =>{
+            ciudadano.this.asignarFelicidadInicial(ciudadano._id)
+        });
         this.consumoCiudadanos();
         this.recursosPorEdificios();
         while (this.aumentarPoblacion()) {
@@ -198,7 +203,5 @@ class Ciudad {
         clearInterval(this.intervalo);
         this.intervalo = null;
     }
-
-
 
 }
