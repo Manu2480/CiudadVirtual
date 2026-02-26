@@ -67,10 +67,9 @@ class Ciudad {
         this.modificarRecurso("felicidad", felicidad - this.estadoRecursos.felicidad); //le resta la felicidad anterior ya que se sumara en el metodo
     }
 
-    // Metodo que valida si estan las condiciones necesarias para crear un ciudadano, 
-    // Si se cumplen las condiciones, se crea un nuevo ciudadano y se agrega 
-    // a la ciudad. Si no se cumplen las condiciones, se lanza un error indicando que no se pueden crear más ciudadanos y el motivo
-    crearCiudadano(x,y,z) {
+    // Metodo que valida si estan las condiciones necesarias para crear un ciudadano
+    // Si no se cumplen las condiciones, se lanza un error indicando que no se pueden crear más ciudadanos y el motivo
+    aumentarPoblacion() {
 
         //dentro tienen el totalDisponibles(contador) y edificios(array edificios)
         const viviendas = this.mapa.viviendasDisponibles();
@@ -86,27 +85,33 @@ class Ciudad {
         } else if (this.ciudadanos.length > 1 && this.estadoRecursos.felicidad < 60){
             throw new Error("No se pueden crear más ciudadanos, no se alcanzo el nivel requerido de felicidad.");
         } else{
-            // Agrega un ciudadano a la ciudad. Recibe un objeto ciudadano como parámetro y lo agrega al arreglo de ciudadanos de la ciudad.
-            const nuevoCiudadano = new Ciudadano(this.ciudadanos.length + 1);
-            this.ciudadanos.push(nuevoCiudadano);
-
-            //Asigno una vivienda disponible al nuevo ciudadano
-            viviendas.edificios[0].ciudadanos.push(nuevoCiudadano); //agrega el nuevo ciudadano al primer edificio con disponibilidad de vivienda
-            nuevoCiudadano._vivienda = true; //actualiza el atributo de vivienda del ciudadano a true para que pueda calcular su felicidad correctamente
-
-            //Asigno un empleo disponible al nuevo ciudadano
-            empleos.edificios[0].ciudadanos.pusg(nuevoCiudadano); //agrega el nuevo ciudadano al primer edificio con disponibilidad de empleo
-            nuevoCiudadano._empleo = true; //actualiza el atributo de empleo del ciudadano a true para que pueda calcular su felicidad correctamente
-
-            this.asignarFelicidadInicial(nuevoCiudadano._id); //calcula la felicidad del nuevo ciudadano con el nivel de felicidad actual de la ciudad
-
-            nuevoCiudadano._consumoCiudadano = {
-                agua: x,
-                electricidad: y,
-                alimento: z
-            };
-
+            return true; //indica que se pueden crear mas ciudadanos
         }
+    }
+
+    // Crea un nuevo ciudadano y se agrega 
+    crearCiudadano(x,y,z) {
+
+        // Agrega un ciudadano a la ciudad. Recibe un objeto ciudadano como parámetro y lo agrega al arreglo de ciudadanos de la ciudad.
+        const nuevoCiudadano = new Ciudadano(this.ciudadanos.length + 1);
+        this.ciudadanos.push(nuevoCiudadano);
+
+        //Asigno una vivienda disponible al nuevo ciudadano
+        viviendas.edificios[0].ciudadanos.push(nuevoCiudadano); //agrega el nuevo ciudadano al primer edificio con disponibilidad de vivienda
+        nuevoCiudadano._vivienda = true; //actualiza el atributo de vivienda del ciudadano a true para que pueda calcular su felicidad correctamente
+
+        //Asigno un empleo disponible al nuevo ciudadano
+        empleos.edificios[0].ciudadanos.pusg(nuevoCiudadano); //agrega el nuevo ciudadano al primer edificio con disponibilidad de empleo
+        nuevoCiudadano._empleo = true; //actualiza el atributo de empleo del ciudadano a true para que pueda calcular su felicidad correctamente
+
+        this.asignarFelicidadInicial(nuevoCiudadano._id); //calcula la felicidad del nuevo ciudadano con el nivel de felicidad actual de la ciudad
+
+        nuevoCiudadano._consumoCiudadano = {
+            agua: x,
+            electricidad: y,
+            alimento: z
+        };
+
         
     }
 
@@ -146,6 +151,18 @@ class Ciudad {
         return negativos;
     }
 
+    // Metodo que se encarga de ejecutar todas las acciones necesarias para avanzar un turno en el juego, 
+    // como consumir recursos por parte de los ciudadanos, calcular los recursos proporcionados o gastados
+    // por los edificios, y aumentar la población si se cumplen las condiciones necesarias.
+    ejecutarTurno(){
+        this.consumoCiudadanos();
+        this.recursosPorEdificios();
+        while (this.aumentarPoblacion()) {
+            this.crearCiudadano(-1, -1, -1); //ejemplo de consumo para cada ciudadano
+        };
+    }
+    
+    // Metodo para validar si se puede jugar otro turno o si se acaba el juego
     pasarTurno(){
 
         if (this.recursosNegativos().length > 0) {
@@ -155,6 +172,23 @@ class Ciudad {
             return true; // Indica que podemos pasar al siguiente turno
         }
 
+    }
+
+    // Metodo para ejecutar un turno cada x tiempo
+    iniciarSimulacion() {
+
+        //Condicional para evitar que se inicie la simulación si ya está corriendo, lo que podría 
+        //causar múltiples intervalos ejecutándose al mismo tiempo y generar resultados inesperados.
+        if (this.intervalo) return; // ya está corriendo
+        this.intervalo = setInterval(() => {
+            this.ejecutarTurno();
+        }, this.tiempoTurno);
+    }
+
+    // Metodo para detener la simulación.
+    detenerSimulacion() {
+        clearInterval(this.intervalo);
+        this.intervalo = null;
     }
 
 
