@@ -40,10 +40,18 @@ class Ciudad {
         }
 
         this.estadoRecursos[tipo] += cantidad;
-    }
+    }   
 
     getRecurso(tipo) {
         return this.estadoRecursos[tipo];
+    }
+
+    //Modificar tiempo del turno
+    modificarTiempoTurno(nuevoTiempo) {
+        if (nuevoTiempo <= 0) {
+            throw new Error("El tiempo del turno debe ser un número positivo");
+        }
+        this.tiempoTurno = nuevoTiempo;
     }
 
     // El método asignarFelicidadInicial se encarga de aumentar la felicidad del ciudadano creado en función de la infraestructura presente en el mapa.
