@@ -171,7 +171,7 @@ class Ciudad {
         this.consumoCiudadanos();
         this.recursosPorEdificios();
         while (this.aumentarPoblacion()) {
-            this.crearCiudadano(-1, -1, -1); //ejemplo de consumo para cada ciudadano
+            this.crearCiudadano(x, y, z); //ejemplo de consumo para cada ciudadano
         };
     }
     
