@@ -2,13 +2,14 @@ class Ciudad {
 
     constructor(nombre, alcalde, latitud, longitud, tiempoTurno, ciudadanos, estadoRecursos) {
 
+        /** PASAR LAS VALIDACIONES A NEGOCIO
         if (nombre.length > 50) {
             throw new Error("El nombre de la ciudad no puede superar 50 caracteres");
         }
 
         if (alcalde.length > 50) {
             throw new Error("El nombre del alcalde no puede superar 50 caracteres");
-        }
+        }*/
 
         this.nombre = nombre;
         this.alcalde = alcalde;
@@ -46,7 +47,7 @@ class Ciudad {
         return this.estadoRecursos[tipo];
     }
 
-    //Modificar tiempo del turno
+    //Modificar tiempo del turno nuevoTiempo debe estar en milisegundos
     modificarTiempoTurno(nuevoTiempo) {
         if (nuevoTiempo <= 0) {
             throw new Error("El tiempo del turno debe ser un número positivo");
@@ -97,11 +98,15 @@ class Ciudad {
         }
     }
 
+
+    static contador = 0;
     // Crea un nuevo ciudadano y se agrega 
     crearCiudadano(x,y,z) {
 
+        contador += 1
+
         // Agrega un ciudadano a la ciudad. Recibe un objeto ciudadano como parámetro y lo agrega al arreglo de ciudadanos de la ciudad.
-        const nuevoCiudadano = new Ciudadano(this.ciudadanos.length + 1);
+        const nuevoCiudadano = new Ciudadano("ciudadano"+contador, null, null, null, null);
         this.ciudadanos.push(nuevoCiudadano);
 
         //Asigno una vivienda disponible al nuevo ciudadano
@@ -141,7 +146,8 @@ class Ciudad {
             let recursos = edificio.recursosEdificio;
             for (const recurso in recursos) {
                 // suma(producción)/resta(consumo) el recurso correspondiente 
-                this.modificarRecurso(recurso, consumo[recurso]); 
+                this.modificarRecurso(recurso, consumo[recurso]);
+                //VALIDAR QUE SI ES UNA PLANTA Y NO HAY ELECTRICIDAD NO SE PRODUZCA AGUA 
             }
         });
 
@@ -165,13 +171,17 @@ class Ciudad {
     ejecutarTurno(){
         //En cada turno se calcula nuevamente la felicidad inicial (hace referencia a la infraestructura que aumenta la felicidad)
         //Ya que pueden haber estructuras nuevas o eliminadas que afectan la felicidad y la condición de vivienda y empleo de los ciudadanos.
-        this.mapa.ciudadanos.forEach (ciudadano =>{
+        this.ciudadanos.forEach (ciudadano =>{
             ciudadano.this.asignarFelicidadInicial(ciudadano._id)
         });
+        this.calcularFelicidadPromedio();
         this.consumoCiudadanos();
         this.recursosPorEdificios();
-        while (this.aumentarPoblacion()) {
+        //añadir metodo para asignar viveinda y empleo en caso de ser necesario
+        let contador = 0;
+        while (this.aumentarPoblacion() && contador < 3) {
             this.crearCiudadano(x, y, z); //ejemplo de consumo para cada ciudadano
+            contador += 1; 
         };
     }
     

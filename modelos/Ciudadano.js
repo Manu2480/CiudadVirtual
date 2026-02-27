@@ -1,10 +1,10 @@
 class Ciudadano{
-    constructor(id){
+    constructor(id, felicidad, vivienda, empleo, consumoCiudadano){
         this._id = id;
-        this._felicidad;
-        this._vivienda;
-        this._empleo;
-        this._consumoCiudadano = {};
+        this._felicidad = felicidad || null;
+        this._vivienda = vivienda || null;
+        this._empleo = empleo || null;
+        this._consumoCiudadano = consumoCiudadano;
     }
 
     editarConsumoCiudadano(recurso, valor){
