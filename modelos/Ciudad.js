@@ -1,34 +1,17 @@
 class Ciudad {
 
-    constructor(nombre, alcalde, latitud, longitud, tiempoTurno, ciudadanos, estadoRecursos) {
-
-        /** PASAR LAS VALIDACIONES A NEGOCIO
-        if (nombre.length > 50) {
-            throw new Error("El nombre de la ciudad no puede superar 50 caracteres");
-        }
-
-        if (alcalde.length > 50) {
-            throw new Error("El nombre del alcalde no puede superar 50 caracteres");
-        }*/
+    constructor(nombre, alcalde, latitud, longitud, tiempoTurno, terreno, ciudadanos, estadoRecursos) {
 
         this.nombre = nombre;
         this.alcalde = alcalde;
         this.latitud = latitud;
         this.longitud = longitud;
-        this.mapa = new Terreno(vias, mapa, edificios);
         this.tiempoTurno = tiempoTurno; //Debe estar en milisegundos para usarlo con setInterval
 
+        
+        this.terreno = terreno;
         this.ciudadanos = ciudadanos;
-        estadoRecursos = estadoRecursos;
-
-        //El diccionario se inicializa con estos valores por defecto segun el enunciado
-        //this.estadoRecursos = {
-            //dinero: 50000,
-            //agua: 0,
-            //electricidad: 0,
-            //alimento: 0,
-            //felicidad: 0
-        //};
+        this.estadoRecursos = estadoRecursos;
     }
 
     // El método modificarRecurso se encarga de modificar la cantidad de un recurso específico en el estado de recursos de la ciudad.
@@ -55,10 +38,10 @@ class Ciudad {
         this.tiempoTurno = nuevoTiempo;
     }
 
-    // El método asignarFelicidadInicial se encarga de aumentar la felicidad del ciudadano creado en función de la infraestructura presente en el mapa.
+    // El método asignarFelicidadInicial se encarga de aumentar la felicidad del ciudadano creado en función de la infraestructura presente en el terreno.
     // y llama el metodo calcularFelicidad de ciudadano para actualizar su nivel de felicidad individualmente. 
     asignarFelicidadInicial(idCiudadano) {
-        const felicidadInfraestructura = this.mapa.felicidadPorInfraestructura(); // Obtiene la felicidad total proporcionada por la infraestructura en el mapa
+        const felicidadInfraestructura = this.terreno.felicidadPorInfraestructura(); // Obtiene la felicidad total proporcionada por la infraestructura en el terreno
         this.ciudadanos.forEach(ciudadano => {
             if (ciudadano._id === idCiudadano) {
                 ciudadano.calcularFelicidad(felicidadInfraestructura);
@@ -81,8 +64,8 @@ class Ciudad {
     aumentarPoblacion() {
 
         //dentro tienen el totalDisponibles(contador) y edificios(array edificios)
-        const viviendas = this.mapa.viviendasDisponibles();
-        const empleos = this.mapa.empleosDisponible();
+        const viviendas = this.terreno.viviendasDisponibles();
+        const empleos = this.terreno.empleosDisponible();
 
         // valido si hay viviendad disponible, si no hay, no se pueden crear mas ciudadanos
         if (viviendas.totalDisponibles <= this.ciudadanos.length){
@@ -142,7 +125,7 @@ class Ciudad {
 
     // Metodo que calcula los recursos proporcionados o gastados por los edificios, se llama una vez en cada turno
     recursosPorEdificios() {
-        this.mapa._edificios.forEach(edificio => {
+        this.terreno._edificios.forEach(edificio => {
             let recursos = edificio.recursosEdificio;
             for (const recurso in recursos) {
                 // suma(producción)/resta(consumo) el recurso correspondiente 
@@ -200,11 +183,17 @@ class Ciudad {
     // Metodo para ejecutar un turno cada x tiempo
     iniciarSimulacion() {
 
+        console.log("entro al metodo iniciarSimulacion")
+
         //Condicional para evitar que se inicie la simulación si ya está corriendo, lo que podría 
         //causar múltiples intervalos ejecutándose al mismo tiempo y generar resultados inesperados.
         if (this.intervalo) return; // ya está corriendo
         this.intervalo = setInterval(() => {
-            this.ejecutarTurno();
+            if (this.pasarTurno()){ //si no hay recursos negativos se puede ejecutar un nuevo turno
+                this.ejecutarTurno();
+            } else {
+                this.detenerSimulacion();//en caso de que no se pueda ejecutar el turno se detiene la simulación
+            }
         }, this.tiempoTurno);
     }
 
@@ -215,3 +204,6 @@ class Ciudad {
     }
 
 }
+
+//exportamos la clase para poder usarla en main.js
+module.exports = Ciudad;

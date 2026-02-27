@@ -1,4 +1,5 @@
 class Ciudadano{
+
     constructor(id, felicidad, vivienda, empleo, consumoCiudadano){
         this._id = id;
         this._felicidad = felicidad || null;
@@ -20,5 +21,7 @@ class Ciudadano{
             this._felicidad = 100; // Limita la felicidad a un máximo de 100
         }
     }
-
 }
+
+//exportamos la clase para poder usarla en main.js
+module.exports = Ciudadano;

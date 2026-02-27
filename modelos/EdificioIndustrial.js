@@ -13,3 +13,6 @@ class EdificioIndustrial extends Edificio {
 
     // A sus hijos hace falta implementar el metodo que agrega los ciudadanos al array
 }
+
+//exportamos la clase para poder usarla en main.js
+module.exports = EdificioIndustrial;

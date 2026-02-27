@@ -16,3 +16,6 @@ class Via extends Edificio{
         this.ciudadanos = []; // Las vías no tienen ciudadanos asociados, pero se puede llenar si es necesario
     }
 }
+
+//exportamos la clase para poder usarla en main.js
+module.exports = Via;

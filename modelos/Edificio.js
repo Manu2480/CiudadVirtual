@@ -31,3 +31,5 @@ class Edificio{
     }
 
 }
+//exportamos la clase para poder usarla en main.js
+module.exports = Edificio;

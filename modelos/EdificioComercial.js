@@ -14,3 +14,6 @@ class EdificioComercial extends Edificio {
     //metodo para agregar ciudadano al edificio comercial
 }
 
+//exportamos la clase para poder usarla en main.js
+module.exports = EdificioComercial;
+

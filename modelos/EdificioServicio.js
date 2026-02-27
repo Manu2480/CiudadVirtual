@@ -29,6 +29,7 @@ class EdificioServicio extends Edificio {
     getFelicidad() {
         return this.recursosEdificio["felicidad"];
     }
-
-
 }
+
+//exportamos la clase para poder usarla en main.js
+module.exports = EdificioServicio;

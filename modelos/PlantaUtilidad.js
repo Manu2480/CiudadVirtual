@@ -10,3 +10,6 @@ class PlantaUtilidad extends Edificio {
         super(id, costo, ubicacion, capacidad);
      } 
 }
+
+//exportamos la clase para poder usarla en main.js
+module.exports = PlantaUtilidad;
