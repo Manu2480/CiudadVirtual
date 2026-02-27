@@ -1,4 +1,7 @@
 
+//Es para que node herede
+const PlantaUtilidad = require("./PlantaUtilidad");
+
 class PlantaElectrica extends PlantaUtilidad {
 
     static contador = 0;

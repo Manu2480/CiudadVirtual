@@ -1,3 +1,5 @@
+const Via = require("./Via");
+
 class Terreno{
     constructor(vias,mapa,edificios){
         this.vias = vias;
@@ -13,10 +15,16 @@ class Terreno{
         if (!this.mapa[columna][fila]){ //Si no hay una construccion en esa parte del mapa, la crea
             if (edificio instanceof Via){
                 this.vias[columna][fila] = 1; //Si es via, se hace la modificiacion en la matriz de vias para usar el route finder
+            } else {
+                //validamos que no se cree un edificio diferente a via su no tiene via adyacente
+                if(this.tieneAdyacente(columna,fila)){
+                    this.mapa[columna][fila] = edificio; //En la posicion de la matriz mapa se ubica el nuevo edificio
+                    this.edificios.push(edificio); //Se agrega el edificio a la lista de edificios para la administracion de recursos
+                } else {
+                    console.log("No hay via adyacente")
+                }
             }
-            this.mapa[columna][fila] = edificio; //En la posicion de la matriz mapa se ubica el nuevo edificio
-            this.edificios.push(edificio); //Se agrega el edificio a la lista de edificios para la administracion de recursos
-            }
+        }
     }
 
     eliminarInfraestructura(columna,fila){
