@@ -13,3 +13,6 @@ class Granja extends EdificioIndustrial {
         this.recursosEdificio["agua"] = -10;
     }
 }
+
+//exportamos la clase para poder usarla en main.js
+module.exports = Granja;

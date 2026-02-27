@@ -1,34 +1,17 @@
 class Ciudad {
 
-    constructor(nombre, alcalde, latitud, longitud, tiempoTurno, ciudadanos, estadoRecursos) {
-
-        /** PASAR LAS VALIDACIONES A NEGOCIO
-        if (nombre.length > 50) {
-            throw new Error("El nombre de la ciudad no puede superar 50 caracteres");
-        }
-
-        if (alcalde.length > 50) {
-            throw new Error("El nombre del alcalde no puede superar 50 caracteres");
-        }*/
+    constructor(nombre, alcalde, latitud, longitud, tiempoTurno, terreno, ciudadanos, estadoRecursos) {
 
         this.nombre = nombre;
         this.alcalde = alcalde;
         this.latitud = latitud;
         this.longitud = longitud;
-        this.mapa = new Terreno(vias, mapa, edificios);
         this.tiempoTurno = tiempoTurno; //Debe estar en milisegundos para usarlo con setInterval
 
+        
+        this.terreno = terreno;
         this.ciudadanos = ciudadanos;
-        estadoRecursos = estadoRecursos;
-
-        //El diccionario se inicializa con estos valores por defecto segun el enunciado
-        //this.estadoRecursos = {
-            //dinero: 50000,
-            //agua: 0,
-            //electricidad: 0,
-            //alimento: 0,
-            //felicidad: 0
-        //};
+        this.estadoRecursos = estadoRecursos;
     }
 
     // El método modificarRecurso se encarga de modificar la cantidad de un recurso específico en el estado de recursos de la ciudad.
@@ -55,12 +38,12 @@ class Ciudad {
         this.tiempoTurno = nuevoTiempo;
     }
 
-    // El método asignarFelicidadInicial se encarga de aumentar la felicidad del ciudadano creado en función de la infraestructura presente en el mapa.
+    // El método asignarFelicidadInicial se encarga de aumentar la felicidad del ciudadano creado en función de la infraestructura presente en el terreno.
     // y llama el metodo calcularFelicidad de ciudadano para actualizar su nivel de felicidad individualmente. 
     asignarFelicidadInicial(idCiudadano) {
-        const felicidadInfraestructura = this.mapa.felicidadPorInfraestructura(); // Obtiene la felicidad total proporcionada por la infraestructura en el mapa
+        const felicidadInfraestructura = this.terreno.felicidadPorInfraestructura(); // Obtiene la felicidad total proporcionada por la infraestructura en el terreno
         this.ciudadanos.forEach(ciudadano => {
-            if (ciudadano._id === idCiudadano) {
+            if (ciudadano.id === idCiudadano) {
                 ciudadano.calcularFelicidad(felicidadInfraestructura);
             }
         });
@@ -69,7 +52,7 @@ class Ciudad {
     calcularFelicidadPromedio(){
         let felicidad = 0;
         this.ciudadanos.forEach(ciudadano => {
-            felicidad += ciudadano._felicidad;
+            felicidad += ciudadano.felicidad;
         });
         felicidad = felicidad / this.ciudadanos.length;
         //actualiza el recurso de felicidad con el nuevo valor promedio usando el metodo modificarRecurso para mantener la consistencia en la forma de actualizar los recursos
@@ -81,8 +64,8 @@ class Ciudad {
     aumentarPoblacion() {
 
         //dentro tienen el totalDisponibles(contador) y edificios(array edificios)
-        const viviendas = this.mapa.viviendasDisponibles();
-        const empleos = this.mapa.empleosDisponible();
+        const viviendas = this.terreno.viviendasDisponibles();
+        const empleos = this.terreno.empleosDisponible();
 
         // valido si hay viviendad disponible, si no hay, no se pueden crear mas ciudadanos
         if (viviendas.totalDisponibles <= this.ciudadanos.length){
@@ -111,15 +94,15 @@ class Ciudad {
 
         //Asigno una vivienda disponible al nuevo ciudadano
         viviendas.edificios[0].ciudadanos.push(nuevoCiudadano); //agrega el nuevo ciudadano al primer edificio con disponibilidad de vivienda
-        nuevoCiudadano._vivienda = true; //actualiza el atributo de vivienda del ciudadano a true para que pueda calcular su felicidad correctamente
+        nuevoCiudadano.vivienda = true; //actualiza el atributo de vivienda del ciudadano a true para que pueda calcular su felicidad correctamente
 
         //Asigno un empleo disponible al nuevo ciudadano
         empleos.edificios[0].ciudadanos.pusg(nuevoCiudadano); //agrega el nuevo ciudadano al primer edificio con disponibilidad de empleo
-        nuevoCiudadano._empleo = true; //actualiza el atributo de empleo del ciudadano a true para que pueda calcular su felicidad correctamente
+        nuevoCiudadano.empleo = true; //actualiza el atributo de empleo del ciudadano a true para que pueda calcular su felicidad correctamente
 
-        this.asignarFelicidadInicial(nuevoCiudadano._id); //calcula la felicidad del nuevo ciudadano con el nivel de felicidad actual de la ciudad
+        this.asignarFelicidadInicial(nuevoCiudadano.id); //calcula la felicidad del nuevo ciudadano con el nivel de felicidad actual de la ciudad
 
-        nuevoCiudadano._consumoCiudadano = {
+        nuevoCiudadano.consumoCiudadano = {
             agua: x,
             electricidad: y,
             alimento: z
@@ -131,7 +114,7 @@ class Ciudad {
     // Metodo que modificar los recursos segun el consumo de los ciudadanos, se llama una vez en cada turno
     consumoCiudadanos() {
         this.ciudadanos.forEach(ciudadano => {
-            let consumo = ciudadano._consumoCiudadano;
+            let consumo = ciudadano.consumoCiudadano;
             for (const recurso in consumo) {
                 // Suma (porque asumimos que el recurso esta en negativo al ser de consumo)
                 // el consumo del ciudadano al recurso correspondiente en la ciudad
@@ -142,7 +125,7 @@ class Ciudad {
 
     // Metodo que calcula los recursos proporcionados o gastados por los edificios, se llama una vez en cada turno
     recursosPorEdificios() {
-        this.mapa._edificios.forEach(edificio => {
+        this.terreno.edificios.forEach(edificio => {
             let recursos = edificio.recursosEdificio;
             for (const recurso in recursos) {
                 // suma(producción)/resta(consumo) el recurso correspondiente 
@@ -172,7 +155,7 @@ class Ciudad {
         //En cada turno se calcula nuevamente la felicidad inicial (hace referencia a la infraestructura que aumenta la felicidad)
         //Ya que pueden haber estructuras nuevas o eliminadas que afectan la felicidad y la condición de vivienda y empleo de los ciudadanos.
         this.ciudadanos.forEach (ciudadano =>{
-            ciudadano.this.asignarFelicidadInicial(ciudadano._id)
+            ciudadano.this.asignarFelicidadInicial(ciudadano.id)
         });
         this.calcularFelicidadPromedio();
         this.consumoCiudadanos();
@@ -200,11 +183,17 @@ class Ciudad {
     // Metodo para ejecutar un turno cada x tiempo
     iniciarSimulacion() {
 
+        console.log("entro al metodo iniciarSimulacion")
+
         //Condicional para evitar que se inicie la simulación si ya está corriendo, lo que podría 
         //causar múltiples intervalos ejecutándose al mismo tiempo y generar resultados inesperados.
         if (this.intervalo) return; // ya está corriendo
         this.intervalo = setInterval(() => {
-            this.ejecutarTurno();
+            if (this.pasarTurno()){ //si no hay recursos negativos se puede ejecutar un nuevo turno
+                this.ejecutarTurno();
+            } else {
+                this.detenerSimulacion();//en caso de que no se pueda ejecutar el turno se detiene la simulación
+            }
         }, this.tiempoTurno);
     }
 
@@ -215,3 +204,6 @@ class Ciudad {
     }
 
 }
+
+//exportamos la clase para poder usarla en main.js
+module.exports = Ciudad;

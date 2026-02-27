@@ -10,3 +10,6 @@ class CentroComercial extends EdificioComercial {
         this.recursosEdificio["electricidad"] = -25;
     }
 }
+
+//exportamos la clase para poder usarla en main.js
+module.exports = CentroComercial;

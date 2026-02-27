@@ -14,3 +14,6 @@ class Fabrica extends EdificioIndustrial {
         this.recursosEdificio["agua"] = -15;
     }
 }
+
+//exportamos la clase para poder usarla en main.js
+module.exports = Fabrica;

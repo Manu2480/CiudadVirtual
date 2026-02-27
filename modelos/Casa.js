@@ -10,3 +10,6 @@ class Casa extends EdificioResidencial {
         this.recursosEdificio["agua"] = -3;
     }
 }
+
+//exportamos la clase para poder usarla en main.js
+module.exports = Casa;

@@ -13,3 +13,6 @@ class EstacionPolicia extends EdificioServicio {
         
     }
 }
+
+//exportamos la clase para poder usarla en main.js
+module.exports = EstacionPolicia;

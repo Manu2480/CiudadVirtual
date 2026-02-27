@@ -15,3 +15,6 @@ class PlantaHidraulica extends PlantaUtilidad {
 
     //Si al descontar la electricidad el recurso quedo negativo, no podra producir agua
 }
+
+//exportamos la clase para poder usarla en main.js
+module.exports = PlantaHidraulica;

@@ -14,3 +14,6 @@ class Tienda extends EdificioComercial {
     
     //sin electricidad no dan ingresos
 }
+
+//exportamos la clase para poder usarla en main.js
+module.exports = Tienda;

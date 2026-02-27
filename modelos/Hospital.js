@@ -13,3 +13,6 @@ class Hospital extends EdificioServicio {
         this.recursosEdificio["agua"] = -10;
     }
 }
+
+//exportamos la clase para poder usarla en main.js
+module.exports = Hospital;

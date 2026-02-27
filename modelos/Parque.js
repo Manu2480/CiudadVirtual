@@ -13,3 +13,6 @@ class Parque extends Edificio {
         this.ciudadanos = [];
     }
 }
+
+//exportamos la clase para poder usarla en main.js
+module.exports = Parque;

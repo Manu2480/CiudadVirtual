@@ -1,4 +1,6 @@
 
+const Edificio = require("./Edificio");
+
 class Via extends Edificio{
 
     // Contador estático para asignar IDs únicos a cada vía
@@ -16,3 +18,6 @@ class Via extends Edificio{
         this.ciudadanos = []; // Las vías no tienen ciudadanos asociados, pero se puede llenar si es necesario
     }
 }
+
+//exportamos la clase para poder usarla en main.js
+module.exports = Via;
