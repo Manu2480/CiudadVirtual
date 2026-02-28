@@ -7,7 +7,7 @@ class EstacionBombero extends EdificioServicio {
     constructor(ubicacion) {
 
         EstacionBombero.contador += 1;
-        const idEstacionBomberos = "estacionBomberos" + EstacionBomberos.contador;
+        const idEstacionBomberos = "Bombero" + EstacionBombero.contador;
 
         super(idEstacionBomberos, 4000, ubicacion, 0); 
         this.recursosEdificio["electricidad"] = -15; //El valor va negativo para que se sepa que es consume y no produce

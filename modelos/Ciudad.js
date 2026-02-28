@@ -1,4 +1,8 @@
-//IMPORTAMOS  
+// IMPORTACIONES: este archivo utiliza módulos comunes de Node.js.
+// El símbolo "class" es una sintaxis ES6 para declarar clases, que
+// son funciones especiales con un constructor y métodos asociados.
+// Más abajo exportamos la clase con module.exports para poder instanciarla
+// desde otros archivos (como main.js).
 const Ciudadano = require("./Ciudadano");
 class Ciudad {
 
@@ -52,6 +56,13 @@ class Ciudad {
     }
 
     calcularFelicidadPromedio(){
+        // this.ciudadanos es un arreglo; .length obtiene su tamaño.
+        if (this.ciudadanos.length === 0) {
+            // no hay ciudadanos, no modificamos el recurso de felicidad
+            return;
+        }
+
+        // Ejemplo de uso de arrow function en forEach: c => { ... }
         let felicidad = 0;
         this.ciudadanos.forEach(ciudadano => {
             felicidad += ciudadano.felicidad;
@@ -61,44 +72,44 @@ class Ciudad {
         this.modificarRecurso("felicidad", felicidad - this.estadoRecursos.felicidad); //le resta la felicidad anterior ya que se sumara en el metodo
     }
 
-    // Metodo que valida si estan las condiciones necesarias para crear un ciudadano
-    // Si no se cumplen las condiciones, se lanza un error indicando que no se pueden crear más ciudadanos y el motivo
+    // Metodo que valida si están las condiciones necesarias para crear un ciudadano
+    // Si no se cumplen las condiciones, devuelve false y escribe en consola el motivo
     aumentarPoblacion() {
 
-        console.log("Entro al metodo de aumentar población")
-
-        //dentro tienen el totalDisponibles(contador) y edificios(array edificios)
+        // obtenemos la disponibilidad de viviendas y empleos
         const viviendas = this.terreno.viviendasDisponibles();
-        console.log(viviendas.totalDisponibles);
         const empleos = this.terreno.empleosDisponibles();
 
-        // valido si hay viviendad disponible, si no hay, no se pueden crear mas ciudadanos
-        if ((viviendas.totalDisponibles == 0) || (viviendas.totalDisponibles < this.ciudadanos.length)){
-            console.log("viviendas en metodo aumentarPoblación: " + viviendas.totalDisponibles)
+        // 1. debe haber al menos una vivienda libre
+        if (viviendas.totalDisponibles <= 0) {
             console.log("No se pueden crear más ciudadanos, no hay viviendas disponibles.");
             return false;
-        // valido si hay empleos disponibles, si no hay, no se pueden crear mas ciudadanos
-        } else if ((empleos.totalDisponibles == 0) || (empleos.totalDisponibles < this.ciudadanos.length)){
+        }
+
+        // 2. debe haber al menos un empleo libre
+        if (empleos.totalDisponibles <= 0) {
             console.log("No se pueden crear más ciudadanos, no hay empleos disponibles.");
             return false;
-        //valido si la felicidad es mayor a 60, si no lo es, no se pueden crear mas ciudadanos por enunciado
-        } else if (this.ciudadanos.length > 1){
+        }
+
+        // 3. la felicidad promedio de la ciudad debe ser mayor a 60
+        // calculamos el promedio solo si ya hay al menos un ciudadano (evita división por cero)
+        if (this.ciudadanos.length > 0) {
             this.calcularFelicidadPromedio();
-            if (this.estadoRecursos.felicidad < 60){
-                console.log("No se pueden crear más ciudadanos, no se alcanzo el nivel requerido de felicidad. Puedes construir parques para aumentar la felicidad de tus ciudadanos");
+            if (this.estadoRecursos.felicidad < 60) {
+                console.log("No se pueden crear más ciudadanos, no son lo suficientemente felices (felicidad < 60). Construye infraestructura que aumente la felicidad.");
                 return false;
             }
-        } else{
-            return true; //indica que se pueden crear mas ciudadanos
         }
+
+        // si todas las validaciones pasaron, se pueden añadir más ciudadanos
+        return true;
     }
 
 
     static contador = 0;
     // Crea un nuevo ciudadano y se agrega 
     crearCiudadano(x,y,z) {
-
-        console.log("entro al metodo de crear ciudadano")
 
         Ciudad.contador += 1;
         const idCiudadano = "ciudadano" + Ciudad.contador;
@@ -112,16 +123,17 @@ class Ciudad {
         const viviendas = this.terreno.viviendasDisponibles();
         const empleos = this.terreno.empleosDisponibles();
 
-        console.log(viviendas.edificios);
-        console.log(empleos.edificios);
+        //Asigno una vivienda disponible al nuevo ciudadano usando el método de edificio
+        if (viviendas.edificios.length > 0) {
+            viviendas.edificios[0].agregarPersona(nuevoCiudadano);
+            nuevoCiudadano.vivienda = true; //actualiza el atributo de vivienda del ciudadano a true para que pueda calcular su felicidad correctamente
+        }
 
-        //Asigno una vivienda disponible al nuevo ciudadano
-        viviendas.edificios[0].ciudadanos.push(nuevoCiudadano); //agrega el nuevo ciudadano al primer edificio con disponibilidad de vivienda
-        nuevoCiudadano.vivienda = true; //actualiza el atributo de vivienda del ciudadano a true para que pueda calcular su felicidad correctamente
-
-        //Asigno un empleo disponible al nuevo ciudadano
-        empleos.edificios[0].ciudadanos.push(nuevoCiudadano); //agrega el nuevo ciudadano al primer edificio con disponibilidad de empleo
-        nuevoCiudadano.empleo = true; //actualiza el atributo de empleo del ciudadano a true para que pueda calcular su felicidad correctamente
+        //Asigno un empleo disponible al nuevo ciudadano usando el método de edificio
+        if (empleos.edificios.length > 0) {
+            empleos.edificios[0].agregarPersona(nuevoCiudadano);
+            nuevoCiudadano.empleo = true; //actualiza el atributo de empleo del ciudadano a true para que pueda calcular su felicidad correctamente
+        }
 
         this.asignarFelicidadInicial(nuevoCiudadano.id); //calcula la felicidad del nuevo ciudadano con el nivel de felicidad actual de la ciudad
 
@@ -131,7 +143,7 @@ class Ciudad {
             alimento: z
         };
 
-        
+        console.log(`✓ ${nuevoCiudadano.id} creado - Felicidad: ${nuevoCiudadano.felicidad}, Vivienda: ${nuevoCiudadano.vivienda}, Empleo: ${nuevoCiudadano.empleo}`);
     }
 
     // Metodo que modificar los recursos segun el consumo de los ciudadanos, se llama una vez en cada turno
@@ -152,14 +164,65 @@ class Ciudad {
             let recursos = edificio.recursosEdificio;
             for (const recurso in recursos) {
                 // suma(producción)/resta(consumo) el recurso correspondiente 
-                this.modificarRecurso(recurso, consumo[recurso]);
+                this.modificarRecurso(recurso, recursos[recurso]);
                 //VALIDAR QUE SI ES UNA PLANTA Y NO HAY ELECTRICIDAD NO SE PRODUZCA AGUA 
             }
         });
-
     }
 
-    // Metodo para saber si hay recursos negativos lo que indica gameover y penitencias en la puntuación final
+    // Metodo que intenta asignar vivienda o empleo a ciudadanos que no tengan
+    asignarViviendaOEmpleos() {
+        console.log("\n--- Asignando viviendas y empleos ---");
+        
+        // Asignar viviendas a ciudadanos sin vivienda
+        // filter crea un nuevo arreglo con los elementos que cumplen la
+        // condición. Aquí c => !c.vivienda es otra arrow function que devuelve
+        // true si el ciudadano no tiene casa.
+        let sinVivienda = this.ciudadanos.filter(c => !c.vivienda);
+        if (sinVivienda.length > 0) {
+            sinVivienda.forEach(ciudadano => {
+                const viviendas = this.terreno.viviendasDisponibles();
+                if (viviendas.edificios.length > 0) {
+                    // Remover el ciudadano de cualquier edificio anterior (en caso de reasignacion)
+                    this.terreno.edificios.forEach(e => {
+                        if (e.ciudadanos && e.ciudadanos.includes(ciudadano)) {
+                            e.ciudadanos = e.ciudadanos.filter(c => c !== ciudadano);
+                        }
+                    });
+                    // Agregar a nuevo edificio
+                    viviendas.edificios[0].agregarPersona(ciudadano);
+                    ciudadano.vivienda = true;
+                    // Aquí usamos un template literal de nuevo para componer el
+                    // mensaje con el id del ciudadano y el id del edificio.
+                    console.log(`[OK] ${ciudadano.id} asignado a vivienda en ${viviendas.edificios[0].id}`);
+                } else {
+                    console.log(`[ERROR] ${ciudadano.id} no pudo ser asignado a vivienda (sin disponibilidad)`);
+                }
+            });
+        }
+        
+        // Asignar empleos a ciudadanos sin empleo
+        let sinEmpleo = this.ciudadanos.filter(c => !c.empleo);
+        if (sinEmpleo.length > 0) {
+            sinEmpleo.forEach(ciudadano => {
+                const empleos = this.terreno.empleosDisponibles();
+                if (empleos.edificios.length > 0) {
+                    // Remover el ciudadano de cualquier edificio anterior (en caso de reasignacion)
+                    this.terreno.edificios.forEach(e => {
+                        if (e.ciudadanos && e.ciudadanos.includes(ciudadano)) {
+                            e.ciudadanos = e.ciudadanos.filter(c => c !== ciudadano);
+                        }
+                    });
+                    // Agregar a nuevo edificio
+                    empleos.edificios[0].agregarPersona(ciudadano);
+                    ciudadano.empleo = true;
+                    console.log(`[OK] ${ciudadano.id} asignado a empleo en ${empleos.edificios[0].id}`);
+                } else {
+                    console.log(`[ERROR] ${ciudadano.id} no pudo ser asignado a empleo (sin disponibilidad)`);
+                }
+            });
+        }
+    }
     recursosNegativos() {
 
         let negativos = [];
@@ -171,24 +234,46 @@ class Ciudad {
         return negativos;
     }
 
-    // Metodo que se encarga de ejecutar todas las acciones necesarias para avanzar un turno en el juego, 
-    // como consumir recursos por parte de los ciudadanos, calcular los recursos proporcionados o gastados
-    // por los edificios, y aumentar la población si se cumplen las condiciones necesarias.
+    // Metodo que se encarga de ejecutar todas las acciones necesarias para avanzar un turno en el juego
     ejecutarTurno(){
-        //En cada turno se calcula nuevamente la felicidad inicial (hace referencia a la infraestructura que aumenta la felicidad)
-        //Ya que pueden haber estructuras nuevas o eliminadas que afectan la felicidad y la condición de vivienda y empleo de los ciudadanos.
+        console.log("\n========== EJECUTANDO TURNO ==========");
+        
+        // 1. Actualizar felicidad inicial según infraestructura
+        console.log("\n--- Calculando felicidad ---");
         this.ciudadanos.forEach (ciudadano =>{
-            ciudadano.this.asignarFelicidadInicial(ciudadano.id)
+            this.asignarFelicidadInicial(ciudadano.id);
         });
         this.calcularFelicidadPromedio();
+        console.log(`Felicidad promedio de la ciudad: ${this.estadoRecursos.felicidad.toFixed(2)}`);
+        
+        // 2. Asignar vivienda y empleo a ciudadanos que no tengan
+        this.asignarViviendaOEmpleos();
+        
+        // 3. Actualizar felicidad después de nuevas asignaciones
+        this.ciudadanos.forEach (ciudadano =>{
+            this.asignarFelicidadInicial(ciudadano.id);
+        });
+        this.calcularFelicidadPromedio();
+        
+        // 4. Consumo de ciudadanos
+        console.log("\n--- Consumo de ciudadanos ---");
         this.consumoCiudadanos();
+        console.log(`Total ciudadanos consumiendo: ${this.ciudadanos.length}`);
+        
+        // 5. Producción de edificios
+        console.log("\n--- Producción de edificios ---");
         this.recursosPorEdificios();
-        //añadir metodo para asignar viveinda y empleo en caso de ser necesario
+        console.log(`Total edificios produciendo: ${this.terreno.edificios.length}`);
+        
+        // 6. Intentar crear nuevos ciudadanos
+        console.log("\n--- Intento de creación de ciudadanos ---");
         let contador = 0;
         while (this.aumentarPoblacion() && contador < 3) {
-            this.crearCiudadano(x, y, z); //ejemplo de consumo para cada ciudadano
-            contador += 1; 
-        };
+            this.crearCiudadano(-1, -1, -1);
+            contador++; 
+        }
+        console.log(`Se crearon ${contador} nuevos ciudadanos`);
+        console.log("\n========== FIN DEL TURNO ==========");
     }
     
     // Metodo para validar si se puede jugar otro turno o si se acaba el juego
