@@ -82,7 +82,7 @@ class Ciudad {
             return false;
         //valido si la felicidad es mayor a 60, si no lo es, no se pueden crear mas ciudadanos por enunciado
         } else if (this.ciudadanos.length > 1 && this.estadoRecursos.felicidad < 60){
-            console.log("No se pueden crear más ciudadanos, no se alcanzo el nivel requerido de felicidad.");
+            console.log("No se pueden crear más ciudadanos, no se alcanzo el nivel requerido de felicidad. Puedes construir parques para aumentar la felicidad de tus ciudadanos");
             return false;
         } else{
             return true; //indica que se pueden crear mas ciudadanos

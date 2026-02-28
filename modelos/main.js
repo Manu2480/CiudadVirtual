@@ -148,16 +148,16 @@ function menu() {
         break;
       case "3":
         let contador = 0;
-        while (ciudad.aumentarPoblacion() && contador < 3) {
+        while (ciudad.aumentarPoblacion() && contador <= 3) {
             ciudad.crearCiudadano(-1, -1, -1); //ejemplo de consumo para cada ciudadano
             contador += 1; 
         };
         break;
       case "4":
-        iniciarSimulacion();
-        break;1
+        //iniciarSimulacion();
+        break;
       case "5":
-        pausarSimulacion();
+        //pausarSimulacion();
         break;
       case "6":
         mostrarCiudad();

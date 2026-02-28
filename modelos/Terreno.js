@@ -127,7 +127,9 @@ class Terreno{
         let felicidadTotal = 0;
         for (const edificio of this.edificios) {
             // ?. evita error si recursosEdificio es undefined || 0 hace que si no existe "felicidad", sume 0
-            felicidadTotal += edificio.recursosEdificio?.felicidad || 0;
+            if ((!edificio instanceof EdificioResidencial) || (!edificio instanceof EdificioIndustrial) || (!edificio instanceof EdificioComercial)){
+                felicidadTotal += edificio.recursosEdificio?.felicidad || 0;
+            }
         }
         return felicidadTotal;
     }
