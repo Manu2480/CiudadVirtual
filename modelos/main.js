@@ -1,7 +1,12 @@
 //SIMULACIÓN POR CONSOLA
 
 // Importaciones al inicio para evitar referencias antes de definir variables
+// "require" es la manera de importar módulos en Node.js. 
+// prompt-sync devuelve una función que solicita texto al usuario; se llama
+// inmediatamente con "()" para obtener la función `prompt`.
 const prompt = require("prompt-sync")();
+// El resto son clases que exportamos desde otros archivos. Están
+// asignadas a constantes para poder usarlas más abajo.
 const Terreno = require("./Terreno");
 const Ciudad = require("./Ciudad");
 const Via = require("./Via");
@@ -18,9 +23,14 @@ const Parque = require("./Parque");
 const Fabrica = require("./Fabrica");
 const Granja = require("./Granja");
 
-//CREAMOS EL OBJETO CIUDAD ------------------------------
-const filas = 15;
-const columnas = 15;
+//CREAMOS EL OBJETO CIUDAD
+// dimensiones del terreno. en este ejemplo usamos 4x4.
+const filas = 4;
+const columnas = 4;
+// Aquí creamos dos matrices bidimensionales (arrays de arrays). Array.from
+// recibe un objeto con "length" y una función que devuelve el valor de
+// cada elemento; usamos una función flecha "() => ..." para crear la fila.
+// El operador .fill(null) inicializa cada celda con null.
 const mapa = Array.from({ length: filas }, () => Array(columnas).fill(null));
 const vias = Array.from({ length: filas }, () => Array(columnas).fill(0));
 
@@ -36,138 +46,287 @@ const ciudad = new Ciudad(
   { dinero: 50000, agua: 0, electricidad: 0, alimento: 0, felicidad: 0 }
 );
 
-console.log("Ciudad inicial:", ciudad.nombre);
+console.log("=======================================================");
+console.log(`Ciudad creada: ${ciudad.nombre}`);
+console.log(`Presupuesto inicial: $${ciudad.estadoRecursos.dinero}`);
+console.log("=======================================================\n");
 
-// CREAMOS EL OBJETO VIA
-function crearVia() {
-  const fila = parseInt(prompt("Ingrese fila: "), 10);
-  const columna = parseInt(prompt("Ingrese columna: "), 10);
-  const via = new Via({ fila, columna });
-  ciudad.terreno.crearInfraestructura(fila, columna, via);
-  console.log("Vía creada:", via);
+// ===================== MOSTRAR ESTADO DE LA CIUDAD =====================
+function mostrarEstadoCiudad() {
+  console.log("\n==================== ESTADO DE LA CIUDAD =====================");
+  console.log("Manizales\n");
+  
+  console.log("RECURSOS:");
+  console.log(`  Dinero:       $${ciudad.estadoRecursos.dinero}`);
+  console.log(`  Agua:         ${ciudad.estadoRecursos.agua}`);
+  console.log(`  Electricidad: ${ciudad.estadoRecursos.electricidad}`);
+  console.log(`  Alimento:     ${ciudad.estadoRecursos.alimento}`);
+  console.log(`  Felicidad:    ${ciudad.estadoRecursos.felicidad.toFixed(2)}`);
+  
+  console.log("\nPOBLACION:");
+  console.log(`  Total ciudadanos: ${ciudad.ciudadanos.length}`);
+  if (ciudad.ciudadanos.length > 0) {
+    const sinVivienda = ciudad.ciudadanos.filter(c => !c.vivienda).length;
+    const sinEmpleo = ciudad.ciudadanos.filter(c => !c.empleo).length;
+    console.log(`  Sin vivienda: ${sinVivienda}`);
+    console.log(`  Sin empleo: ${sinEmpleo}`);
+    ciudad.ciudadanos.forEach(c => {
+      console.log(`    - ${c.id}: felicidad=${c.felicidad}, vivienda=${c.vivienda}, empleo=${c.empleo}`);
+    });
+  }
+  
+  console.log("\nINFRAESTRUCTURA:");
+  if (ciudad.terreno.edificios.length > 0) {
+    ciudad.terreno.edificios.forEach(e => {
+      const col = e.ubicacion.columna;
+      const fil = e.ubicacion.fila;
+      console.log(`  - ${e.id} en (${col},${fil}): ${e.ciudadanos.length}/${e.capacidad} ocupados`);
+    });
+  } else {
+    console.log("  Sin edificios");
+  }
+  
+  console.log("");
 }
 
-//MOSTRAMOS EK MENU DE EDIFICIOS
-function crearEdificio() {
-  console.log("Seleccione tipo de edificio:");
-  console.log("1. Planta Electrica");
-  console.log("2. Planta Hidraulica");
-  console.log("3. Casa");
-  console.log("4. Apartamento");
-  console.log("5. Tienda");
-  console.log("6. Centro Comercial");
-  console.log("7. Estacion Bomberos");
-  console.log("8. Estacion Policia");
-  console.log("9. Hospital");
-  console.log("10. Parque");
-  console.log("11. Fabrica");
-  console.log("12. Granja");
+// ===================== MOSTRAR MAPA =====================
+function mostrarMapa() {
+  console.log("\n==================== MAPA DE TERRENO ====================");
+  // usamos un bucle "for" anidado para recorrer filas (f) y columnas (c)
+  for (let f = 0; f < filas; f++) {
+    let line = "";
+    for (let c = 0; c < columnas; c++) {
+      // estudia la variable 'cell': en cada iteración representa el
+      // objeto que haya en esa celda del mapa, o null si está vacío.
+      const cell = ciudad.terreno.mapa[c][f];
+      if (cell) {
+        // Las comillas invertidas `` crean una plantilla (template literal).
+        // Permiten incrustar variables dentro de la cadena usando ${...}.
+        // padEnd(12) es un método de string que rellena con espacios hasta
+        // que la longitud alcance 12 caracteres; se usa aquí para alinear
+        // visualmente las columnas en la salida.
+        line += `${cell.id}`.padEnd(12);
+      } else {
+        line += " . ".padEnd(12);
+      }
+    }
+    console.log(line);
+  }
+}
+
+// ===================== CONSTRUIR INFRAESTRUCTURA =====================
+function construirInfraestructura() {
+  console.log("\n==================== CONSTRUIR INFRAESTRUCTURA ====================");
+  
+  console.log("\nTipo de infraestructura:");
+  console.log("1. Vía               (Costo: 500)");
+  console.log("2. Planta Eléctrica  (Costo: 3000)");
+  console.log("3. Planta Hidráulica (Costo: 3000)");
+  console.log("4. Casa              (Costo: 1000)");
+  console.log("5. Apartamento       (Costo: 1500)");
+  console.log("6. Tienda            (Costo: 2000)");
+  console.log("7. Centro Comercial  (Costo: 4000)");
+  console.log("8. Estación Bomberos (Costo: 2500)");
+  console.log("9. Estación Policía  (Costo: 2500)");
+  console.log("10. Hospital         (Costo: 5000)");
+  console.log("11. Parque           (Costo: 1500)");
+  console.log("12. Fábrica          (Costo: 5000)");
+  console.log("13. Granja           (Costo: 2000)");
   console.log("0. Cancelar");
 
-  const tipo = prompt("Opción: ");
-  if (tipo === "0") return;
+  const tipo = prompt("Seleccione tipo: ");
+  if (tipo === "0") {
+    console.log("Construcción cancelada.");
+    return;
+  }
 
-  const fila = parseInt(prompt("Ingrese fila: "), 10); //10 significa base decimal. convertimos el '5' a numero
-  const columna = parseInt(prompt("Ingrese columna: "), 10);
+  const columna = parseInt(prompt("Ingrese columna (0-3): "), 10);
+  const fila = parseInt(prompt("Ingrese fila (0-3): "), 10);
+
+  if (columna < 0 || columna >= columnas || fila < 0 || fila >= filas) {
+    console.log("[ERROR] Posicion fuera del mapa");
+    return;
+  }
+
   let edificio;
-
   switch (tipo) {
     case "1":
-      edificio = new PlantaElectrica({ fila, columna });
+      edificio = new Via({ columna, fila });
       break;
     case "2":
-      edificio = new PlantaHidraulica({ fila, columna });
+      edificio = new PlantaElectrica({ columna, fila });
       break;
     case "3":
-      edificio = new Casa({ fila, columna });
+      edificio = new PlantaHidraulica({ columna, fila });
       break;
     case "4":
-      edificio = new Apartamento({ fila, columna });
+      edificio = new Casa({ columna, fila });
       break;
     case "5":
-      edificio = new Tienda({ fila, columna });
+      edificio = new Apartamento({ columna, fila });
       break;
     case "6":
-      edificio = new CentroComercial({ fila, columna });
+      edificio = new Tienda({ columna, fila });
       break;
     case "7":
-      edificio = new EstacionBombero({ fila, columna });
+      edificio = new CentroComercial({ columna, fila });
       break;
     case "8":
-      edificio = new EstacionPolicia({ fila, columna });
+      edificio = new EstacionBombero({ columna, fila });
       break;
     case "9":
-      edificio = new Hospital({ fila, columna });
+      edificio = new EstacionPolicia({ columna, fila });
       break;
     case "10":
-      edificio = new Parque({ fila, columna });
+      edificio = new Hospital({ columna, fila });
       break;
     case "11":
-      edificio = new Fabrica({ fila, columna });
+      edificio = new Parque({ columna, fila });
       break;
     case "12":
-      edificio = new Granja({ fila, columna });
+      edificio = new Fabrica({ columna, fila });
+      break;
+    case "13":
+      edificio = new Granja({ columna, fila });
       break;
     default:
-      console.log("Tipo inválido");
+      console.log("[ERROR] Tipo invalido");
       return;
   }
 
-  ciudad.terreno.crearInfraestructura(fila, columna, edificio);
-  console.log("Edificio creado:", edificio);
+  // Intentar crear la infraestructura
+  const resultado = ciudad.terreno.crearInfraestructura(columna, fila, edificio);
+  
+  if (resultado.exito) {
+    // Descontar el costo del dinero
+    ciudad.modificarRecurso("dinero", -resultado.costo);
+    console.log(`[OK] ${resultado.mensaje}`);
+    console.log(`[OK] Dinero deducido: $${resultado.costo}`);
+    console.log(`[OK] Dinero disponible: $${ciudad.estadoRecursos.dinero}`);
+  } else {
+    console.log(`[ERROR] ${resultado.mensaje}`);
+  }
 }
 
-function mostrarCiudad() {
-  ciudad.calcularFelicidadPromedio();
-  console.log(ciudad.estadoRecursos)
-  console.log(ciudad.ciudadanos);
-  console.log(ciudad.terreno.edificios)
+// ===================== DEMOLER INFRAESTRUCTURA =====================
+function demolerInfraestructura() {
+  console.log("\n==================== DEMOLER INFRAESTRUCTURA ====================");
+
+  const columna = parseInt(prompt("Ingrese columna a demoler (0-3): "), 10);
+  const fila = parseInt(prompt("Ingrese fila a demoler (0-3): "), 10);
+
+  if (columna < 0 || columna >= columnas || fila < 0 || fila >= filas) {
+    console.log("[ERROR] Posicion fuera del mapa");
+    return;
+  }
+
+  const resultado = ciudad.terreno.eliminarInfraestructura(columna, fila);
+  
+  if (resultado.exito) {
+    // Sumar reembolso al dinero
+    ciudad.modificarRecurso("dinero", resultado.reembolso);
+    console.log(`[OK] ${resultado.mensaje}`);
+    console.log(`[OK] Dinero reembolsado: $${resultado.reembolso}`);
+    console.log(`[OK] Dinero disponible: $${ciudad.estadoRecursos.dinero}`);
+  } else {
+    console.log(`[ERROR] ${resultado.mensaje}`);
+  }
 }
 
-// Bucle principal del menú
+// ===================== EJECUTAR TURNO =====================
+function ejecutarTurno() {
+  console.log("\n==================== EJECUTANDO TURNO ====================");
+  
+  // Ejecutar las mecánicas del turno
+  ciudad.ejecutarTurno();
+  
+  // Mostrar estado final
+  console.log("\nESTADO DESPUES DEL TURNO:");
+  console.log(`  Poblacion: ${ciudad.ciudadanos.length}`);
+  console.log(`  Dinero: $${ciudad.estadoRecursos.dinero}`);
+  console.log(`  Agua: ${ciudad.estadoRecursos.agua}`);
+  console.log(`  Electricidad: ${ciudad.estadoRecursos.electricidad}`);
+  console.log(`  Alimento: ${ciudad.estadoRecursos.alimento}`);
+  console.log(`  Felicidad promedio: ${ciudad.estadoRecursos.felicidad.toFixed(2)}`);
+  
+  // Verificar si hay game over
+  const negativos = ciudad.recursosNegativos();
+  if (negativos.length > 0) {
+    console.log(`\n[ALERTA] Recursos negativos - ${negativos.join(", ")}`);
+  }
+}
+
+// ===================== MENU PRINCIPAL =====================
 function menu() {
-  while (true) {
-    console.log("\n*** Menú Ciudad Virtual ***");
-    console.log("1. Crear vía");
-    console.log("2. Crear edificio");
-    console.log("3. Crear ciudadanos");
-    console.log("4. Iniciar simulación automática");
-    console.log("5. Pausar simulación");
-    console.log("6. Mostrar ciudad completa");
-    console.log("0. Salir");
+  let enJuego = true;
+  
+  while (enJuego) {
+    console.log("\n==================== CIUDAD VIRTUAL ====================");
+    console.log("====================  MENU PRINCIPAL  ====================");
+    console.log("1. Ver estado de la ciudad");
+    console.log("2. Construir infraestructura");
+    console.log("3. Demoler infraestructura");
+    console.log("4. Ejecutar turno");
+    console.log("5. Ver ciudadanos");
+    console.log("6. Ver edificios");
+    console.log("7. Consultar mapa");
+    console.log("0. Salir del juego");
 
-    const opcion = prompt("Seleccione una opción: ");
+    const opcion = prompt("\nSeleccione una opción: ");
 
     switch (opcion) {
       case "0":
-        console.log("Saliendo...");
-        return;
+        console.log("\nGracias por jugar Ciudad Virtual. Hasta luego.");
+        enJuego = false;
+        break;
       case "1":
-        crearVia();
+        mostrarEstadoCiudad();
         break;
       case "2":
-        crearEdificio();
+        construirInfraestructura();
         break;
       case "3":
-        let contador = 0;
-        while (ciudad.aumentarPoblacion() && contador <= 3) {
-            ciudad.crearCiudadano(-1, -1, -1); //ejemplo de consumo para cada ciudadano
-            contador += 1; 
-        };
+        demolerInfraestructura();
         break;
       case "4":
-        //iniciarSimulacion();
+        ejecutarTurno();
         break;
       case "5":
-        //pausarSimulacion();
+        console.log("\n==================== CIUDADANOS ====================");
+        if (ciudad.ciudadanos.length === 0) {
+          console.log("No hay ciudadanos en la ciudad");
+        } else {
+          ciudad.ciudadanos.forEach(c => {
+            console.log(`${c.id}:`);
+            console.log(`  - Felicidad: ${c.felicidad}`);
+            console.log(`  - Vivienda: ${c.vivienda ? "SI" : "NO"}`);
+            console.log(`  - Empleo: ${c.empleo ? "SI" : "NO"}`);
+            console.log(`  - Consumo: agua=${c.consumoCiudadano.agua}, electricidad=${c.consumoCiudadano.electricidad}, alimento=${c.consumoCiudadano.alimento}`);
+          });
+        }
         break;
       case "6":
-        mostrarCiudad();
+        console.log("\n==================== EDIFICIOS ====================");
+        if (ciudad.terreno.edificios.length === 0) {
+          console.log("No hay edificios en la ciudad");
+        } else {
+          ciudad.terreno.edificios.forEach(e => {
+            console.log(`${e.id}:`);
+            console.log(`  - Costo: $${e.costo}`);
+            console.log(`  - Capacidad: ${e.capacidad}`);
+            console.log(`  - Ocupación: ${e.ciudadanos.length}/${e.capacidad}`);
+            console.log(`  - Recursos: ${JSON.stringify(e.recursosEdificio)}`);
+          });
+        }
+        break;
+      case "7":
+        mostrarMapa();
         break;
       default:
-        console.log("Opción inválida");
+        console.log("[ERROR] Opcion invalida");
     }
   }
 }
 
+// Iniciar el juego
 menu();
