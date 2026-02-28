@@ -1,4 +1,6 @@
 
+const Edificio = require("./Edificio");
+
 class Parque extends Edificio {
 
     static contador = 0;

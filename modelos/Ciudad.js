@@ -1,3 +1,5 @@
+//IMPORTAMOS  
+const Ciudadano = require("./Ciudadano");
 class Ciudad {
 
     constructor(nombre, alcalde, latitud, longitud, tiempoTurno, terreno, ciudadanos, estadoRecursos) {
@@ -63,19 +65,25 @@ class Ciudad {
     // Si no se cumplen las condiciones, se lanza un error indicando que no se pueden crear más ciudadanos y el motivo
     aumentarPoblacion() {
 
+        console.log("Entro al metodo de aumentar población")
+
         //dentro tienen el totalDisponibles(contador) y edificios(array edificios)
         const viviendas = this.terreno.viviendasDisponibles();
-        const empleos = this.terreno.empleosDisponible();
+        console.log(viviendas.totalDisponibles);
+        const empleos = this.terreno.empleosDisponibles();
 
         // valido si hay viviendad disponible, si no hay, no se pueden crear mas ciudadanos
         if (viviendas.totalDisponibles <= this.ciudadanos.length){
-            throw new Error("No se pueden crear más ciudadanos, no hay viviendas disponibles.");
+            console.log("No se pueden crear más ciudadanos, no hay viviendas disponibles.");
+            return false;
         // valido si hay empleos disponibles, si no hay, no se pueden crear mas ciudadanos
         } else if (empleos.totalDisponibles <= this.ciudadanos.length){
-            throw new Error("No se pueden crear más ciudadanos, no hay empleos disponibles.");
+            console.log("No se pueden crear más ciudadanos, no hay empleos disponibles.");
+            return false;
         //valido si la felicidad es mayor a 60, si no lo es, no se pueden crear mas ciudadanos por enunciado
         } else if (this.ciudadanos.length > 1 && this.estadoRecursos.felicidad < 60){
-            throw new Error("No se pueden crear más ciudadanos, no se alcanzo el nivel requerido de felicidad.");
+            console.log("No se pueden crear más ciudadanos, no se alcanzo el nivel requerido de felicidad.");
+            return false;
         } else{
             return true; //indica que se pueden crear mas ciudadanos
         }
@@ -86,18 +94,29 @@ class Ciudad {
     // Crea un nuevo ciudadano y se agrega 
     crearCiudadano(x,y,z) {
 
-        contador += 1
+        console.log("entro al metodo de crear ciudadano")
+
+        Ciudad.contador += 1;
+        const idCiudadano = "ciudadano" + Ciudad.contador;
 
         // Agrega un ciudadano a la ciudad. Recibe un objeto ciudadano como parámetro y lo agrega al arreglo de ciudadanos de la ciudad.
-        const nuevoCiudadano = new Ciudadano("ciudadano"+contador, null, null, null, null);
+        const nuevoCiudadano = new Ciudadano(idCiudadano, null, null, null, null);
         this.ciudadanos.push(nuevoCiudadano);
+
+        // Obtengo los edificios con empleos y viviendad
+        //dentro tienen el totalDisponibles(contador) y edificios(array edificios)
+        const viviendas = this.terreno.viviendasDisponibles();
+        const empleos = this.terreno.empleosDisponibles();
+
+        console.log(viviendas.edificios);
+        console.log(empleos.edificios);
 
         //Asigno una vivienda disponible al nuevo ciudadano
         viviendas.edificios[0].ciudadanos.push(nuevoCiudadano); //agrega el nuevo ciudadano al primer edificio con disponibilidad de vivienda
         nuevoCiudadano.vivienda = true; //actualiza el atributo de vivienda del ciudadano a true para que pueda calcular su felicidad correctamente
 
         //Asigno un empleo disponible al nuevo ciudadano
-        empleos.edificios[0].ciudadanos.pusg(nuevoCiudadano); //agrega el nuevo ciudadano al primer edificio con disponibilidad de empleo
+        empleos.edificios[0].ciudadanos.push(nuevoCiudadano); //agrega el nuevo ciudadano al primer edificio con disponibilidad de empleo
         nuevoCiudadano.empleo = true; //actualiza el atributo de empleo del ciudadano a true para que pueda calcular su felicidad correctamente
 
         this.asignarFelicidadInicial(nuevoCiudadano.id); //calcula la felicidad del nuevo ciudadano con el nivel de felicidad actual de la ciudad

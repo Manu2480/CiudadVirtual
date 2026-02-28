@@ -1,3 +1,4 @@
+const EdificioServicio = require("./EdificioServicio");
 
 class EstacionBombero extends EdificioServicio {
 

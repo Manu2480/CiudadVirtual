@@ -1,4 +1,6 @@
 
+const EdificioIndustrial = require("./EdificioIndustrial");
+
 class Fabrica extends EdificioIndustrial {
 
     static contador = 0;
