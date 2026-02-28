@@ -8,7 +8,7 @@ class Fabrica extends EdificioIndustrial {
     constructor(ubicacion) {
 
         Fabrica.contador += 1; // Incrementa el contador cada vez que se crea una nueva fábrica
-        const idFabrica = "fabrica" + Fabrica.contador; // Genera un ID único para la fábrica
+        const idFabrica = "Fabrica" + Fabrica.contador; // Genera un ID único para la fábrica
 
         super(idFabrica, 5000, ubicacion, 15); 
         this.recursosEdificio["dinero"] = 800;

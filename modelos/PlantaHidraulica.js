@@ -7,7 +7,7 @@ class PlantaHidraulica extends PlantaUtilidad {
     constructor(ubicacion) {
 
         PlantaHidraulica.contador += 1; // Incrementa el contador cada vez que se crea una nueva planta hidráulica
-        const idPlanta = "plantaHidraulica" + PlantaHidraulica.contador; // Genera un ID único para la planta hidráulica
+        const idPlanta = "Agua" + PlantaHidraulica.contador; // Genera un ID único para la planta hidráulica
 
         super(idPlanta, 8000, ubicacion, 0);
         this.recursosEdificio["electricidad"] = -20;
