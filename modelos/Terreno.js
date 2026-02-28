@@ -75,7 +75,7 @@ class Terreno{
         let edificiosConDisponibilidad = [];//edificios donde hay empleos disponibles
 
         this.edificios.forEach(edificio => {//recorro la lista de edificios
-            if (edificio instanceof EdificioResidencial || edificio instanceof EdificioIndustrial) {//valido que sean de tipo comercial o industrial
+            if (edificio instanceof EdificioComercial || edificio instanceof EdificioIndustrial) {//valido que sean de tipo comercial o industrial
 
                 const disponibles = edificio.capacidad - edificio.ciudadanos.length;//calculo la disponibilidad de empleo restandole a la capacidad el numero de ciudadanos que ya estan en el array de eseedificio
 
@@ -127,7 +127,9 @@ class Terreno{
         let felicidadTotal = 0;
         for (const edificio of this.edificios) {
             // ?. evita error si recursosEdificio es undefined || 0 hace que si no existe "felicidad", sume 0
-            felicidadTotal += edificio.recursosEdificio?.felicidad || 0;
+            if ((!edificio instanceof EdificioResidencial) || (!edificio instanceof EdificioIndustrial) || (!edificio instanceof EdificioComercial)){
+                felicidadTotal += edificio.recursosEdificio?.felicidad || 0;
+            }
         }
         return felicidadTotal;
     }
