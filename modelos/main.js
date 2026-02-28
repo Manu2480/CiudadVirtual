@@ -155,7 +155,7 @@ function menu() {
         break;
       case "4":
         iniciarSimulacion();
-        break;
+        break;1
       case "5":
         pausarSimulacion();
         break;
