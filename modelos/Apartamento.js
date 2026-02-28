@@ -1,3 +1,4 @@
+const EdificioResidencial = require("./EdificioResidencial");
 
 class Apartamento extends EdificioResidencial {
 

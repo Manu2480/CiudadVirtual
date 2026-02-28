@@ -1,3 +1,4 @@
+const PlantaUtilidad = require("./PlantaUtilidad");
 
 class PlantaHidraulica extends PlantaUtilidad {
 

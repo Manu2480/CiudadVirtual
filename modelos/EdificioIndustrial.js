@@ -1,4 +1,7 @@
 
+//Es para que node herede
+const Edificio = require("./Edificio");
+
 class EdificioIndustrial extends Edificio {
 
     constructor(id, costo, ubicacion, capacidad) {

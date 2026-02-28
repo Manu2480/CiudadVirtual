@@ -1,4 +1,7 @@
 const Via = require("./Via");
+const EdificioComercial = require("./EdificioComercial")
+const EdificioResidencial = require("./EdificioResidencial")
+const EdificioIndustrial = require("./EdificioIndustrial")
 
 class Terreno{
     constructor(vias,mapa,edificios){
@@ -24,6 +27,8 @@ class Terreno{
                     console.log("No hay via adyacente")
                 }
             }
+        } else {
+            console.log("Espacio no disponible")
         }
     }
 
@@ -72,7 +77,7 @@ class Terreno{
         this.edificios.forEach(edificio => {//recorro la lista de edificios
             if (edificio instanceof EdificioResidencial || edificio instanceof EdificioIndustrial) {//valido que sean de tipo comercial o industrial
 
-                const disponibles = edificio.capacidadViviendas - edificio.ciudadanos.length;//calculo la disponibilidad de empleo restandole a la capacidad el numero de ciudadanos que ya estan en el array de eseedificio
+                const disponibles = edificio.capacidad - edificio.ciudadanos.length;//calculo la disponibilidad de empleo restandole a la capacidad el numero de ciudadanos que ya estan en el array de eseedificio
 
                 if (disponibles > 0) { //si hay empleos disponibles, las sumo al contador total de viviendas disponibles y agrego el edificio a la lista de edificios con disponibilidad para crear ciudadanos
                     contador += disponibles;
@@ -89,21 +94,26 @@ class Terreno{
     }
 
     viviendasDisponibles() {
+        console.log("Entro al metodo de viviendas disponibles")
         let contador = 0; //numero de viviendas disponibles
         let edificiosConDisponibilidad = [];//edificios donde hay viviendas disponibles
 
         this.edificios.forEach(edificio => {//recorro la lista de edificios
+            console.log("entro a recorrer los edficios en el metodo de vieviendad dispo")
             if (edificio instanceof EdificioResidencial) {//valido que sean de tipo residencial
-
-                const disponibles = edificio.capacidadViviendas - edificio.ciudadanos.length;//conto la cantidad de viviendas disponibles restando la capacidad total de viviendas del edificio con la cantidad de ciudadanos que ya viven en ese edificio
-
+                console.log("se encontro un edificio residencial")
+                console.log("capacidad: "+edificio.capacidad+" longitud arreglo: "+edificio.ciudadanos.length)
+                let disponibles = edificio.capacidad - edificio.ciudadanos.length;//conto la cantidad de viviendas disponibles restando la capacidad total de viviendas del edificio con la cantidad de ciudadanos que ya viven en ese edificio
+                console.log("disponibles "+disponibles)
+                console.log("longitud "+edificio.ciudadanos.length)
                 if (disponibles > 0) { //si hay viviendas disponibles, las sumo al contador total de viviendas disponibles y agrego el edificio a la lista de edificios con disponibilidad para crear ciudadanos
                     contador += disponibles;
+                    console.log("se le aumento el valor al contador" + contador)
                     edificiosConDisponibilidad.push(edificio);
                 }
             }
         });
-
+        console.log("contado"+contador)
         //retorno un objeto con la cantidad total de viviendas disponibles y la lista de edificios con disponibilidad para crear ciudadanos porque en js no existen las tuplas simples
         return {
             totalDisponibles: contador,
