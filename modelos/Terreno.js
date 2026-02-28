@@ -75,7 +75,7 @@ class Terreno{
         let edificiosConDisponibilidad = [];//edificios donde hay empleos disponibles
 
         this.edificios.forEach(edificio => {//recorro la lista de edificios
-            if (edificio instanceof EdificioResidencial || edificio instanceof EdificioIndustrial) {//valido que sean de tipo comercial o industrial
+            if (edificio instanceof EdificioComercial || edificio instanceof EdificioIndustrial) {//valido que sean de tipo comercial o industrial
 
                 const disponibles = edificio.capacidad - edificio.ciudadanos.length;//calculo la disponibilidad de empleo restandole a la capacidad el numero de ciudadanos que ya estan en el array de eseedificio
 
