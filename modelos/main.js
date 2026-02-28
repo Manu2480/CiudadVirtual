@@ -40,9 +40,10 @@ console.log("Ciudad inicial:", ciudad.nombre);
 
 // CREAMOS EL OBJETO VIA
 function crearVia() {
-  const fila = parseInt(prompt("Ingrese fila: "), 10);
   const columna = parseInt(prompt("Ingrese columna: "), 10);
-  const via = new Via({ fila, columna });
+  const fila = parseInt(prompt("Ingrese fila: "), 10); //10 es la base decimal, es un parseo
+
+  const via = new Via({ columna , fila });
   ciudad.terreno.crearInfraestructura(fila, columna, via);
   console.log("Vía creada:", via);
 }
@@ -67,53 +68,54 @@ function crearEdificio() {
   const tipo = prompt("Opción: ");
   if (tipo === "0") return;
 
-  const fila = parseInt(prompt("Ingrese fila: "), 10); //10 significa base decimal. convertimos el '5' a numero
   const columna = parseInt(prompt("Ingrese columna: "), 10);
+  const fila = parseInt(prompt("Ingrese fila: "), 10); //10 significa base decimal. convertimos el '5' a numero
+
   let edificio;
 
   switch (tipo) {
     case "1":
-      edificio = new PlantaElectrica({ fila, columna });
+      edificio = new PlantaElectrica({ columna , fila});
       break;
     case "2":
-      edificio = new PlantaHidraulica({ fila, columna });
+      edificio = new PlantaHidraulica({ columna , fila });
       break;
     case "3":
-      edificio = new Casa({ fila, columna });
+      edificio = new Casa({ columna , fila });
       break;
     case "4":
-      edificio = new Apartamento({ fila, columna });
+      edificio = new Apartamento({ columna , fila });
       break;
     case "5":
-      edificio = new Tienda({ fila, columna });
+      edificio = new Tienda({ columna , fila });
       break;
     case "6":
-      edificio = new CentroComercial({ fila, columna });
+      edificio = new CentroComercial({ columna , fila });
       break;
     case "7":
-      edificio = new EstacionBombero({ fila, columna });
+      edificio = new EstacionBombero({ columna , fila });
       break;
     case "8":
-      edificio = new EstacionPolicia({ fila, columna });
+      edificio = new EstacionPolicia({ columna , fila });
       break;
     case "9":
-      edificio = new Hospital({ fila, columna });
+      edificio = new Hospital({ columna , fila });
       break;
     case "10":
-      edificio = new Parque({ fila, columna });
+      edificio = new Parque({ columna , fila });
       break;
     case "11":
-      edificio = new Fabrica({ fila, columna });
+      edificio = new Fabrica({ columna , fila });
       break;
     case "12":
-      edificio = new Granja({ fila, columna });
+      edificio = new Granja({ columna , fila });
       break;
     default:
       console.log("Tipo inválido");
       return;
   }
 
-  ciudad.terreno.crearInfraestructura(fila, columna, edificio);
+  ciudad.terreno.crearInfraestructura(columna, fila, edificio);
   console.log("Edificio creado:", edificio);
 }
 
@@ -131,9 +133,10 @@ function menu() {
     console.log("1. Crear vía");
     console.log("2. Crear edificio");
     console.log("3. Crear ciudadanos");
-    console.log("4. Iniciar simulación automática");
-    console.log("5. Pausar simulación");
-    console.log("6. Mostrar ciudad completa");
+    console.log("4. Mostrar ciudad completa");
+    console.log("5. Mostrar mapa de terreno");
+    console.log("6. Mostrar ciudadanos");
+    console.log("7. Mostrar edificios");
     console.log("0. Salir");
 
     const opcion = prompt("Seleccione una opción: ");
@@ -156,13 +159,13 @@ function menu() {
         };
         break;
       case "4":
-        //iniciarSimulacion();
+        mostrarCiudad()
         break;
       case "5":
-        //pausarSimulacion();
+        console.log(ciudad.terreno.mapa)
         break;
       case "6":
-        mostrarCiudad();
+        //
         break;
       default:
         console.log("Opción inválida");
