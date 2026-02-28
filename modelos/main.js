@@ -118,7 +118,9 @@ function crearEdificio() {
 }
 
 function mostrarCiudad() {
-  console.log(ciudad);
+  ciudad.calcularFelicidadPromedio();
+  console.log(ciudad.estadoRecursos)
+  console.log(ciudad.ciudadanos);
   console.log(ciudad.terreno.edificios)
 }
 
