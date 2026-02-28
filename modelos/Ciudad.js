@@ -73,17 +73,21 @@ class Ciudad {
         const empleos = this.terreno.empleosDisponibles();
 
         // valido si hay viviendad disponible, si no hay, no se pueden crear mas ciudadanos
-        if (viviendas.totalDisponibles <= this.ciudadanos.length){
+        if ((viviendas.totalDisponibles == 0) || (viviendas.totalDisponibles < this.ciudadanos.length)){
+            console.log("viviendas en metodo aumentarPoblación: " + viviendas.totalDisponibles)
             console.log("No se pueden crear más ciudadanos, no hay viviendas disponibles.");
             return false;
         // valido si hay empleos disponibles, si no hay, no se pueden crear mas ciudadanos
-        } else if (empleos.totalDisponibles <= this.ciudadanos.length){
+        } else if ((empleos.totalDisponibles == 0) || (empleos.totalDisponibles < this.ciudadanos.length)){
             console.log("No se pueden crear más ciudadanos, no hay empleos disponibles.");
             return false;
         //valido si la felicidad es mayor a 60, si no lo es, no se pueden crear mas ciudadanos por enunciado
-        } else if (this.ciudadanos.length > 1 && this.estadoRecursos.felicidad < 60){
-            console.log("No se pueden crear más ciudadanos, no se alcanzo el nivel requerido de felicidad. Puedes construir parques para aumentar la felicidad de tus ciudadanos");
-            return false;
+        } else if (this.ciudadanos.length > 1){
+            this.calcularFelicidadPromedio();
+            if (this.estadoRecursos.felicidad < 60){
+                console.log("No se pueden crear más ciudadanos, no se alcanzo el nivel requerido de felicidad. Puedes construir parques para aumentar la felicidad de tus ciudadanos");
+                return false;
+            }
         } else{
             return true; //indica que se pueden crear mas ciudadanos
         }
