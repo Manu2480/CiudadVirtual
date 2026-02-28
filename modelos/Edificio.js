@@ -1,3 +1,6 @@
+//Importamos ciudadano para poder tener el if if (!(persona instanceof Ciudadano))
+const Ciudadano = require("./Ciudadano");
+
 class Edificio{
 
     //no mandamos recursosEdificio ni ciudadanos en este constructor porque cada edificio los va a definir de manera diferente
@@ -31,3 +34,5 @@ class Edificio{
     }
 
 }
+//exportamos la clase para poder usarla en main.js
+module.exports = Edificio;

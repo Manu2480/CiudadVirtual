@@ -1,3 +1,4 @@
+const EdificioServicio = require("./EdificioServicio");
 
 class EstacionBombero extends EdificioServicio {
 
@@ -13,3 +14,6 @@ class EstacionBombero extends EdificioServicio {
         
     }
 }
+
+//exportamos la clase para poder usarla en main.js
+module.exports = EstacionBombero;

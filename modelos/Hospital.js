@@ -1,4 +1,6 @@
 
+const EdificioServicio = require("./EdificioServicio");
+
 class Hospital extends EdificioServicio {
 
     static contador = 0;
@@ -13,3 +15,6 @@ class Hospital extends EdificioServicio {
         this.recursosEdificio["agua"] = -10;
     }
 }
+
+//exportamos la clase para poder usarla en main.js
+module.exports = Hospital;

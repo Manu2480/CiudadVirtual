@@ -1,4 +1,6 @@
 
+const EdificioIndustrial = require("./EdificioIndustrial");
+
 class Fabrica extends EdificioIndustrial {
 
     static contador = 0;
@@ -14,3 +16,6 @@ class Fabrica extends EdificioIndustrial {
         this.recursosEdificio["agua"] = -15;
     }
 }
+
+//exportamos la clase para poder usarla en main.js
+module.exports = Fabrica;

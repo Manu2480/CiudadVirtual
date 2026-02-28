@@ -1,3 +1,4 @@
+const EdificioResidencial = require("./EdificioResidencial");
 
 class Apartamento extends EdificioResidencial {
 
@@ -10,3 +11,6 @@ class Apartamento extends EdificioResidencial {
         this.recursosEdificio["agua"] = -10;
     }
 }
+
+//exportamos la clase para poder usarla en main.js
+module.exports = Apartamento;
