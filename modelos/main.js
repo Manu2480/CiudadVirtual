@@ -19,8 +19,8 @@ const Fabrica = require("./Fabrica");
 const Granja = require("./Granja");
 
 //CREAMOS EL OBJETO CIUDAD ------------------------------
-const filas = 15;
-const columnas = 15;
+const filas = 4;
+const columnas = 4;
 const mapa = Array.from({ length: filas }, () => Array(columnas).fill(null));
 const vias = Array.from({ length: filas }, () => Array(columnas).fill(0));
 
