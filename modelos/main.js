@@ -25,7 +25,7 @@ const Granja = require("./Granja");
 
 //CREAMOS EL OBJETO CIUDAD
 // dimensiones del terreno. en este ejemplo usamos 4x4.
-const filas = 4;
+const filas = 5;
 const columnas = 4;
 // Aquí creamos dos matrices bidimensionales (arrays de arrays). Array.from
 // recibe un objeto con "length" y una función que devuelve el valor de
@@ -78,9 +78,10 @@ function mostrarEstadoCiudad() {
   console.log("\nINFRAESTRUCTURA:");
   if (ciudad.terreno.edificios.length > 0) {
     ciudad.terreno.edificios.forEach(e => {
-      const col = e.ubicacion.columna;
+      // Mostrar primero fila y luego columna para seguir la convención nueva
       const fil = e.ubicacion.fila;
-      console.log(`  - ${e.id} en (${col},${fil}): ${e.ciudadanos.length}/${e.capacidad} ocupados`);
+      const col = e.ubicacion.columna;
+      console.log(`  - ${e.id} en (${fil},${col}): ${e.ciudadanos.length}/${e.capacidad} ocupados`);
     });
   } else {
     console.log("  Sin edificios");
@@ -98,7 +99,8 @@ function mostrarMapa() {
     for (let c = 0; c < columnas; c++) {
       // estudia la variable 'cell': en cada iteración representa el
       // objeto que haya en esa celda del mapa, o null si está vacío.
-      const cell = ciudad.terreno.mapa[c][f];
+      // ahora la primera coordenada es fila, luego columna
+      const cell = ciudad.terreno.mapa[f][c];
       if (cell) {
         // Las comillas invertidas `` crean una plantilla (template literal).
         // Permiten incrustar variables dentro de la cadena usando ${...}.
@@ -140,10 +142,11 @@ function construirInfraestructura() {
     return;
   }
 
-  const columna = parseInt(prompt("Ingrese columna (0-3): "), 10);
+  // pedimos primero la fila y luego la columna, siguiendo la nueva convención
   const fila = parseInt(prompt("Ingrese fila (0-3): "), 10);
+  const columna = parseInt(prompt("Ingrese columna (0-3): "), 10);
 
-  if (columna < 0 || columna >= columnas || fila < 0 || fila >= filas) {
+  if (fila < 0 || fila >= filas || columna < 0 || columna >= columnas) {
     console.log("[ERROR] Posicion fuera del mapa");
     return;
   }
@@ -151,43 +154,43 @@ function construirInfraestructura() {
   let edificio;
   switch (tipo) {
     case "1":
-      edificio = new Via({ columna, fila });
+      edificio = new Via({ fila, columna });
       break;
     case "2":
-      edificio = new PlantaElectrica({ columna, fila });
+      edificio = new PlantaElectrica({ fila, columna });
       break;
     case "3":
-      edificio = new PlantaHidraulica({ columna, fila });
+      edificio = new PlantaHidraulica({ fila, columna });
       break;
     case "4":
-      edificio = new Casa({ columna, fila });
+      edificio = new Casa({ fila, columna });
       break;
     case "5":
-      edificio = new Apartamento({ columna, fila });
+      edificio = new Apartamento({ fila, columna });
       break;
     case "6":
-      edificio = new Tienda({ columna, fila });
+      edificio = new Tienda({ fila, columna });
       break;
     case "7":
-      edificio = new CentroComercial({ columna, fila });
+      edificio = new CentroComercial({ fila, columna });
       break;
     case "8":
-      edificio = new EstacionBombero({ columna, fila });
+      edificio = new EstacionBombero({ fila, columna });
       break;
     case "9":
-      edificio = new EstacionPolicia({ columna, fila });
+      edificio = new EstacionPolicia({ fila, columna });
       break;
     case "10":
-      edificio = new Hospital({ columna, fila });
+      edificio = new Hospital({ fila, columna });
       break;
     case "11":
-      edificio = new Parque({ columna, fila });
+      edificio = new Parque({ fila, columna });
       break;
     case "12":
-      edificio = new Fabrica({ columna, fila });
+      edificio = new Fabrica({ fila, columna });
       break;
     case "13":
-      edificio = new Granja({ columna, fila });
+      edificio = new Granja({ fila, columna });
       break;
     default:
       console.log("[ERROR] Tipo invalido");
@@ -195,7 +198,8 @@ function construirInfraestructura() {
   }
 
   // Intentar crear la infraestructura
-  const resultado = ciudad.terreno.crearInfraestructura(columna, fila, edificio);
+  // parámetros ahora son (fila, columna, edificio)
+  const resultado = ciudad.terreno.crearInfraestructura(fila, columna, edificio);
   
   if (resultado.exito) {
     // Descontar el costo del dinero
@@ -212,15 +216,17 @@ function construirInfraestructura() {
 function demolerInfraestructura() {
   console.log("\n==================== DEMOLER INFRAESTRUCTURA ====================");
 
-  const columna = parseInt(prompt("Ingrese columna a demoler (0-3): "), 10);
+  // solicitamos fila primero, luego columna
   const fila = parseInt(prompt("Ingrese fila a demoler (0-3): "), 10);
+  const columna = parseInt(prompt("Ingrese columna a demoler (0-3): "), 10);
 
   if (columna < 0 || columna >= columnas || fila < 0 || fila >= filas) {
     console.log("[ERROR] Posicion fuera del mapa");
     return;
   }
 
-  const resultado = ciudad.terreno.eliminarInfraestructura(columna, fila);
+  // cambiar orden de argumentos a (fila, columna)
+  const resultado = ciudad.terreno.eliminarInfraestructura(fila, columna);
   
   if (resultado.exito) {
     // Sumar reembolso al dinero

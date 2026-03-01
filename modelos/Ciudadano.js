@@ -18,7 +18,7 @@ class Ciudadano{
         this.consumoCiudadano = consumoCiudadano;
     }
 
-    // Crea una instancia de Ciudadano a partir de un objeto plano (pJSON)
+    // Crea una instancia de Ciudadano a partir de un objeto plano (JSON)
     static fromData(obj) {
         // Si ya es una instancia de Ciudadano, la devolvemos tal cual (evita cargar dos veces)
         if (obj instanceof Ciudadano) return obj;

@@ -19,31 +19,31 @@ class Terreno{
         this.edificios = edificios
     }
 
-    tieneAdyacente(columna,fila){
-        // El operador "?." se llama optional chaining. Si el índice
-        // anterior no existe (por ejemplo columna-1 < 0), la expresión
-        // no lanza error sino que devuelve undefined. Esto evita que el
-        // programa se rompa al consultar fuera de los límites.
-        // La función retorna true si alguna celda adyacente contiene una vía (valor 1).
-        return (this.vias[columna-1]?.[fila] == 1 || this.vias[columna+1]?.[fila] == 1 || this.vias[columna]?.[fila-1] == 1 || this.vias[columna]?.[fila+1] == 1);
+    // verifica si en la casilla (fila,columna) existe una vía adyacente
+    tieneAdyacente(fila,columna){
+        // ahora la primera coordenada corresponde a la fila y la segunda a la columna
+        // revisamos los cuatro vecinos: izquierda/derecha (misma fila, columnas -/+1)
+        // y arriba/abajo (filas -/+1, misma columna). el optional chaining evita errores
+        return (
+            this.vias[fila]?.[columna-1] == 1 ||
+            this.vias[fila]?.[columna+1] == 1 ||
+            this.vias[fila-1]?.[columna] == 1 ||
+            this.vias[fila+1]?.[columna] == 1
+        );
     } //?. protege el acceso, es decir, si esa fila/columna no existe, no lanza error
 
-    esViaCritica(columna, fila) {
+    esViaCritica(fila, columna) {
         // Esta función recorre cada edificio para ver si la vía situada en
-        // (columna,fila) es la única conexión que tiene.
-        // "for...of" es una sintaxis ES6 para iterar directamente sobre
-        // los elementos de un arreglo (this.edificios en este caso).
+        // (fila,columna) es la única conexión que tiene.
         for (const edificio of this.edificios) {
             const ubicacion = edificio.ubicacion;
             const edCol = ubicacion.columna;
             const edFila = ubicacion.fila;
             
-            // variables que iremos actualizando durante el chequeo
             let viasAdyacentes = 0;
             let tieneEstaVia = false;
             
-            // construimos un arreglo de objetos con las coordenadas
-            // de los cuatro vecinos directos.
+            // vecinos directos (ahora usamos f para fila, c para columna)
             const adyacentes = [
                 { c: edCol - 1, f: edFila },
                 { c: edCol + 1, f: edFila },
@@ -51,45 +51,35 @@ class Terreno{
                 { c: edCol, f: edFila + 1 }
             ];
             
-            // otro for...of para iterar esas cuatro posiciones
             for (const adj of adyacentes) {
-                // de nuevo usamos optional chaining al leer this.vias, porque
-                // el índice podría estar fuera del rango válido.
-                if (this.vias[adj.c]?.[adj.f] === 1) {
+                if (this.vias[adj.f]?.[adj.c] === 1) {
                     viasAdyacentes++;
-                    if (adj.c === columna && adj.f === fila) {
+                    if (adj.f === fila && adj.c === columna) {
                         tieneEstaVia = true;
                     }
                 }
             }
             
-            // Una vez contadas, si la vía que estamos inspeccionando es
-            // la única, devolvemos true y salimos inmediatamente.
             if (tieneEstaVia && viasAdyacentes === 1) {
                 return true;
             }
         }
-        
-        // si ningún edificio depende exclusivamente de esa vía
         return false;
     }
 
-    crearInfraestructura(columna,fila,edificio){
-        if (!this.mapa[columna][fila]){ //Si no hay una construccion en esa parte del mapa, la crea
-            // "instanceof" comprueba el tipo en tiempo de ejecución. aquí
-            // distingue si la infraestructura es una vía o algún otro edificio.
+    crearInfraestructura(fila,columna,edificio){
+        if (!this.mapa[fila][columna]){ //Si no hay una construccion en esa parte del mapa, la crea
             if (edificio instanceof Via){
-                this.vias[columna][fila] = 1; // en la matriz de vías ponemos 1
-                this.mapa[columna][fila] = edificio;
-                console.log(`Vía creada en (${columna}, ${fila})`);
-                // usamos template literal con paréntesis para mostrar coordenadas
+                this.vias[fila][columna] = 1; // en la matriz de vías ponemos 1
+                this.mapa[fila][columna] = edificio;
+                console.log(`Vía creada en (${fila}, ${columna})`);
                 return { exito: true, costo: edificio.costo, mensaje: `Vía construida`, edificio: edificio };
             } else {
                 //validamos que no se cree un edificio diferente a via su no tiene via adyacente
-                if(this.tieneAdyacente(columna,fila)){
-                    this.mapa[columna][fila] = edificio; //En la posicion de la matriz mapa se ubica el nuevo edificio
+                if(this.tieneAdyacente(fila,columna)){
+                    this.mapa[fila][columna] = edificio; //En la posicion de la matriz mapa se ubica el nuevo edificio
                     this.edificios.push(edificio); //Se agrega el edificio a la lista de edificios para la administracion de recursos
-                    console.log(`Edificio ${edificio.id} construido en (${columna}, ${fila}) - Costo: ${edificio.costo}`);
+                    console.log(`Edificio ${edificio.id} construido en (${fila}, ${columna}) - Costo: ${edificio.costo}`);
                     return { exito: true, costo: edificio.costo, mensaje: `${edificio.id} construido correctamente`, edificio: edificio };
                 } else {
                     console.log("No hay via adyacente");
@@ -102,19 +92,19 @@ class Terreno{
         }
     }
 
-    eliminarInfraestructura(columna,fila){
-        let edificio = this.mapa[columna][fila];//seleccionamos la referencia del edificio
+    eliminarInfraestructura(fila,columna){
+        let edificio = this.mapa[fila][columna];//seleccionamos la referencia del edificio
         if (edificio){ //si el edificio existe
             let reembolso = 0;
             if (edificio instanceof Via){
                 // Verificar si es una via critica
-                if (this.esViaCritica(columna, fila)) {
+                if (this.esViaCritica(fila, columna)) {
                     console.log("No se puede demoler esta via, es la unica conectada a uno o mas edificios.");
                     return { exito: false, reembolso: 0, mensaje: "Via critica: es la unica conectada a uno o mas edificios", edificio: null };
                 }
                 reembolso = Math.round(edificio.costo * 0.5);
-                this.vias[columna][fila] = 0; //se remueve la via de la matriz de vias
-                console.log(`Via eliminada de (${columna}, ${fila}) - Reembolso: ${reembolso}`);
+                this.vias[fila][columna] = 0; //se remueve la via de la matriz de vias
+                console.log(`Via eliminada de (${fila}, ${columna}) - Reembolso: ${reembolso}`);
             }
             else if (edificio instanceof EdificioResidencial){
                 reembolso = Math.round(edificio.costo * 0.5); // recuperamos 50%
