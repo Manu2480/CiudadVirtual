@@ -152,14 +152,43 @@ class Ciudad {
     }
 
     static contador = 0;
-    // Crea un nuevo ciudadano y se agrega 
+    // Crea un nuevo ciudadano y se agrega. Acepta dos modos:
+    // - llamada normal: crearCiudadano(x, y, z) donde x/y/z son consumos
+    // - carga desde JSON: crearCiudadano(obj) donde obj es un objeto con campos guardados
     crearCiudadano(x,y,z) {
 
+        // Modo carga: si el primer argumento es un objeto con id -> cargar objeto ya hecho
+        // Verificamos si x es un objeto serializado (proviene de JSON) y contiene un `id`.
+        if (typeof x === 'object' && x !== null && x.id) {
+            // Guardamos una referencia clara a los datos entrantes
+            const data = x; // data es el objeto plano (por ejemplo, lo parseado desde JSON)
+
+            // Creamos una instancia real de Ciudadano usando el método fromData
+            const nuevoCiudadano = Ciudadano.fromData(data); // fromData devuelve una instancia con métodos y estructura correcta
+
+            // Añadimos la instancia cargada al array de ciudadanos de la ciudad
+            this.ciudadanos.push(nuevoCiudadano);
+
+            // sincronizar contador para evitar colisiones futuras
+            // Extraemos la parte numérica del id (por ejemplo 'ciudadano12' -> 12)
+            const n = parseInt(String(nuevoCiudadano.id).replace(/^ciudadano/, ''), 10);
+            // Si la extracción produjo un número válido y es mayor que el contador actual,
+            // actualizamos `Ciudad.contador` para que los nuevos ids no colisionen.
+            if (!Number.isNaN(n) && n > Ciudad.contador) Ciudad.contador = n;
+
+            // Log de confirmación con valores relevantes para depuración
+            console.log(`[OK] ${nuevoCiudadano.id} cargado - Felicidad: ${nuevoCiudadano.felicidad}, Vivienda: ${nuevoCiudadano.vivienda}, Empleo: ${nuevoCiudadano.empleo}`);
+
+            // Devolvemos la instancia cargada por si el llamador quiere usarla.
+            return nuevoCiudadano;
+        }
+
+        // Modo creación normal (nuevos ciudadanos generados en el juego)
         Ciudad.contador += 1;
         const idCiudadano = "ciudadano" + Ciudad.contador;
 
-        // Agrega un ciudadano a la ciudad. Recibe un objeto ciudadano como parámetro y lo agrega al arreglo de ciudadanos de la ciudad.
-        const nuevoCiudadano = new Ciudadano(idCiudadano, null, null, null, null);
+        // crear con valores por defecto (constructor maneja felicidad/vivienda/empleo)
+        const nuevoCiudadano = new Ciudadano(idCiudadano);
         this.ciudadanos.push(nuevoCiudadano);
 
         // Intentamos asignar vivienda y empleo al nuevo ciudadano
@@ -173,6 +202,7 @@ class Ciudad {
         };
 
         console.log(`[OK] ${nuevoCiudadano.id} creado - Felicidad: ${nuevoCiudadano.felicidad}, Vivienda: ${nuevoCiudadano.vivienda}, Empleo: ${nuevoCiudadano.empleo}`);
+        return nuevoCiudadano;
     }
 
     // Asigna vivienda disponible a un ciudadano específico (si hay)
