@@ -1,10 +1,11 @@
 class Ciudadano{
     //Se implementa el constructor de ciudadano, especificando que si no se mandan ciertos atributos se asuman null.
-    constructor(id, felicidad, vivienda, empleo, consumoCiudadano){
+    constructor(id, felicidad = 0, vivienda = null, empleo = null, consumoCiudadano){
         this.id = id;
-        this.felicidad = felicidad || null;
-        this.vivienda = vivienda || null;
-        this.empleo = empleo || null;
+        // la felicidad arranca en cero si no se pasa valor (antes podía quedar null)
+        this.felicidad = felicidad;
+        this.vivienda = vivienda;
+        this.empleo = empleo;
         this.consumoCiudadano = consumoCiudadano;
     }
 
@@ -15,13 +16,15 @@ class Ciudadano{
 
     //Se calcula la felicidad individual del ciudadano, según el paramétro de felicidad general dada por las edificaciones
     calcularFelicidad(felicidadGeneral){
-        this.felicidad = felicidadGeneral
-        this.felicidad += this.vivienda ? 20 : -20
-        this.felicidad += this.empleo ? 10 : -10
+        // la fórmula deja la felicidad igual al valor general de infraestructura
+        // y luego aplica bonos/malos por vivienda y empleo.
+        this.felicidad = felicidadGeneral;
+        this.felicidad += this.vivienda ? 20 : -20;
+        this.felicidad += this.empleo ? 10 : -10;
 
-        if (this.felicidad > 100) {
-            this.felicidad = 100; // Limita la felicidad a un máximo de 100
-        }
+        // límites
+        if (this.felicidad > 100) this.felicidad = 100;
+        if (this.felicidad < 0) this.felicidad = 0;
     }
 }
 
