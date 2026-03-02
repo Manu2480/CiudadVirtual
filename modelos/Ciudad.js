@@ -166,20 +166,36 @@ class Ciudad {
             // Creamos una instancia real de Ciudadano usando el método fromData
             const nuevoCiudadano = Ciudadano.fromData(data); // fromData devuelve una instancia con métodos y estructura correcta
 
+            // Validar formato del id: debe cumplir 'ciudadano' seguido de dígitos
+            const idStr = String(nuevoCiudadano.id || '');
+            const match = idStr.match(/^ciudadano(\d+)$/);
+            let n = match ? parseInt(match[1], 10) : NaN;
+
+            // Si id no válido o no viene, asignar un id nuevo y único
+            if (Number.isNaN(n)) {
+                Ciudad.contador += 1;
+                nuevoCiudadano.id = `ciudadano${Ciudad.contador}`;
+                n = Ciudad.contador;
+                console.log(`[WARN] id inválido o ausente en datos; reasignado a ${nuevoCiudadano.id}`);
+            }
+
+            // Evitar colisiones: si ya existe un ciudadano con el mismo id en esta ciudad, reasignar
+            const existe = this.ciudadanos.some(ch => ch.id === nuevoCiudadano.id);
+            if (existe) {
+                Ciudad.contador += 1;
+                nuevoCiudadano.id = `ciudadano${Ciudad.contador}`;
+                n = Ciudad.contador;
+                console.log(`[WARN] id duplicado detectado; reasignado a ${nuevoCiudadano.id}`);
+            }
+
             // Añadimos la instancia cargada al array de ciudadanos de la ciudad
             this.ciudadanos.push(nuevoCiudadano);
 
-            // sincronizar contador para evitar colisiones futuras
-            // Extraemos la parte numérica del id (por ejemplo 'ciudadano12' -> 12)
-            const n = parseInt(String(nuevoCiudadano.id).replace(/^ciudadano/, ''), 10);
-            // Si la extracción produjo un número válido y es mayor que el contador actual,
-            // actualizamos `Ciudad.contador` para que los nuevos ids no colisionen.
+            // sincronizar contador para evitar colisiones futuras (si el id numérico es mayor)
             if (!Number.isNaN(n) && n > Ciudad.contador) Ciudad.contador = n;
 
-            // Log de confirmación con valores relevantes para depuración
             console.log(`[OK] ${nuevoCiudadano.id} cargado - Felicidad: ${nuevoCiudadano.felicidad}, Vivienda: ${nuevoCiudadano.vivienda}, Empleo: ${nuevoCiudadano.empleo}`);
 
-            // Devolvemos la instancia cargada por si el llamador quiere usarla.
             return nuevoCiudadano;
         }
 
@@ -203,6 +219,53 @@ class Ciudad {
 
         console.log(`[OK] ${nuevoCiudadano.id} creado - Felicidad: ${nuevoCiudadano.felicidad}, Vivienda: ${nuevoCiudadano.vivienda}, Empleo: ${nuevoCiudadano.empleo}`);
         return nuevoCiudadano;
+    }
+
+    // Crea una instancia de Ciudad a partir de un objeto plano (JSON)
+    static fromData(obj) {
+        if (obj instanceof Ciudad) return obj;
+
+        // Cargar terreno: reutilizamos Terreno.crearInfraestructura que acepta objetos JSON
+        const Terreno = require('./Terreno');
+        const vias = obj.terreno?.vias || [];
+        const terreno = new Terreno(vias, []);
+
+        // Construir ciudad con listas vacías; luego cargamos edificios y ciudadanos
+        const nombre = obj.nombre || '';
+        const alcalde = obj.alcalde || '';
+        const latitud = obj.latitud ?? 0;
+        const longitud = obj.longitud ?? 0;
+        const tiempoTurno = obj.tiempoTurno ?? 1000;
+        const estadoRecursos = obj.estadoRecursos || { dinero: 0, agua: 0, electricidad: 0, alimento: 0, felicidad: 0 };
+
+        const ciudad = new Ciudad(nombre, alcalde, latitud, longitud, tiempoTurno, terreno, [], estadoRecursos);
+
+        // Cargar edificios desde JSON (si existen). Cada edificio JSON debe tener ubicacion.fila/columna
+        if (Array.isArray(obj.terreno?.edificios)) {
+            for (const ed of obj.terreno.edificios) {
+                const fila = ed.ubicacion?.fila ?? ed.ubicacion?.row ?? 0;
+                const columna = ed.ubicacion?.columna ?? ed.ubicacion?.col ?? 0;
+                ciudad.terreno.crearInfraestructura(fila, columna, ed);
+            }
+        }
+
+        // Cargar ciudadanos usando crearCiudadano (acepta objetos JSON y sincroniza contadores)
+        if (Array.isArray(obj.ciudadanos)) {
+            for (const c of obj.ciudadanos) {
+                ciudad.crearCiudadano(c);
+            }
+        }
+
+        // Sincronizar contador de Ciudad si viene un valor mayor en los datos
+        if (Array.isArray(obj.ciudadanos) && obj.ciudadanos.length > 0) {
+            const maxN = obj.ciudadanos.reduce((max, it) => {
+                const m = parseInt(String(it.id || '').replace(/^ciudadano/, ''), 10);
+                return Number.isNaN(m) ? max : Math.max(max, m);
+            }, 0);
+            if (maxN > Ciudad.contador) Ciudad.contador = maxN;
+        }
+
+        return ciudad;
     }
 
     // Asigna vivienda disponible a un ciudadano específico (si hay)
@@ -243,6 +306,9 @@ class Ciudad {
     recursosNegativos() {
 
         let negativos = [];
+        //Object.entries() en JavaScript convierte un objeto en un array de pares [clave, valor] 
+        //propios y enumerables. Facilita la iteración sobre las propiedades de un objeto al 
+        //transformarlo en una estructura de array, permitiendo el uso de métodos como map() o forEach()
         for (const [recurso, valor] of Object.entries(this.estadoRecursos)) {
             if (valor < 0) {
                 negativos.push(recurso);
@@ -283,7 +349,6 @@ class Ciudad {
             this.crearCiudadano(-1, -1, -1);
             contador++; 
         }
-        console.log(`Se crearon ${this.ciudadanos.length} nuevos ciudadanos`);
         console.log("\n========== FIN DEL TURNO ==========");
     }
     

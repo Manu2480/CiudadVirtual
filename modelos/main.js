@@ -327,5 +327,7 @@ function menu() {
   }
 }
 
-// Iniciar el juego
-menu();
+// Iniciar el juego solo si este archivo se ejecuta directamente
+if (require.main === module) {
+  menu();
+}

@@ -14,6 +14,22 @@ class Granja extends EdificioIndustrial {
         this.recursosEdificio["alimento"] = 50;
         this.recursosEdificio["agua"] = -10;
     }
+
+    static fromData(obj) {
+        if (obj instanceof Granja) return obj;
+        const numMatch = String(obj.id).match(/\d+$/);
+        if (numMatch) {
+            const num = parseInt(numMatch[0], 10);
+            if (num > Granja.contador) Granja.contador = num;
+        }
+        const instance = Object.create(Granja.prototype);
+        Object.assign(instance, obj);
+        if (obj.ciudadanos && Array.isArray(obj.ciudadanos)) {
+            const Ciudadano = require("./Ciudadano");
+            instance.ciudadanos = obj.ciudadanos.map(c => Ciudadano.fromData(c));
+        }
+        return instance;
+    }
 }
 
 //exportamos la clase para poder usarla en main.js

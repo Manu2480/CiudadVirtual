@@ -15,6 +15,22 @@ class Fabrica extends EdificioIndustrial {
         this.recursosEdificio["electricidad"] = -20;
         this.recursosEdificio["agua"] = -15;
     }
+
+    static fromData(obj) {
+        if (obj instanceof Fabrica) return obj;
+        const numMatch = String(obj.id).match(/\d+$/);
+        if (numMatch) {
+            const num = parseInt(numMatch[0], 10);
+            if (num > Fabrica.contador) Fabrica.contador = num;
+        }
+        const instance = Object.create(Fabrica.prototype);
+        Object.assign(instance, obj);
+        if (obj.ciudadanos && Array.isArray(obj.ciudadanos)) {
+            const Ciudadano = require("./Ciudadano");
+            instance.ciudadanos = obj.ciudadanos.map(c => Ciudadano.fromData(c));
+        }
+        return instance;
+    }
 }
 
 //exportamos la clase para poder usarla en main.js
