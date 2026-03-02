@@ -1,5 +1,3 @@
-const EdificioResidencial = require("./EdificioResidencial");
-
 class Apartamento extends EdificioResidencial {
 
     static contador = 0;
@@ -10,7 +8,25 @@ class Apartamento extends EdificioResidencial {
         this.recursosEdificio["electricidad"] = -15;
         this.recursosEdificio["agua"] = -10;
     }
-}
 
-//exportamos la clase para poder usarla en main.js
-module.exports = Apartamento;
+    // Crea una instancia de Apartamento a partir de un objeto plano (JSON)
+    static fromData(obj) {
+        if (obj instanceof Apartamento) return obj;
+        
+        const numMatch = String(obj.id).match(/\d+$/);
+        if (numMatch) {
+            const num = parseInt(numMatch[0], 10);
+            if (num > Apartamento.contador) Apartamento.contador = num;
+        }
+        
+        const instance = Object.create(Apartamento.prototype);
+        Object.assign(instance, obj);
+        
+        if (obj.ciudadanos && Array.isArray(obj.ciudadanos)) {
+            const Ciudadano = require("./Ciudadano");
+            instance.ciudadanos = obj.ciudadanos.map(c => Ciudadano.fromData(c));
+        }
+        
+        return instance;
+    }
+}
