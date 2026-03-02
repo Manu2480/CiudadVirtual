@@ -61,20 +61,3 @@ class ApiColombia{
 
     }
 }
-
-// ===== TEST =====
-async function probar() {
-    const api = new ApiColombia();
-
-    try {
-        const regiones = await api.getJsonCiudades(33);
-
-        console.log("✅ Regiones obtenidas:");
-        console.log(regiones);
-
-    } catch (error) {
-        console.error("❌ Error:", error);
-    }
-}
-
-probar();
