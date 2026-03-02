@@ -64,6 +64,3 @@ class Ciudadano{
         if (this.felicidad < 0) this.felicidad = 0;
     }
 }
-
-//exportamos la clase para poder usarla en main.js
-module.exports = Ciudadano;

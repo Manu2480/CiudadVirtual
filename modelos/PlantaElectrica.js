@@ -1,7 +1,4 @@
 
-//Es para que node herede
-const PlantaUtilidad = require("./PlantaUtilidad");
-
 class PlantaElectrica extends PlantaUtilidad {
 
     static contador = 0;
@@ -32,5 +29,3 @@ class PlantaElectrica extends PlantaUtilidad {
     }
 }
 
-//exportamos la clase para poder usarla en main.js
-module.exports = PlantaElectrica;

@@ -1,9 +1,4 @@
-// IMPORTACIONES: este archivo utiliza módulos comunes de Node.js.
-// El símbolo "class" es una sintaxis ES6 para declarar clases, que
-// son funciones especiales con un constructor y métodos asociados.
-// Más abajo exportamos la clase con module.exports para poder instanciarla
-// desde otros archivos (como main.js).
-const Ciudadano = require("./Ciudadano");
+
 class Ciudad {
 
     constructor(nombre, alcalde, latitud, longitud, tiempoTurno, terreno, ciudadanos, estadoRecursos) {
@@ -388,6 +383,3 @@ class Ciudad {
     }
 
 }
-
-//exportamos la clase para poder usarla en main.js
-module.exports = Ciudad;

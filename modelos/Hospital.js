@@ -1,6 +1,4 @@
 
-const EdificioServicio = require("./EdificioServicio");
-
 class Hospital extends EdificioServicio {
 
     static contador = 0;
@@ -31,6 +29,3 @@ class Hospital extends EdificioServicio {
         return instance;
     }
 }
-
-//exportamos la clase para poder usarla en main.js
-module.exports = Hospital;

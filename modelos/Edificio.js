@@ -1,5 +1,3 @@
-//Importamos ciudadano para poder tener el if if (!(persona instanceof Ciudadano))
-const Ciudadano = require("./Ciudadano");
 
 class Edificio{
 
@@ -34,5 +32,3 @@ class Edificio{
     }
 
 }
-//exportamos la clase para poder usarla en main.js
-module.exports = Edificio;

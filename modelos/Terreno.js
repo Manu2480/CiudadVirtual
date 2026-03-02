@@ -1,12 +1,3 @@
-// los "require" traen módulos (archivos) de Node.js. Aquí
-// cada constante apunta a la clase correspondiente que exporta ese
-// archivo. Más adelante comprobamos el tipo de edificios usando
-// "instanceof" (operador que verifica si un objeto es instancia de
-// determinada clase).
-const Via = require("./Via");
-const EdificioComercial = require("./EdificioComercial");
-const EdificioResidencial = require("./EdificioResidencial");
-const EdificioIndustrial = require("./EdificioIndustrial");
 
 class Terreno{
     // El constructor se ejecuta cuando creamos un nuevo Terreno.
@@ -331,6 +322,3 @@ class Terreno{
     }
     
 }
-
-//exportamos la clase para poder usarla en main.js
-module.exports = Terreno;

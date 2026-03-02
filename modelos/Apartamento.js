@@ -1,5 +1,3 @@
-const EdificioResidencial = require("./EdificioResidencial");
-
 class Apartamento extends EdificioResidencial {
 
     static contador = 0;
@@ -32,6 +30,3 @@ class Apartamento extends EdificioResidencial {
         return instance;
     }
 }
-
-//exportamos la clase para poder usarla en main.js
-module.exports = Apartamento;

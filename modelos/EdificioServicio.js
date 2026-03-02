@@ -1,7 +1,4 @@
 
-//Es para que node herede
-const Edificio = require("./Edificio");
-
 class EdificioServicio extends Edificio {
 
     constructor(id, costo, ubicacion, capacidad) {
@@ -34,5 +31,3 @@ class EdificioServicio extends Edificio {
     }
 }
 
-//exportamos la clase para poder usarla en main.js
-module.exports = EdificioServicio;
