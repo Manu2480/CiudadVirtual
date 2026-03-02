@@ -31,10 +31,11 @@ const columnas = 4;
 // recibe un objeto con "length" y una función que devuelve el valor de
 // cada elemento; usamos una función flecha "() => ..." para crear la fila.
 // El operador .fill(null) inicializa cada celda con null.
-const mapa = Array.from({ length: filas }, () => Array(columnas).fill(null));
 const vias = Array.from({ length: filas }, () => Array(columnas).fill(0));
 
-const terreno = new Terreno(vias, mapa, []);
+// creamos el terreno sin necesidad de matriz "mapa"; la información de
+// qué hay en cada celda se obtiene a partir de la lista de edificios.
+const terreno = new Terreno(vias, []);
 const ciudad = new Ciudad(
   "Manizales",
   "pepito perez",
@@ -93,20 +94,12 @@ function mostrarEstadoCiudad() {
 // ===================== MOSTRAR MAPA =====================
 function mostrarMapa() {
   console.log("\n==================== MAPA DE TERRENO ====================");
-  // usamos un bucle "for" anidado para recorrer filas (f) y columnas (c)
+  // recorremos todas las celdas y preguntamos al terreno qué hay allí
   for (let f = 0; f < filas; f++) {
     let line = "";
     for (let c = 0; c < columnas; c++) {
-      // estudia la variable 'cell': en cada iteración representa el
-      // objeto que haya en esa celda del mapa, o null si está vacío.
-      // ahora la primera coordenada es fila, luego columna
-      const cell = ciudad.terreno.mapa[f][c];
+      const cell = ciudad.terreno.ubicacionInfraestructura(f, c);
       if (cell) {
-        // Las comillas invertidas `` crean una plantilla (template literal).
-        // Permiten incrustar variables dentro de la cadena usando ${...}.
-        // padEnd(12) es un método de string que rellena con espacios hasta
-        // que la longitud alcance 12 caracteres; se usa aquí para alinear
-        // visualmente las columnas en la salida.
         line += `${cell.id}`.padEnd(12);
       } else {
         line += " . ".padEnd(12);

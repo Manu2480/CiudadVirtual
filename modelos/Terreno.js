@@ -10,20 +10,20 @@ const EdificioIndustrial = require("./EdificioIndustrial");
 
 class Terreno{
     // El constructor se ejecuta cuando creamos un nuevo Terreno.
-    // Recibe tres argumentos: la matriz de vías, la matriz del mapa
-    // y la lista de edificios. "this" se usa para asignar propiedades al
-    // objeto que se está creando.
-    constructor(vias,mapa,edificios){
+    // Recibe dos argumentos: la matriz de vías y la lista de edificios.
+    // ya no almacenamos una matriz "mapa" porque las ubicaciones se
+    // deducen inspeccionando el arreglo de edificios, lo que facilita
+    // la serialización a JSON. Además, todas las funciones usan ahora
+    // la convención fila-primero para coordinar (fila, columna).
+    constructor(vias, edificios){
         this.vias = vias;
-        this.mapa = mapa;
-        this.edificios = edificios
+        this.edificios = edificios;
     }
 
-    // verifica si en la casilla (fila,columna) existe una vía adyacente
-    tieneAdyacente(fila,columna){
-        // ahora la primera coordenada corresponde a la fila y la segunda a la columna
-        // revisamos los cuatro vecinos: izquierda/derecha (misma fila, columnas -/+1)
-        // y arriba/abajo (filas -/+1, misma columna). el optional chaining evita errores
+    tieneAdyacente(fila, columna){
+        // optional chaining evita errores al acceder fuera de los límites.
+        // Ahora el primer índice de la matriz de vías representa la fila.
+        // Retorna true si en alguna de las cuatro celdas vecinas hay una vía.
         return (
             this.vias[fila]?.[columna-1] == 1 ||
             this.vias[fila]?.[columna+1] == 1 ||
@@ -36,21 +36,18 @@ class Terreno{
         // Esta función recorre cada edificio para ver si la vía situada en
         // (fila,columna) es la única conexión que tiene.
         for (const edificio of this.edificios) {
-            const ubicacion = edificio.ubicacion;
-            const edCol = ubicacion.columna;
-            const edFila = ubicacion.fila;
-            
+            const { fila: edFila, columna: edCol } = edificio.ubicacion;
+
             let viasAdyacentes = 0;
             let tieneEstaVia = false;
-            
-            // vecinos directos (ahora usamos f para fila, c para columna)
+
             const adyacentes = [
-                { c: edCol - 1, f: edFila },
-                { c: edCol + 1, f: edFila },
-                { c: edCol, f: edFila - 1 },
-                { c: edCol, f: edFila + 1 }
+                { f: edFila, c: edCol - 1 },
+                { f: edFila, c: edCol + 1 },
+                { f: edFila - 1, c: edCol },
+                { f: edFila + 1, c: edCol }
             ];
-            
+
             for (const adj of adyacentes) {
                 if (this.vias[adj.f]?.[adj.c] === 1) {
                     viasAdyacentes++;
@@ -59,55 +56,54 @@ class Terreno{
                     }
                 }
             }
-            
+
             if (tieneEstaVia && viasAdyacentes === 1) {
                 return true;
             }
         }
+
         return false;
     }
 
-    crearInfraestructura(fila,columna,edificio){
-        if (!this.mapa[fila][columna]){ //Si no hay una construccion en esa parte del mapa, la crea
-            if (edificio instanceof Via){
-                this.vias[fila][columna] = 1; // en la matriz de vías ponemos 1
-                this.mapa[fila][columna] = edificio;
-                console.log(`Vía creada en (${fila}, ${columna})`);
-                return { exito: true, costo: edificio.costo, mensaje: `Vía construida`, edificio: edificio };
-            } else {
-                //validamos que no se cree un edificio diferente a via su no tiene via adyacente
-                if(this.tieneAdyacente(fila,columna)){
-                    this.mapa[fila][columna] = edificio; //En la posicion de la matriz mapa se ubica el nuevo edificio
-                    this.edificios.push(edificio); //Se agrega el edificio a la lista de edificios para la administracion de recursos
-                    console.log(`Edificio ${edificio.id} construido en (${fila}, ${columna}) - Costo: ${edificio.costo}`);
-                    return { exito: true, costo: edificio.costo, mensaje: `${edificio.id} construido correctamente`, edificio: edificio };
-                } else {
-                    console.log("No hay via adyacente");
-                    return { exito: false, costo: 0, mensaje: "No hay vía adyacente para construir", edificio: null };
-                }
-            }
-        } else {
+    crearInfraestructura(fila, columna, edificio){
+        // buf: ver si ya hay algo en esa posición
+        if (this.ubicacionInfraestructura(fila, columna)){
             console.log("Espacio no disponible");
             return { exito: false, costo: 0, mensaje: "Espacio ya ocupado", edificio: null };
         }
+
+        if (edificio instanceof Via){
+            this.vias[fila][columna] = 1; // marca la vía
+            this.edificios.push(edificio); // guardamos la vía en la lista general
+            console.log(`Vía creada en (${fila}, ${columna})`);
+            return { exito: true, costo: edificio.costo, mensaje: `Vía construida`, edificio: edificio };
+        } else {
+            //validamos que no se cree un edificio si no tiene via adyacente
+            if(this.tieneAdyacente(fila, columna)){
+                this.edificios.push(edificio);
+                console.log(`Edificio ${edificio.id} construido en (${fila}, ${columna}) - Costo: ${edificio.costo}`);
+                return { exito: true, costo: edificio.costo, mensaje: `${edificio.id} construido correctamente`, edificio: edificio };
+            } else {
+                console.log("No hay via adyacente");
+                return { exito: false, costo: 0, mensaje: "No hay vía adyacente para construir", edificio: null };
+            }
+        }
     }
 
-    eliminarInfraestructura(fila,columna){
-        let edificio = this.mapa[fila][columna];//seleccionamos la referencia del edificio
+    eliminarInfraestructura(fila, columna){
+        let edificio = this.ubicacionInfraestructura(fila, columna);
         if (edificio){ //si el edificio existe
-            let reembolso = 0;
+            let reembolso = this.reembolso(edificio);
             if (edificio instanceof Via){
                 // Verificar si es una via critica
                 if (this.esViaCritica(fila, columna)) {
                     console.log("No se puede demoler esta via, es la unica conectada a uno o mas edificios.");
                     return { exito: false, reembolso: 0, mensaje: "Via critica: es la unica conectada a uno o mas edificios", edificio: null };
                 }
-                reembolso = Math.round(edificio.costo * 0.5);
                 this.vias[fila][columna] = 0; //se remueve la via de la matriz de vias
                 console.log(`Via eliminada de (${fila}, ${columna}) - Reembolso: ${reembolso}`);
             }
             else if (edificio instanceof EdificioResidencial){
-                reembolso = Math.round(edificio.costo * 0.5); // recuperamos 50%
                 edificio.ciudadanos.forEach(ciudadano => {
                     ciudadano.vivienda = false; //Actualizamos el estado de vivienda
                     console.log(`${ciudadano.id} perdio su vivienda`);
@@ -116,7 +112,6 @@ class Terreno{
                 console.log(`${edificio.id} demolido - Reembolso: ${reembolso}`);
             }
             else if (edificio instanceof EdificioComercial){
-                reembolso = Math.round(edificio.costo * 0.5); // recuperamos 50%
                 edificio.ciudadanos.forEach(ciudadano => {
                     ciudadano.empleo = false; //Actualizamos el estado de empleo
                     console.log(`${ciudadano.id} perdio su empleo`);
@@ -125,7 +120,6 @@ class Terreno{
                 console.log(`${edificio.id} demolido - Reembolso: ${reembolso}`);
             }
             else if (edificio instanceof EdificioIndustrial){
-                reembolso = Math.round(edificio.costo * 0.5); // recuperamos 50%
                 edificio.ciudadanos.forEach(ciudadano => {
                     ciudadano.empleo = false; //Actualizamos el estado de empleo
                     console.log(`${ciudadano.id} perdio su empleo`);
@@ -134,11 +128,10 @@ class Terreno{
                 console.log(`${edificio.id} demolido - Reembolso: ${reembolso}`);
             }
             else {
-                reembolso = Math.round(edificio.costo * 0.5); // recuperamos 50% para otros tipos
                 console.log(`${edificio.id} demolido - Reembolso: ${reembolso}`);
             }
-            this.edificios = this.edificios.filter(construcciones => construcciones !== edificio); //la eliminamos de la lista de edificios creando una nueva lista con los edificios que no sean el seleccionado
-            this.mapa[columna][fila] = null; //la eliminamos del mapa cuando ya no necesitemos al edificio
+            // eliminar de la lista general
+            this.edificios = this.edificios.filter(construcciones => construcciones !== edificio);
             return { exito: true, reembolso: reembolso, mensaje: `Infraestructura demolida - Reembolso: ${reembolso}`, edificio: edificio };
         } else {
             console.log("No hay construcción en esa posición");
@@ -166,7 +159,7 @@ class Terreno{
         return contador;
     }
 
-    //METODOS PARA VALIDAR SI HAY VIVIENDAS Y EMPLEOS PARA CREAR CIUDADANOS
+    // métodos auxiliares añadidos para eliminar dependencias de `mapa`
     empleosDisponibles() {
         let contador = 0; //numero de empleos disponibles
         let edificiosConDisponibilidad = [];//edificios donde hay empleos disponibles
@@ -211,7 +204,7 @@ class Terreno{
         };
     }
 
-    //METODOS PARA CALCULAR LA FELICIDAD TOTAL POR LAS NFRAESTRUCTURAS 
+    //METODOS PARA CALCULAR LA FELICIDAD TOTAL POR LAS INFRAESTRUCTURAS 
     felicidadPorInfraestructura() {
 
         let felicidadTotal = 0;
@@ -236,14 +229,30 @@ class Terreno{
         return felicidadTotal;
     }
 
-    setMapa(mapa){
-        this.mapa = mapa;
-    }
-    
-    getMapa(){
-        return this.mapa;
+    // ----------------------------
+    // métodos nuevos solicitados por el usuario
+
+    // devuelve el objeto (vía o edificio) que ocupa la casilla indicada
+    // por (fila, columna), o null si está vacía. Se recorre la lista de
+    // edificios, que ahora incluye las vías; de esta forma no necesitamos
+    // la antigua matriz "mapa".
+    ubicacionInfraestructura(fila, columna) {
+        for (const ed of this.edificios) {
+            if (ed.ubicacion.fila === fila && ed.ubicacion.columna === columna) {
+                return ed;
+            }
+        }
+        // ninguna construcción encontrada
+        return null;
     }
 
+    // calcula cuánto dinero devuelve demoler el objeto pasado.
+    // actualmente todas las infraestructuras reembolsan el 50% de su costo
+    reembolso(edificio) {
+        return Math.round(edificio.costo * 0.5);
+    }
+
+    // antiguos setters/getters a continuación (sin cambios) 
     setVias(vias){
         this.vias = vias;
     }
