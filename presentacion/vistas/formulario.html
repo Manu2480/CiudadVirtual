@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crear ciudad</title>
+</head>
+<body>
+    <div>
+        <h1>Creación de ciudad</h1>
+        <p>Llena con atención el siguiente formulario para crear tu ciudad</p>
+    </div>
+    <div>
+        <table>
+            <tr>
+                <td><p>Nombre de la ciudad: </p></td>
+                <td><input type="text" id="nombreCiudad"></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><p>Nombre del alcalde: </p></td>
+                <td><input type="text" id="nombreAlcalde"></td>
+            </tr>
+        </table>
+    </div>
+    <div>
+        <p>
+            Para mayor realismo, vamos a ubicar tu ciudad en una de las ciudades colombianas,
+            por favor selecciona el departamento y la ciudad colombiana donde quieres localizar tu ciudad.
+        </p>
+        <table>
+            <tr>
+                <td><p>Departamento de la ciudad: </p></td>
+                <td><input type="select" id="departamento"></td>
+            </tr>
+            <tr>
+                <td><p>Ciudad: </p></td>
+                <td><input type="select" id="ciudad" value="Seleccione un departamento" disabled></td>
+            </tr>
+        </table>
+    </div>
+    <div>
+        <p>Finalmente configuremos el funcionamiento de la ciudad</p>
+        <table>
+            <tr>
+                <td><p>Longitud del mapa: </p></td>
+                <td><input type="range" id="longitudMapa" min="15" max="30"></td>
+            </tr>
+            <tr>
+                <td><p>Alto del mapa: </p></td>
+                <td><input type="range" id="alturaMapa" min="15" max="30"></td>
+            </tr>
+        </table>
+    </div>
+</body>
+</html>
