@@ -27,7 +27,10 @@ document.addEventListener("DOMContentLoaded", function () {
     terreno.crearInfraestructura(2, 3, via3);
     terreno.crearInfraestructura(3, 2, apartamento);
     terreno.crearInfraestructura(1, 1, fabrica);
+    ciudad.asignarVivienda(ciudadano1);
+    ciudad.asignarEmpleo(ciudadano1);
+    ciudad.asignarVivienda(ciudadano2);
+    ciudad.asignarEmpleo(ciudadano2);
 
     ControladorStorage.guardarCiudad(ciudad);
-    
 })
