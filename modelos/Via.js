@@ -30,13 +30,13 @@ class Via extends Edificio{
         // Crear instancia sin pasar por constructor (no incrementa contador)
         const instance = Object.create(Via.prototype);
         Object.assign(instance, obj);
-        
+        /*
         // Si hay ciudadanos, cargarlos con Ciudadano.fromData
         if (obj.ciudadanos && Array.isArray(obj.ciudadanos)) {
             const Ciudadano = require("./Ciudadano");
             instance.ciudadanos = obj.ciudadanos.map(c => Ciudadano.fromData(c));
         }
-        
+        */
         return instance;
     }
 }

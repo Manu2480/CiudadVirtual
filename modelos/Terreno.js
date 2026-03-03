@@ -263,10 +263,11 @@ class Terreno{
 
         let felicidadTotal = 0;
         // importamos las clases abstractas necesarias para instanceof
+        /*
         const EdificioResidencial = require("./EdificioResidencial");
         const EdificioComercial = require("./EdificioComercial");
         const EdificioIndustrial = require("./EdificioIndustrial");
-
+        */
         for (const edificio of this.edificios) {
             // saltamos los tipos que aportan vivienda o empleo porque
             // su efecto se calcula en cada ciudadano
