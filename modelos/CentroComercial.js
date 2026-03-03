@@ -19,10 +19,11 @@ class CentroComercial extends EdificioComercial {
         }
         const instance = Object.create(CentroComercial.prototype);
         Object.assign(instance, obj);
+        /*
         if (obj.ciudadanos && Array.isArray(obj.ciudadanos)) {
             const Ciudadano = require("./Ciudadano");
             instance.ciudadanos = obj.ciudadanos.map(c => Ciudadano.fromData(c));
-        }
+        }*/
         return instance;
     }
 }

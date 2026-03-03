@@ -8,6 +8,6 @@ class PlantaUtilidad extends Edificio {
         }
 
         super(id, costo, ubicacion, capacidad);
-     } 
+    } 
 }
 

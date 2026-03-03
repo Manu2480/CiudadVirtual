@@ -22,10 +22,11 @@ class Granja extends EdificioIndustrial {
         }
         const instance = Object.create(Granja.prototype);
         Object.assign(instance, obj);
+        /*
         if (obj.ciudadanos && Array.isArray(obj.ciudadanos)) {
             const Ciudadano = require("./Ciudadano");
             instance.ciudadanos = obj.ciudadanos.map(c => Ciudadano.fromData(c));
-        }
+        }*/
         return instance;
     }
 }
