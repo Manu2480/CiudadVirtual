@@ -19,6 +19,7 @@ class ControladorStorage{
         Fabrica,
         Granja,
         Hospital,
+        Tienda,
         Parque,
         PlantaElectrica,
         PlantaHidraulica,

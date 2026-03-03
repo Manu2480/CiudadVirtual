@@ -19,18 +19,21 @@ document.addEventListener("DOMContentLoaded", function () {
     const via1 = new Via({fila: 2, columna: 1});
     const via2 = new Via({fila: 2, columna: 2});
     const via3 = new Via({fila: 2, columna: 3});
-    const apartamento = new Apartamento({fila: 3, columna: 2});
-    const fabrica = new Fabrica({fila: 1, columna: 1});
+    const casa = new Casa({fila: 3, columna: 2});
+    const granja = new Tienda({fila: 1, columna: 1});
 
     terreno.crearInfraestructura(2, 1, via1);
     terreno.crearInfraestructura(2, 2, via2);
     terreno.crearInfraestructura(2, 3, via3);
-    terreno.crearInfraestructura(3, 2, apartamento);
-    terreno.crearInfraestructura(1, 1, fabrica);
+    terreno.crearInfraestructura(3, 2, casa);
+    terreno.crearInfraestructura(1, 1, granja);
     ciudad.asignarVivienda(ciudadano1);
     ciudad.asignarEmpleo(ciudadano1);
     ciudad.asignarVivienda(ciudadano2);
     ciudad.asignarEmpleo(ciudadano2);
-
     ControladorStorage.guardarCiudad(ciudad);
+    ciudadnueva = ControladorStorage.cargarCiudad();
+    console.log(ciudadnueva)
+    console.log(ciudadnueva.terreno.edificios[4].ciudadanos[0] instanceof Ciudadano)
+    
 })

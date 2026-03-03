@@ -216,6 +216,7 @@ class Ciudad {
         return nuevoCiudadano;
     }
 
+    /*
     // Crea una instancia de Ciudad a partir de un objeto plano (JSON)
     static fromData(obj) {
         if (obj instanceof Ciudad) return obj;
@@ -261,7 +262,7 @@ class Ciudad {
         }
 
         return ciudad;
-    }
+    }*/
 
     // Asigna vivienda disponible a un ciudadano específico (si hay)
     asignarVivienda(ciudadano) {
