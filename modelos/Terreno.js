@@ -57,6 +57,7 @@ class Terreno{
     }
 
     crearInfraestructura(fila, columna, edificio){
+        /*
         // Modo dual: acepta tanto instancias como objetos JSON planos
         // Si es un objeto plano (JSON), convertirlo a instancia usando fromData
         if (typeof edificio === 'object' && edificio !== null && !(edificio instanceof Via)) {
@@ -67,13 +68,13 @@ class Terreno{
                 if (cargado) edificio = cargado;
             }
         }
-
-        // buf: ver si ya hay algo en esa posición
+        */
+        
         if (this.ubicacionInfraestructura(fila, columna)){
             console.log("Espacio no disponible");
             return { exito: false, costo: 0, mensaje: "Espacio ya ocupado", edificio: null };
         }
-
+        
         if (edificio instanceof Via){
             this.vias[fila][columna] = 1; // marca la vía
             this.edificios.push(edificio); // guardamos la vía en la lista general
@@ -94,6 +95,7 @@ class Terreno{
 
     // Método que detecta el tipo de infraestructura por su id y carga usando fromData
     // Esto permite cargar edificios desde JSON automáticamente
+    /*
     cargarEdificioDesdeJSON(obj) {
         const id = obj.id || '';
         const idLower = id.toLowerCase(); //toLowerCase() convierte todas las letras mayúsculas de una cadena de texto (string) a minúsculas
@@ -140,7 +142,7 @@ class Terreno{
         }
 
         return null; // Tipo desconocido
-    }
+    }*/
 
     eliminarInfraestructura(fila, columna){
         let edificio = this.ubicacionInfraestructura(fila, columna);
@@ -261,10 +263,11 @@ class Terreno{
 
         let felicidadTotal = 0;
         // importamos las clases abstractas necesarias para instanceof
+        /*
         const EdificioResidencial = require("./EdificioResidencial");
         const EdificioComercial = require("./EdificioComercial");
         const EdificioIndustrial = require("./EdificioIndustrial");
-
+        */
         for (const edificio of this.edificios) {
             // saltamos los tipos que aportan vivienda o empleo porque
             // su efecto se calcula en cada ciudadano
@@ -289,12 +292,14 @@ class Terreno{
     // edificios, que ahora incluye las vías; de esta forma no necesitamos
     // la antigua matriz "mapa".
     ubicacionInfraestructura(fila, columna) {
-        for (const ed of this.edificios) {
-            if (ed.ubicacion.fila === fila && ed.ubicacion.columna === columna) {
-                return ed;
+        if (this.edificios.length !== 0) {
+            for (const ed of this.edificios) {
+                // Validamos que 'ed' y 'ed.ubicacion' existan antes de leer 'fila'
+                if (ed && ed.ubicacion && ed.ubicacion.fila === fila && ed.ubicacion.columna === columna) {
+                    return ed;
+                }
             }
         }
-        // ninguna construcción encontrada
         return null;
     }
 
