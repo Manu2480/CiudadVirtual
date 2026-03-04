@@ -1,13 +1,18 @@
 class ControladorStorage{
     static guardarCiudad(ciudad){
+        // Creee una copia para no modificar el objeto original
+        const ciudadCopia = JSON.parse(JSON.stringify(ciudad));
+        
+        // Serializar edificios con sus tipos
         let edificios = ciudad.terreno.edificios.map(obj => {
             return {
                 tipo: obj.constructor.name,
-                edificio: obj
+                edificio: JSON.parse(JSON.stringify(obj))
             };
         });
-        ciudad.terreno.edificios = edificios;
-        CiudadStorage.guardar(ciudad);
+        
+        ciudadCopia.terreno.edificios = edificios;
+        CiudadStorage.guardar(ciudadCopia);
     }
 
     static TipoClases = {
