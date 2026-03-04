@@ -4,6 +4,7 @@ class ControladorStorage{
         const ciudadCopia = JSON.parse(JSON.stringify(ciudad));
         
         // Serializar edificios con sus tipos
+        // Serializar es empacar el objeto para poder guardarlo
         let edificios = ciudad.terreno.edificios.map(obj => {
             return {
                 tipo: obj.constructor.name,
