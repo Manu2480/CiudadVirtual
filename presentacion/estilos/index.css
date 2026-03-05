@@ -1,0 +1,40 @@
+body{
+    margin:0;
+    height:100vh;
+}
+
+.container{
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:flex-end;
+    background-image:url("img/fondo-desktop.png");
+    background-size:cover;
+    background-position:center;
+}
+
+/* fondo movil */
+@media (max-width:768px){
+
+    .container{
+        background-image:url("img/fondo-mobile.png");
+    }
+
+}
+
+.logo{
+    width:200px;
+    margin-bottom:40px;
+    cursor:pointer;
+}
+
+.botones{
+    display:none;
+    gap:30px;
+    margin-bottom:40px;
+}
+
+.boton{
+    width:160px;
+    cursor:pointer;
+}

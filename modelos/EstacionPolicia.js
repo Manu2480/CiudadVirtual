@@ -1,6 +1,4 @@
 
-const EdificioServicio = require("./EdificioServicio");
-
 class EstacionPolicia extends EdificioServicio {
 
     static contador = 0;
@@ -14,7 +12,21 @@ class EstacionPolicia extends EdificioServicio {
         this.recursosEdificio["electricidad"] = -15; //El valor va negativo para que se sepa que es consume y no produce
         
     }
-}
 
-//exportamos la clase para poder usarla en main.js
-module.exports = EstacionPolicia;
+    static fromData(obj) {
+        if (obj instanceof EstacionPolicia) return obj;
+        const numMatch = String(obj.id).match(/\d+$/);
+        if (numMatch) {
+            const num = parseInt(numMatch[0], 10);
+            if (num > EstacionPolicia.contador) EstacionPolicia.contador = num;
+        }
+        const instance = Object.create(EstacionPolicia.prototype);
+        Object.assign(instance, obj);
+        /*
+        if (obj.ciudadanos && Array.isArray(obj.ciudadanos)) {
+            const Ciudadano = require("./Ciudadano");
+            instance.ciudadanos = obj.ciudadanos.map(c => Ciudadano.fromData(c));
+        }*/
+        return instance;
+    }
+}

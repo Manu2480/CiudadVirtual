@@ -1,4 +1,3 @@
-const PlantaUtilidad = require("./PlantaUtilidad");
 
 class PlantaHidraulica extends PlantaUtilidad {
 
@@ -14,8 +13,23 @@ class PlantaHidraulica extends PlantaUtilidad {
         this.recursosEdificio["agua"] = 150; // El valor es positivo porque produce agua
     }
 
+    static fromData(obj) {
+        if (obj instanceof PlantaHidraulica) return obj;
+        const numMatch = String(obj.id).match(/\d+$/);
+        if (numMatch) {
+            const num = parseInt(numMatch[0], 10);
+            if (num > PlantaHidraulica.contador) PlantaHidraulica.contador = num;
+        }
+        const instance = Object.create(PlantaHidraulica.prototype);
+        Object.assign(instance, obj);
+        /*
+        if (obj.ciudadanos && Array.isArray(obj.ciudadanos)) {
+            const Ciudadano = require("./Ciudadano");
+            instance.ciudadanos = obj.ciudadanos.map(c => Ciudadano.fromData(c));
+        }*/
+        return instance;
+    }
+
     //Si al descontar la electricidad el recurso quedo negativo, no podra producir agua
 }
 
-//exportamos la clase para poder usarla en main.js
-module.exports = PlantaHidraulica;
