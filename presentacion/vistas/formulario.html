@@ -11,78 +11,92 @@
     <link rel="stylesheet" href="../estilos/formulario.css">
 </head>
 <body>
-    <div>
-        <h1>Creación de ciudad</h1>
-        <p>Llena con atención el siguiente formulario para crear tu ciudad</p>
+    <div class="encabezado">
+        <img src="../../media/inicio/logo.png">
     </div>
-    <div class="paso activo" id="paso1">
-        <p>Antes de comenzar ¿Cómo te ves? ¿Cómo deberíamos llamarte?</p>
-        <div class="selectorGenero">
-
-            <div class="opcion" data-genero="hombre">
-                <img src="iconoHombre" alt="Alcalde">
-                <p>Hombre</p>
-            </div>
-
-            <div class="opcion" data-genero="mujer">
-                <img src="iconoMujer" alt="Alcaldesa">
-                <p>Mujer</p>
-            </div>
+    <div class="contenido">
+        <div class="paso activo" id="paso1">
+            <h1>¡Felicitaciones!</h1>
+            <h3>Como miembro de una noble familia de un territorio curiosamente similar
+                al de la Colombia de la vida real, se te ha encargado la tarea de fundar
+                y dirigir una nueva ciudad con un único propósito: hacer de ella la ciudad
+                más prospera del territorio controlado por tu familia.
+            </h3>
+            <h3>¿Aceptas la tarea?</h3>
+            <h3>Por favor diligencia el siguiente formulario para poder realizar oficialmente
+                la fundación de la nueva ciudad.
+            </h3>
+            <button onclick="siguiente()" id="comenzar">Registrarse</button>
         </div>
-        <table>
-            <tr>
-                <td><p>Ingresa tu nombre: </p></td>
-                <td><input type="text" id="nombreAlcalde"></td>
-            </tr>
-            <tr>  
-                <td><button onclick="anterior()" disabled>⬅</button></td>
-                <td><button onclick="siguiente()">➡</button></td>
-            </tr>
-        </table>
-    </div>
+        <div class="paso" id="paso2">
+            <p>Antes de comenzar ¿Cómo te ves? ¿Cómo deberíamos llamarte?</p>
+            <div class="selectorGenero">
 
-    <div class="paso" id="paso2">
-        <p>Ahora dinos ¿Cómo se llamará tu ciudad? ¿Cómo se va a ver?</p>
-        <table>
-            <tr>
-                <td><p>Nombre de la ciudad:</p></td>
-                <td><input type="text" id="nombreCiudad"></td>
-            </tr>
-            <tr>
-                <td><p>Longitud del mapa: </p></td>
-                <td><input type="number" id="longitudMapa" min="15" max="30" step="1"></td>
-            </tr>
-            <tr>
-                <td><p>Alto del mapa: </p></td>
-                <td><input type="number" id="alturaMapa" min="15" max="30" step="1"></td> 
-                <!--Con el step lo que se hace es obligar a que el numero sea un entero-->
-            </tr>
-            <tr>  
-                <td><button onclick="anterior()">⬅</button></td>
-                <td><button onclick="siguiente()">➡</button></td>
-            </tr>
-        </table>
-    </div>
+                <div class="opcion" data-genero="hombre">
+                    <img src="../../media/inicio/rey.png" alt="Alcalde">
+                    <p>Hombre</p>
+                </div>
 
-    <div class="paso" id="paso3">
-        <p>
-            Para mayor realismo, vamos a ubicar tu ciudad en una de las ciudades colombianas,
-            por favor selecciona el departamento y la ciudad colombiana donde quieres localizar tu ciudad.
-        </p>
-        <table>
-            <tr>
-                <td><p>Departamento de la ciudad: </p></td>
-                <td><select id="departamento"></select></td>
-            </tr>
-            <tr>
-                <td><p>Ciudad: </p></td>
-                <td><select id="ciudad" value="Seleccione un departamento" disabled></select></td>
-            </tr>
-            <tr>  
-                <td><button onclick="anterior()">⬅</button></td>
-                <td><button onclick="siguiente()">➡</button></td>
-            </tr>
-        </table>
+                <div class="opcion" data-genero="mujer">
+                    <img src="../../media/inicio/reina.png" alt="Alcaldesa">
+                    <p>Mujer</p>
+                </div>
+            </div>
+            <table>
+                <tr>
+                    <td><p>Ingresa tu nombre: </p></td>
+                    <td><input type="text" id="nombreAlcalde"></td>
+                </tr>
+                <tr>  
+                    <td><button onclick="anterior()">⬅</button></td>
+                    <td><button onclick="siguiente()">➡</button></td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="paso" id="paso3">
+            <p>Ahora dinos ¿Cómo se llamará tu ciudad? ¿Cómo se va a ver?</p>
+            <table>
+                <tr>
+                    <td><p>Nombre de la ciudad:</p></td>
+                    <td><input type="text" id="nombreCiudad"></td>
+                </tr>
+                <tr>
+                    <td><p>Longitud del mapa: </p></td>
+                    <td><input type="number" id="longitudMapa" min="15" max="30" step="1"></td>
+                </tr>
+                <tr>
+                    <td><p>Alto del mapa: </p></td>
+                    <td><input type="number" id="alturaMapa" min="15" max="30" step="1"></td> 
+                    <!--Con el step lo que se hace es obligar a que el numero sea un entero-->
+                </tr>
+                <tr>  
+                    <td><button onclick="anterior()">⬅</button></td>
+                    <td><button onclick="siguiente()">➡</button></td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="paso" id="paso4">
+            <p>
+                Para mayor realismo, vamos a ubicar tu ciudad en una de las ciudades colombianas,
+                por favor selecciona el departamento y la ciudad colombiana donde quieres localizar tu ciudad.
+            </p>
+            <table>
+                <tr>
+                    <td><p>Departamento de la ciudad: </p></td>
+                    <td><select id="departamento"></select></td>
+                </tr>
+                <tr>
+                    <td><p>Ciudad: </p></td>
+                    <td><select id="ciudad" value="Seleccione un departamento" disabled></select></td>
+                </tr>
+                <tr>  
+                    <td><button onclick="anterior()">⬅</button></td>
+                    <td><button onclick="siguiente()">➡</button></td>
+                </tr>
+            </table>
+        </div>
     </div>
 </body>
 </html>
