@@ -1,0 +1,18 @@
+/*
+================================
+SECCION QUE MUESTRA CADA PASO
+================================*/
+
+.paso{
+    display: none; /*Si solo tiene el nombre paso, no lo muestra*/
+}
+
+.paso.activo{
+    display: block; /*Si además de paso, tiene la palabra activo, ahí si lo muestra*/
+}
+
+
+/*
+================================
+SECCION DE SELECCIÓN HOMBRE/MUJER
+================================*/

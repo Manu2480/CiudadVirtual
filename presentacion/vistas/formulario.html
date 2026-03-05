@@ -4,26 +4,67 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Crear ciudad</title>
+
+    <!--Carga de archivos necesarios-->
+    <script src="../../acceso_datos/ApiColombia.js" defer></script>
+    <script src="../../negocio/formulario.js" defer></script>
+    <link rel="stylesheet" href="../estilos/formulario.css">
 </head>
 <body>
     <div>
         <h1>Creación de ciudad</h1>
         <p>Llena con atención el siguiente formulario para crear tu ciudad</p>
     </div>
-    <div>
+    <div class="paso activo" id="paso1">
+        <p>Antes de comenzar ¿Cómo te ves? ¿Cómo deberíamos llamarte?</p>
+        <div class="selectorGenero">
+
+            <div class="opcion" data-genero="hombre">
+                <img src="iconoHombre" alt="Alcalde">
+                <p>Hombre</p>
+            </div>
+
+            <div class="opcion" data-genero="mujer">
+                <img src="iconoMujer" alt="Alcaldesa">
+                <p>Mujer</p>
+            </div>
+        </div>
         <table>
             <tr>
-                <td><p>Nombre de la ciudad: </p></td>
-                <td><input type="text" id="nombreCiudad"></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td><p>Nombre del alcalde: </p></td>
+                <td><p>Ingresa tu nombre: </p></td>
                 <td><input type="text" id="nombreAlcalde"></td>
+            </tr>
+            <tr>  
+                <td><button onclick="anterior()" disabled>⬅</button></td>
+                <td><button onclick="siguiente()">➡</button></td>
             </tr>
         </table>
     </div>
-    <div>
+
+    <div class="paso" id="paso2">
+        <p>Ahora dinos ¿Cómo se llamará tu ciudad? ¿Cómo se va a ver?</p>
+        <table>
+            <tr>
+                <td><p>Nombre de la ciudad:</p></td>
+                <td><input type="text" id="nombreCiudad"></td>
+            </tr>
+            <tr>
+                <td><p>Longitud del mapa: </p></td>
+                <td><input type="number" id="longitudMapa" min="15" max="30" step="1"></td>
+            </tr>
+            <tr>
+                <td><p>Alto del mapa: </p></td>
+                <td><input type="number" id="alturaMapa" min="15" max="30" step="1"></td> 
+                <!--Con el step lo que se hace es obligar a que el numero sea un entero-->
+            </tr>
+            <tr>  
+                <td><button onclick="anterior()">⬅</button></td>
+                <td><button onclick="siguiente()">➡</button></td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="paso" id="paso3">
         <p>
             Para mayor realismo, vamos a ubicar tu ciudad en una de las ciudades colombianas,
             por favor selecciona el departamento y la ciudad colombiana donde quieres localizar tu ciudad.
@@ -31,24 +72,15 @@
         <table>
             <tr>
                 <td><p>Departamento de la ciudad: </p></td>
-                <td><input type="select" id="departamento"></td>
+                <td><select id="departamento"></select></td>
             </tr>
             <tr>
                 <td><p>Ciudad: </p></td>
-                <td><input type="select" id="ciudad" value="Seleccione un departamento" disabled></td>
+                <td><select id="ciudad" value="Seleccione un departamento" disabled></select></td>
             </tr>
-        </table>
-    </div>
-    <div>
-        <p>Finalmente configuremos el funcionamiento de la ciudad</p>
-        <table>
-            <tr>
-                <td><p>Longitud del mapa: </p></td>
-                <td><input type="range" id="longitudMapa" min="15" max="30"></td>
-            </tr>
-            <tr>
-                <td><p>Alto del mapa: </p></td>
-                <td><input type="range" id="alturaMapa" min="15" max="30"></td>
+            <tr>  
+                <td><button onclick="anterior()">⬅</button></td>
+                <td><button onclick="siguiente()">➡</button></td>
             </tr>
         </table>
     </div>
