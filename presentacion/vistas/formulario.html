@@ -29,29 +29,35 @@
             <button onclick="siguiente()" id="comenzar">Registrarse</button>
         </div>
         <div class="paso" id="paso2">
-            <p>Antes de comenzar ¿Cómo te ves? ¿Cómo deberíamos llamarte?</p>
             <div class="selectorGenero">
+                <div class="generos">
 
-                <div class="opcion" data-genero="hombre">
-                    <img src="../../media/inicio/rey.png" alt="Alcalde">
-                    <p>Hombre</p>
-                </div>
+                    <label class="genero">
+                        <h3>Rey</h3>
+                        <input type="radio" name="genero" value="hombre" checked>
+                        <img src="../../media/inicio/rey.png" alt="Alcalde">
+                    </label>
 
-                <div class="opcion" data-genero="mujer">
-                    <img src="../../media/inicio/reina.png" alt="Alcaldesa">
-                    <p>Mujer</p>
+                    <label class="genero">
+                        <h3>Reina</h3>
+                        <input type="radio" name="genero" value="mujer">
+                        <img src="../../media/inicio/reina.png" alt="Alcaldesa">
+                    </label>
+
                 </div>
+                    <div class="flechasGenero">
+                        <button type="button" id="anteriorGenero">◀</button>
+                        <button type="button" id="siguienteGenero">▶</button>
+                    </div>
             </div>
-            <table>
-                <tr>
-                    <td><p>Ingresa tu nombre: </p></td>
-                    <td><input type="text" id="nombreAlcalde"></td>
-                </tr>
-                <tr>  
-                    <td><button onclick="anterior()">⬅</button></td>
-                    <td><button onclick="siguiente()">➡</button></td>
-                </tr>
-            </table>
+            <div class="nombre">
+                <input type="text" id="nombreAlcalde" placeholder="Escribe tu nombre">
+            </div>
+
+            <div class="botonesPaso">
+                <button onclick="anterior()">⬅</button>
+                <button onclick="siguiente()">➡</button>
+            </div>
         </div>
 
         <div class="paso" id="paso3">
@@ -70,10 +76,10 @@
                     <td><input type="number" id="alturaMapa" min="15" max="30" step="1"></td> 
                     <!--Con el step lo que se hace es obligar a que el numero sea un entero-->
                 </tr>
-                <tr>  
-                    <td><button onclick="anterior()">⬅</button></td>
-                    <td><button onclick="siguiente()">➡</button></td>
-                </tr>
+                <div class="botonesPaso">
+                    <button onclick="anterior()">⬅</button>
+                    <button onclick="siguiente()">➡</button>
+                </div>
             </table>
         </div>
 
@@ -91,10 +97,10 @@
                     <td><p>Ciudad: </p></td>
                     <td><select id="ciudad" value="Seleccione un departamento" disabled></select></td>
                 </tr>
-                <tr>  
-                    <td><button onclick="anterior()">⬅</button></td>
-                    <td><button onclick="siguiente()">➡</button></td>
-                </tr>
+                <div class="botonesPaso">
+                    <button onclick="anterior()">⬅</button>
+                    <button onclick="siguiente()">➡</button>
+                </div>
             </table>
         </div>
     </div>

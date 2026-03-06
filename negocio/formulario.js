@@ -36,6 +36,43 @@ addEventListener("DOMContentLoaded",function(){
     window.siguiente = siguiente;
     window.anterior = anterior;
 
+    //===========================================
+    //SECCIÓN DE SELECCIÓN DE SELECCIÓN DE GÉNERO
+    //===========================================
+
+    const radios = document.querySelectorAll('input[name="genero"]');
+    let generoActual = 0;
+
+    function mostrarGenero(i){
+        radios[i].checked = true;
+    }
+
+    document.getElementById("siguienteGenero").addEventListener("click", () => {
+
+        generoActual++;
+
+        if(generoActual >= radios.length){
+            generoActual = 0;
+        }
+
+        mostrarGenero(generoActual);
+
+    });
+
+    document.getElementById("anteriorGenero").addEventListener("click", () => {
+
+        generoActual--;
+
+        if(generoActual < 0){
+            generoActual = radios.length - 1;
+        }
+
+        mostrarGenero(generoActual);
+
+    });
+
+
+
     //=============================================
     //SECCIÓN DE SELECCIÓN DE DEPARTAMENTO Y CIUDAD
     //=============================================
