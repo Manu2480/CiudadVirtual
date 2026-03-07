@@ -13,8 +13,8 @@ body{
     height: 100vh;          /* Ocupa el 100% de la altura de la pantalla */
     background-color: #fcfcfc;
     background-image:url("../../media/inicio/vacio.png");
-    background-size:100% auto;
-    background-position:center 70%;
+    background-size:cover;
+    background-position:center;
     background-repeat:no-repeat;
     gap: 25px;              /* Crea un espacio uniforme entre la imagen y el botón */
 }
@@ -82,4 +82,16 @@ body{
 /* efecto hover opcional */
 .nav-btn:hover{
     opacity:0.7;
+}
+
+@media (max-width:768px){
+
+    .container{
+        background-image:url("../../media/inicio/vacio-movil.png");
+    }
+
+    .nav-container{
+        margin-bottom:40px;
+    }
+
 }
