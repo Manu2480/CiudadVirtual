@@ -1,0 +1,265 @@
+/*
+==============
+FUENTES USADAS
+==============*/
+@font-face {
+    font-family: 'codec';
+    src: url(../../media/fuentes/codec/Codec-Cold-Regular-trial.ttf) format('truetype');
+    font-weight: normal; /*IMPORTANTE: SI SE VAN A USAR OTROS ESTILOS, COMO EL BOLD, TOCA CREARLE OTRO SEPARADO
+    Y EL FONT-WEIGHT SE PONE BOLD*/ 
+}
+@font-face {
+    font-family: 'floraison des amours';
+    src: url(../../media/fuentes/floraison_des_amours/Floraison\ des\ Amours.ttf) format('truetype');
+    font-weight: normal;
+}
+/*
+==============
+COLORES USADOS
+==============
+*/
+:root{
+    --colorEncabezado: #1A73E8;
+    --colorFondo: rgba(167, 204, 208, 0.7);
+    --colorBotones: #1A73E8;
+}
+
+/*
+==========
+ENCABEZADO
+==========*/
+html, body{
+    height: 100%;
+    margin: 0; 
+    /*Ahora todo ocupará el tamaño de la pantalla*/
+}
+body{
+    display: grid;
+    grid-template-rows: 100px 1fr;
+    height: 100%;
+}
+
+.encabezado{
+    background-color: var(--colorEncabezado);
+    height:100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1;
+}
+.encabezado img{
+    max-width: 100%;
+    max-height: 100px;
+    height: auto;
+    object-fit: contain;
+    display: block;
+}
+h1{
+    font-size: 30pt;
+    font-family: 'floraison des amours';
+}
+/*
+=========
+CONTENIDO
+=========*/
+.contenido{
+    display: grid;
+    place-items: center;
+    background-image: url(../../media/inicio/fondo-movil.png);
+    background-size: cover;
+    background-position: center;
+    min-height: 0;
+    width: 100%;
+    height: 100%;
+}
+.botonesPaso{
+    display: grid;
+    grid-template-columns: auto auto;
+    gap: 40px;
+    justify-content: center;
+}
+.botonesPaso button{
+    font-size:24px;
+    padding:10px 20px;
+    background-color: white;
+    color:black;
+    border:none;
+    border-radius:8px;
+    cursor:pointer;
+}
+.pasar:hover {
+    transform: scale(1.05); /* Se agranda un poquito */
+    box-shadow: 0px 5px 15px rgba(0,0,0,0.2);
+    background-color: var(--colorBotones);
+    color: #ffffff;
+}
+@media (min-width: 768px){
+    .contenido{
+        display: grid;
+        place-items: center;
+        background-image: url(../../media/inicio/fondo.png);
+        background-size: cover;
+        background-position: center;
+    }
+}
+/*
+==========
+FORMULARIO
+==========
+*/
+.paso{
+    height: 100%;
+    width: 100%;
+    position: relative;
+    margin: 0;
+    position: relative;
+    display: none; /*Si solo tiene el nombre paso, no lo muestra*/
+}
+.paso.activo{
+    display: grid;
+    grid-template-rows: minmax(0,1fr) auto auto;
+    /*Si además de paso, tiene la palabra activo, ahí si lo muestra*/
+}
+
+.instruccion{
+    font-size: 15pt;
+    text-align: center;
+    font-family: 'codec';
+    font-weight: normal;
+}
+
+.paso > * { /*> * selecciona todos los hijos de paso (todo lo que hay adentro de el)*/
+    display: grid;
+    grid-template-rows: 1fr auto auto;
+    align-items: center;
+    justify-items: center;
+    gap: 15px;
+    height: 100%;
+}
+#comenzar{
+    background-color: white;
+    padding:10px 20px;
+    color:black;
+    border:none;
+    border-radius:8px;
+    cursor:pointer;
+    width: auto;
+    justify-self: center;
+    align-self: center;
+    display: flex;
+    font-size: 1.2rem;
+    margin-top: auto;
+}
+#comenzar:hover {
+    transform: scale(1.05); /* Se agranda un poquito */
+    box-shadow: 0px 5px 15px rgba(0,0,0,0.2);
+    background-color: var(--colorBotones);
+    color: #ffffff;
+}
+.carta{
+    font-family: 'floraison des amours';
+    font-size: 20pt;
+    text-align: center;
+}
+
+.contenidoPaso {
+    background-color: var(--colorFondo);
+    padding: 2rem 2rem 3rem;    /*Pongo esto para que el texto no se salga de la tarjetica*/
+    margin: 1rem auto 0;         /*Aleja la tarjeta del borde de la pantalla*/
+    border-radius: 8px;
+    max-width: 800px;
+    width: calc(100% - 2rem);
+    box-sizing: border-box;
+    /* Lo siguiente es para que el fondo (color) no crezca más que la pantalla menos el espacio del header */
+    max-height: calc(100vh - 140px);
+    overflow-y: auto;           /* Si el contenido no cabe, le hace un scroll */
+}
+
+/*
+================================
+SECCION DE SELECCIÓN HOMBRE/MUJER
+================================*/
+.genero{
+display: none;
+    text-align: center;
+    min-height: 0;
+    justify-content:center;
+    align-items:center;
+}
+.generos {
+    display: flex;
+    flex-direction: column; 
+    justify-content: center;
+    align-items: center;
+    gap: 20px; /* spacing between options */
+}
+.genero h3{
+    font-family: 'floraison des amours';
+    font-size: 25pt;
+}
+.genero input{
+    display: none;
+}
+.genero img{
+    height: clamp(120px, 35vh, 500px);
+    /*Minimo 120px, normalmente el 40% de la pantalla, máximo 500px*/
+    width: auto;
+}
+
+.genero:has(input:checked){
+    display: block;
+}
+
+.flechasGenero{
+    display:flex;
+    justify-content:center;
+    gap:40px;
+    margin-top:15px;
+}
+
+.flechasGenero button{
+    font-size:24px;
+    padding:10px 20px;
+    background-color: white;
+    color:black;
+    border:none;
+    border-radius:8px;
+    cursor:pointer;
+}
+.nombre{
+    width: 80%;
+    max-width: 400px;
+    padding: 12px;
+    font-size: 18px;
+    border-radius: 8px;
+    border: 2px solid #ccc;
+}
+
+.genero input:checked ~ img {
+    border: 20px solid var(--colorEncabezado); /* color del borde cuando está seleccionado */
+    border-radius: 12px;
+    transform: scale(1.05); /* hace que la imagen se agrande un poquito */
+    transition: all 0.3s ease; /* animación suave */
+}
+
+.etiqueta{
+    font-family: 'codec';
+    font-size: 15pt;
+}
+
+@media (min-width:768px){
+    .generos {
+        display: flex;
+        flex-direction: row; /* lado a lado */
+        justify-content: center;
+        gap: 40px;
+    }
+    .genero {
+        display: block;
+    }
+
+    #anteriorGenero, /*oculta las flechitas que hay en pantallas pequeñas*/
+    #siguienteGenero{
+        display:none;
+    }
+}
