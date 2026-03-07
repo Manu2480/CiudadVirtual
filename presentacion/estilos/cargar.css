@@ -20,7 +20,7 @@ body{
 }
 
 /* Imagen de construcción */
-.construction-img {
+.constructionImg {
     max-width: 300px;       /* Tamaño ajustable */
     width: 90%;             /* Responsive para móviles */
     height: auto;
@@ -29,7 +29,7 @@ body{
 }
 
 /* El botón redondeado y claro */
-.carga-btn {
+.cargaBtn {
     background-color: #ffffff;
     color: #333333;         /* Letras oscuras para que destaquen sobre fondo claro */
     font-size: 1.2rem;
@@ -44,7 +44,7 @@ body{
 }
 
 /* Efecto al pasar el mouse */
-.carga-btn:hover {
+.cargaBtn:hover {
     transform: scale(1.05); /* Se agranda un poquito */
     box-shadow: 0px 5px 15px rgba(0,0,0,0.2);
     background-color: #1a73e8;
@@ -52,14 +52,14 @@ body{
 }
 
 /* contenedor de navegación */
-.nav-container{
+.navContainer{
     display:flex;
     align-items:center;
     gap:20px;
 }
 
 /* triángulos */
-.nav-btn{
+.navBtn{
     width:0;
     height:0;
     border-style:solid;
@@ -80,7 +80,7 @@ body{
 }
 
 /* efecto hover opcional */
-.nav-btn:hover{
+.navBtn:hover{
     opacity:0.7;
 }
 
@@ -88,9 +88,10 @@ body{
 
     .container{
         background-image:url("../../media/inicio/vacio-movil.png");
+        gap: 70px;
     }
 
-    .nav-container{
+    .navContainer{
         margin-bottom:40px;
     }
 
