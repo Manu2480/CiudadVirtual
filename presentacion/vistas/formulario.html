@@ -8,6 +8,7 @@
     <!--Carga de archivos necesarios-->
     <script src="../../acceso_datos/ApiColombia.js" defer></script>
     <script src="../../negocio/formulario.js" defer></script>
+    <script src="../../acceso_datos/ApiCoordenadas.js" defer></script>
     <link rel="stylesheet" href="../estilos/formulario.css">
 </head>
 <body>
@@ -16,92 +17,120 @@
     </div>
     <div class="contenido">
         <div class="paso activo" id="paso1">
-            <h1>¡Felicitaciones!</h1>
-            <h3>Como miembro de una noble familia de un territorio curiosamente similar
-                al de la Colombia de la vida real, se te ha encargado la tarea de fundar
-                y dirigir una nueva ciudad con un único propósito: hacer de ella la ciudad
-                más prospera del territorio controlado por tu familia.
-            </h3>
-            <h3>¿Aceptas la tarea?</h3>
-            <h3>Por favor diligencia el siguiente formulario para poder realizar oficialmente
-                la fundación de la nueva ciudad.
-            </h3>
-            <button onclick="siguiente()" id="comenzar">Registrarse</button>
+            <div class="contenidoPaso">
+                <h1>¡Felicitaciones!</h1>
+                <h3 class="carta">Como miembro de una noble familia de un territorio curiosamente similar
+                    al de la Colombia de la vida real, se te ha encargado la tarea de fundar
+                    y dirigir una nueva ciudad con un único propósito: hacer de ella la ciudad
+                    más prospera del territorio controlado por tu familia.
+                </h3>
+                <h3 class="carta">¿Aceptas la tarea?</h3>
+                <h3 class="carta">Por favor diligencia el siguiente formulario para poder realizar oficialmente
+                    la fundación de la nueva ciudad.
+                </h3>
+                <button onclick="siguiente()" id="comenzar">Registrarse</button>
+            </div>
         </div>
         <div class="paso" id="paso2">
-            <div class="selectorGenero">
-                <div class="generos">
-
-                    <label class="genero">
-                        <h3>Rey</h3>
-                        <input type="radio" name="genero" value="hombre" checked>
-                        <img src="../../media/inicio/rey.png" alt="Alcalde">
-                    </label>
-
-                    <label class="genero">
-                        <h3>Reina</h3>
-                        <input type="radio" name="genero" value="mujer">
-                        <img src="../../media/inicio/reina.png" alt="Alcaldesa">
-                    </label>
-
+            <div class="contenidoPaso">
+                <div class="instruccion">
+                    <p>Hablanos de ti ¿Cómo te ves? ¿Cómo te llamas?</p>
                 </div>
-                    <div class="flechasGenero">
-                        <button type="button" id="anteriorGenero">◀</button>
-                        <button type="button" id="siguienteGenero">▶</button>
-                    </div>
-            </div>
-            <div class="nombre">
-                <input type="text" id="nombreAlcalde" placeholder="Escribe tu nombre">
-            </div>
+                <div class="selectorGenero">
+                    <div class="generos">
 
-            <div class="botonesPaso">
-                <button onclick="anterior()">⬅</button>
-                <button onclick="siguiente()">➡</button>
+                        <label class="genero">
+                            <h3>Rey</h3>
+                            <input type="radio" name="genero" value="hombre" checked>
+                            <img src="../../media/inicio/rey.png" alt="Alcalde">
+                        </label>
+
+                        <label class="genero">
+                            <h3>Reina</h3>
+                            <input type="radio" name="genero" value="mujer">
+                            <img src="../../media/inicio/reina.png" alt="Alcaldesa">
+                        </label>
+
+                    </div>
+                        <div class="flechasGenero">
+                            <button type="button" id="anteriorGenero">◀</button>
+                            <button type="button" id="siguienteGenero">▶</button>
+                        </div>
+                </div>
+                <div>
+                    <input class="nombre" type="text" id="nombreAlcalde" placeholder="Escribe tu nombre">
+                </div>
+
+                <div class="botonesPaso">
+                    <button onclick="anterior()">⬅</button>
+                    <button onclick="siguiente()">➡</button>
+                </div>
             </div>
         </div>
 
         <div class="paso" id="paso3">
-            <p>Ahora dinos ¿Cómo se llamará tu ciudad? ¿Cómo se va a ver?</p>
-            <table>
-                <tr>
-                    <td><p>Nombre de la ciudad:</p></td>
-                    <td><input type="text" id="nombreCiudad"></td>
-                </tr>
-                <tr>
-                    <td><p>Longitud del mapa: </p></td>
-                    <td><input type="number" id="longitudMapa" min="15" max="30" step="1"></td>
-                </tr>
-                <tr>
-                    <td><p>Alto del mapa: </p></td>
-                    <td><input type="number" id="alturaMapa" min="15" max="30" step="1"></td> 
-                    <!--Con el step lo que se hace es obligar a que el numero sea un entero-->
-                </tr>
+            <div class="contenidoPaso">
+                <div class="instruccion">
+                    <p>Cuéntanos sobre la ciudad que vas a fundar ¿Cómo se llamará?
+                        ¿Qué tan grande será?
+                    </p>
+                </div>
+                <div>
+                    <input class="nombre" type="text" id="nombreCiudad" placeholder="Escribe el nombre de tu ciudad">
+                </div>
+                <div class="dimension">
+                    <div class="etiqueta">
+                        <p>Largo del mapa: </p>
+                    </div>
+                    <div class="dimension">
+                        <input class="nombre" type="number" id="longitudMapa" min="15" max="30" step="1">
+                    </div>
+                </div>
+                <div class="dimension">
+                    <div class="etiqueta">
+                        <p>Ancho del mapa: </p>
+                    </div>
+                    <div class="dimension">
+                        <input class="nombre" type="number" id="alturaMapa" min="15" max="30" step="1">
+                    </div>
+                </div>
                 <div class="botonesPaso">
                     <button onclick="anterior()">⬅</button>
                     <button onclick="siguiente()">➡</button>
                 </div>
-            </table>
+            </div>
         </div>
 
         <div class="paso" id="paso4">
-            <p>
-                Para mayor realismo, vamos a ubicar tu ciudad en una de las ciudades colombianas,
-                por favor selecciona el departamento y la ciudad colombiana donde quieres localizar tu ciudad.
-            </p>
-            <table>
-                <tr>
-                    <td><p>Departamento de la ciudad: </p></td>
-                    <td><select id="departamento"></select></td>
-                </tr>
-                <tr>
-                    <td><p>Ciudad: </p></td>
-                    <td><select id="ciudad" value="Seleccione un departamento" disabled></select></td>
-                </tr>
-                <div class="botonesPaso">
-                    <button onclick="anterior()">⬅</button>
-                    <button onclick="siguiente()">➡</button>
+            <div class="contenidoPaso">
+                <div class="instruccion">
+                    <p>¿A qué ciudad Colombiana dirías que se asemeja
+                        el clima de tu nueva ciudad?
+                    </p>
                 </div>
-            </table>
+
+                <div class="selectorTerritorio">
+                    <div class="etiqueta">
+                        <p>Departamento:</p>
+                    </div>
+                    <div class="territorio">
+                        <select class="nombre" id="departamento"></select>
+                    </div>
+                </div>
+                <div class="selectorTerritorio">
+                    <div class="etiqueta">
+                        <p>Ciudad:</p>
+                    </div>
+                    <div class="territorio">
+                        <select class="nombre" id="ciudad"></select>
+                    </div>
+                </div>
+                    <div class="botonesPaso">
+                        <button onclick="anterior()">⬅</button>
+                        <button onclick="crearCiudad()">Fundar ciudad</button>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </body>
