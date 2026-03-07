@@ -1,33 +1,50 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
-<meta charset="UTF-8">
-<title>Ciudad Virtual</title>
-<link rel="stylesheet" href="styles.css">
+
+    <meta charset="UTF-8">
+    <title>Ciudad Virtual</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="../estilos/index.css">
+    <!-- Para vistas moviles -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- JS -->
+    <script src="../../negocio/index.js" defer></script>
+
 </head>
 
 <body>
 
 <div class="container">
 
+    <!-- Nubes moviendose -->
+    <img class="nube nube1" src="../../media/inicio/nube.png">
+    <img class="nube nube2" src="../../media/inicio/nube.png">
+    <img class="nube nube3" src="../../media/inicio/nube.png">
+
+    <div id="menu" class="menu">
+
     <!-- Logo inicial -->
     <img id="logo" src="../../media/inicio/logo.png" class="logo">
 
-    <!-- Botones ocultos -->
-    <div id="botones" class="botones">
+        <!-- Botones ocultos -->
+        <div id="botones" class="botones">
 
-        <a href="crear.html">
-            <img src="img/crear.png" class="boton">
-        </a>
+            <a href="crear.html">
+                <img src="../../media/inicio/crear.png" class="boton">
+            </a>
 
-        <a href="cargar.html">
-            <img src="img/cargar.png" class="boton">
-        </a>
+            <a href="cargar.html">
+                <img src="../../media/inicio/cargar.png" class="boton">
+            </a>
+
+        </div>
 
     </div>
 
 </div>
 
-<script src="script.js"></script>
 </body>
 </html>

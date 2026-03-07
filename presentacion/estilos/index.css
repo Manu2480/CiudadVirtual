@@ -1,40 +1,266 @@
+/* =========================================
+RESET BÁSICO
+Quita márgenes del navegador
+========================================= */
+
 body{
     margin:0;
-    height:100vh;
+    min-height:100vh;
+    overflow:hidden;
 }
 
+
+/* =========================================
+CONTENEDOR PRINCIPAL (FONDO)
+========================================= */
+
 .container{
-    height:100vh;
+
+    position:relative; /* permite usar capas (nubes, partículas) */
+    overflow:hidden;
+
+    min-height:100vh;
+    width:100%;
+
     display:flex;
     justify-content:center;
     align-items:flex-end;
-    background-image:url("img/fondo-desktop.png");
+
+    background-image:url("../../media/inicio/fondo.png");
     background-size:cover;
     background-position:center;
+    background-repeat:no-repeat;
+
 }
 
-/* fondo movil */
-@media (max-width:768px){
 
-    .container{
-        background-image:url("img/fondo-mobile.png");
+/* =========================================
+NUBES EN MOVIMIENTO
+========================================= */
+
+.nube{
+    position:absolute;
+    top:80px;
+
+    width:200px;
+
+    margin-top: -100px;
+
+    animation:moverNube 20s linear infinite;
+}
+
+.nube1{
+    top:60px;
+    animation-duration:18s;
+}
+
+.nube2{
+    top:150px;
+    animation-duration:30s;
+    opacity:0.7;
+}
+
+.nube3{
+    top:250px;
+    animation-duration:45s;
+    opacity:0.4;
+}
+
+@keyframes moverNube{
+
+    0%{
+        left:-200px;
+        opacity:0;
+    }
+
+    10%{
+        opacity:0.7;
+    }
+
+    90%{
+        opacity:0.6;
+    }
+
+    100%{
+        left:110%;
+        opacity:1;
+    }
+}
+
+
+/* =========================================
+PARTÍCULAS FLOTANDO
+========================================= */
+
+.container::after{
+
+    content:"";
+
+    position:absolute;
+    top:0;
+    left:0;
+
+    width:100%;
+    height:100%;
+
+    background-image:
+        radial-gradient(circle, rgba(255,255,255,0.7) 2px, transparent 2px),
+        radial-gradient(circle, rgba(255,255,255,0.5) 1px, transparent 1px);
+
+    background-size:80px 80px, 120px 120px;
+
+    animation:particulas 40s linear infinite;
+
+    pointer-events:none;
+
+    z-index:1;
+
+}
+
+
+/* animación vertical de partículas */
+
+@keyframes particulas{
+
+    from{
+        transform:translateY(0);
+    }
+
+    to{
+        transform:translateY(-300px);
     }
 
 }
 
-.logo{
-    width:200px;
-    margin-bottom:40px;
-    cursor:pointer;
+
+/* =========================================
+MENÚ (LOGO + BOTONES)
+========================================= */
+
+.menu{
+
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+
+    margin-bottom:80px;
+
+    transition: transform 0.5s ease;
+
+    position:relative;
+    z-index:2; /* por encima de nubes y partículas */
+
 }
+
+
+/* cuando se activa el menú */
+
+.menu.activo{
+    transform: translateY(-120px);
+}
+
+
+/* =========================================
+LOGO PRINCIPAL
+Responsive automático
+========================================= */
+
+.logo{
+
+    width: clamp(200px, 35vw, 460px);
+
+    cursor:pointer;
+
+    transition: transform 0.3s ease;
+
+    animation: flotar 4s ease-in-out infinite;
+
+}
+
+
+/* efecto hover */
+
+.logo:hover{
+    transform: scale(1.05);
+}
+
+
+/* animación flotante */
+
+@keyframes flotar{
+
+    0%{ transform: translateY(0px); }
+
+    50%{ transform: translateY(-10px); }
+
+    100%{ transform: translateY(0px); }
+
+}
+
+
+/* =========================================
+BOTONES DEL MENÚ
+========================================= */
 
 .botones{
-    display:none;
-    gap:30px;
-    margin-bottom:40px;
+
+    margin-top:25px;
+
+    display:flex;
+    gap:25px;
+
+    opacity:0;
+    transform: translateY(40px);
+
+    transition: all 0.6s ease;
+
 }
 
+
+/* cuando aparecen */
+
+.botones.mostrar{
+
+    opacity:1;
+    transform: translateY(0);
+
+}
+
+
+/* =========================================
+BOTONES (IMÁGENES)
+========================================= */
+
 .boton{
-    width:160px;
+
+    width: clamp(120px, 12vw, 170px);
+
     cursor:pointer;
+
+    transition: transform 0.25s ease;
+
+}
+
+
+/* animación hover */
+
+.boton:hover{
+    transform: scale(1.1);
+}
+
+
+/* =========================================
+RESPONSIVE (MÓVIL)
+========================================= */
+
+@media (max-width:768px){
+
+    .container{
+        background-image:url("../../media/inicio/fondo-movil.png");
+    }
+
+    .menu{
+        margin-bottom:40px;
+    }
+
 }
