@@ -12,10 +12,22 @@
     <link rel="stylesheet" href="../estilos/formulario.css">
 </head>
 <body>
+
+    <!-- Barra superior con logo: al hacer click regresa a la pantalla de inicio -->
     <div class="encabezado">
-        <img src="../../media/inicio/logo.png">
+        <a href="index.html">
+            <img src="../../media/inicio/logo.png">
+        </a>
     </div>
+
+    <!-- Área principal del formulario: contiene todos los pasos -->
     <div class="contenido">
+
+        <!-- =====================
+        PASO 1: Introducción
+        Presenta el contexto del juego y pide al jugador registrarse.
+        Empieza con clase "activo" para mostrarse por defecto.
+        ===================== -->
         <div class="paso activo" id="paso1">
             <div class="contenidoPaso">
                 <h1>¡Felicitaciones!</h1>
@@ -28,23 +40,34 @@
                 <h3 class="carta">Por favor diligencia el siguiente formulario para poder realizar oficialmente
                     la fundación de la nueva ciudad.
                 </h3>
+                <!-- Botón que avanza al siguiente paso -->
                 <button class="pasar" onclick="siguiente()" id="comenzar">Registrarse</button>
             </div>
         </div>
+
+        <!-- =====================
+        PASO 2: Perfil del gobernante
+        El jugador elige si es Rey o Reina y escribe su nombre.
+        En móvil se navega con flechas; en escritorio se muestran ambas opciones.
+        ===================== -->
         <div class="paso" id="paso2">
             <div class="contenidoPaso">
                 <div class="instruccion">
                     <p>Hablanos de ti ¿Cómo te ves? ¿Cómo te llamas?</p>
                 </div>
+
+                <!-- Selector de género: radio buttons ocultos controlados por CSS/JS -->
                 <div class="selectorGenero">
                     <div class="generos">
 
+                        <!-- Opción Rey: radio button oculto, imagen visible -->
                         <label class="genero">
                             <h3>Rey</h3>
                             <input type="radio" name="genero" value="hombre" checked>
                             <img src="../../media/inicio/rey.png" alt="Alcalde">
                         </label>
 
+                        <!-- Opción Reina: radio button oculto, imagen visible -->
                         <label class="genero">
                             <h3>Reina</h3>
                             <input type="radio" name="genero" value="mujer">
@@ -52,15 +75,20 @@
                         </label>
 
                     </div>
-                        <div class="flechasGenero">
-                            <button class="pasar" type="button" id="anteriorGenero">◀</button>
-                            <button class="pasar" type="button" id="siguienteGenero">▶</button>
-                        </div>
+
+                    <!-- Flechas de navegación entre géneros (solo visibles en móvil) -->
+                    <div class="flechasGenero">
+                        <button class="pasar" type="button" id="anteriorGenero">◀</button>
+                        <button class="pasar" type="button" id="siguienteGenero">▶</button>
+                    </div>
                 </div>
+
+                <!-- Campo de texto para el nombre del gobernante -->
                 <div>
                     <input class="nombre" type="text" id="nombreAlcalde" placeholder="Escribe tu nombre">
                 </div>
 
+                <!-- Botones para navegar entre pasos -->
                 <div class="botonesPaso">
                     <button class="pasar" onclick="anterior()">⬅</button>
                     <button class="pasar" onclick="siguiente()">➡</button>
@@ -68,6 +96,11 @@
             </div>
         </div>
 
+        <!-- =====================
+        PASO 3: Datos de la ciudad
+        El jugador define el nombre y las dimensiones del mapa.
+        Los valores del mapa van de 15 a 30 celdas.
+        ===================== -->
         <div class="paso" id="paso3">
             <div class="contenidoPaso">
                 <div class="instruccion">
@@ -75,9 +108,13 @@
                         ¿Qué tan grande será?
                     </p>
                 </div>
+
+                <!-- Nombre de la ciudad -->
                 <div>
                     <input class="nombre" type="text" id="nombreCiudad" placeholder="Escribe el nombre de tu ciudad">
                 </div>
+
+                <!-- Dimensión: largo del mapa (eje X) -->
                 <div class="dimension">
                     <div class="etiqueta">
                         <p>Largo del mapa: </p>
@@ -86,6 +123,8 @@
                         <input class="nombre" type="number" id="longitudMapa" min="15" max="30" step="1">
                     </div>
                 </div>
+
+                <!-- Dimensión: ancho del mapa (eje Y) -->
                 <div class="dimension">
                     <div class="etiqueta">
                         <p>Ancho del mapa: </p>
@@ -94,6 +133,8 @@
                         <input class="nombre" type="number" id="alturaMapa" min="15" max="30" step="1">
                     </div>
                 </div>
+
+                <!-- Botones para navegar entre pasos -->
                 <div class="botonesPaso">
                     <button class="pasar" onclick="anterior()">⬅</button>
                     <button class="pasar" onclick="siguiente()">➡</button>
@@ -101,6 +142,12 @@
             </div>
         </div>
 
+        <!-- =====================
+        PASO 4: Clima de la ciudad
+        El jugador selecciona una ciudad colombiana real para
+        definir el clima de su ciudad virtual.
+        Los <select> se llenan dinámicamente desde ApiColombia.js
+        ===================== -->
         <div class="paso" id="paso4">
             <div class="contenidoPaso">
                 <div class="instruccion">
@@ -109,6 +156,7 @@
                     </p>
                 </div>
 
+                <!-- Selector de departamento: opciones cargadas por ApiColombia.js -->
                 <div class="selectorTerritorio">
                     <div class="etiqueta">
                         <p>Departamento:</p>
@@ -117,6 +165,8 @@
                         <select class="nombre" id="departamento"></select>
                     </div>
                 </div>
+
+                <!-- Selector de ciudad: se filtra según el departamento elegido -->
                 <div class="selectorTerritorio">
                     <div class="etiqueta">
                         <p>Ciudad:</p>
@@ -125,13 +175,15 @@
                         <select class="nombre" id="ciudad"></select>
                     </div>
                 </div>
-                    <div class="botonesPaso">
-                        <button class="pasar" onclick="anterior()">⬅</button>
-                        <button class="pasar" onclick="crearCiudad()">Fundar ciudad</button>
-                    </div>
+
+                <!-- Botón final: llama a crearCiudad() en formulario.js -->
+                <div class="botonesPaso">
+                    <button class="pasar" onclick="anterior()">⬅</button>
+                    <button class="pasar" onclick="crearCiudad()">Fundar ciudad</button>
                 </div>
             </div>
         </div>
+
     </div>
 </body>
 </html>

@@ -2,40 +2,52 @@
 ==============
 FUENTES USADAS
 ==============*/
+
+/* Fuente principal para instrucciones y etiquetas */
 @font-face {
     font-family: 'codec';
     src: url(../../media/fuentes/codec/Codec-Cold-Regular-trial.ttf) format('truetype');
     font-weight: normal; /*IMPORTANTE: SI SE VAN A USAR OTROS ESTILOS, COMO EL BOLD, TOCA CREARLE OTRO SEPARADO
     Y EL FONT-WEIGHT SE PONE BOLD*/ 
 }
+
+/* Fuente decorativa para títulos y texto de carta */
 @font-face {
     font-family: 'floraison des amours';
     src: url(../../media/fuentes/floraison_des_amours/Floraison\ des\ Amours.ttf) format('truetype');
     font-weight: normal;
 }
+
+
 /*
 ==============
 COLORES USADOS
+Variables globales para mantener coherencia visual
 ==============
 */
 :root{
-    --colorEncabezado: #1A73E8;
-    --colorFondo: rgba(167, 204, 208, 0.7);
-    --colorBotones: #1A73E8;
+    --colorEncabezado: #1A73E8;                  /* azul de la barra superior */
+    --colorFondo: rgba(167, 204, 208, 0.7);      /* celeste semitransparente de las tarjetas */
+    --colorBotones: #1A73E8;                     /* azul del hover en botones */
 }
+
 
 /*
 ==========
 ENCABEZADO
+Barra azul fija arriba con el logo centrado.
+El body usa grid para que el encabezado ocupe
+exactamente 100px y el contenido el resto.
 ==========*/
 html, body{
     height: 100%;
     margin: 0; 
     /*Ahora todo ocupará el tamaño de la pantalla*/
 }
+
 body{
     display: grid;
-    grid-template-rows: 100px 1fr;
+    grid-template-rows: 100px 1fr; /* fila 1: encabezado | fila 2: contenido */
     height: 100%;
 }
 
@@ -45,39 +57,63 @@ body{
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 1;
+    z-index: 1; /* queda por encima del contenido al hacer scroll */
 }
+
+/* El enlace que envuelve el logo no debe verse como link */
+.encabezado a{
+    display: flex;
+    align-items: center;
+    height: 100%;
+    text-decoration: none;
+}
+
 .encabezado img{
     max-width: 100%;
     max-height: 100px;
     height: auto;
     object-fit: contain;
     display: block;
+    transition: opacity 0.2s ease;
 }
+
+/* Efecto hover en el logo para indicar que es clickeable */
+.encabezado img:hover{
+    opacity: 0.85;
+}
+
+/* Título principal con fuente decorativa */
 h1{
     font-size: 30pt;
     font-family: 'floraison des amours';
 }
+
+
 /*
 =========
 CONTENIDO
+Área principal debajo del encabezado.
+Centra el paso activo y aplica el fondo de pantalla.
 =========*/
 .contenido{
     display: grid;
-    place-items: center;
-    background-image: url(../../media/inicio/fondo-movil.png);
+    place-items: center;         /* centra el paso activo vertical y horizontalmente */
+    background-image: url(../../media/inicio/fondo-movil.png); /* fondo por defecto (móvil) */
     background-size: cover;
     background-position: center;
-    min-height: 0;
+    min-height: 0;               /* necesario para que grid no desborde */
     width: 100%;
     height: 100%;
 }
+
+/* Botones de navegación entre pasos: siempre en fila de dos */
 .botonesPaso{
     display: grid;
     grid-template-columns: auto auto;
     gap: 40px;
     justify-content: center;
 }
+
 .botonesPaso button{
     font-size:24px;
     padding:10px 20px;
@@ -87,12 +123,16 @@ CONTENIDO
     border-radius:8px;
     cursor:pointer;
 }
+
+/* Hover compartido por todos los botones de clase .pasar */
 .pasar:hover {
-    transform: scale(1.05); /* Se agranda un poquito */
+    transform: scale(1.05);
     box-shadow: 0px 5px 15px rgba(0,0,0,0.2);
     background-color: var(--colorBotones);
     color: #ffffff;
 }
+
+/* En escritorio se usa el fondo horizontal */
 @media (min-width: 768px){
     .contenido{
         display: grid;
@@ -102,25 +142,33 @@ CONTENIDO
         background-position: center;
     }
 }
+
+
 /*
 ==========
 FORMULARIO
+Sistema de pasos: solo el paso con clase "activo" se muestra.
+Cada paso ocupa toda la altura disponible.
 ==========
 */
+
+/* Un paso oculto no ocupa espacio */
 .paso{
     height: 100%;
     width: 100%;
-    position: relative;
     margin: 0;
     position: relative;
     display: none; /*Si solo tiene el nombre paso, no lo muestra*/
 }
+
+/* Un paso activo se muestra como grid de una columna */
 .paso.activo{
     display: grid;
     grid-template-rows: minmax(0,1fr) auto auto;
     /*Si además de paso, tiene la palabra activo, ahí si lo muestra*/
 }
 
+/* Texto de instrucción en cada paso */
 .instruccion{
     font-size: 15pt;
     text-align: center;
@@ -128,6 +176,7 @@ FORMULARIO
     font-weight: normal;
 }
 
+/* El contenido directo de cada paso se distribuye en columna centrada */
 .paso > * { /*> * selecciona todos los hijos de paso (todo lo que hay adentro de el)*/
     display: grid;
     grid-template-rows: 1fr auto auto;
@@ -136,6 +185,8 @@ FORMULARIO
     gap: 15px;
     height: 100%;
 }
+
+/* Botón "Registrarse" del paso 1: centrado especial */
 #comenzar{
     background-color: white;
     padding:10px 20px;
@@ -150,18 +201,23 @@ FORMULARIO
     font-size: 1.2rem;
     margin-top: auto;
 }
+
 #comenzar:hover {
-    transform: scale(1.05); /* Se agranda un poquito */
+    transform: scale(1.05);
     box-shadow: 0px 5px 15px rgba(0,0,0,0.2);
     background-color: var(--colorBotones);
     color: #ffffff;
 }
+
+/* Texto estilo carta con fuente decorativa */
 .carta{
     font-family: 'floraison des amours';
     font-size: 20pt;
     text-align: center;
 }
 
+/* Tarjeta semitransparente que contiene el formulario de cada paso.
+   Tiene scroll si el contenido no cabe en pantalla. */
 .contenidoPaso {
     background-color: var(--colorFondo);
     padding: 2rem 2rem 3rem;    /*Pongo esto para que el texto no se salga de la tarjetica*/
@@ -175,17 +231,25 @@ FORMULARIO
     overflow-y: auto;           /* Si el contenido no cabe, le hace un scroll */
 }
 
+
 /*
 ================================
 SECCION DE SELECCIÓN HOMBRE/MUJER
+Cada opción es un label con radio oculto e imagen.
+Solo se muestra la opción cuyo radio está checked.
+En escritorio se muestran las dos a la vez.
 ================================*/
+
+/* Por defecto los labels de género están ocultos */
 .genero{
-display: none;
+    display: none;
     text-align: center;
     min-height: 0;
     justify-content:center;
     align-items:center;
 }
+
+/* Contenedor que alinea las opciones (columna en móvil, fila en escritorio) */
 .generos {
     display: flex;
     flex-direction: column; 
@@ -193,23 +257,31 @@ display: none;
     align-items: center;
     gap: 20px; /* spacing between options */
 }
+
+/* Título de cada opción con fuente decorativa */
 .genero h3{
     font-family: 'floraison des amours';
     font-size: 25pt;
 }
+
+/* El radio button es decorativo: se controla por JS/CSS, no se muestra */
 .genero input{
     display: none;
 }
+
+/* Imagen del personaje: tamaño fluido entre 120px y 500px */
 .genero img{
     height: clamp(120px, 35vh, 500px);
     /*Minimo 120px, normalmente el 40% de la pantalla, máximo 500px*/
     width: auto;
 }
 
+/* Solo muestra el label cuyo radio está seleccionado */
 .genero:has(input:checked){
     display: block;
 }
 
+/* Flechas de navegación entre géneros (solo en móvil) */
 .flechasGenero{
     display:flex;
     justify-content:center;
@@ -226,6 +298,8 @@ display: none;
     border-radius:8px;
     cursor:pointer;
 }
+
+/* Campos de texto e inputs numéricos comparten este estilo base */
 .nombre{
     width: 80%;
     max-width: 400px;
@@ -235,6 +309,7 @@ display: none;
     border: 2px solid #ccc;
 }
 
+/* Resalta la imagen del personaje seleccionado con borde azul */
 .genero input:checked ~ img {
     border: 20px solid var(--colorEncabezado); /* color del borde cuando está seleccionado */
     border-radius: 12px;
@@ -242,18 +317,30 @@ display: none;
     transition: all 0.3s ease; /* animación suave */
 }
 
+/* Etiquetas de los campos de dimensión del mapa */
 .etiqueta{
     font-family: 'codec';
     font-size: 15pt;
 }
 
+
+/*
+================================
+RESPONSIVE ESCRITORIO (768px+)
+En pantallas grandes se muestran Rey y Reina lado a lado
+y se ocultan las flechas de navegación entre géneros.
+================================*/
 @media (min-width:768px){
+
+    /* Las dos opciones se muestran en fila */
     .generos {
         display: flex;
-        flex-direction: row; /* lado a lado */
+        flex-direction: row;
         justify-content: center;
         gap: 40px;
     }
+
+    /* Ambos labels visibles al mismo tiempo */
     .genero {
         display: block;
     }

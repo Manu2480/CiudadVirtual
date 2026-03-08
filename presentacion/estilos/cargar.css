@@ -1,64 +1,179 @@
+/* =========================================
+RESET BÁSICO
+El body ocupa toda la pantalla y se divide
+en dos filas: encabezado (100px) + contenido
+========================================= */
 body{
     margin:0;
     min-height:100vh;
     overflow:hidden;
+    display: grid;
+    grid-template-rows: 100px 1fr;
 }
 
-/* Contenedor principal */
+
+/* =========================================
+BARRA SUPERIOR CON LOGO
+Misma barra azul que tiene formulario.html.
+El <a> dentro permite que el logo sea un link.
+========================================= */
+.encabezado{
+    background-color: #1A73E8;
+    height: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1;
+}
+
+/* El enlace que envuelve el logo no debe verse como link */
+.encabezado a{
+    display: flex;
+    align-items: center;
+    height: 100%;
+    text-decoration: none;
+}
+
+.encabezado img{
+    max-width: 100%;
+    max-height: 80px;
+    height: auto;
+    object-fit: contain;
+    display: block;
+    transition: opacity 0.2s ease;
+}
+
+/* Efecto hover en el logo para indicar que es clickeable */
+.encabezado img:hover{
+    opacity: 0.85;
+}
+
+
+/* =========================================
+CONTENEDOR PRINCIPAL
+Ocupa el espacio restante debajo del encabezado
+y centra vertical y horizontalmente su contenido.
+========================================= */
 .container {
     display: flex;
-    flex-direction: column; /* Alinea los elementos en columna (uno sobre otro) */
-    justify-content: center; /* Centra el grupo verticalmente */
-    align-items: center;    /* Centra el grupo horizontalmente */
-    height: 100vh;          /* Ocupa el 100% de la altura de la pantalla */
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     background-color: #fcfcfc;
     background-image:url("../../media/inicio/vacio.png");
     background-size:cover;
     background-position:center;
     background-repeat:no-repeat;
-    gap: 25px;              /* Crea un espacio uniforme entre la imagen y el botón */
+    gap: 25px;
 }
 
-/* Imagen de construcción */
+
+/* =========================================
+IMAGEN DE CONSTRUCCIÓN
+Usa dos capas superpuestas dentro de .imgWrapper:
+  - capa inferior (.constructionImg):     imagen a color, siempre visible
+  - capa superior (.constructionImgGris): imagen gris, se recorta de abajo
+    hacia arriba con clip-path al añadir la clase .revelando
+========================================= */
+
+/* Contenedor relativo que mantiene ambas capas alineadas */
+.imgWrapper {
+    position: relative;
+    max-width: 300px;
+    width: 90%;            /* responsive para móviles */
+    line-height: 0;        /* evita espacio extra debajo de las imágenes */
+}
+
+/* Capa inferior: imagen a color (siempre visible, base) */
 .constructionImg {
-    max-width: 300px;       /* Tamaño ajustable */
-    width: 90%;             /* Responsive para móviles */
+    width: 100%;
     height: auto;
-    /* Sombreo suave opcional para dar profundidad */
-    filter: drop-shadow(0px 10px 15px rgba(0,0,0,0.1));
+    display: block;
+    filter: drop-shadow(0px 10px 15px rgba(0,0,0,0.15));
 }
 
-/* El botón redondeado y claro */
+/* Capa superior: misma imagen en gris, flotando sobre la de color.
+   clip-path recorta cuánto se ve: al inicio tapa todo (inset 0%),
+   al revelar sube hasta tapar 0% (desaparece de abajo hacia arriba). */
+.constructionImgGris {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: auto;
+    display: block;
+    filter: grayscale(100%) brightness(0.85);
+    clip-path: inset(0% 0% 0% 0%);           /* estado inicial: tapa toda la imagen */
+    transition: clip-path 1.4s cubic-bezier(0.4, 0, 0.2, 1); /* animación suave */
+}
+
+/* Al añadir .revelando, el recorte sube desde abajo hasta el tope:
+   el gris desaparece revelando el color debajo */
+.constructionImgGris.revelando {
+    clip-path: inset(100% 0% 0% 0%);
+}
+
+
+/* =========================================
+BOTÓN PRINCIPAL (CARGAR / VER CIUDAD)
+Estado inicial: blanco con borde negro
+Estado listo:   blanco con borde negro (igual)
+Hover en ambos: azul con letras blancas
+========================================= */
 .cargaBtn {
     background-color: #ffffff;
-    color: #333333;         /* Letras oscuras para que destaquen sobre fondo claro */
+    color: #333333;
     font-size: 1.2rem;
-    font-weight: 700;       /* Letras negritas (destacan) */
+    font-weight: 700;
     padding: 15px 40px;
-    border: 2px solid #333333; /* Un borde sólido ayuda a que destaque */
-    border-radius: 50px;    /* Extremos totalmente redondeados */
+    border: 2px solid #333333;
+    border-radius: 50px;   /* extremos totalmente redondeados */
     cursor: pointer;
-    transition: transform 0.2s, box-shadow 0.2s;
+    transition: transform 0.2s, box-shadow 0.2s, background-color 0.3s, color 0.3s, border-color 0.3s;
     text-transform: uppercase;
-    letter-spacing: 1px;    /* Espaciado entre letras para un look moderno */
+    letter-spacing: 1px;
 }
 
-/* Efecto al pasar el mouse */
+/* Hover: azul consistente con la barra superior y el formulario */
 .cargaBtn:hover {
-    transform: scale(1.05); /* Se agranda un poquito */
+    transform: scale(1.05);
     box-shadow: 0px 5px 15px rgba(0,0,0,0.2);
     background-color: #1a73e8;
     color: #ffffff;
+    border-color: #1a73e8;
 }
 
-/* contenedor de navegación */
+/* Estado "listo" tras cargar JSON: mantiene blanco/negro igual que el inicial */
+.cargaBtn.listo {
+    background-color: #ffffff;
+    color: #333333;
+    border-color: #333333;
+}
+
+/* Hover estado listo: mismo azul */
+.cargaBtn.listo:hover {
+    background-color: #1a73e8;
+    color: #ffffff;
+    border-color: #1a73e8;
+}
+
+
+/* =========================================
+CONTENEDOR DE NAVEGACIÓN
+Agrupa las flechas de dirección y el botón
+principal en una fila centrada.
+========================================= */
 .navContainer{
     display:flex;
     align-items:center;
     gap:20px;
 }
 
-/* triángulos */
+
+/* =========================================
+BOTONES DE FLECHA (TRIÁNGULOS CSS)
+Se dibujan solo con bordes, sin imágenes.
+========================================= */
 .navBtn{
     width:0;
     height:0;
@@ -67,30 +182,36 @@ body{
     cursor:pointer;
 }
 
-/* triángulo izquierda */
+/* Triángulo apuntando a la izquierda */
 .left{
     border-width:15px 20px 15px 0;
     border-color:transparent #333 transparent transparent;
 }
 
-/* triángulo derecha */
+/* Triángulo apuntando a la derecha */
 .right{
     border-width:15px 0 15px 20px;
     border-color:transparent transparent transparent #333;
 }
 
-/* efecto hover opcional */
+/* Efecto hover en las flechas */
 .navBtn:hover{
     opacity:0.7;
 }
 
+
+/* =========================================
+RESPONSIVE (MÓVIL)
+========================================= */
 @media (max-width:768px){
 
+    /* Fondo alternativo para pantallas pequeñas */
     .container{
         background-image:url("../../media/inicio/vacio-movil.png");
         gap: 70px;
     }
 
+    /* Separa la barra de navegación del borde inferior */
     .navContainer{
         margin-bottom:40px;
     }
