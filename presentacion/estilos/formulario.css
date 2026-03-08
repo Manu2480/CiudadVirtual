@@ -41,7 +41,7 @@ exactamente 100px y el contenido el resto.
 ==========*/
 html, body{
     height: 100%;
-    margin: 0; 
+    margin: 0;
     /*Ahora todo ocupará el tamaño de la pantalla*/
 }
 
@@ -53,7 +53,7 @@ body{
 
 .encabezado{
     background-color: var(--colorEncabezado);
-    height:100px;
+    height: 100px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -70,7 +70,7 @@ body{
 
 .encabezado img{
     max-width: 100%;
-    max-height: 100px;
+    max-height: 80px;        /* un poco menos para que respire en móvil */
     height: auto;
     object-fit: contain;
     display: block;
@@ -82,10 +82,11 @@ body{
     opacity: 0.85;
 }
 
-/* Título principal con fuente decorativa */
+/* Título principal: fluido entre pantallas */
 h1{
-    font-size: 30pt;
     font-family: 'floraison des amours';
+    font-size: clamp(20pt, 5vw, 30pt); /* se reduce en móvil */
+    margin: 0 0 0.5rem;
 }
 
 
@@ -104,42 +105,14 @@ Centra el paso activo y aplica el fondo de pantalla.
     min-height: 0;               /* necesario para que grid no desborde */
     width: 100%;
     height: 100%;
+    overflow-y: auto;            /* si en algún móvil muy pequeño desborda, permite scroll */
 }
 
-/* Botones de navegación entre pasos: siempre en fila de dos */
-.botonesPaso{
-    display: grid;
-    grid-template-columns: auto auto;
-    gap: 40px;
-    justify-content: center;
-}
-
-.botonesPaso button{
-    font-size:24px;
-    padding:10px 20px;
-    background-color: white;
-    color:black;
-    border:none;
-    border-radius:8px;
-    cursor:pointer;
-}
-
-/* Hover compartido por todos los botones de clase .pasar */
-.pasar:hover {
-    transform: scale(1.05);
-    box-shadow: 0px 5px 15px rgba(0,0,0,0.2);
-    background-color: var(--colorBotones);
-    color: #ffffff;
-}
-
-/* En escritorio se usa el fondo horizontal */
+/* En escritorio/tablet se usa el fondo horizontal */
 @media (min-width: 768px){
     .contenido{
-        display: grid;
-        place-items: center;
         background-image: url(../../media/inicio/fondo.png);
-        background-size: cover;
-        background-position: center;
+        /* overflow-y sigue en auto: la tarjeta maneja su propio scroll interno */
     }
 }
 
@@ -161,45 +134,110 @@ Cada paso ocupa toda la altura disponible.
     display: none; /*Si solo tiene el nombre paso, no lo muestra*/
 }
 
-/* Un paso activo se muestra como grid de una columna */
+/* Un paso activo se muestra centrado y nunca desborda su contenedor */
 .paso.activo{
     display: grid;
-    grid-template-rows: minmax(0,1fr) auto auto;
+    place-items: center;
+    min-height: 0;   /* permite que el grid hijo se encoja si es necesario */
+    overflow: hidden;
     /*Si además de paso, tiene la palabra activo, ahí si lo muestra*/
 }
 
+/* Tarjeta semitransparente que contiene el formulario de cada paso.
+   Se adapta a cualquier pantalla con clamp y padding fluido.
+   La tarjeta ocupa como máximo el espacio disponible bajo el encabezado,
+   y su scroll interno evita que desborde hacia afuera. */
+.contenidoPaso {
+    background-color: var(--colorFondo);
+    padding: clamp(0.8rem, 3vw, 2rem) clamp(1rem, 4vw, 2rem) clamp(1rem, 3vw, 2rem);
+    margin: clamp(0.4rem, 1.5vh, 1rem) auto;
+    border-radius: 8px;
+    max-width: 800px;
+    width: calc(100% - clamp(1rem, 4vw, 4rem)); /* margen lateral fluido */
+    box-sizing: border-box;
+    /* Ocupa hasta el 90% de la altura disponible (pantalla - encabezado - margen) */
+    max-height: calc(100dvh - 130px);
+    min-height: 0;
+    overflow-y: auto;           /* scroll interno si el contenido no cabe */
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: clamp(6px, 1.5vh, 16px); /* separación fluida entre elementos internos */
+}
+
+
+/*
+==========
+TEXTO DE INSTRUCCIÓN Y CARTA
+Tamaños fluidos con clamp para que no queden
+ni muy grandes en móvil ni muy chicos en escritorio.
+==========*/
+
 /* Texto de instrucción en cada paso */
 .instruccion{
-    font-size: 15pt;
-    text-align: center;
     font-family: 'codec';
     font-weight: normal;
+    font-size: clamp(12pt, 2.5vw, 15pt);
+    text-align: center;
+    margin: 0;
 }
 
-/* El contenido directo de cada paso se distribuye en columna centrada */
-.paso > * { /*> * selecciona todos los hijos de paso (todo lo que hay adentro de el)*/
-    display: grid;
-    grid-template-rows: 1fr auto auto;
-    align-items: center;
-    justify-items: center;
-    gap: 15px;
-    height: 100%;
+/* Texto estilo carta con fuente decorativa */
+.carta{
+    font-family: 'floraison des amours';
+    font-size: clamp(14pt, 3.5vw, 20pt); /* fluido entre móvil y escritorio */
+    text-align: center;
+    margin: 0;
 }
 
-/* Botón "Registrarse" del paso 1: centrado especial */
+/* Etiquetas de los campos de dimensión del mapa */
+.etiqueta{
+    font-family: 'codec';
+    font-size: clamp(11pt, 2vw, 15pt);
+}
+
+
+/*
+==========
+BOTONES
+==========*/
+
+/* Botones de navegación entre pasos: siempre en fila de dos */
+.botonesPaso{
+    display: flex;
+    gap: clamp(16px, 5vw, 40px); /* separación fluida */
+    justify-content: center;
+    flex-wrap: wrap;             /* si no caben lado a lado en pantallas muy chicas, bajan */
+}
+
+.botonesPaso button{
+    font-size: clamp(18px, 4vw, 24px); /* tamaño fluido */
+    padding: clamp(7px, 1.5vw, 10px) clamp(14px, 3vw, 20px);
+    background-color: white;
+    color: black;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+/* Hover compartido por todos los botones de clase .pasar */
+.pasar:hover {
+    transform: scale(1.05);
+    box-shadow: 0px 5px 15px rgba(0,0,0,0.2);
+    background-color: var(--colorBotones);
+    color: #ffffff;
+}
+
+/* Botón "Registrarse" del paso 1 */
 #comenzar{
     background-color: white;
-    padding:10px 20px;
-    color:black;
-    border:none;
-    border-radius:8px;
-    cursor:pointer;
-    width: auto;
-    justify-self: center;
-    align-self: center;
-    display: flex;
-    font-size: 1.2rem;
-    margin-top: auto;
+    padding: clamp(8px, 1.5vw, 10px) clamp(16px, 3vw, 20px);
+    color: black;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: clamp(1rem, 2.5vw, 1.2rem);
 }
 
 #comenzar:hover {
@@ -209,26 +247,21 @@ Cada paso ocupa toda la altura disponible.
     color: #ffffff;
 }
 
-/* Texto estilo carta con fuente decorativa */
-.carta{
-    font-family: 'floraison des amours';
-    font-size: 20pt;
-    text-align: center;
-}
 
-/* Tarjeta semitransparente que contiene el formulario de cada paso.
-   Tiene scroll si el contenido no cabe en pantalla. */
-.contenidoPaso {
-    background-color: var(--colorFondo);
-    padding: 2rem 2rem 3rem;    /*Pongo esto para que el texto no se salga de la tarjetica*/
-    margin: 1rem auto 0;         /*Aleja la tarjeta del borde de la pantalla*/
+/*
+==========
+INPUTS
+==========*/
+
+/* Campos de texto e inputs numéricos comparten este estilo base */
+.nombre{
+    width: 80%;
+    max-width: 400px;
+    padding: clamp(8px, 1.5vw, 12px);
+    font-size: clamp(14px, 2.5vw, 18px);
     border-radius: 8px;
-    max-width: 800px;
-    width: calc(100% - 2rem);
+    border: 2px solid #ccc;
     box-sizing: border-box;
-    /* Lo siguiente es para que el fondo (color) no crezca más que la pantalla menos el espacio del header */
-    max-height: calc(100vh - 140px);
-    overflow-y: auto;           /* Si el contenido no cabe, le hace un scroll */
 }
 
 
@@ -245,23 +278,24 @@ En escritorio se muestran las dos a la vez.
     display: none;
     text-align: center;
     min-height: 0;
-    justify-content:center;
-    align-items:center;
+    justify-content: center;
+    align-items: center;
 }
 
 /* Contenedor que alinea las opciones (columna en móvil, fila en escritorio) */
 .generos {
     display: flex;
-    flex-direction: column; 
+    flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap: 20px; /* spacing between options */
+    gap: 10px;
 }
 
 /* Título de cada opción con fuente decorativa */
 .genero h3{
     font-family: 'floraison des amours';
-    font-size: 25pt;
+    font-size: clamp(16pt, 4vw, 25pt); /* fluido */
+    margin: 0 0 0.3rem;
 }
 
 /* El radio button es decorativo: se controla por JS/CSS, no se muestra */
@@ -269,11 +303,13 @@ En escritorio se muestran las dos a la vez.
     display: none;
 }
 
-/* Imagen del personaje: tamaño fluido entre 120px y 500px */
+/* Imagen del personaje: fluida tanto en alto como en ancho.
+   En tablet el límite real es el ancho del contenedor, no el alto. */
 .genero img{
-    height: clamp(120px, 35vh, 500px);
-    /*Minimo 120px, normalmente el 40% de la pantalla, máximo 500px*/
+    height: clamp(100px, 22vh, 380px);
     width: auto;
+    max-width: clamp(120px, 30vw, 320px); /* evita que se desborde horizontalmente */
+    object-fit: contain;
 }
 
 /* Solo muestra el label cuyo radio está seleccionado */
@@ -281,46 +317,30 @@ En escritorio se muestran las dos a la vez.
     display: block;
 }
 
-/* Flechas de navegación entre géneros (solo en móvil) */
+/* Flechas de navegación entre géneros (solo visibles en móvil) */
 .flechasGenero{
-    display:flex;
-    justify-content:center;
-    gap:40px;
-    margin-top:15px;
+    display: flex;
+    justify-content: center;
+    gap: clamp(20px, 6vw, 40px);
+    margin-top: 10px;
 }
 
 .flechasGenero button{
-    font-size:24px;
-    padding:10px 20px;
+    font-size: clamp(18px, 4vw, 24px);
+    padding: clamp(7px, 1.5vw, 10px) clamp(14px, 3vw, 20px);
     background-color: white;
-    color:black;
-    border:none;
-    border-radius:8px;
-    cursor:pointer;
-}
-
-/* Campos de texto e inputs numéricos comparten este estilo base */
-.nombre{
-    width: 80%;
-    max-width: 400px;
-    padding: 12px;
-    font-size: 18px;
+    color: black;
+    border: none;
     border-radius: 8px;
-    border: 2px solid #ccc;
+    cursor: pointer;
 }
 
 /* Resalta la imagen del personaje seleccionado con borde azul */
 .genero input:checked ~ img {
-    border: 20px solid var(--colorEncabezado); /* color del borde cuando está seleccionado */
+    border: clamp(8px, 2vw, 20px) solid var(--colorEncabezado); /* borde fluido */
     border-radius: 12px;
-    transform: scale(1.05); /* hace que la imagen se agrande un poquito */
-    transition: all 0.3s ease; /* animación suave */
-}
-
-/* Etiquetas de los campos de dimensión del mapa */
-.etiqueta{
-    font-family: 'codec';
-    font-size: 15pt;
+    transform: scale(1.05);
+    transition: all 0.3s ease;
 }
 
 
@@ -330,13 +350,11 @@ RESPONSIVE ESCRITORIO (768px+)
 En pantallas grandes se muestran Rey y Reina lado a lado
 y se ocultan las flechas de navegación entre géneros.
 ================================*/
-@media (min-width:768px){
+@media (min-width: 768px){
 
     /* Las dos opciones se muestran en fila */
     .generos {
-        display: flex;
         flex-direction: row;
-        justify-content: center;
         gap: 40px;
     }
 
@@ -345,8 +363,14 @@ y se ocultan las flechas de navegación entre géneros.
         display: block;
     }
 
+    /* En escritorio cada imagen puede usar más alto pero se reparte el ancho entre dos */
+    .genero img {
+        height: clamp(120px, 25vh, 320px);
+        max-width: clamp(140px, 22vw, 280px);
+    }
+
     #anteriorGenero, /*oculta las flechitas que hay en pantallas pequeñas*/
     #siguienteGenero{
-        display:none;
+        display: none;
     }
 }
