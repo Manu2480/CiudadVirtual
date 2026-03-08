@@ -25,10 +25,10 @@ Si ya se cargó un JSON válido, navega a la ciudad.
 cargaBtn.addEventListener("click", () => {
 
     if (cargaBtn.classList.contains("listo")) {
-        /* JSON ya cargado y validado → ir a la vista de ciudad */
+        /* JSON ya cargado y validado => ir a la vista de ciudad */
         window.location.href = "ciudad.html";
     } else {
-        /* Aún no hay archivo → dispara el input oculto */
+        /* Aún no hay archivo => dispara el input oculto */
         fileInput.click();
     }
 
@@ -53,7 +53,7 @@ fileInput.addEventListener("change", (e) => {
             /* Intenta parsear el texto como JSON para comprobar que es válido */
             JSON.parse(evento.target.result);
 
-            /* JSON válido → lanza la animación de revelado */
+            /* JSON válido => lanza la animación de revelado */
             revelarImagen();
 
             /* Cambia el texto del botón a "Ver ciudad" y marca como listo */
@@ -78,8 +78,8 @@ Anima la capa gris reduciéndola de abajo hacia arriba,
 dejando ver progresivamente la imagen a color que está debajo.
 
 Técnica: clip-path inset(top right bottom left)
-  - Estado inicial:  inset(0% 0% 0% 0%)  → la capa gris tapa todo
-  - Estado final:    inset(100% 0% 0% 0%) → la capa gris sube hasta desaparecer
+  - Estado inicial:  inset(0% 0% 0% 0%)  => la capa gris tapa todo
+  - Estado final:    inset(100% 0% 0% 0%) => la capa gris sube hasta desaparecer
 La transición CSS en .constructionImgGris hace el movimiento suave.
 ========================================= */
 function revelarImagen() {
