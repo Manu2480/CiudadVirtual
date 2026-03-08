@@ -1,3 +1,6 @@
+
+<!-- -->
+
 <!DOCTYPE html>
 <html lang="es">
 
@@ -32,13 +35,19 @@
         <!-- Botones ocultos -->
         <div id="botones" class="botones">
 
-            <a href="crear.html">
-                <img src="../../media/inicio/crear.png" class="boton">
-            </a>
+            <div class="boton-wrapper"> <!-- La clase boton-wrapper encapsula botones-->
+                <span class="tooltip">¡Click para crear tu ciudad!</span> <!-- Mensajes de ayuda para el usuario tooltip-->
+                <a href="formulario.html">
+                    <img src="../../media/inicio/crear.png" class="boton">
+                </a>
+            </div>
 
-            <a href="cargar.html">
-                <img src="../../media/inicio/cargar.png" class="boton">
-            </a>
+            <div class="boton-wrapper"> <!-- La clase boton-wrapper encapsula botones-->
+                <span class="tooltip">¡Click para cargar tu ciudad!</span><!-- Mensajes de ayuda para el usuario tooltip-->
+                <a href="cargar.html">
+                    <img src="../../media/inicio/cargar.png" class="boton">
+                </a>
+            </div>
 
         </div>
 

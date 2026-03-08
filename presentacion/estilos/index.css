@@ -204,15 +204,17 @@ BOTONES DEL MENÚ
 
 .botones{
 
-    margin-top:25px;
+    margin-top: 60px; /* más separación del logo para dar espacio a los tooltips */
 
     display:flex;
-    gap:25px;
+    gap: 40px;
 
     opacity:0;
     transform: translateY(40px);
 
     transition: all 0.6s ease;
+
+    overflow: visible; /* asegura que los tooltips no se corten */
 
 }
 
@@ -250,7 +252,65 @@ BOTONES (IMÁGENES)
 
 
 /* =========================================
-RESPONSIVE (MÓVIL)
+TOOLTIP (PENSAMIENTO DEL BOTÓN)
+========================================= */
+
+.boton-wrapper {
+    position: relative;
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    /* reserva espacio arriba para el tooltip en móvil */
+}
+
+.tooltip {
+    position: absolute;
+    bottom: calc(100% + 18px);
+    left: 50%;
+    transform: translateX(-50%) scale(0.85);
+
+    background: rgba(255, 255, 255, 0.95);
+    color: #3a2d6b;
+    font-family: 'Comic Sans MS', 'Chalkboard SE', cursive;
+    font-size: clamp(10px, 1.3vw, 13px);
+    font-weight: 700;
+    white-space: nowrap;
+    padding: 8px 14px;
+    border-radius: 20px;
+    border: 2.5px solid #a78bfa;
+    box-shadow: 0 4px 16px rgba(120, 80, 220, 0.18);
+    pointer-events: none;
+    z-index: 10;
+
+    /* desktop: oculto hasta hover */
+    opacity: 0;
+    transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+/* bolitas de pensamiento */
+.tooltip::after {
+    content: "• • •";
+    position: absolute;
+    bottom: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 11px;
+    color: #a78bfa;
+    letter-spacing: 2px;
+    line-height: 1;
+}
+
+/* hover en desktop: cada wrapper activa solo su tooltip */
+@media (hover: hover) {
+    .boton-wrapper:hover > .tooltip {
+        opacity: 1;
+        transform: translateX(-50%) scale(1);
+    }
+}
+
+
+/* =========================================
+RESPONSIVE (MÓVIL / TABLET)
 ========================================= */
 
 @media (max-width:768px){
@@ -261,6 +321,31 @@ RESPONSIVE (MÓVIL)
 
     .menu{
         margin-bottom:40px;
+    }
+
+    /* más separación del logo para que los tooltips no choquen con él */
+    .botones{
+        margin-top: 70px;
+        gap: 30px;
+    }
+
+    /* wrapper con espacio fijo arriba para el tooltip estático */
+    .boton-wrapper {
+        padding-top: 50px; /* reserva el hueco del tooltip */
+    }
+
+    /* tooltip siempre visible, estático, sin animación */
+    .tooltip {
+        opacity: 1;
+        transform: translateX(-50%) scale(1);
+        font-size: clamp(9px, 2.8vw, 11px);
+        padding: 6px 10px;
+        white-space: normal;
+        text-align: center;
+        width: 120px;
+        /* posicionado dentro del padding-top del wrapper */
+        bottom: auto;
+        top: 0;
     }
 
 }
