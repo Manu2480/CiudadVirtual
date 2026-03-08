@@ -18,6 +18,28 @@ addEventListener("DOMContentLoaded",function(){
     window.anterior = anterior;
     window.crearCiudad = crearCiudad;
 
+    // Función para detectar overflow en inputs y activar animación
+    function checkOverflow() {
+        const inputs = document.querySelectorAll('.nombre');
+        
+        inputs.forEach(input => {
+            if (input.scrollWidth > input.clientWidth){
+                input.classList.add('overflowing');
+            } else {
+                input.classList.remove('overflowing');
+            }
+        }); //Si hay overflow le agrega nombre 'overflowing', si no, se lo quita
+    }
+
+    // Verificar overflow en eventos de input y cuando el usuario manipula / deja de manipular el input
+    document.addEventListener('input', checkOverflow);
+    document.addEventListener('focusin', checkOverflow);
+    document.addEventListener('focusout', checkOverflow);
+    
+
+    // Verificar overflow inicial
+    checkOverflow();
+
     //===========================================================================
     //SECCIÓN QUE VA A PERMITIR DESPLAZARSE ENTRE VARIAS SECCIONES DEL FORMULARIO
     //===========================================================================

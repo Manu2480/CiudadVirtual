@@ -18,6 +18,16 @@ FUENTES USADAS
     font-weight: normal;
 }
 
+/* Animacion del texto cuando hay overflow */
+@keyframes moverTexto{
+    from{
+        text-indent: 0;
+    }
+    to{
+        text-indent: -100%;
+    }
+}
+
 
 /*
 ==============
@@ -29,6 +39,8 @@ Variables globales para mantener coherencia visual
     --colorEncabezado: #1A73E8;                  /* azul de la barra superior */
     --colorFondo: rgba(167, 204, 208, 0.7);      /* celeste semitransparente de las tarjetas */
     --colorBotones: #1A73E8;                     /* azul del hover en botones */
+    --colorBordeBotones: #A78BFA;                /* ¿lila? del borde de los botones */
+    --colorLetraBotones: #3A2D6B;                /* morado de la tipografía de los botones */
 }
 
 
@@ -215,8 +227,8 @@ BOTONES
     font-size: clamp(18px, 4vw, 24px); /* tamaño fluido */
     padding: clamp(7px, 1.5vw, 10px) clamp(14px, 3vw, 20px);
     background-color: white;
-    color: black;
-    border: none;
+    color: var(--colorLetraBotones);
+    border: 2.5px solid var(--colorBordeBotones);
     border-radius: 8px;
     cursor: pointer;
 }
@@ -233,8 +245,8 @@ BOTONES
 #comenzar{
     background-color: white;
     padding: clamp(8px, 1.5vw, 10px) clamp(16px, 3vw, 20px);
-    color: black;
-    border: none;
+    color: var(--colorLetraBotones);
+    border: 2.5px solid var(--colorBordeBotones);
     border-radius: 8px;
     cursor: pointer;
     font-size: clamp(1rem, 2.5vw, 1.2rem);
@@ -260,9 +272,17 @@ INPUTS
     padding: clamp(8px, 1.5vw, 12px);
     font-size: clamp(14px, 2.5vw, 18px);
     border-radius: 8px;
-    border: 2px solid #ccc;
+    border: 2.5px solid var(--colorBordeBotones);
     box-sizing: border-box;
+    overflow: hidden;
+    white-space: nowrap;
 }
+
+/* Animación solo cuando hay overflow */
+.nombre.overflowing:not(:focus) {
+    animation: moverTexto 10s linear infinite;
+}
+
 
 
 /*
@@ -329,8 +349,8 @@ En escritorio se muestran las dos a la vez.
     font-size: clamp(18px, 4vw, 24px);
     padding: clamp(7px, 1.5vw, 10px) clamp(14px, 3vw, 20px);
     background-color: white;
-    color: black;
-    border: none;
+    color: var(--colorLetraBotones);
+    border: 2.5px solid var(--colorBordeBotones);
     border-radius: 8px;
     cursor: pointer;
 }
