@@ -357,7 +357,7 @@ En escritorio se muestran las dos a la vez.
 
 /* Resalta la imagen del personaje seleccionado con borde azul */
 .genero input:checked ~ img {
-    border: clamp(8px, 2vw, 20px) solid var(--colorEncabezado); /* borde fluido */
+    border: clamp(8px, 2vw, 20px) solid var(--colorBordeBotones); /* borde fluido */
     border-radius: 12px;
     transform: scale(1.05);
     transition: all 0.3s ease;
