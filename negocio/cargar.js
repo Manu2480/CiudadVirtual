@@ -78,8 +78,8 @@ Anima la capa gris reduciéndola de abajo hacia arriba,
 dejando ver progresivamente la imagen a color que está debajo.
 
 Técnica: clip-path inset(top right bottom left)
-  - Estado inicial:  inset(0% 0% 0% 0%)  => la capa gris tapa todo
-  - Estado final:    inset(100% 0% 0% 0%) => la capa gris sube hasta desaparecer
+- Estado inicial:  inset(0% 0% 0% 0%)  => la capa gris tapa todo
+- Estado final:    inset(100% 0% 0% 0%) => la capa gris sube hasta desaparecer
 La transición CSS en .constructionImgGris hace el movimiento suave.
 ========================================= */
 function revelarImagen() {

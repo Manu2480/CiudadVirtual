@@ -93,8 +93,8 @@ Usa dos capas superpuestas dentro de .imgWrapper:
 }
 
 /* Capa superior: misma imagen en gris, flotando sobre la de color.
-   clip-path recorta cuánto se ve: al inicio tapa todo (inset 0%),
-   al revelar sube hasta tapar 0% (desaparece de abajo hacia arriba). */
+    clip-path recorta cuánto se ve: al inicio tapa todo (inset 0%),
+    al revelar sube hasta tapar 0% (desaparece de abajo hacia arriba). */
 .constructionImgGris {
     position: absolute;
     top: 0;
