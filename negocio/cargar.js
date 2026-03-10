@@ -1,3 +1,4 @@
+
 /* =========================================
 CARGAR.JS
 Maneja la interacción de la pantalla de carga:
@@ -11,9 +12,8 @@ Maneja la interacción de la pantalla de carga:
 /* =========================================
 REFERENCIAS AL DOM
 ========================================= */
-const cargaBtn  = document.getElementById("cargaBtn");
+const cargaBtn = document.getElementById("cargaBtn");
 const fileInput = document.getElementById("fileInput");
-const imgGris   = document.getElementById("constructionImgGris");
 
 
 /* =========================================
@@ -22,17 +22,16 @@ Si todavía no hay archivo cargado, abre el
 explorador de archivos del sistema operativo.
 Si ya se cargó un JSON válido, navega a la ciudad.
 ========================================= */
+
+
 cargaBtn.addEventListener("click", () => {
 
-    if (cargaBtn.classList.contains("listo")) {
-        /* JSON ya cargado y validado => ir a la vista de ciudad */
-        window.location.href = "ciudad.html";
+    if(cargaBtn.classList.contains("listo")){
+        windows.location.href = "ciudad.html";
     } else {
-        /* Aún no hay archivo => dispara el input oculto */
         fileInput.click();
     }
-
-});
+})
 
 
 /* =========================================
@@ -53,8 +52,7 @@ fileInput.addEventListener("change", (e) => {
             /* Intenta parsear el texto como JSON para comprobar que es válido */
             JSON.parse(evento.target.result);
 
-            /* JSON válido => lanza la animación de revelado */
-            revelarImagen();
+            document.body.classList.remove("gris");
 
             /* Cambia el texto del botón a "Ver ciudad" y marca como listo */
             cargaBtn.textContent = "Ver ciudad";
@@ -72,17 +70,3 @@ fileInput.addEventListener("change", (e) => {
 });
 
 
-/* =========================================
-FUNCIÓN: revelarImagen
-Anima la capa gris reduciéndola de abajo hacia arriba,
-dejando ver progresivamente la imagen a color que está debajo.
-
-Técnica: clip-path inset(top right bottom left)
-- Estado inicial:  inset(0% 0% 0% 0%)  => la capa gris tapa todo
-- Estado final:    inset(100% 0% 0% 0%) => la capa gris sube hasta desaparecer
-La transición CSS en .constructionImgGris hace el movimiento suave.
-========================================= */
-function revelarImagen() {
-    /* Añadir la clase dispara la transición definida en cargar.css */
-    imgGris.classList.add("revelando");
-}
