@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ciudad Virtual — Tablero</title>
+
+    <!-- UIcons de Flaticon (bold rounded) -->
+    <link rel="stylesheet" href="https://cdn-uicons.flaticon.com/uicons-bold-rounded/css/uicons-bold-rounded.css">
+
+    <!-- CSS base compartido (todas las vistas) -->
+    <link rel="stylesheet" href="../estilos/tableroBase.css">
+
+    <!-- Detección de vista y carga dinámica de CSS/JS específico.
+         Sin defer: debe ejecutarse antes del primer pintado. -->
+    <script src="../../negocio/vista.js"></script>
+
+    <!-- Jerarquía de modelos (orden importante por dependencias) -->
+    <script src="../../modelos/Edificio.js" defer></script>
+    <script src="../../modelos/EdificioResidencial.js" defer></script>
+    <script src="../../modelos/EdificioComercial.js" defer></script>
+    <script src="../../modelos/EdificioIndustrial.js" defer></script>
+    <script src="../../modelos/EdificioServicio.js" defer></script>
+    <script src="../../modelos/Via.js" defer></script>
+    <script src="../../modelos/Ciudadano.js" defer></script>
+    <script src="../../modelos/Terreno.js" defer></script>
+    <script src="../../modelos/Ciudad.js" defer></script>
+
+    <!-- Acceso a datos -->
+    <script src="../../acceso_datos/CiudadStorage.js" defer></script>
+    <script src="../../acceso_datos/ApiClima.js" defer></script>
+    <script src="../../acceso_datos/ApiNoticias.js" defer></script>
+
+    <!-- Lógica de la UI del tablero -->
+    <script src="../../negocio/edificios.js"      defer></script>
+    <script src="../../negocio/notificaciones.js" defer></script>
+    <script src="../../negocio/recursos.js"       defer></script>
+    <script src="../../negocio/mapa.js"           defer></script>
+    <script src="../../negocio/modal.js"          defer></script>
+    <script src="../../negocio/tablero.js"        defer></script>
+
+</head>
+
+<body>
+
+    <!-- Zona de notificaciones: siempre en la parte superior.
+         Se puebla dinámicamente desde tablero.js. -->
+    <div id="zona-notificaciones" class="zona-notificaciones" aria-live="polite"></div>
+
+    <!-- Encabezado: logo + nombre de ciudad + panel de recursos.
+         En móvil el panel de recursos es colapsable. -->
+    <header id="encabezado" class="encabezado">
+
+        <a href="index.html" class="encabezado__logo">
+            <img src="../../media/inicio/logo.png" alt="Ciudad Virtual">
+        </a>
+
+        <h1 id="nombre-ciudad" class="encabezado__titulo">Mi Ciudad</h1>
+
+        <div id="panel-recursos" class="panel-recursos">
+            <!-- recursos.js inyecta aquí los indicadores -->
+        </div>
+
+        <!-- Solo visible en móvil -->
+        <button id="btn-recursos-movil" class="btn-recursos-movil" aria-label="Ver recursos">
+            <i class="fi fi-br-menu-burger"></i>
+        </button>
+
+    </header>
+
+    <!-- Contenedor principal: su layout cambia según la vista.
+         Móvil: columna única | Tablet: 70/30 | Desktop: 3 columnas -->
+    <main id="contenedor-juego" class="contenedor-juego">
+
+        <!-- Sidebar izquierdo (solo desktop).
+             En móvil sus contenidos van a las tabs inferiores. -->
+        <aside id="sidebar-izquierdo" class="sidebar sidebar--izquierdo">
+
+            <section id="panel-recursos-side" class="panel panel--recursos">
+                <h2 class="panel__titulo">Recursos</h2>
+                <!-- recursos.js inyecta los indicadores -->
+            </section>
+
+            <!-- En móvil aparece como tab. En tablet/desktop como sidebar. -->
+            <section id="menu-construccion" class="panel panel--construccion">
+                <h2 class="panel__titulo">Construir</h2>
+                <!-- mapa.js inyecta las opciones de construcción -->
+            </section>
+
+        </aside>
+
+        <!-- Área del mapa: scrollable en móvil, sin scroll horizontal en tablet.
+             mapa.js construye el grid según las dimensiones guardadas en CiudadStorage. -->
+        <section id="area-mapa" class="area-mapa">
+
+            <div id="controles-zoom" class="controles-zoom">
+                <button id="btn-zoom-in"  class="btn-zoom" aria-label="Acercar"><i class="fi fi-br-zoom-in"></i></button>
+                <button id="btn-zoom-out" class="btn-zoom" aria-label="Alejar"><i class="fi fi-br-zoom-out"></i></button>
+            </div>
+
+            <div id="mapa-grid" class="mapa-grid" role="grid">
+                <!-- mapa.js genera las celdas dinámicamente -->
+            </div>
+
+        </section>
+
+        <!-- Sidebar derecho (tablet y desktop).
+             En móvil las estadísticas se acceden por el botón flotante. -->
+        <aside id="sidebar-derecho" class="sidebar sidebar--derecho">
+
+            <section id="widget-clima" class="panel panel--clima">
+                <h2 class="panel__titulo">Clima</h2>
+                <!-- tablero.js puebla el clima según la ciudad del formulario -->
+            </section>
+
+            <section id="panel-noticias" class="panel panel--noticias">
+                <h2 class="panel__titulo">Noticias</h2>
+                <!-- tablero.js inyecta las noticias del turno -->
+            </section>
+
+            <section id="panel-estadisticas" class="panel panel--estadisticas">
+                <h2 class="panel__titulo">Estadísticas</h2>
+                <!-- tablero.js inyecta los datos de la ciudad -->
+            </section>
+
+        </aside>
+
+    </main>
+
+    <!-- Tabs de navegación inferior (solo móvil, HU-022).
+         tablero-movil.css los muestra; las otras vistas los ocultan. -->
+    <nav id="tabs-movil" class="tabs-movil" aria-label="Menú principal">
+        <button class="tab tab--activo" data-panel="area-mapa"><i class="fi fi-br-map"></i> Mapa</button>
+        <button class="tab" data-panel="menu-construccion"><i class="fi fi-br-hammer"></i> Construir</button>
+        <button class="tab" data-panel="panel-recursos"><i class="fi fi-br-box"></i> Recursos</button>
+        <button class="tab" data-panel="panel-estadisticas"><i class="fi fi-br-chart-histogram"></i> Stats</button>
+    </nav>
+
+    <!-- Botón flotante de estadísticas (solo móvil, HU-022) -->
+    <button id="btn-stats-flotante" class="btn-flotante" aria-label="Ver estadísticas">
+        <i class="fi fi-br-chart-histogram"></i>
+    </button>
+
+    <!-- Modal genérico: info de edificio y estadísticas detalladas.
+         Ancho según vista: 80% móvil | 60% tablet | 50% desktop -->
+    <div id="modal-overlay" class="modal-overlay" role="dialog" aria-modal="true" aria-hidden="true">
+        <div id="modal-contenido" class="modal-contenido">
+            <button id="modal-cerrar" class="modal-cerrar" aria-label="Cerrar"><i class="fi fi-br-cross-small"></i></button>
+            <div id="modal-cuerpo" class="modal-cuerpo">
+                <!-- modal.js inyecta el contenido dinámicamente -->
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,155 @@
+/* ================================================
+MODAL.JS
+Controlador del modal genérico compartido por todas las vistas.
+
+El ancho del modal varía según la vista (definido en cada CSS):
+  - Móvil:   80% de la pantalla   (HU-022)
+  - Tablet:  60% de la pantalla   (HU-023)
+  - Desktop: 50% max-width        (HU-024)
+
+Responsabilidades:
+  - Abrir/cerrar el modal
+  - Mostrar información de un edificio
+  - Mostrar estadísticas detalladas
+  - Gestionar foco y accesibilidad (aria)
+================================================ */
+
+
+/* 
+REFERENCIAS AL DOM
+*/
+let _overlay    = null;
+let _contenido  = null;
+let _cuerpo     = null;
+let _btnCerrar  = null;
+
+
+/* 
+INICIALIZACIÓN AUTOMÁTICA
+ */
+document.addEventListener("DOMContentLoaded", () => {
+    _overlay   = document.getElementById("modal-overlay");
+    _contenido = document.getElementById("modal-contenido");
+    _cuerpo    = document.getElementById("modal-cuerpo");
+    _btnCerrar = document.getElementById("modal-cerrar");
+
+    if (!_overlay) {
+        console.error("modal.js: no se encontró #modal-overlay en el DOM.");
+        return;
+    }
+
+    /* Cerrar al hacer click en el overlay oscuro (fuera de la tarjeta) */
+    _overlay.addEventListener("click", (e) => {
+        if (e.target === _overlay) cerrar();
+    });
+
+    /* Cerrar con el botón X */
+    _btnCerrar.addEventListener("click", cerrar);
+
+    /* Cerrar con Escape (también lo captura controles-desktop.js) */
+    document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape" && _overlay.classList.contains("activo")) cerrar();
+    });
+});
+
+
+/* 
+ABRIR MODAL
+Muestra el overlay con el contenido HTML dado.
+ */
+function abrir(htmlContenido) {
+    if (!_overlay) return;
+    _cuerpo.innerHTML = htmlContenido;
+    _overlay.classList.add("activo");
+    _overlay.setAttribute("aria-hidden", "false");
+
+    /* Mueve el foco al botón cerrar para accesibilidad */
+    _btnCerrar.focus();
+}
+
+
+/*
+CERRAR MODAL
+ */
+function cerrar() {
+    if (!_overlay) return;
+    _overlay.classList.remove("activo");
+    _overlay.setAttribute("aria-hidden", "true");
+    _cuerpo.innerHTML = "";
+}
+
+
+/* 
+MOSTRAR INFO DE EDIFICIO
+Genera el HTML con los datos del edificio y abre el modal.
+Llamado desde mapa.js al hacer tap/click en un edificio.
+ */
+function mostrarEdificio(edificio, fila, col) {
+    const html = `
+        <div class="modal-edificio">
+
+            <img src="${edificio.imagen}"
+                 alt="${edificio.nombre}"
+                 class="modal-edificio__imagen">
+
+            <h2 class="modal-edificio__nombre">${edificio.nombre}</h2>
+
+            <p class="modal-edificio__descripcion">${edificio.descripcion || ""}</p>
+
+            <ul class="modal-edificio__stats">
+                ${edificio.costo      !== undefined ? `<li><i class="fi fi-br-coins"></i> Costo: <strong>$${edificio.costo.toLocaleString()}</strong></li>` : ""}
+                ${edificio.poblacion  !== undefined ? `<li><i class="fi fi-br-users"></i> Población: <strong>+${edificio.poblacion}</strong></li>` : ""}
+                ${edificio.felicidad  !== undefined ? `<li><i class="fi fi-br-smile"></i> Felicidad: <strong>${edificio.felicidad > 0 ? "+" : ""}${edificio.felicidad}</strong></li>` : ""}
+                ${edificio.energia    !== undefined ? `<li><i class="fi fi-br-bolt"></i> Energía: <strong>${edificio.energia > 0 ? "+" : ""}${edificio.energia}</strong></li>` : ""}
+            </ul>
+
+            <button class="modal-edificio__demoler btn-peligro"
+                    onclick="Mapa.demolerEdificio(${fila}, ${col}); Modal.cerrar(); Tablero.cancelarModo();">
+                <i class="fi fi-br-trash"></i> Demoler
+            </button>
+
+        </div>
+    `;
+
+    abrir(html);
+}
+
+
+/*
+MOSTRAR ESTADÍSTICAS
+Genera el HTML con las estadísticas de la ciudad.
+Llamado desde el botón flotante (móvil) o panel (desktop).
+ */
+function mostrarEstadisticas() {
+    const estado = Tablero.Estado;
+    const recursos = Recursos.obtenerTodos();
+
+    const html = `
+        <div class="modal-stats">
+
+            <h2><i class="fi fi-br-chart-histogram"></i> ${estado.nombreCiudad}</h2>
+            <p class="modal-stats__subtitulo">Turno ${estado.turno}</p>
+
+            <ul class="modal-stats__lista">
+                <li><i class="fi fi-br-coins"></i> Dinero:     <strong>$${(recursos.dinero    || 0).toLocaleString()}</strong></li>
+                <li><i class="fi fi-br-users"></i> Población:  <strong>${(recursos.poblacion || 0).toLocaleString()}</strong></li>
+                <li><i class="fi fi-br-smile"></i> Felicidad:  <strong>${(recursos.felicidad || 0)}%</strong></li>
+                <li><i class="fi fi-br-bolt"></i> Energía:   <strong>${(recursos.energia   || 0)} MW</strong></li>
+            </ul>
+
+        </div>
+    `;
+
+    abrir(html);
+}
+
+
+/* 
+EXPOSICIÓN GLOBAL
+ */
+window.Modal = {
+    abrir,
+    cerrar,
+    mostrarEdificio,
+    mostrarEstadisticas,
+};
