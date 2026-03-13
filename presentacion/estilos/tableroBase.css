@@ -99,7 +99,6 @@ con sus propias si necesitan ajustes. */
 
 html, body {
     height: 100%;
-    overflow: hidden;     /* el scroll ocurre dentro del mapa, no en body */
 }
 
 body {
