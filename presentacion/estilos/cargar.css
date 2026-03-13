@@ -1,14 +1,50 @@
-/* =========================================
-RESET BÁSICO
-El body ocupa toda la pantalla y se divide
-en dos filas: encabezado (100px) + contenido
-========================================= */
-body{
+body{ 
     margin:0;
     min-height:100vh;
     overflow:hidden;
-    display: grid;
+    display:grid;
     grid-template-rows: 100px 1fr;
+
+    transition: filter 2s ease; /* velocidad del cambio */
+}
+
+/* pantalla gris inicial */
+body.gris{
+    filter: grayscale(100%);
+}
+
+/* Solo mientras esté gris el hover activa color */
+body.gris:has(.cargaBtn:hover){
+    filter: grayscale(0%);
+}
+
+.encabezado{
+    background-color: #1A73E8;
+    height: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index:1;
+}
+
+.encabezado a {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    text-decoration: none;
+}
+
+.encabezado img {
+    max-width: 100%;
+    max-height: 80px;
+    height: auto;
+    object-fit: contain;
+    display: block;
+    transition: opacity 0.2s ease;
+}
+
+.encabezado img:hover{
+    opacity: 0.85;
 }
 
 
@@ -67,59 +103,20 @@ y centra vertical y horizontalmente su contenido.
     gap: 25px;
 }
 
-
-/* =========================================
-IMAGEN DE CONSTRUCCIÓN
-Usa dos capas superpuestas dentro de .imgWrapper:
-  - capa inferior (.constructionImg):     imagen a color, siempre visible
-  - capa superior (.constructionImgGris): imagen gris, se recorta de abajo
-    hacia arriba con clip-path al añadir la clase .revelando
-========================================= */
-
-/* Contenedor relativo que mantiene ambas capas alineadas */
 .imgWrapper {
     position: relative;
     max-width: 300px;
-    width: 90%;            /* responsive para móviles */
-    line-height: 0;        /* evita espacio extra debajo de las imágenes */
+    width: 90%;
+    line-height: 0;
 }
 
-/* Capa inferior: imagen a color (siempre visible, base) */
 .constructionImg {
-    width: 100%;
+    max-width: 300px;
+    width: 90%;
     height: auto;
-    display: block;
-    filter: drop-shadow(0px 10px 15px rgba(0,0,0,0.15));
+    filter: drop-shadow(0px 10px 15px rgba(0,0,0,0.1));
 }
 
-/* Capa superior: misma imagen en gris, flotando sobre la de color.
-   clip-path recorta cuánto se ve: al inicio tapa todo (inset 0%),
-   al revelar sube hasta tapar 0% (desaparece de abajo hacia arriba). */
-.constructionImgGris {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: auto;
-    display: block;
-    filter: grayscale(100%) brightness(0.85);
-    clip-path: inset(0% 0% 0% 0%);           /* estado inicial: tapa toda la imagen */
-    transition: clip-path 1.4s cubic-bezier(0.4, 0, 0.2, 1); /* animación suave */
-}
-
-/* Al añadir .revelando, el recorte sube desde abajo hasta el tope:
-   el gris desaparece revelando el color debajo */
-.constructionImgGris.revelando {
-    clip-path: inset(100% 0% 0% 0%);
-}
-
-
-/* =========================================
-BOTÓN PRINCIPAL (CARGAR / VER CIUDAD)
-Estado inicial: blanco con borde negro
-Estado listo:   blanco con borde negro (igual)
-Hover en ambos: azul con letras blancas
-========================================= */
 .cargaBtn {
     background-color: #ffffff;
     color: #333333;
@@ -127,14 +124,14 @@ Hover en ambos: azul con letras blancas
     font-weight: 700;
     padding: 15px 40px;
     border: 2px solid #333333;
-    border-radius: 50px;   /* extremos totalmente redondeados */
+    border-radius: 50px;
     cursor: pointer;
-    transition: transform 0.2s, box-shadow 0.2s, background-color 0.3s, color 0.3s, border-color 0.3s;
+    transition: transform 0.2s, box-shadow 0.2s, background-color 0.2s;
     text-transform: uppercase;
     letter-spacing: 1px;
 }
 
-/* Hover: azul consistente con la barra superior y el formulario */
+/* Hover del botón */
 .cargaBtn:hover {
     transform: scale(1.05);
     box-shadow: 0px 5px 15px rgba(0,0,0,0.2);
@@ -194,7 +191,6 @@ Se dibujan solo con bordes, sin imágenes.
     border-color:transparent transparent transparent #333;
 }
 
-/* Efecto hover en las flechas */
 .navBtn:hover{
     opacity:0.7;
 }
