@@ -5,11 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Crear ciudad</title>
 
-    <!--Carga de archivos necesarios-->
-    <script src="../../acceso_datos/ApiColombia.js" defer></script>
-    <script src="../../negocio/formulario.js" defer></script>
-    <script src="../../acceso_datos/ApiCoordenadas.js" defer></script>
+    <link rel="stylesheet" href="https://cdn-uicons.flaticon.com/uicons-bold-rounded/css/uicons-bold-rounded.css">
     <link rel="stylesheet" href="../estilos/formulario.css">
+
+    <!-- Jerarquía de modelos (orden importante por dependencias) -->
+    <script src="../../modelos/Edificio.js" defer></script>
+    <script src="../../modelos/EdificioResidencial.js" defer></script>
+    <script src="../../modelos/EdificioComercial.js" defer></script>
+    <script src="../../modelos/EdificioIndustrial.js" defer></script>
+    <script src="../../modelos/EdificioServicio.js" defer></script>
+    <script src="../../modelos/Ciudadano.js" defer></script>
+    <script src="../../modelos/Terreno.js" defer></script>
+    <script src="../../modelos/Ciudad.js" defer></script>
+
+    <!-- Acceso a datos -->
+    <script src="../../acceso_datos/CiudadStorage.js" defer></script>
+    <script src="../../acceso_datos/ApiColombia.js" defer></script>
+    <script src="../../acceso_datos/ApiCoordenadas.js" defer></script>
+
+    <!-- Lógica del formulario — al final porque usa todo lo anterior -->
+    <script src="../../negocio/formulario.js" defer></script>
 </head>
 <body>
 

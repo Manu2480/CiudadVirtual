@@ -1,0 +1,587 @@
+/*
+TABLERO-BASE.CSS
+Estilos compartidos para TODAS las vistas del tablero.
+Cada vista (móvil/tablet/desktop) importa este archivo
+y agrega su propio CSS específico encima.
+
+Contenido:
+  1. Variables globales (colores, tamaños, fuentes)
+  2. Reset básico
+  3. Tipografía base
+  4. Encabezado
+  5. Panel de recursos
+  6. Área del mapa y grid
+  7. Modal genérico
+  8. Notificaciones
+  9. Paneles genéricos (estructura, sin layout)
+  10. Utilidades compartidas
+*/
+
+
+/* 
+1. VARIABLES GLOBALES
+Paleta, espaciado y tamaños que usan todas las vistas.
+Las vistas específicas pueden sobreescribir estas variables
+con sus propias si necesitan ajustes. */
+:root {
+
+    /* Colores principales (consistentes con index y formulario) */
+    --color-primario:    #1A73E8;   /* azul principal */
+    --color-primario-h:  #1558b0;   /* azul hover */
+    --color-fondo:       #f5f5f5;   /* fondo general */
+    --color-superficie:  #ffffff;   /* tarjetas y paneles */
+    --color-borde:       #e0e0e0;   /* bordes suaves */
+    --color-texto:       #2c2c2c;   /* texto principal */
+    --color-texto-s:     #666666;   /* texto secundario */
+
+    /* Colores semánticos del juego */
+    --color-dinero:      #27ae60;
+    --color-poblacion:   #1A73E8;
+    --color-felicidad:   #f39c12;
+    --color-energia:     #e74c3c;
+
+    /* Colores del mapa */
+    --color-celda:         #7ec850;  /* hierba base */
+    --color-celda-hover:   #a3d977;  /* hover de celda vacía */
+    --color-celda-borde:   rgba(0,0,0,0.08);
+    --color-celda-agua:    #5baad4;
+    --color-celda-selec:   rgba(26,115,232,0.35); /* celda seleccionada */
+
+    /* Tamaños de celda del mapa (se puede ajustar con zoom) */
+    --tamano-celda:        48px;     /* tamaño base por defecto */
+
+    /* Espaciado */
+    --espacio-s:  8px;
+    --espacio-m:  16px;
+    --espacio-l:  24px;
+    --espacio-xl: 32px;
+
+    /* Bordes */
+    --radio-s:  6px;
+    --radio-m:  10px;
+    --radio-l:  16px;
+
+    /* Sombras */
+    --sombra-s: 0 2px 8px rgba(0,0,0,0.10);
+    --sombra-m: 0 4px 16px rgba(0,0,0,0.14);
+
+    /* Tipografía */
+    --fuente-ui:  system-ui, -apple-system, sans-serif;
+    --fuente-tam-s:   12px;
+    --fuente-tam-m:   14px;
+    --fuente-tam-l:   16px;
+    --fuente-tam-xl:  20px;
+
+    /* Altura del encabezado (cada vista puede ajustar) */
+    --alto-encabezado: 60px;
+
+    /* Altura de tabs móvil */
+    --alto-tabs: 56px;
+
+    /* Tamaño mínimo de botón táctil (HU-022 y HU-023) */
+    --btn-tap-min: 44px;
+
+    /* Transiciones */
+    --trans-rapida:  0.15s ease;
+    --trans-normal:  0.25s ease;
+    --trans-lenta:   0.4s ease;
+}
+
+
+/* 
+2. RESET BÁSICO
+*/
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html, body {
+    height: 100%;
+    overflow: hidden;     /* el scroll ocurre dentro del mapa, no en body */
+}
+
+body {
+    font-family: var(--fuente-ui);
+    font-size: var(--fuente-tam-m);
+    color: var(--color-texto);
+    background-color: var(--color-fondo);
+
+    /* Layout principal: encabezado fijo + zona de juego */
+    display: grid;
+    grid-template-rows: var(--alto-encabezado) 1fr;
+    grid-template-columns: 1fr;
+}
+
+button {
+    font-family: var(--fuente-ui);
+    cursor: pointer;
+    border: none;
+    background: none;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+img {
+    display: block;
+    max-width: 100%;
+}
+
+
+/* 
+3. ENCABEZADO
+Barra superior con logo, nombre de ciudad y recursos.
+Cada vista ajusta su altura y disposición interna.
+ */
+.encabezado {
+    background-color: var(--color-primario);
+    color: #ffffff;
+    height: var(--alto-encabezado);
+    display: flex;
+    align-items: center;
+    gap: var(--espacio-m);
+    padding: 0 var(--espacio-m);
+    position: relative;
+    z-index: 100;
+    box-shadow: var(--sombra-s);
+}
+
+/* Logo en el encabezado */
+.encabezado__logo img {
+    height: 40px;
+    width: auto;
+    transition: opacity var(--trans-rapida);
+}
+
+.encabezado__logo:hover img {
+    opacity: 0.85;
+}
+
+/* Nombre de la ciudad */
+.encabezado__titulo {
+    font-size: var(--fuente-tam-l);
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    flex: 1;
+}
+
+
+/* 
+4. PANEL DE RECURSOS (barra de indicadores)
+Versión base: fila de indicadores.
+Cada vista puede reorganizarlos (colapsable en móvil,
+ */
+.panel-recursos {
+    display: flex;
+    gap: var(--espacio-m);
+    align-items: center;
+}
+
+/* Indicador individual de recurso (dinero, población, etc.) */
+.recurso {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: var(--fuente-tam-s);
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.recurso__icono {
+    font-size: 14px;
+    line-height: 1;
+    display: inline-flex;
+    align-items: center;
+}
+
+/* Colores por tipo de recurso */
+.recurso--dinero     .recurso__valor { color: var(--color-dinero); }
+.recurso--poblacion  .recurso__valor { color: #ffffff; }
+.recurso--felicidad  .recurso__valor { color: var(--color-felicidad); }
+.recurso--energia    .recurso__valor { color: var(--color-energia); }
+
+/* Botón de recursos en móvil (oculto por defecto, solo móvil lo muestra) */
+.btn-recursos-movil {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    width: var(--btn-tap-min);
+    height: var(--btn-tap-min);
+    font-size: 20px;
+    color: #ffffff;
+    border-radius: var(--radio-s);
+    transition: background var(--trans-rapida);
+}
+
+.btn-recursos-movil:hover {
+    background: rgba(255,255,255,0.15);
+}
+
+
+/*
+5. CONTENEDOR PRINCIPAL DEL JUEGO
+El layout de columnas se define en cada CSS de vista.
+Aquí solo se establece la base.
+ */
+.contenedor-juego {
+    display: grid;
+    overflow: hidden;
+    height: 100%;
+    min-height: 0;
+}
+
+
+/* 
+6. SIDEBARS (paneles laterales)
+Base sin dimensiones — cada vista define el ancho,
+visibilidad y posición.
+*/
+.sidebar {
+    background-color: var(--color-superficie);
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: var(--espacio-m);
+    padding: var(--espacio-m);
+    border-color: var(--color-borde);
+}
+
+.sidebar--izquierdo {
+    border-right: 1px solid var(--color-borde);
+}
+
+.sidebar--derecho {
+    border-left: 1px solid var(--color-borde);
+}
+
+
+/* 
+7. PANELES GENÉRICOS (recursos, construcción, stats…)
+Tarjeta con título y cuerpo. El contenido
+lo inyectan los JS correspondientes.
+ */
+.panel {
+    background-color: var(--color-superficie);
+    border: 1px solid var(--color-borde);
+    border-radius: var(--radio-m);
+    padding: var(--espacio-m);
+    box-shadow: var(--sombra-s);
+}
+
+.panel__titulo {
+    font-size: var(--fuente-tam-m);
+    font-weight: 600;
+    color: var(--color-texto);
+    margin-bottom: var(--espacio-s);
+    padding-bottom: var(--espacio-s);
+    border-bottom: 1px solid var(--color-borde);
+}
+
+
+/* 
+8. ÁREA DEL MAPA
+Contenedor scrollable del grid.
+El tamaño del grid lo calcula mapa.js según
+las filas x columnas guardadas en localStorage.
+ */
+.area-mapa {
+    position: relative;
+    overflow: auto;         /* scrollable en todas las vistas */
+    background-color: #87ceeb; /* cielo de fondo mientras carga */
+    -webkit-overflow-scrolling: touch; /* scroll suave en iOS */
+}
+
+/* Grid del mapa: mapa.js calcula el total de columnas y filas */
+.mapa-grid {
+    display: grid;
+    /* mapa.js define: grid-template-columns y grid-template-rows
+       usando: repeat(columnas, var(--tamano-celda)) */
+    gap: 0;
+    transform-origin: top left; /* para el zoom */
+    transition: transform var(--trans-normal);
+}
+
+/* Celda individual del mapa */
+.celda {
+    width: var(--tamano-celda);
+    height: var(--tamano-celda);
+    background-color: var(--color-celda);
+    border: 1px solid var(--color-celda-borde);
+    position: relative;
+    cursor: pointer;
+    transition: background-color var(--trans-rapida);
+    user-select: none;
+}
+
+/* Hover en celda vacía */
+.celda:hover {
+    background-color: var(--color-celda-hover);
+}
+
+/* Celda con edificio encima */
+.celda--construida {
+    cursor: default;
+}
+
+/* Celda seleccionada */
+.celda--seleccionada {
+    outline: 3px solid var(--color-primario);
+    outline-offset: -2px;
+    background-color: var(--color-celda-selec);
+}
+
+/* Celda de agua */
+.celda--agua {
+    background-color: var(--color-celda-agua);
+    cursor: not-allowed;
+}
+
+/* Imagen del edificio dentro de la celda */
+.celda__edificio {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    pointer-events: none;
+}
+
+/* Controles de zoom (botones + / -) */
+.controles-zoom {
+    position: absolute;
+    bottom: var(--espacio-m);
+    right: var(--espacio-m);
+    display: flex;
+    flex-direction: column;
+    gap: var(--espacio-s);
+    z-index: 10;
+}
+
+.btn-zoom {
+    width: var(--btn-tap-min);
+    height: var(--btn-tap-min);
+    background: var(--color-superficie);
+    border: 1px solid var(--color-borde);
+    border-radius: var(--radio-s);
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--color-texto);
+    box-shadow: var(--sombra-s);
+    transition: background var(--trans-rapida), transform var(--trans-rapida);
+}
+
+.btn-zoom:hover {
+    background: var(--color-fondo);
+    transform: scale(1.08);
+}
+
+.btn-zoom:active {
+    transform: scale(0.96);
+}
+
+
+/*
+9. MODAL GENÉRICO
+Overlay + tarjeta centrada.
+El ancho varía por vista (CSS de cada vista).
+ */
+
+/* Fondo oscuro detrás del modal */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 500;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--trans-normal);
+}
+
+/* Modal visible */
+.modal-overlay.activo {
+    opacity: 1;
+    pointer-events: all;
+}
+
+/* Tarjeta del modal */
+.modal-contenido {
+    background: var(--color-superficie);
+    border-radius: var(--radio-l);
+    box-shadow: var(--sombra-m);
+    position: relative;
+    max-height: 90dvh;
+    overflow-y: auto;
+    padding: var(--espacio-l);
+    /* El ancho se define en cada CSS de vista */
+}
+
+/* Botón cerrar en esquina superior derecha */
+.modal-cerrar {
+    position: absolute;
+    top: var(--espacio-m);
+    right: var(--espacio-m);
+    width: var(--btn-tap-min);
+    height: var(--btn-tap-min);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    color: var(--color-texto-s);
+    border-radius: var(--radio-s);
+    transition: background var(--trans-rapida);
+}
+
+.modal-cerrar:hover {
+    background: var(--color-fondo);
+    color: var(--color-texto);
+}
+
+
+/* 
+10. ZONA DE NOTIFICACIONES
+Las notificaciones siempre aparecen en la parte
+superior de la pantalla (todas las vistas).
+*/
+.zona-notificaciones {
+    position: fixed;
+    top: calc(var(--alto-encabezado) + var(--espacio-s));
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: var(--espacio-s);
+    z-index: 400;
+    pointer-events: none;
+    width: min(460px, 90vw);
+}
+
+/* Notificación individual */
+.notificacion {
+    background: var(--color-superficie);
+    border-left: 4px solid var(--color-primario);
+    border-radius: var(--radio-m);
+    padding: var(--espacio-s) var(--espacio-m);
+    box-shadow: var(--sombra-m);
+    font-size: var(--fuente-tam-m);
+    pointer-events: all;
+
+    /* Animación de entrada */
+    animation: notif-entrar var(--trans-normal) ease forwards;
+}
+
+/* Tipos de notificación */
+.notificacion--exito  { border-color: var(--color-dinero); }
+.notificacion--aviso  { border-color: var(--color-felicidad); }
+.notificacion--error  { border-color: var(--color-energia); }
+
+@keyframes notif-entrar {
+    from { opacity: 0; transform: translateY(-10px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+
+/*
+11. TABS DE NAVEGACIÓN INFERIOR (base)
+Ocultos por defecto: solo tablero-movil.css los activa.
+ */
+.tabs-movil {
+    display: none;   /* tablero-movil.css lo pone a flex */
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: var(--alto-tabs);
+    background: var(--color-superficie);
+    border-top: 1px solid var(--color-borde);
+    z-index: 200;
+}
+
+.tab {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    font-size: var(--fuente-tam-s);
+    color: var(--color-texto-s);
+    min-height: var(--btn-tap-min);
+    transition: color var(--trans-rapida), background var(--trans-rapida);
+}
+
+.tab--activo {
+    color: var(--color-primario);
+    font-weight: 600;
+}
+
+.tab:hover {
+    background: var(--color-fondo);
+    color: var(--color-primario);
+}
+
+
+/*
+12. BOTÓN FLOTANTE (base)
+Oculto por defecto: solo tablero-movil.css lo muestra.
+ */
+.btn-flotante {
+    display: none;   /* tablero-movil.css lo pone a flex */
+    position: fixed;
+    bottom: calc(var(--alto-tabs) + var(--espacio-m));
+    right: var(--espacio-m);
+    width: 52px;
+    height: 52px;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    background: var(--color-primario);
+    color: #ffffff;
+    border-radius: 50%;
+    box-shadow: var(--sombra-m);
+    z-index: 201;
+    transition: transform var(--trans-rapida), box-shadow var(--trans-rapida);
+}
+
+.btn-flotante:hover {
+    transform: scale(1.08);
+    box-shadow: 0 6px 20px rgba(26,115,232,0.35);
+}
+
+
+/*
+13. UTILIDADES COMPARTIDAS
+Clases helper que usan todos los CSS de vista. 
+*/
+
+/* Ocultar elemento visualmente pero mantenerlo accesible */
+.sr-only {
+    position: absolute;
+    width: 1px; height: 1px;
+    padding: 0; margin: -1px;
+    overflow: hidden;
+    clip: rect(0,0,0,0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* Ocultar completamente */
+.oculto {
+    display: none !important;
+}
+
+/* Cursor especial en modo construcción */
+body.modo-construccion .celda:not(.celda--construida):not(.celda--agua) {
+    cursor: crosshair;
+}
+
+/* Cursor especial en modo demolición */
+body.modo-demolicion .celda--construida {
+    cursor: url('../../media/inicio/demoler.cur'), pointer;
+}

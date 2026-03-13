@@ -228,9 +228,36 @@ addEventListener("DOMContentLoaded",function(){
             crear = false;
             alert("No se pudo obtener las coordenadas de la ciudad colombiana seleccionada. Por favor inténtalo de nuevo más tarde o cambia la ciudad")
         }
-        if (crear){
-            console.log("Creando ciudad")
-            //Comandito para crear la ciudad
+        if (crear) {
+            const generoValor = document.querySelector('input[name="genero"]:checked').value;
+
+            const estadoInicial = {
+                dinero:       10000,
+                agua:         0,
+                electricidad: 0,
+                alimento:     0,
+                felicidad:    50,
+            };
+
+            const vias = Array.from(
+                { length: altoNum },
+                () => Array(anchoNum).fill(0)
+            );
+
+            const ciudad = new Ciudad(
+                nombreCiudadACrear.value,
+                nombreAlcalde.value,
+                latitud,
+                longitud,
+                30000,
+                new Terreno(vias, []),
+                [],
+                estadoInicial
+            );
+            ciudad.genero = generoValor;
+
+            CiudadStorage.guardar(ciudad);
+            window.location.href = "tablero.html";
         }
     }
 });
