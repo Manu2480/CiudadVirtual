@@ -233,4 +233,17 @@ addEventListener("DOMContentLoaded",function(){
             //Comandito para crear la ciudad
         }
     }
+
+    function actualizarPlaceholder() {
+    if (window.innerWidth <= 768) {
+        nombreAlcalde.placeholder = "Nombre alcalde/sa";
+        nombreCiudadACrear.placeholder = "Nombre ciudad";
+    } else {
+        nombreAlcalde.placeholder = "Ingresa el nombre del gobernante de la ciudad";
+        nombreCiudadACrear.placeholder = "Ingresa el nombre tu futura ciudad";
+    }
+}
+
+actualizarPlaceholder();
+window.addEventListener("resize", actualizarPlaceholder);
 });
