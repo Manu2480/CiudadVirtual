@@ -151,6 +151,10 @@ function _renderizarUI() {
             panelSide.insertAdjacentHTML("beforeend", _htmlIndicadores(datos, true));
         }
     }
+    else if (vista=="tablet"){
+        panelHeader.innerHTML=""
+        panelHeader.insertAdjacentHTML("beforeend", _htmlIndicadores(datos,true));
+    }
 }
 
 

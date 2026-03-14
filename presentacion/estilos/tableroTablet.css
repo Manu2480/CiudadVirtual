@@ -22,3 +22,40 @@ Prioridad: Media
 Dependencias: HU-023
 
 */
+
+@media (orientation: portrait){ /*Tablet en vertical*/
+    .contenedor-juego{
+        display: grid;
+        grid-template-columns: 70% 30%;
+        grid-template-rows: 1fr 1fr;
+    }
+
+    .area-mapa{
+        grid-column: 1;
+        grid-row: 1 / -1;
+        
+    }
+
+    .panel--recursos{
+        display: none; /*En tablet los recursos se muestran en la barra superior*/
+
+    }
+
+    .sidebar--izquierdo{
+        grid-column: 2;
+        grid-row: 1;
+    }
+    
+    .sidebar--derecho{
+        grid-column: 2;
+        grid-row:2;
+    }
+
+
+
+
+} 
+
+@media (orientation: portrait){ /*Tablet en horizontal*/
+    
+} 

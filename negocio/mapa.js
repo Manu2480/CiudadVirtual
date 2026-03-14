@@ -313,7 +313,7 @@ function _ajustarCeldaParaTablet(columnas) {
 
     /* Tamaño de celda = ancho disponible dividido entre el número de columnas.
        Se acota entre 20px (mínimo legible) y 48px (tamaño base de desktop). */
-    const tamano = Math.min(48, Math.max(20, Math.floor(anchoArea / columnas)));
+    const tamano = Math.min(48, Math.max(44, Math.floor(anchoArea / columnas)));
     document.documentElement.style.setProperty("--tamano-celda", `${tamano}px`);
 
     /* Guarda el número de columnas para recalcular si cambia la orientación */

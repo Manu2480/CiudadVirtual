@@ -11,7 +11,7 @@ Vistas:
 (function() {
     const w = window.innerWidth;
     let vista;
-    if      (w < 768)   vista = "movil";
+    if      (w < 768)   vista = "tablet";
     else if (w <= 1024) vista = "tablet";
     else                vista = "desktop";
 
