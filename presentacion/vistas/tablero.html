@@ -66,6 +66,10 @@
             <i class="fi fi-br-menu-burger"></i>
         </button>
 
+        <button id="btn-sidebar-tablet" class="btn-sidebar-tablet" aria-label="menús">
+            <i class="fi fi-br-menu-burger"></i>
+        </button>
+
     </header>
 
     <!-- Contenedor principal: su layout cambia según la vista.
@@ -91,7 +95,7 @@
 
         <!-- Área del mapa: scrollable en móvil, sin scroll horizontal en tablet.
              mapa.js construye el grid según las dimensiones guardadas en CiudadStorage. -->
-        <section id="area-mapa" class="area-mapa">
+        <section id="area-mapa" class="area-mapa full">
 
             <div id="controles-zoom" class="controles-zoom">
                 <button id="btn-zoom-in"  class="btn-zoom" aria-label="Acercar"><i class="fi fi-br-zoom-in"></i></button>
@@ -129,13 +133,14 @@
 
         </aside>
 
-        <aside id="sidebar-tablet" class="sidebar--tablet">
+        <aside id="sidebar-tablet" class="sidebar--tablet cerrada">
             <section id="panel-recursos-tablet" class="panel panel--recursos">
                 <h2 class="panel__titulo">Recursos</h2>
                 <!-- recursos.js inyecta los indicadores -->
             </section> 
-            <section id="menu-construccion" class="panel panel--construccion">
+            <section id="menu-construccion-tablet" class="panel panel--construccion">
                 <h2 class="panel__titulo">Construir</h2>
+                <div id="catalogo-edificios-tablet"></div>
                 <!-- mapa.js inyecta las opciones de construcción -->
             </section>
             <section id="panel-estadisticas-tablet" class="panel panel--estadisticas">

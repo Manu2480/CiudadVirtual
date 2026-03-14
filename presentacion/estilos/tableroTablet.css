@@ -22,19 +22,49 @@ Prioridad: Media
 Dependencias: HU-023
 
 */
+:root{
+        /* Colores principales (consistentes con index y formulario) */
+    --color-primario:    #1A73E8;   /* azul principal */
+    --color-primario-h:  #1558b0;   /* azul hover */
+    --color-fondo:       #f5f5f5;   /* fondo general */
+    --color-superficie:  #ffffff;   /* tarjetas y paneles */
+    --color-borde:       #e0e0e0;   /* bordes suaves */
+    --color-texto:       #2c2c2c;   /* texto principal */
+    --color-texto-s:     #666666;   /* texto secundario */
 
+    /* Colores semánticos del juego */
+    --color-dinero:      #27ae60;
+    --color-poblacion:   #1A73E8;
+    --color-felicidad:   #f39c12;
+    --color-energia:     #e74c3c;
+
+    /* Colores del mapa */
+    --color-celda:         #7ec850;  /* hierba base */
+    --color-celda-hover:   #a3d977;  /* hover de celda vacía */
+    --color-celda-borde:   rgba(0,0,0,0.08);
+    --color-celda-agua:    #5baad4;
+    --color-celda-selec:   rgba(26,115,232,0.35); /* celda seleccionada */
+}
 @media (orientation: portrait){ /*Tablet en vertical*/
+    #btn-sidebar-tablet{
+        color:white;
+    }
     .contenedor-juego{
         display: grid;
         grid-template-columns: 70% 30%;
-        grid-template-rows: 1fr 1fr 1fr;
+        grid-template-rows: 25% 50% 25%;
     }
 
     .area-mapa{
         grid-column: 1;
         grid-row: 1 / -1;
-        
     }
+
+    .area-mapa.full{
+        grid-column: 1 / -1;
+        grid-row: 1 / -1;
+        
+    } /*Si la sidebar está oculta, el mapa ocupa el 100%, en caso contrario, ocupa el 70%*/
 
     .sidebar--izquierdo{
         display: none;   
@@ -45,9 +75,82 @@ Dependencias: HU-023
     }
 
     .sidebar--tablet{
-        grid-column: 2;
+        grid-column: 2; /*La sidebar ocupa el 30% si está activada, si no, no se muestra*/
         grid-row: 1 / -1;
+        background-color: var(--color-texto-s);
+        display: grid;
+        grid-template-rows: 25% 50% 25%;
     }
+
+    .sidebar--tablet.cerrada{
+        display:none
+    }
+
+    .panel--recursos{
+        grid-row:1;
+    }
+
+    .panel--construccion{
+        grid-row: 2;
+    }
+    
+    .panel--estadisticas{
+        grid-row: 3;
+    }
+
+    .panel__titulo{
+        background-color: var(--color-primario-h);
+        color: white;
+        width: 100%;
+        margin:0;
+        text-align: center;
+    }
+
+    .panel{
+        padding:0;
+        border-radius:12px;
+        padding:0;
+        overflow:hidden;
+    }
+    #catalogo-edificios-tablet{
+        display: flex;
+        flex-direction: row;
+        gap: 5px;
+        overflow-x: scroll;
+        align-items: stretch;
+    }
+
+    .tarjeta-edificio{
+        flex: 0 0 clamp(130px, 14vw, 180px);
+
+        display: flex;
+        flex-direction: column;
+
+        padding: 8px;
+        border-radius: 8px;
+        background: #f3f3f3;
+        border: 1px solid var(--color-texto);
+        text-align: center;
+
+        height: auto;
+    }
+    .edificio__descripcion{
+        min-height: 4.5em;
+    }
+
+    .edificio__imagen{
+        width: 150px;
+        height: 150px;
+        object-fit: contain;
+
+    }
+
+    .comprar-edificio{
+        margin-top: auto;
+        background-color: var(--color-primario);
+        color: white;
+    }
+
 
 
 

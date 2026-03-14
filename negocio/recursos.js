@@ -80,7 +80,7 @@ function _renderizarUI() {
     const datos = obtenerTodos();
 
     const header = document.getElementById("panel-recursos");
-    if (header) header.innerHTML = _htmlIndicadores(datos);
+    if (header && !(document.documentElement.getAttribute("data-vista") === "tablet")) header.innerHTML = _htmlIndicadores(datos);
 
     if (document.documentElement.getAttribute("data-vista") === "desktop") {
         const side = document.getElementById("panel-recursos-side");

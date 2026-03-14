@@ -22,3 +22,12 @@ Prioridad: Media
 Dependencias: HU-023
 
 */
+
+const sidebar = document.getElementById("sidebar-tablet");
+const boton = document.getElementById("btn-sidebar-tablet");
+const mapa = document.getElementById("area-mapa")
+
+boton.addEventListener("click", () => {
+    sidebar.classList.toggle("cerrada");
+    mapa.classList.toggle("full")
+});
