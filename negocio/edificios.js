@@ -24,6 +24,17 @@ CATÁLOGO COMPLETO
 ================================================ */
 const _catalogo = [
 
+    
+    /* ── Carretera ─────────────────────────── */
+    {
+        id:          "via",
+        nombre:      "via",
+        categoria:   "padimentaria",
+        imagen:      "../../media/edificios/via.png",
+        descripcion: "Sendero necesario para conectar edificios. No aporta recursos pero es esencial para el desarrollo urbano.",
+        costo:       100,
+    },
+
     /* ── Residencial ─────────────────────────── */
     {
         id:          "casa",
@@ -31,10 +42,10 @@ const _catalogo = [
         categoria:   "residencial",
         imagen:      "../../media/edificios/casa.png",
         descripcion: "Hogar para familias. Aumenta la población y la felicidad.",
-        costo:       500,
-        poblacion:   4,
-        felicidad:   2,
-        energia:     -1,
+        costo:       1000,
+        capacidad:   4,
+        electricidad: -3,
+        agua: -3,
     },
     {
         id:          "apartamento",
@@ -42,10 +53,10 @@ const _catalogo = [
         categoria:   "residencial",
         imagen:      "../../media/edificios/departamentos.png",
         descripcion: "Edificio multifamiliar. Alta densidad de población.",
-        costo:       1500,
-        poblacion:   20,
-        felicidad:   1,
-        energia:     -4,
+        costo:       3000,
+        capacidad:   12,
+        electricidad:  -15,
+        agua: -10,
     },
 
     /* ── Comercial ───────────────────────────── */
@@ -55,10 +66,10 @@ const _catalogo = [
         categoria:   "comercial",
         imagen:      "../../media/edificios/tienda.png",
         descripcion: "Genera ingresos y aumenta la felicidad del vecindario.",
-        costo:       800,
-        poblacion:   0,
-        felicidad:   3,
-        energia:     -2,
+        costo:       2000,
+        empleos:   6,
+        dinero:   500,
+        electricidad:  -8,
     },
     {
         id:          "centro-comercial",
@@ -66,10 +77,10 @@ const _catalogo = [
         categoria:   "comercial",
         imagen:      "../../media/edificios/centro-comercial.png",
         descripcion: "Gran centro comercial que genera muchos ingresos.",
-        costo:       6500,
-        poblacion:   0,
-        felicidad:   5,
-        energia:     -20,
+        costo:       8000,
+        empleos:   20,
+        dinero:   2000,
+        electricidad:  -25,
     },
 
     /* ── Industrial ──────────────────────────── */
@@ -79,10 +90,11 @@ const _catalogo = [
         categoria:   "industrial",
         imagen:      "../../media/edificios/fabrica.png",
         descripcion: "Produce bienes pero reduce la felicidad por contaminación.",
-        costo:       2000,
-        poblacion:   0,
-        felicidad:   -5,
-        energia:     -15,
+        costo:       5000,
+        empleos:   15,
+        dinero:   800,
+        electricidad:  -20,
+        agua: -15,
     },
     {
         id:          "granja",
@@ -90,10 +102,10 @@ const _catalogo = [
         categoria:   "industrial",
         imagen:      "../../media/edificios/granja.png",
         descripcion: "Provee alimento para la ciudad y genera recursos.",
-        costo:       2500,
-        poblacion:   0,
-        felicidad:   2,
-        energia:     -10,
+        costo:       3000,
+        empleos:   8,
+        alimento:   50,
+        agua:        -10,
     },
 
     /* ── Servicios ───────────────────────────── */
@@ -103,10 +115,10 @@ const _catalogo = [
         categoria:   "servicios",
         imagen:      "../../media/edificios/hospital.png",
         descripcion: "Mejora la salud y la felicidad de la población.",
-        costo:       4000,
-        poblacion:   0,
+        costo:       6000,
         felicidad:   10,
-        energia:     -12,
+        electricidad:     -20,
+        agua:        -10,
     },
     {
         id:          "bombero",
@@ -114,10 +126,9 @@ const _catalogo = [
         categoria:   "servicios",
         imagen:      "../../media/edificios/bombero.png",
         descripcion: "Reduce desastres y aumenta la seguridad del barrio.",
-        costo:       3200,
-        poblacion:   0,
-        felicidad:   8,
-        energia:     -10,
+        costo:       4000,
+        felicidad:   10,
+        electricidad: -15,
     },
     {
         id:          "policia",
@@ -125,21 +136,18 @@ const _catalogo = [
         categoria:   "servicios",
         imagen:      "../../media/edificios/policia.png",
         descripcion: "Mantiene el orden y mejora la felicidad ciudadana.",
-        costo:       3200,
-        poblacion:   0,
-        felicidad:   7,
-        energia:     -10,
+        costo:       4000,
+        felicidad:   10,
+        electricidad: -15,
     },
     {
         id:          "parque",
         nombre:      "Parque",
         categoria:   "servicios",
         imagen:      "../../media/edificios/parque.png",
-        descripcion: "Espacio verde que mejora mucho la felicidad del área.",
-        costo:       600,
-        poblacion:   0,
-        felicidad:   12,
-        energia:     0,
+        descripcion: "Espacio verde que mejora la felicidad del área.",
+        costo:       1500,
+        felicidad:   5,
     },
 
     /* ── Infraestructura ─────────────────────── */
@@ -149,10 +157,8 @@ const _catalogo = [
         categoria:   "infraestructura",
         imagen:      "../../media/edificios/electrica.png",
         descripcion: "Genera energía para toda la ciudad.",
-        costo:       5000,
-        poblacion:   0,
-        felicidad:   -3,
-        energia:     50,
+        costo:       10000,
+        electricidad:  200,
     },
     {
         id:          "planta-hidraulica",
@@ -160,10 +166,9 @@ const _catalogo = [
         categoria:   "infraestructura",
         imagen:      "../../media/edificios/agua.png",
         descripcion: "Provee agua para la ciudad y mejora el suministro.",
-        costo:       4500,
-        poblacion:   0,
-        felicidad:   -2,
-        energia:     30,
+        costo:       8000,
+        electricidad:   -20,
+        agua: 150,
     },
 ];
 

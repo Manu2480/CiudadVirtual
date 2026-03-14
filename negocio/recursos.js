@@ -29,6 +29,54 @@ Recursos que muestra la UI (vienen de Ciudad.estadoRecursos):
 
 
 /* ================================================
+ICONOS DE RECURSOS
+Definidos aquí para que todas las vistas los usen
+sin repetir clases ni nombres.
+================================================ */
+const ICONOS_RECURSOS = {
+    dinero: {
+        nombre: "Dinero",
+        icono:  "fi-br-coins",
+        link:   "https://www.flaticon.com/free-icon/coins",
+    },
+    agua: {
+        nombre: "Agua",
+        icono:  "fi-br-water",
+        link:   "https://www.flaticon.com/free-icon/water",
+    },
+    alimento: {
+        nombre: "Alimento",
+        icono:  "fi-br-wheat",
+        link:   "https://www.flaticon.com/free-icon/wheat",
+    },
+    poblacion: {
+        nombre: "Población",
+        icono:  "fi-br-users",
+        link:   "https://www.flaticon.com/free-icon/users",
+    },
+    felicidad: {
+        nombre: "Felicidad",
+        icono:  "fi-br-smile",
+        link:   "https://www.flaticon.com/free-icon/smile",
+    },
+    electricidad: {
+        nombre: "Electricidad",
+        icono:  "fi-br-bolt",
+        link:   "https://www.flaticon.com/free-icon/bolt",
+    },
+    capacidadResidencial: {
+        nombre: "Capacidad residencial",
+        icono:  "fi-br-users",
+        link:   "https://www.flaticon.com/free-icon/users",
+    },
+    capacidadLaboral: {
+        nombre: "Capacidad laboral",
+        icono:  "fi-br-handshake",
+        link:   "https://www.flaticon.com/free-icon/handshake",
+    },
+};
+
+/* ================================================
 REFERENCIA A LA INSTANCIA ACTIVA DE CIUDAD
 Se asigna desde tablero.js al arrancar:
   Recursos.setCiudad(instanciaDeCiudad);
@@ -69,12 +117,21 @@ Devuelve un objeto plano para que la UI lo consuma.
 ================================================ */
 function obtenerTodos() {
     if (!_ciudad) return {};
-    return {
+
+    const recursos = {
         ..._ciudad.estadoRecursos,
         /* La población no es un recurso en estadoRecursos sino
            el tamaño del array de ciudadanos */
         poblacion: _ciudad.ciudadanos.length,
     };
+
+    /* Añadimos métricas de capacidad (vivienda + empleo) para mostrarlas en la UI */
+    if (_ciudad.terreno) {
+        recursos.capacidadResidencial = _ciudad.terreno.capacidadTotalViviendas?.() ?? 0;
+        recursos.capacidadLaboral   = _ciudad.terreno.capacidadTotalEmpleos?.()   ?? 0;
+    }
+
+    return recursos;
 }
 
 
@@ -163,33 +220,51 @@ GENERAR HTML DE INDICADORES
 ================================================ */
 function _htmlIndicadores(datos, extendido = false) {
 
+    const getIcon = (key) => ICONOS_RECURSOS[key]?.icono || "fi-br-question";
+
     const principal = `
         <span class="recurso recurso--dinero">
-            <i class="fi fi-br-coins recurso__icono"></i>
+            <i class="fi ${getIcon("dinero")} recurso__icono"></i>
             <span class="recurso__valor">$${(datos.dinero || 0).toLocaleString()}</span>
         </span>
+        <span class="recurso recurso--agua">
+            <i class="fi ${getIcon("agua")} recurso__icono"></i>
+            <span class="recurso__valor">${datos.agua || 0} L</span>
+        </span>
+        <span class="recurso recurso--alimento">
+            <i class="fi ${getIcon("alimento")} recurso__icono"></i>
+            <span class="recurso__valor">${datos.alimento || 0} kg</span>
+        </span>
         <span class="recurso recurso--poblacion">
-            <i class="fi fi-br-users recurso__icono"></i>
+            <i class="fi ${getIcon("poblacion")} recurso__icono"></i>
             <span class="recurso__valor">${(datos.poblacion || 0).toLocaleString()}</span>
         </span>
         <span class="recurso recurso--felicidad">
-            <i class="fi fi-br-smile recurso__icono"></i>
-            <span class="recurso__valor">${Math.round(datos.felicidad || 0)}%</span>
+            <i class="fi ${getIcon("felicidad")} recurso__icono"></i>
+            <span class="recurso__valor">${Math.round(datos.felicidad || 0)}</span>
         </span>
-        <span class="recurso recurso--electricidad">
-            <i class="fi fi-br-bolt recurso__icono"></i>
+        <span class="recurso recurso--energia">
+            <i class="fi ${getIcon("electricidad")} recurso__icono"></i>
             <span class="recurso__valor">${datos.electricidad || 0} kW</span>
+        </span>
+        <span class="recurso recurso--capacidad-residencial">
+            <i class="fi ${getIcon("capacidadResidencial")} recurso__icono"></i>
+            <span class="recurso__valor">${datos.capacidadResidencial || 0}</span>
+        </span>
+        <span class="recurso recurso--capacidad-laboral">
+            <i class="fi ${getIcon("capacidadLaboral")} recurso__icono"></i>
+            <span class="recurso__valor">${datos.capacidadLaboral || 0}</span>
         </span>
     `;
 
     /* En el sidebar también mostramos agua y alimento */
     const extra = extendido ? `
         <span class="recurso recurso--agua">
-            <i class="fi fi-br-water recurso__icono"></i>
+            <i class="fi ${getIcon("agua")} recurso__icono"></i>
             <span class="recurso__valor">${datos.agua || 0} L</span>
         </span>
         <span class="recurso recurso--alimento">
-            <i class="fi fi-br-wheat recurso__icono"></i>
+            <i class="fi ${getIcon("alimento")} recurso__icono"></i>
             <span class="recurso__valor">${datos.alimento || 0} kg</span>
         </span>
     ` : "";
@@ -202,6 +277,7 @@ function _htmlIndicadores(datos, extendido = false) {
 EXPOSICIÓN GLOBAL
 ================================================ */
 window.Recursos = {
+    iconos: ICONOS_RECURSOS,
     setCiudad,
     inicializar,
     obtenerTodos,

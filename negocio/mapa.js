@@ -154,13 +154,26 @@ function _manejarClickCelda(e) {
 }
 
 function _manejarTouchCelda(e) {
-    /* En móvil el touchend puede no tener target correcto,
-       se usa el click para simplicidad */
+    /* En móvil el touchend puede no generar click si hubo un leve movimiento.
+       Aquí interpretamos el toque como tap y procesamos la interacción. */
+    if (!e.changedTouches || e.changedTouches.length === 0) return;
+
+    const t = e.changedTouches[0];
+    const el = document.elementFromPoint(t.clientX, t.clientY);
+    const celda = el?.closest(".celda");
+    if (!celda) return;
+
+    const fila = parseInt(celda.dataset.fila);
+    const col  = parseInt(celda.dataset.col);
+
+    _procesarInteraccion(celda, fila, col);
 }
 
 function _procesarInteraccion(celdaEl, fila, col) {
     const estado      = Tablero.Estado;
     const estadoCelda = _mapaState.grid[fila]?.[col] || { tipo: "vacio" };
+
+    console.log("mapa: interacción", { modo: estado.modo, fila, col, tipo: estadoCelda.tipo });
 
     switch (estado.modo) {
 
@@ -170,9 +183,10 @@ function _procesarInteraccion(celdaEl, fila, col) {
                 const edificio = Edificios.obtener(estadoCelda.tipo);
                 if (edificio) Modal.mostrarEdificio(edificio, fila, col);
             }
-            /* Tap en celda vacía: selecciona */
+            /* Tap en celda vacía: selecciona + abre el menú de construcción en móvil */
             else if (estadoCelda.tipo === "vacio") {
                 _seleccionarCelda(celdaEl, fila, col);
+                _abrirMenuConstruccionMovil();
             }
             break;
 
@@ -290,6 +304,72 @@ function actualizarModo(nuevoModo) {
             if (el) el.classList.remove("celda--seleccionada");
             _mapaState.celdaSelec = null;
         }
+    }
+}
+
+/* En móvil, al tocar una celda vacía abrimos automáticamente la tab "Construir" */
+function _abrirMenuConstruccionMovil() {
+    const vista = document.documentElement.getAttribute("data-vista");
+    console.log("mapa: intentar abrir menú construcción móvil (vista)", vista);
+    if (vista !== "movil") return;
+
+    const tab = document.querySelector("#tabs-movil .tab[data-panel=\"menu-construccion\"]");
+    if (tab) {
+        console.log("mapa: haciendo click en tab de construcción");
+        tab.click();
+    } else {
+        console.warn("mapa: no se encontró tab de construcción, forzando menú directamente");
+        _mostrarMenuConstruccionMovil();
+    }
+}
+
+function _mostrarMenuConstruccionMovil() {
+    const menu = document.getElementById("menu-construccion");
+    if (!menu) {
+        console.warn("mapa: no se encontró #menu-construccion");
+        return;
+    }
+
+    /* Si está dentro del sidebar oculto, lo movemos al body */
+    const sidebar = menu.closest(".sidebar--izquierdo");
+    if (sidebar) document.body.appendChild(menu);
+
+    /* Asegura que el panel esté visible */
+    menu.classList.add("abierto");
+    menu.style.display = "block";
+    menu.style.position = "fixed";
+    menu.style.top = "var(--alto-encabezado)";
+    menu.style.bottom = "var(--alto-tabs)";
+    menu.style.left = "0";
+    menu.style.right = "0";
+    menu.style.zIndex = "2000";
+    menu.style.background = "rgba(255,255,255,0.98)";
+    menu.style.border = "2px solid rgba(0,0,0,0.25)";
+
+    /* Si no está poblado, creamos el listado de edificios (fallback) */
+    if (!menu.querySelector(".construccion-lista") && window.Edificios && window.Tablero) {
+        const lista = document.createElement("div");
+        lista.className = "construccion-lista";
+
+        Edificios.todos().forEach(edificio => {
+            const btn = document.createElement("button");
+            btn.type = "button";
+            btn.className = "construccion-item";
+            btn.setAttribute("aria-label", `Construir ${edificio.nombre} — $${edificio.costo}`);
+            btn.innerHTML = `
+                <img src="${edificio.imagen}" alt="" class="construccion-item__imagen" />
+                <span class="construccion-item__nombre">${edificio.nombre}</span>
+                <span class="construccion-item__costo">$${edificio.costo}</span>
+            `;
+            btn.addEventListener("click", () => {
+                Tablero.seleccionarEdificio(edificio.id);
+                window.Notificaciones?.mostrar(`Seleccionado: ${edificio.nombre}. Toca una celda vacía para construir.`, "aviso");
+            });
+            lista.appendChild(btn);
+        });
+
+        menu.appendChild(lista);
+        console.log("mapa: menú de construcción fallback generado", { items: lista.childElementCount });
     }
 }
 
