@@ -134,19 +134,20 @@ Sobreescribe tableroBase.css donde sea necesario.
 }
 
 .construccion-item {
-    min-width: 120px;
-    min-height: var(--btn-tap-min);
-    flex: 0 0 auto;
+    flex: 0 0 100%;          /* cada tarjeta ocupa el 100% del ancho */
+    height: 100%;
+    scroll-snap-align: start;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 4px;
-    background: rgba(255, 255, 255, 0.95);
-    border: 1px solid var(--color-borde);
-    border-radius: var(--radio-s);
-    padding: var(--espacio-s);
+    gap: 8px;
+    background: var(--color-superficie);
+    border-right: 1px solid var(--color-borde);
+    padding: var(--espacio-l);
+    box-sizing: border-box;
     cursor: pointer;
+    overflow-y: auto;
 }
 
 .construccion-item:active {
@@ -154,19 +155,21 @@ Sobreescribe tableroBase.css donde sea necesario.
 }
 
 .construccion-item__imagen {
-    width: 40px;
-    height: 40px;
+    width: 100px;
+    height: 100px;
     object-fit: contain;
 }
 
 .construccion-item__nombre {
-    font-size: var(--fuente-tam-s);
+    font-size: var(--fuente-tam-l);
+    font-weight: 600;
     text-align: center;
 }
 
 .construccion-item__costo {
-    font-size: var(--fuente-tam-s);
-    color: var(--color-texto-s);
+    font-size: var(--fuente-tam-m);
+    color: var(--color-primario);
+    font-weight: 600;
 }
 
 .construccion-item__detalles {
@@ -322,3 +325,15 @@ Sobreescribe tableroBase.css donde sea necesario.
 .joystick-arrows i:nth-child(2) { bottom: 6px; left: 50%; transform: translateX(-50%); }  /* abajo */
 .joystick-arrows i:nth-child(3) { left: 6px;   top: 50%;  transform: translateY(-50%); }  /* izq */
 .joystick-arrows i:nth-child(4) { right: 6px;  top: 50%;  transform: translateY(-50%); }  /* der */
+.construccion-lista {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    height: 100%;
+    width: 100%;
+    scroll-snap-type: x mandatory;
+    gap: 0;
+    padding: 0;
+}

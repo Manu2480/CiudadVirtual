@@ -182,6 +182,21 @@ function _inicializarMenuConstruccion() {
     /* Limpia el contenido existente (por ejemplo, durante recarga) */
     const contenido = document.createElement("div");
     contenido.className = "construccion-lista";
+    /* Fuerza fila horizontal con scroll — el panel se abre con style inline
+       que no hereda CSS de clase, así que lo aplicamos directamente */
+    contenido.style.cssText = `
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        overflow-y: hidden;
+        height: 100%;
+        width: 100%;
+        padding: 0;
+        gap: 0;
+        box-sizing: border-box;
+        scroll-snap-type: x mandatory;
+    `;
 
     Edificios.todos().forEach(edificio => {
         const btn = document.createElement("button");
@@ -189,40 +204,36 @@ function _inicializarMenuConstruccion() {
         btn.className = "construccion-item";
         btn.setAttribute("aria-label", `Construir ${edificio.nombre} — $${edificio.costo}`);
 
-        const iconosRecursos = window.Recursos?.iconos || {};
-        const getIcono = key => iconosRecursos[key]?.icono || "fi-br-question";
+        const cat = window.Recursos?.RECURSOS || {};
+        const icono = key => cat[key]?.icono || "fi-br-question";
 
         const indicadores = [
-            { key: "dinero",     icon: getIcono("dinero"),     formatter: v => `$${v.toLocaleString()}` },
-            { key: "agua",       icon: getIcono("agua"),       formatter: v => `${v} L` },
-            { key: "alimento",   icon: getIcono("alimento"),   formatter: v => `${v} kg` },
-            { key: "felicidad",  icon: getIcono("felicidad"),  formatter: v => `${Math.round(v)}` },
-            { key: "energia",    icon: getIcono("electricidad"), formatter: v => `${v}` },
-            { key: "poblacion",  icon: getIcono("poblacion"),  formatter: v => `${v}` },
-            { key: "empleo",     icon: getIcono("capacidadLaboral"), formatter: v => `${v}` },
+            { key: "electricidad", icono: icono("electricidad"), fmt: v => `${v > 0 ? "+" : ""}${v} kW`  },
+            { key: "agua",         icono: icono("agua"),         fmt: v => `${v > 0 ? "+" : ""}${v} L`   },
+            { key: "alimento",     icono: icono("alimento"),     fmt: v => `+${v} kg`                     },
+            { key: "dinero",       icono: icono("dinero"),       fmt: v => `+$${v.toLocaleString()}/turno` },
+            { key: "felicidad",    icono: icono("felicidad"),    fmt: v => `${v > 0 ? "+" : ""}${v}`      },
+            { key: "capacidad",    icono: icono("capacidadResidencial"), fmt: v => `+${v} hab`            },
+            { key: "empleos",      icono: icono("capacidadLaboral"),     fmt: v => `+${v} empleos`        },
         ];
 
         const detallesHtml = indicadores
-            .map(info => {
-                const valor = edificio[info.key];
+            .map(({ key, icono, fmt }) => {
+                const valor = edificio[key];
                 if (valor === null || valor === undefined || valor === 0) return "";
-                const signo = info.key === "poblacion" ? "" : (valor > 0 ? "+" : "");
-                return `
-                    <span class="construccion-item__atributo">
-                        <i class="fi ${info.icon}"></i>
-                        ${signo}${info.formatter(Math.abs(valor))}
-                    </span>`;
+                return `<span class="construccion-item__atributo">
+                            <i class="fi ${icono}"></i> ${fmt(valor)}
+                        </span>`;
             })
             .filter(Boolean)
             .join("");
 
         btn.innerHTML = `
-            <img src="${edificio.imagen}" alt="" class="construccion-item__imagen" />
+            <img src="${edificio.imagen}" alt="${edificio.nombre}" class="construccion-item__imagen" />
             <span class="construccion-item__nombre">${edificio.nombre}</span>
-            <span class="construccion-item__costo">$${edificio.costo}</span>
-            <div class="construccion-item__detalles">
-                ${detallesHtml}
-            </div>
+            <span class="construccion-item__costo">$${edificio.costo.toLocaleString()}</span>
+            <p class="construccion-item__desc">${edificio.descripcion || ""}</p>
+            <div class="construccion-item__detalles">${detallesHtml}</div>
         `;
 
         btn.addEventListener("click", () => {
@@ -346,6 +357,7 @@ function _inicializarJoystick() {
     wrap.addEventListener("touchstart", (e) => {
         if (activo) return;
         e.preventDefault();
+        e.stopPropagation();
         const t  = e.changedTouches[0];
         origenId = t.identifier;
         activo   = true;
@@ -356,6 +368,7 @@ function _inicializarJoystick() {
 
     wrap.addEventListener("touchmove", (e) => {
         e.preventDefault();
+        e.stopPropagation();
         const t = Array.from(e.changedTouches).find(x => x.identifier === origenId);
         if (!t) return;
         const c = _centro();
