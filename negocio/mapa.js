@@ -17,11 +17,11 @@ Dependencias: tablero.js (Estado), edificios.js
 ESTADO INTERNO DEL MAPA
 ================================================ */
 const _mapaState = {
-    nivelZoom:    1,       /* factor de escala actual */
+    nivelZoom:    1,
     zoomMin:      0.4,
     zoomMax:      2.5,
-    zoomPaso:     0.15,    /* incremento por cada click de zoom */
-    celdaSelec:   null,    /* índice [fila][col] de la celda seleccionada */
+    zoomPaso:     0.15,
+    celdaSelec:   null,
     grid:         [],      /* grid interno [fila][col] = { tipo } */
 };
 
@@ -75,19 +75,17 @@ function inicializar(filas, columnas, edificiosGuardados) {
         Array.from({ length: columnas }, () => ({ tipo: "vacio" }))
     );
 
-    /* Rellena las celdas ocupadas desde los edificios guardados */
+    /* Rellena celdas con edificios guardados */
     Object.entries(mapaEdificios).forEach(([clave, ed]) => {
         const [f, c] = clave.split("-").map(Number);
-        if (_mapaState.grid[f] && _mapaState.grid[f][c] !== undefined) {
-            _mapaState.grid[f][c] = { tipo: ed.id || "edificio", edificio: ed };
+        if (_mapaState.grid[f]?.[c] !== undefined) {
+            _mapaState.grid[f][c] = { tipo: ed.id || "edificio" };
         }
     });
 
     for (let f = 0; f < filas; f++) {
         for (let c = 0; c < columnas; c++) {
-
-            const estadoCelda = _mapaState.grid[f][c];
-            const celda = _crearCeldaEl(f, c, estadoCelda);
+            const celda = _crearCeldaEl(f, c, _mapaState.grid[f][c]);
             _gridEl.appendChild(celda);
         }
     }
@@ -160,7 +158,8 @@ function _manejarTouchCelda(e) {
 
 function _procesarInteraccion(celdaEl, fila, col) {
     const estado      = Tablero.Estado;
-    const estadoCelda = _mapaState.grid[fila]?.[col] || { tipo: "vacio" };
+    if (!_mapaState.grid?.[fila]) return;   /* grid aún no inicializado */
+    const estadoCelda = _mapaState.grid[fila][col] || { tipo: "vacio" };
 
     switch (estado.modo) {
 
@@ -226,7 +225,7 @@ function construirEdificio(fila, col, idEdificio) {
         return;
     }
 
-    /* Actualiza el grid interno */
+    /* Actualiza el Estado */
     _mapaState.grid[fila][col] = { tipo: idEdificio };
 
     /* Actualiza el DOM */
@@ -256,7 +255,7 @@ DEMOLER EDIFICIO
 Elimina el edificio de la celda y restaura la celda vacía.
 ================================================ */
 function demolerEdificio(fila, col) {
-    const tipo = _mapaState.grid[fila][col].tipo;
+    const tipo = _mapaState.grid[fila]?.[col]?.tipo || "vacio";
     const edificio = Edificios.obtener(tipo);
 
     _mapaState.grid[fila][col] = { tipo: "vacio" };

@@ -97,10 +97,14 @@ function mostrarEdificio(edificio, fila, col) {
             <p class="modal-edificio__descripcion">${edificio.descripcion || ""}</p>
 
             <ul class="modal-edificio__stats">
-                ${edificio.costo      !== undefined ? `<li><i class="fi fi-br-coins"></i> Costo: <strong>$${edificio.costo.toLocaleString()}</strong></li>` : ""}
-                ${edificio.poblacion  !== undefined ? `<li><i class="fi fi-br-users"></i> Población: <strong>+${edificio.poblacion}</strong></li>` : ""}
-                ${edificio.felicidad  !== undefined ? `<li><i class="fi fi-br-smile"></i> Felicidad: <strong>${edificio.felicidad > 0 ? "+" : ""}${edificio.felicidad}</strong></li>` : ""}
-                ${edificio.energia    !== undefined ? `<li><i class="fi fi-br-bolt"></i> Energía: <strong>${edificio.energia > 0 ? "+" : ""}${edificio.energia}</strong></li>` : ""}
+                ${edificio.costo         ? `<li><i class="fi fi-br-coins"></i> Costo: <strong>$${edificio.costo.toLocaleString()}</strong></li>` : ""}
+                ${edificio.capacidad     ? `<li><i class="fi fi-br-users"></i> Capacidad: <strong>+${edificio.capacidad} hab</strong></li>` : ""}
+                ${edificio.empleos       ? `<li><i class="fi fi-br-handshake"></i> Empleos: <strong>+${edificio.empleos}</strong></li>` : ""}
+                ${edificio.felicidad     ? `<li><i class="fi fi-br-smile"></i> Felicidad: <strong>${edificio.felicidad > 0 ? "+" : ""}${edificio.felicidad}</strong></li>` : ""}
+                ${edificio.electricidad  !== undefined ? `<li><i class="fi fi-br-bolt"></i> Electricidad: <strong>${edificio.electricidad > 0 ? "+" : ""}${edificio.electricidad} kW</strong></li>` : ""}
+                ${edificio.agua          !== undefined ? `<li><i class="fi fi-br-raindrops"></i> Agua: <strong>${edificio.agua > 0 ? "+" : ""}${edificio.agua} L</strong></li>` : ""}
+                ${edificio.dinero        ? `<li><i class="fi fi-br-coins"></i> Ingresos: <strong>+$${edificio.dinero.toLocaleString()}/turno</strong></li>` : ""}
+                ${edificio.alimento      ? `<li><i class="fi fi-br-wheat"></i> Alimento: <strong>+${edificio.alimento} kg</strong></li>` : ""}
             </ul>
 
             <button class="modal-edificio__demoler btn-peligro"
@@ -124,19 +128,19 @@ function mostrarEstadisticas() {
     const estado = Tablero.Estado;
     const recursos = Recursos.obtenerTodos();
 
+    const ciudad = estado.ciudad;
     const html = `
         <div class="modal-stats">
-
-            <h2><i class="fi fi-br-chart-histogram"></i> ${estado.nombreCiudad}</h2>
-            <p class="modal-stats__subtitulo">Turno ${estado.turno}</p>
-
+            <h2><i class="fi fi-br-chart-histogram"></i> ${ciudad?.nombre || "Mi Ciudad"}</h2>
+            <p class="modal-stats__subtitulo">Turno ${ciudad?.tiempoTurno || 0}</p>
             <ul class="modal-stats__lista">
-                <li><i class="fi fi-br-coins"></i> Dinero:     <strong>$${(recursos.dinero    || 0).toLocaleString()}</strong></li>
-                <li><i class="fi fi-br-users"></i> Población:  <strong>${(recursos.poblacion || 0).toLocaleString()}</strong></li>
-                <li><i class="fi fi-br-smile"></i> Felicidad:  <strong>${(recursos.felicidad || 0)}%</strong></li>
-                <li><i class="fi fi-br-bolt"></i> Energía:   <strong>${(recursos.energia   || 0)} MW</strong></li>
+                <li><i class="fi fi-br-coins"></i> Dinero: <strong>$${(recursos.dinero || 0).toLocaleString()}</strong></li>
+                <li><i class="fi fi-br-users"></i> Población: <strong>${(recursos.poblacion || 0).toLocaleString()}</strong></li>
+                <li><i class="fi fi-br-smile"></i> Felicidad: <strong>${Math.round(recursos.felicidad || 0)}</strong></li>
+                <li><i class="fi fi-br-bolt"></i> Electricidad: <strong>${recursos.electricidad || 0} kW</strong></li>
+                <li><i class="fi fi-br-raindrops"></i> Agua: <strong>${recursos.agua || 0} L</strong></li>
+                <li><i class="fi fi-br-wheat"></i> Alimento: <strong>${recursos.alimento || 0} kg</strong></li>
             </ul>
-
         </div>
     `;
 
