@@ -17,11 +17,12 @@ Dependencias: tablero.js (Estado), edificios.js
 ESTADO INTERNO DEL MAPA
 ================================================ */
 const _mapaState = {
-    nivelZoom:    1,       /* factor de escala actual */
+    nivelZoom:    1,
     zoomMin:      0.4,
     zoomMax:      2.5,
-    zoomPaso:     0.15,    /* incremento por cada click de zoom */
-    celdaSelec:   null,    /* índice [fila][col] de la celda seleccionada */
+    zoomPaso:     0.15,
+    celdaSelec:   null,
+    grid:         [],      /* grid interno [fila][col] = { tipo } */
 };
 
 
@@ -69,16 +70,22 @@ function inicializar(filas, columnas, edificiosGuardados) {
     _gridEl.style.gridTemplateRows    = `repeat(${filas}, var(--tamano-celda))`;
     _gridEl.innerHTML = "";
 
+    /* Inicializa el grid interno vacío */
+    _mapaState.grid = Array.from({ length: filas }, () =>
+        Array.from({ length: columnas }, () => ({ tipo: "vacio" }))
+    );
+
+    /* Rellena celdas con edificios guardados */
+    Object.entries(mapaEdificios).forEach(([clave, ed]) => {
+        const [f, c] = clave.split("-").map(Number);
+        if (_mapaState.grid[f]?.[c] !== undefined) {
+            _mapaState.grid[f][c] = { tipo: ed.id || "edificio" };
+        }
+    });
+
     for (let f = 0; f < filas; f++) {
         for (let c = 0; c < columnas; c++) {
-
-            /* Busca si hay un edificio en esta celda */
-            const edificio = mapaEdificios[`${f}-${c}`] || null;
-            const estadoCelda = edificio
-                ? { tipo: edificio.id || edificio.constructor?.name || "edificio", edificio }
-                : { tipo: "vacio" };
-
-            const celda = _crearCeldaEl(f, c, estadoCelda);
+            const celda = _crearCeldaEl(f, c, _mapaState.grid[f][c]);
             _gridEl.appendChild(celda);
         }
     }

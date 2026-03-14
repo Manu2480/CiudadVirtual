@@ -182,21 +182,6 @@ function _inicializarMenuConstruccion() {
     /* Limpia el contenido existente (por ejemplo, durante recarga) */
     const contenido = document.createElement("div");
     contenido.className = "construccion-lista";
-    /* Fuerza fila horizontal con scroll — el panel se abre con style inline
-       que no hereda CSS de clase, así que lo aplicamos directamente */
-    contenido.style.cssText = `
-        display: flex;
-        flex-direction: row;
-        flex-wrap: nowrap;
-        overflow-x: auto;
-        overflow-y: hidden;
-        height: 100%;
-        width: 100%;
-        padding: 0;
-        gap: 0;
-        box-sizing: border-box;
-        scroll-snap-type: x mandatory;
-    `;
 
     Edificios.todos().forEach(edificio => {
         const btn = document.createElement("button");
@@ -208,13 +193,13 @@ function _inicializarMenuConstruccion() {
         const icono = key => cat[key]?.icono || "fi-br-question";
 
         const indicadores = [
-            { key: "electricidad", icono: icono("electricidad"), fmt: v => `${v > 0 ? "+" : ""}${v} kW`  },
-            { key: "agua",         icono: icono("agua"),         fmt: v => `${v > 0 ? "+" : ""}${v} L`   },
-            { key: "alimento",     icono: icono("alimento"),     fmt: v => `+${v} kg`                     },
-            { key: "dinero",       icono: icono("dinero"),       fmt: v => `+$${v.toLocaleString()}/turno` },
-            { key: "felicidad",    icono: icono("felicidad"),    fmt: v => `${v > 0 ? "+" : ""}${v}`      },
-            { key: "capacidad",    icono: icono("capacidadResidencial"), fmt: v => `+${v} hab`            },
-            { key: "empleos",      icono: icono("capacidadLaboral"),     fmt: v => `+${v} empleos`        },
+            { key: "electricidad", icono: icono("electricidad"), fmt: v => `${v > 0 ? "+" : ""}${v} kW`   },
+            { key: "agua",         icono: icono("agua"),         fmt: v => `${v > 0 ? "+" : ""}${v} L`    },
+            { key: "alimento",     icono: icono("alimento"),     fmt: v => `+${v} kg`                      },
+            { key: "dinero",       icono: icono("dinero"),       fmt: v => `+$${v.toLocaleString()}/turno`  },
+            { key: "felicidad",    icono: icono("felicidad"),    fmt: v => `${v > 0 ? "+" : ""}${v}`       },
+            { key: "capacidad",    icono: icono("capacidadResidencial"), fmt: v => `+${v} hab`             },
+            { key: "empleos",      icono: icono("capacidadLaboral"),     fmt: v => `+${v} empleos`         },
         ];
 
         const detallesHtml = indicadores
@@ -357,7 +342,6 @@ function _inicializarJoystick() {
     wrap.addEventListener("touchstart", (e) => {
         if (activo) return;
         e.preventDefault();
-        e.stopPropagation();
         const t  = e.changedTouches[0];
         origenId = t.identifier;
         activo   = true;
@@ -368,7 +352,6 @@ function _inicializarJoystick() {
 
     wrap.addEventListener("touchmove", (e) => {
         e.preventDefault();
-        e.stopPropagation();
         const t = Array.from(e.changedTouches).find(x => x.identifier === origenId);
         if (!t) return;
         const c = _centro();
@@ -408,17 +391,19 @@ function _inicializarPinchZoom() {
 
     area.addEventListener("touchstart", (e) => {
         if (e.touches.length === 2) {
+            e.preventDefault();   /* evita zoom del navegador en toda la página */
             distanciaInicial = _distancia(e.touches[0], e.touches[1]);
             zoomInicial      = Mapa.getZoom();
         }
-    }, { passive: true });
+    }, { passive: false });
 
     area.addEventListener("touchmove", (e) => {
         if (e.touches.length !== 2 || distanciaInicial === null) return;
+        e.preventDefault();   /* evita zoom del navegador en toda la página */
         const distActual = _distancia(e.touches[0], e.touches[1]);
         const ratio      = distActual / distanciaInicial;
         Mapa.setZoom(zoomInicial * ratio);
-    }, { passive: true });
+    }, { passive: false });
 
     area.addEventListener("touchend", (e) => {
         if (e.touches.length < 2) {
@@ -441,8 +426,13 @@ function _inicializarZoomBtns() {
    Llama a ApiClima con las coordenadas de la ciudad guardada
    e inyecta un chip de icono + temperatura en el header. */
 function _inicializarClima() {
+    /* Tablero.Estado.ciudad puede no estar listo aún en DOMContentLoaded.
+       Reintenta hasta que esté disponible. */
     const ciudad = window.Tablero?.Estado?.ciudad;
-    if (!ciudad || !ciudad.latitud || !ciudad.longitud) return;
+    if (!ciudad || !ciudad.latitud || !ciudad.longitud) {
+        setTimeout(_inicializarClima, 300);
+        return;
+    }
 
     const api = new ApiClima();
 
@@ -483,6 +473,12 @@ function _iconoClima(condicion = "") {
 function _inicializarNoticias() {
     const area = document.getElementById("area-mapa");
     if (!area) return;
+
+    /* Espera a que Tablero esté listo antes de pedir noticias */
+    if (!window.Tablero?.Estado?.ciudad) {
+        setTimeout(_inicializarNoticias, 300);
+        return;
+    }
 
     const api = new ApiNoticias();
 
