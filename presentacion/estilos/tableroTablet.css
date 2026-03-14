@@ -27,7 +27,7 @@ Dependencias: HU-023
     .contenedor-juego{
         display: grid;
         grid-template-columns: 70% 30%;
-        grid-template-rows: 1fr 1fr;
+        grid-template-rows: 1fr 1fr 1fr;
     }
 
     .area-mapa{
@@ -36,19 +36,17 @@ Dependencias: HU-023
         
     }
 
-    .panel--recursos{
-        display: none; /*En tablet los recursos se muestran en la barra superior*/
-
-    }
-
     .sidebar--izquierdo{
-        grid-column: 2;
-        grid-row: 1;
+        display: none;   
     }
     
     .sidebar--derecho{
+        display: none;
+    }
+
+    .sidebar--tablet{
         grid-column: 2;
-        grid-row:2;
+        grid-row: 1 / -1;
     }
 
 

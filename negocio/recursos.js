@@ -91,9 +91,11 @@ function _renderizarUI() {
             side.insertAdjacentHTML("beforeend", _htmlIndicadores(datos, true));
         }
     }
-    else if (vista=="tablet"){
-        panelHeader.innerHTML=""
-        panelHeader.insertAdjacentHTML("beforeend", _htmlIndicadores(datos,true));
+    else if (document.documentElement.getAttribute("data-vista") === "tablet"){
+        const panelTablet = document.getElementById("panel-recursos-tablet")
+        panelTablet.innerHTML = "";
+        panelTablet.innerHTML= '<h2 class="panel__titulo">Recursos</h2>';
+        panelTablet.insertAdjacentHTML("beforeend", _htmlIndicadores(datos,true));
     }
 }
 
