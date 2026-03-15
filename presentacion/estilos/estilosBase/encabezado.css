@@ -1,0 +1,36 @@
+/* ================================================
+ENCABEZADO
+Barra superior con logo, nombre de ciudad y recursos.
+================================================ */
+
+.encabezado {
+    background-color: var(--color-primario);
+    color: #ffffff;
+    height: var(--alto-encabezado);
+    display: flex;
+    align-items: center;
+    gap: var(--espacio-m);
+    padding: 0 var(--espacio-m);
+    position: relative;
+    z-index: 100;
+    box-shadow: var(--sombra-s);
+}
+
+.encabezado__logo img {
+    height: 40px;
+    width: auto;
+    transition: opacity var(--trans-rapida);
+}
+
+.encabezado__logo:hover img {
+    opacity: 0.85;
+}
+
+.encabezado__titulo {
+    font-size: var(--fuente-tam-l);
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    flex: 1;
+}

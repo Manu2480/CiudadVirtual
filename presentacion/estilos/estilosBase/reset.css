@@ -1,0 +1,41 @@
+/* ================================================
+RESET Y BASE
+Reset básico + tipografía y elementos base.
+================================================ */
+
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html, body {
+    height: 100%;
+}
+
+body {
+    font-family: var(--fuente-ui);
+    font-size: var(--fuente-tam-m);
+    color: var(--color-texto);
+    background-color: var(--color-fondo);
+    display: grid;
+    grid-template-rows: var(--alto-encabezado) 1fr;
+    grid-template-columns: 1fr;
+}
+
+button {
+    font-family: var(--fuente-ui);
+    cursor: pointer;
+    border: none;
+    background: none;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+img {
+    display: block;
+    max-width: 100%;
+}

@@ -35,6 +35,11 @@ function inicializar() {
         document.body.appendChild(menu);
     }
 
+    /* Oculta el título del panel — en móvil el catálogo es un modal,
+       no necesita el h2 del sidebar */
+    const titulo = menu.querySelector(".panel__titulo");
+    if (titulo) titulo.style.display = "none";
+
     /* Edificios y Tablero se cargan con defer; reintenta si aún no están */
     const intentos = parseInt(menu.dataset._intentos || "0", 10);
     if (!window.Edificios || !window.Tablero) {
@@ -44,6 +49,9 @@ function inicializar() {
         }
         return;
     }
+
+    /* Evita renderizar el contenido dos veces */
+    if (menu.querySelector(".construccion-lista")) return;
 
     const contenido = document.createElement("div");
     contenido.className = "construccion-lista";

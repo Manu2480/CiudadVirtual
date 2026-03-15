@@ -180,15 +180,12 @@ function _procesarInteraccion(celdaEl, fila, col) {
     switch (estado.modo) {
 
         case "normal":
-            /* Click en edificio: abre modal de info */
-            if (estadoCelda.tipo !== "vacio" && estadoCelda.tipo !== "agua") {
-                const edificio = Edificios.obtener(estadoCelda.tipo);
-                if (edificio) Modal.mostrarEdificio(edificio, fila, col);
-            }
-            /* Click en celda vacía: selecciona */
-            else if (estadoCelda.tipo === "vacio") {
-                _seleccionarCelda(celdaEl, fila, col);
-            }
+            /* En modo normal solo se navega — notifica al usuario
+               que debe ir a Construir para interactuar con las celdas. */
+            Notificaciones.mostrar(
+                "Ve a la tab Construir para edificar o demoler.",
+                "aviso"
+            );
             break;
 
         case "construccion":
@@ -203,11 +200,15 @@ function _procesarInteraccion(celdaEl, fila, col) {
                         detail: { fila, col, grid: _mapaState.grid, gridEl: _gridEl }
                     }));
                 }
+            } else if (estadoCelda.tipo !== "agua") {
+                /* Click en edificio construido: abre modal con info y opción de demoler */
+                const edificio = Edificios.obtener(estadoCelda.tipo);
+                if (edificio) Modal.mostrarEdificio(edificio, fila, col);
             }
             break;
 
         case "demolicion":
-            /* Click en edificio: demuele */
+            /* Click en edificio: demuele directamente sin modal */
             if (estadoCelda.tipo !== "vacio" && estadoCelda.tipo !== "agua") {
                 Edificaciones.demoler(fila, col, _mapaState.grid, _gridEl);
             }
@@ -253,35 +254,6 @@ function actualizarModo(nuevoModo) {
 }
 
 /* ================================================
-ZOOM
-Aplica transform:scale al grid. El área scrollable
-mantiene su tamaño — solo la cuadrícula escala.
-================================================ */
-function getZoom() {
-    return _mapaState.nivelZoom;
-}
-
-function setZoom(nivel) {
-    _mapaState.nivelZoom = Math.min(
-        _mapaState.zoomMax,
-        Math.max(_mapaState.zoomMin, nivel)
-    );
-    if (_gridEl) {
-        _gridEl.style.transform       = `scale(${_mapaState.nivelZoom})`;
-        _gridEl.style.transformOrigin = "top left";
-    }
-}
-
-function acercar() {
-    setZoom(_mapaState.nivelZoom + _mapaState.zoomPaso);
-}
-
-function alejar() {
-    setZoom(_mapaState.nivelZoom - _mapaState.zoomPaso);
-}
-
-
-/* ================================================
 EXPOSICIÓN GLOBAL
 ================================================ */
 function getGrid() {
@@ -291,4 +263,5 @@ function getGrid() {
 window.Mapa = {
     inicializar,
     actualizarModo,
+    getGrid,
 };
