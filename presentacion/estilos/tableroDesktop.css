@@ -1,0 +1,757 @@
+/*
+=================================================================
+TABLERODESKTOP.CSS
+Vista Desktop para resoluciones > 1024px
+
+HU-024: Diseño Responsive - Vista Desktop
+Como jugador en computadora de escritorio
+Quiero una interfaz completa con todos los paneles visibles
+Para gestionar mi ciudad eficientemente
+
+Criterios de Aceptación:
+ ✓ Layout en tres secciones: sidebar izquierdo (250px), mapa central, sidebar derecho (300px)
+ ✓ Panel de recursos y menú de construcción en sidebar izquierdo
+ ✓ Grid completo visible con controles de zoom (+/-)
+ ✓ Widget de clima, panel de noticias y estadísticas en sidebar derecho
+ ✓ Hover effects en todos los elementos interactivos
+ ✓ Tooltips informativos al hacer hover en edificios
+ ✓ Cursor personalizado en modo construcción y demolición
+ ✓ Atajos de teclado implementados en MICHAELcontrolesDesktop.js
+ ✓ Modales centrados (50% max-width)
+ ✓ Animaciones suaves en transiciones
+ ✓ Zoom estático respecto al movimiento del mapa
+
+Prioridad: Alta
+Dependencias: HU-023, HU-024
+=================================================================
+*/
+
+/* =========================
+   VARIABLES GLOBALES
+========================= */
+:root {
+    --sidebar-izquierdo: 250px;
+    --sidebar-derecho: 300px;
+    --alto-encabezado: 60px;
+    --transicion: 0.25s ease;
+    --transicion-rapida: 0.15s ease;
+
+    /* Sistema de zoom estático */
+    --zoom-min: 0.5;
+    --zoom-max: 2;
+    --zoom-paso: 0.25;
+    --zoom-actual: 1;
+}
+
+/* =========================
+   RESET Y BASE
+========================= */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--fuente-ui, system-ui, -apple-system, sans-serif);
+    font-size: var(--fuente-tam-m, 14px);
+    color: var(--color-texto, #2c2c2c);
+    background-color: var(--color-fondo, #f5f5f5);
+    height: 100vh;
+    overflow: hidden;
+}
+
+/* =========================
+   ENCABEZADO
+========================= */
+.encabezado {
+    background-color: var(--color-primario, #1A73E8);
+    color: #ffffff;
+    height: var(--alto-encabezado);
+    display: flex;
+    align-items: center;
+    gap: var(--espacio-m, 16px);
+    padding: 0 var(--espacio-m, 16px);
+    position: relative;
+    z-index: 100;
+    box-shadow: var(--sombra-s, 0 2px 8px rgba(0,0,0,0.10));
+}
+
+.encabezado__logo img {
+    height: 40px;
+    width: auto;
+    transition: opacity var(--transicion-rapida);
+}
+
+.encabezado__logo:hover img {
+    opacity: 0.85;
+}
+
+.encabezado__titulo {
+    font-size: var(--fuente-tam-l, 16px);
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    flex: 1;
+}
+
+/* =========================
+   LAYOUT DESKTOP - 3 COLUMNAS
+========================= */
+.contenedor-juego {
+    display: grid;
+    grid-template-columns: var(--sidebar-izquierdo) 1fr var(--sidebar-derecho);
+    height: calc(100vh - var(--alto-encabezado));
+    overflow: hidden;
+}
+
+/* =========================
+   SIDEBARS
+========================= */
+.sidebar {
+    background-color: var(--color-superficie, #ffffff);
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: var(--espacio-m, 16px);
+    padding: var(--espacio-m, 16px);
+}
+
+.sidebar--izquierdo {
+    border-right: 1px solid var(--color-borde, #e0e0e0);
+}
+
+.sidebar--derecho {
+    border-left: 1px solid var(--color-borde, #e0e0e0);
+}
+
+/* =========================
+   PANELES
+========================= */
+.panel {
+    background-color: var(--color-superficie, #ffffff);
+    border: 1px solid var(--color-borde, #e0e0e0);
+    border-radius: var(--radio-m, 10px);
+    padding: var(--espacio-m, 16px);
+    box-shadow: var(--sombra-s, 0 2px 8px rgba(0,0,0,0.10));
+    transition: box-shadow var(--transicion), transform var(--transicion);
+}
+
+.panel:hover {
+    box-shadow: var(--sombra-m, 0 4px 16px rgba(0,0,0,0.14));
+}
+
+.panel__titulo {
+    font-size: var(--fuente-tam-m, 14px);
+    font-weight: 600;
+    color: var(--color-texto, #2c2c2c);
+    margin-bottom: var(--espacio-s, 8px);
+    padding-bottom: var(--espacio-s, 8px);
+    border-bottom: 1px solid var(--color-borde, #e0e0e0);
+}
+
+.panel--recursos {
+    background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+}
+
+.panel--construccion {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.panel--clima {
+    text-align: center;
+}
+
+.panel--noticias {
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.panel--estadisticas {
+    flex: 1;
+}
+
+/* =========================
+   ÁREA DEL MAPA CON ZOOM ESTÁTICO
+   El zoom permanece fijo durante el arrastre del mapa
+========================= */
+.area-mapa {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    overflow: auto;
+    background: linear-gradient(180deg, #87ceeb 0%, #e0e5ec 100%);
+    width: 100%;
+    height: 100%;
+    cursor: grab;
+}
+
+.area-mapa:active {
+    cursor: grabbing;
+}
+
+/* =========================
+   GRID DEL MAPA - ZOOM ESTÁTICO
+   El zoom se aplica mediante transform: scale()
+   transform-origin: top left asegura que el zoom
+   siempre se expanda desde la esquina superior izquierda.
+   El zoom NO cambia cuando el usuario mueve el mapa.
+========================= */
+.mapa-grid {
+    display: grid;
+    grid-template-columns: repeat(20, var(--tamano-celda, 48px));
+    grid-template-rows: repeat(15, var(--tamano-celda, 48px));
+    padding: 20px;
+    transform-origin: top left;
+    transform: scale(var(--zoom-actual));
+    transition: transform var(--transicion);
+    will-change: transform;
+}
+
+/* Niveles de zoom predefinidos */
+.mapa-grid[data-zoom="0.5"] { transform: scale(0.5); }
+.mapa-grid[data-zoom="0.75"] { transform: scale(0.75); }
+.mapa-grid[data-zoom="1"] { transform: scale(1); }
+.mapa-grid[data-zoom="1.25"] { transform: scale(1.25); }
+.mapa-grid[data-zoom="1.5"] { transform: scale(1.5); }
+.mapa-grid[data-zoom="1.75"] { transform: scale(1.75); }
+.mapa-grid[data-zoom="2"] { transform: scale(2); }
+
+/* =========================
+   CELDAS DEL MAPA
+========================= */
+.celda {
+    width: var(--tamano-celda, 48px);
+    height: var(--tamano-celda, 48px);
+    background-color: var(--color-celda, #7ec850);
+    border: 1px solid var(--color-celda-borde, rgba(0,0,0,0.08));
+    position: relative;
+    cursor: pointer;
+    transition: background-color var(--transicion-rapida), transform var(--transicion-rapida);
+    user-select: none;
+}
+
+.celda:hover {
+    background-color: var(--color-celda-hover, #a3d977);
+    transform: scale(1.02);
+    z-index: 1;
+}
+
+.celda--construida {
+    cursor: default;
+}
+
+.celda--construida:hover {
+    transform: none;
+}
+
+.celda--seleccionada {
+    outline: 3px solid var(--color-primario, #1A73E8);
+    outline-offset: -2px;
+    background-color: var(--color-celda-selec, rgba(26,115,232,0.35));
+}
+
+.celda--agua {
+    background-color: var(--color-celda-agua, #5baad4);
+    cursor: not-allowed;
+}
+
+.celda--agua:hover {
+    background-color: var(--color-celda-agua, #5baad4);
+    transform: none;
+}
+
+.celda__edificio {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    pointer-events: none;
+}
+
+/* =========================
+   CONTROLES DE ZOOM
+   Posicionados de forma sticky para que siempre
+   estén visibles en el área del mapa
+========================= */
+.controles-zoom {
+    position: sticky;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+    background: rgba(255, 255, 255, 0.95);
+    padding: 12px 20px;
+    border-radius: var(--radio-m, 10px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    gap: 12px;
+    pointer-events: auto;
+    margin: 20px auto;
+    width: fit-content;
+}
+
+.zoom-indicador {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--color-texto-s, #666666);
+    min-width: 45px;
+    text-align: center;
+    padding: 4px 8px;
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 4px;
+}
+
+/* =========================
+   BOTONES DE ZOOM
+========================= */
+.btn-zoom {
+    width: 40px;
+    height: 40px;
+    min-width: 40px;
+    border: none;
+    border-radius: var(--radio-s, 6px);
+    background: var(--color-primario, #1A73E8);
+    color: white;
+    cursor: pointer;
+    transition: background var(--transicion-rapida), transform var(--transicion-rapida);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+}
+
+.btn-zoom:hover:not(:disabled) {
+    background: var(--color-primario-h, #1558b0);
+    transform: scale(1.08);
+}
+
+.btn-zoom:active:not(:disabled) {
+    transform: scale(0.95);
+}
+
+.btn-zoom:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    background: #999;
+}
+
+/* =========================
+   TOOLTIPS EN EDIFICIOS
+========================= */
+.celda--construida[data-nombre]::after {
+    content: attr(data-nombre);
+    position: absolute;
+    bottom: calc(100% + 5px);
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 6px 10px;
+    background: rgba(0, 0, 0, 0.85);
+    color: white;
+    font-size: 12px;
+    font-weight: 500;
+    border-radius: 4px;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity var(--transicion-rapida), visibility var(--transicion-rapida);
+    z-index: 100;
+    pointer-events: none;
+}
+
+.celda--construida[data-nombre]:hover::after {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* =========================
+   CURSOR PERSONALIZADO EN MODOS
+========================= */
+body.modo-construccion {
+    cursor: crosshair;
+}
+
+body.modo-construccion .celda:not(.celda--construida):not(.celda--agua) {
+    cursor: crosshair;
+}
+
+body.modo-demolicion {
+    cursor: not-allowed;
+}
+
+body.modo-demolicion .celda--construida {
+    cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="red" stroke-width="2"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>') 12 12, not-allowed;
+}
+
+/* =========================
+   PANEL DE RECURSOS (ENCABEZADO)
+========================= */
+.panel-recursos {
+    display: flex;
+    gap: var(--espacio-m, 16px);
+    align-items: center;
+}
+
+.recurso {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: var(--fuente-tam-s, 12px);
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.recurso__icono {
+    font-size: 14px;
+    line-height: 1;
+    display: inline-flex;
+    align-items: center;
+}
+
+.recurso__valor {
+    font-size: 13px;
+}
+
+.recurso--dinero .recurso__valor { color: var(--color-dinero, #27ae60); }
+.recurso--poblacion .recurso__valor { color: #ffffff; }
+.recurso--felicidad .recurso__valor { color: var(--color-felicidad, #f39c12); }
+.recurso--energia .recurso__valor { color: var(--color-energia, #e74c3c); }
+
+/* =========================
+   MENÚ DE CONSTRUCCIÓN
+========================= */
+.menu-construccion {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.construccion-categoria {
+    margin-bottom: 12px;
+}
+
+.construccion-categoria__titulo {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--color-texto-s, #666666);
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.construccion-lista {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+}
+
+.construccion-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px 8px;
+    background: var(--color-fondo, #f5f5f5);
+    border: 2px solid transparent;
+    border-radius: var(--radio-s, 6px);
+    cursor: pointer;
+    transition: all var(--transicion-rapida);
+}
+
+.construccion-item:hover {
+    background: #e8f4fd;
+    border-color: var(--color-primario, #1A73E8);
+    transform: translateY(-2px);
+}
+
+.construccion-item--seleccionado {
+    background: #e8f4fd;
+    border-color: var(--color-primario, #1A73E8);
+    box-shadow: 0 2px 8px rgba(26, 115, 232, 0.3);
+}
+
+.construccion-item__icono {
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
+    margin-bottom: 4px;
+}
+
+.construccion-item__nombre {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--color-texto, #2c2c2c);
+    text-align: center;
+}
+
+.construccion-item__costo {
+    font-size: 10px;
+    color: var(--color-dinero, #27ae60);
+}
+
+/* =========================
+   MODAL CENTRADO
+========================= */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 500;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity var(--transicion), visibility var(--transicion);
+}
+
+.modal-overlay.activo {
+    opacity: 1;
+    visibility: visible;
+}
+
+.modal-contenido {
+    width: 50%;
+    max-width: 700px;
+    max-height: 90vh;
+    overflow-y: auto;
+    background: var(--color-superficie, #ffffff);
+    border-radius: var(--radio-l, 16px);
+    box-shadow: var(--sombra-m, 0 4px 16px rgba(0,0,0,0.14));
+    padding: var(--espacio-l, 24px);
+    position: relative;
+    animation: modalEntrada 0.3s ease;
+}
+
+@keyframes modalEntrada {
+    from {
+        opacity: 0;
+        transform: translateY(-20px) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.modal-cerrar {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--color-fondo, #f5f5f5);
+    border-radius: 50%;
+    font-size: 18px;
+    color: var(--color-texto-s, #666666);
+    cursor: pointer;
+    transition: background var(--transicion-rapida), transform var(--transicion-rapida);
+}
+
+.modal-cerrar:hover {
+    background: #e0e0e0;
+    transform: scale(1.1);
+}
+
+/* =========================
+   NOTIFICACIONES
+========================= */
+.zona-notificaciones {
+    position: fixed;
+    top: calc(var(--alto-encabezado) + 10px);
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 400;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    pointer-events: none;
+    width: min(400px, 90vw);
+}
+
+.notificacion {
+    background: var(--color-superficie, #ffffff);
+    border-left: 4px solid var(--color-primario, #1A73E8);
+    border-radius: var(--radio-m, 10px);
+    padding: 12px 16px;
+    box-shadow: var(--sombra-m, 0 4px 16px rgba(0,0,0,0.14));
+    animation: notificacionEntrada 0.3s ease;
+    pointer-events: auto;
+}
+
+.notificacion--exito { border-color: var(--color-dinero, #27ae60); }
+.notificacion--aviso { border-color: var(--color-felicidad, #f39c12); }
+.notificacion--error { border-color: var(--color-energia, #e74c3c); }
+
+@keyframes notificacionEntrada {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* =========================
+   ELEMENTOS OCULTOS (SOLO MÓVIL)
+========================= */
+.tabs-movil {
+    display: none !important;
+}
+
+.btn-flotante {
+    display: none !important;
+}
+
+.btn-recursos-movil {
+    display: none !important;
+}
+
+/* =========================
+   EFECTOS HOVER GENERALES
+========================= */
+button {
+    font-family: inherit;
+    cursor: pointer;
+    border: none;
+    background: none;
+    transition: opacity var(--transicion-rapida), transform var(--transicion-rapida);
+}
+
+button:hover:not(:disabled) {
+    opacity: 0.85;
+}
+
+.tab {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    font-size: var(--fuente-tam-s, 12px);
+    color: var(--color-texto-s, #666666);
+    min-height: var(--btn-tap-min, 44px);
+    transition: color var(--transicion-rapida), background var(--transicion-rapida);
+}
+
+.tab--activo {
+    color: var(--color-primario, #1A73E8);
+    font-weight: 600;
+}
+
+.tab:hover {
+    background: var(--color-fondo, #f5f5f5);
+    color: var(--color-primario, #1A73E8);
+}
+
+/* =========================
+   INDICADOR DE MODO ACTIVO
+========================= */
+.indicador-modo {
+    position: fixed;
+    top: calc(var(--alto-encabezado) + 15px);
+    right: calc(var(--sidebar-derecho) + 20px);
+    padding: 8px 16px;
+    background: var(--color-primario, #1A73E8);
+    color: white;
+    border-radius: var(--radio-m, 10px);
+    font-size: 13px;
+    font-weight: 500;
+    z-index: 50;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    animation: indicadorEntrada 0.3s ease;
+}
+
+.indicador-modo--demolicion {
+    background: var(--color-energia, #e74c3c);
+}
+
+@keyframes indicadorEntrada {
+    from {
+        opacity: 0;
+        transform: translateX(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* =========================
+   ESTADÍSTICAS
+========================= */
+.stats-lista {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.stats-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 12px;
+    background: var(--color-fondo, #f5f5f5);
+    border-radius: var(--radio-s, 6px);
+}
+
+.stats-item__label {
+    font-size: 12px;
+    color: var(--color-texto-s, #666666);
+}
+
+.stats-item__valor {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--color-texto, #2c2c2c);
+}
+
+/* =========================
+   CLIMA
+========================= */
+.clima-contenido {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+}
+
+.clima-icono {
+    font-size: 40px;
+}
+
+.clima-temperatura {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--color-texto, #2c2c2c);
+}
+
+.clima-descripcion {
+    font-size: 14px;
+    color: var(--color-texto-s, #666666);
+}
+
+/* =========================
+   RESPONSIVE AJUSTES
+========================= */
+@media (max-width: 1200px) {
+    :root {
+        --sidebar-izquierdo: 220px;
+        --sidebar-derecho: 280px;
+    }
+}
+
+@media (max-width: 1100px) {
+    :root {
+        --sidebar-izquierdo: 200px;
+        --sidebar-derecho: 260px;
+    }
+}
