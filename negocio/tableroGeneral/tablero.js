@@ -1,4 +1,4 @@
-/* tablero.js
+/* tablero.js  (negocio/tableroGeneral/tablero.js)
 Lógica principal del tablero, compartida por todas las vistas.
 
 Responsabilidades:
@@ -9,12 +9,12 @@ Responsabilidades:
 */
 
 const Estado = {
-    ciudad:              null,
-    filas:               null,   /* se asigna al cargar la ciudad */
-    columnas:            null,   /* se asigna al cargar la ciudad */
-    modo:                "normal",   /* "normal" | "construccion" | "demolicion" */
+    ciudad:               null,
+    filas:                null,   /* se asigna al cargar la ciudad */
+    columnas:             null,   /* se asigna al cargar la ciudad */
+    modo:                 "normal",   /* "normal" | "construccion" | "demolicion" */
     edificioSeleccionado: null,
-    pausado:             false,
+    pausado:              false,
 };
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -58,10 +58,10 @@ function _cargarCiudad() {
         };
 
         Estado.ciudad = new Ciudad(
-            datos.nombre    || "Mi Ciudad",
-            datos.alcalde   || "Alcalde",
-            datos.latitud   ?? 0,
-            datos.longitud  ?? 0,
+            datos.nombre      || "Mi Ciudad",
+            datos.alcalde     || "Alcalde",
+            datos.latitud     ?? 0,
+            datos.longitud    ?? 0,
             datos.tiempoTurno ?? 30000,
             terreno,
             [],
@@ -73,9 +73,9 @@ function _cargarCiudad() {
             datos.ciudadanos.forEach(c => Estado.ciudad.crearCiudadano(c));
         }
 
-        const _vias    = Estado.ciudad.terreno.vias;
-        Estado.filas    = _vias?.length        || 15;
-        Estado.columnas = _vias?.[0]?.length  || 15;
+        const _vias      = Estado.ciudad.terreno.vias;
+        Estado.filas     = _vias?.length       || 15;
+        Estado.columnas  = _vias?.[0]?.length  || 15;
         console.log(`tablero.js: mapa ${Estado.filas}x${Estado.columnas}`);
 
         Recursos.setCiudad(Estado.ciudad);
@@ -146,4 +146,13 @@ function avanzarTurno() {
     guardarPartida();
 }
 
-window.Tablero = { Estado, guardarPartida, exportarJSON, activarModo, cancelarModo, seleccionarEdificio, togglePausa, avanzarTurno };
+window.Tablero = {
+    Estado,
+    guardarPartida,
+    exportarJSON,
+    activarModo,
+    cancelarModo,
+    seleccionarEdificio,
+    togglePausa,
+    avanzarTurno,
+};
