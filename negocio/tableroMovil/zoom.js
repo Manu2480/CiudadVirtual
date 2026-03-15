@@ -1,28 +1,38 @@
 /* ================================================
 ZOOM MÓVIL
-Zoom del mapa mediante pinch (dos dedos) y botones.
+Zoom del mapa mediante pinch (dos dedos).
 
 Responsabilidad:
-  - Detectar gesto pinch sobre #area-mapa y aplicar
-    el zoom proporcional a la distancia entre dedos
-  - Conectar los botones #btn-zoom-in / #btn-zoom-out
-    a Mapa.acercar() y Mapa.alejar()
+  - Detectar gesto pinch sobre #area-mapa
+  - Aplicar transform:scale solo al #mapa-grid
+  - Mantener el nivel de zoom dentro de los límites
 
-Dependencias: mapa.js (Mapa.getZoom, Mapa.setZoom,
-                        Mapa.acercar, Mapa.alejar)
+Dependencias: (ninguna — opera directamente sobre el DOM)
 ================================================ */
+
+const _zoomState = {
+    nivel:   1,
+    min:     0.4,
+    max:     2.5,
+};
 
 function inicializar() {
     _inicializarPinch();
-    _inicializarBotones();
+}
+
+function _aplicarZoom() {
+    const gridEl = document.getElementById("mapa-grid");
+    if (!gridEl) return;
+    gridEl.style.transform       = `scale(${_zoomState.nivel})`;
+    gridEl.style.transformOrigin = "top left";
 }
 
 function _inicializarPinch() {
     const area = document.getElementById("area-mapa");
-    if (!area || !window.Mapa) return;
+    if (!area) return;
 
     let distanciaInicial = null;
-    let zoomInicial      = null;
+    let nivelInicial     = null;
 
     function _distancia(t1, t2) {
         const dx = t1.clientX - t2.clientX;
@@ -34,28 +44,24 @@ function _inicializarPinch() {
         if (e.touches.length === 2) {
             e.preventDefault();
             distanciaInicial = _distancia(e.touches[0], e.touches[1]);
-            zoomInicial      = Mapa.getZoom();
+            nivelInicial     = _zoomState.nivel;
         }
     }, { passive: false });
 
     area.addEventListener("touchmove", (e) => {
         if (e.touches.length !== 2 || distanciaInicial === null) return;
         e.preventDefault();
-        const distActual = _distancia(e.touches[0], e.touches[1]);
-        Mapa.setZoom(zoomInicial * (distActual / distanciaInicial));
+        const ratio  = _distancia(e.touches[0], e.touches[1]) / distanciaInicial;
+        _zoomState.nivel = Math.min(_zoomState.max, Math.max(_zoomState.min, nivelInicial * ratio));
+        _aplicarZoom();
     }, { passive: false });
 
     area.addEventListener("touchend", (e) => {
         if (e.touches.length < 2) {
             distanciaInicial = null;
-            zoomInicial      = null;
+            nivelInicial     = null;
         }
     }, { passive: true });
-}
-
-function _inicializarBotones() {
-    document.getElementById("btn-zoom-in") ?.addEventListener("click", () => window.Mapa?.acercar());
-    document.getElementById("btn-zoom-out")?.addEventListener("click", () => window.Mapa?.alejar());
 }
 
 

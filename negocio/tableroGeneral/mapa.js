@@ -16,12 +16,8 @@ Dependencias: tablero.js (Estado), edificios.js, edificaciones.js
 ESTADO INTERNO DEL MAPA
 ================================================ */
 const _mapaState = {
-    nivelZoom:    1,
-    zoomMin:      0.4,
-    zoomMax:      2.5,
-    zoomPaso:     0.15,
-    celdaSelec:   null,
-    grid:         [],      /* grid interno [fila][col] = { tipo } */
+    celdaSelec: null,
+    grid:       [],    /* grid interno [fila][col] = { tipo } */
 };
 
 
@@ -37,6 +33,36 @@ INICIALIZAR
 Construye el grid según las dimensiones del Estado.
 Llamado desde tablero.js al arrancar.
 ================================================ */
+/* ================================================
+NORMALIZAR ID
+Los modelos generan ids únicos con contador (via1, via2,
+Granja1…). Los normaliza al id del catálogo (via, granja…)
+para que Edificios.obtener() los encuentre correctamente.
+================================================ */
+function _normalizarId(id) {
+    if (!id) return "edificio";
+    /* Si el id existe tal cual en el catálogo, lo devuelve directo */
+    if (Edificios.obtener(id)) return id;
+    /* Mapa de prefijos generados por los constructores → id del catálogo */
+    const _prefijos = {
+        "via":            "via",
+        "casa":           "casa",
+        "apartamento":    "apartamento",
+        "tienda":         "tienda",
+        "centrocomercial":"centro-comercial",
+        "fabrica":        "fabrica",
+        "granja":         "granja",
+        "hospital":       "hospital",
+        "bombero":        "bombero",
+        "policia":        "policia",
+        "parque":         "parque",
+        "luz":            "planta-electrica",
+        "agua":           "planta-hidraulica",
+    };
+    const prefijo = id.replace(/\d+$/, "").toLowerCase();
+    return _prefijos[prefijo] || id;
+}
+
 function inicializar(filas, columnas, edificiosGuardados) {
     _gridEl = document.getElementById("mapa-grid");
     _areaEl = document.getElementById("area-mapa");
@@ -68,11 +94,14 @@ function inicializar(filas, columnas, edificiosGuardados) {
         Array.from({ length: columnas }, () => ({ tipo: "vacio" }))
     );
 
-    /* Rellena celdas con edificios guardados */
+    /* Rellena celdas con edificios guardados.
+       Los ids únicos generados por los modelos (via1, via2…) se normalizan
+       al id del catálogo para que Edificios.obtener() los encuentre. */
     Object.entries(mapaEdificios).forEach(([clave, ed]) => {
         const [f, c] = clave.split("-").map(Number);
         if (_mapaState.grid[f]?.[c] !== undefined) {
-            _mapaState.grid[f][c] = { tipo: ed.id || "edificio" };
+            const tipoNormalizado = _normalizarId(ed.id);
+            _mapaState.grid[f][c] = { tipo: tipoNormalizado };
         }
     });
 
@@ -226,7 +255,12 @@ function actualizarModo(nuevoModo) {
 /* ================================================
 EXPOSICIÓN GLOBAL
 ================================================ */
+function getGrid() {
+    return _mapaState.grid;
+}
+
 window.Mapa = {
     inicializar,
     actualizarModo,
+    getGrid,
 };
