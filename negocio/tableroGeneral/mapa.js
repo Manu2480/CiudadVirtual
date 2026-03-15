@@ -163,9 +163,17 @@ function _procesarInteraccion(celdaEl, fila, col) {
             break;
 
         case "construccion":
-            /* Click en celda vacía: construye el edificio seleccionado */
-            if (estadoCelda.tipo === "vacio" && estado.edificioSeleccionado) {
-                Edificaciones.construir(fila, col, estado.edificioSeleccionado, _mapaState.grid, _gridEl);
+            if (estadoCelda.tipo === "vacio") {
+                if (estado.edificioSeleccionado) {
+                    /* Edificio ya seleccionado: construye */
+                    Edificaciones.construir(fila, col, estado.edificioSeleccionado, _mapaState.grid, _gridEl);
+                } else {
+                    /* Sin edificio seleccionado: notifica para que la vista
+                       muestre un selector. mapa.js no sabe qué vista es. */
+                    document.dispatchEvent(new CustomEvent("mapa:celdaParaConstruir", {
+                        detail: { fila, col, grid: _mapaState.grid, gridEl: _gridEl }
+                    }));
+                }
             }
             break;
 

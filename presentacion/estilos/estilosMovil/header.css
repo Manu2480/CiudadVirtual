@@ -1,0 +1,62 @@
+/* ================================================
+HEADER MÓVIL
+Panel de recursos colapsable y widget de clima compacto.
+
+Responsabilidad:
+  - Ocultar/mostrar el panel de recursos como dropdown
+  - Botón hamburguesa que abre el panel
+  - Widget clima: solo icono + temperatura en el header
+================================================ */
+
+/* Oculto por defecto; se despliega al pulsar btn-recursos-movil */
+.panel-recursos {
+    display: none;
+    position: absolute;
+    top: var(--alto-encabezado);
+    left: 0;
+    right: 0;
+    background: var(--color-primario);
+    padding: var(--espacio-s) var(--espacio-m);
+    gap: var(--espacio-m);
+    flex-wrap: wrap;
+    z-index: 99;
+    box-shadow: var(--sombra-s);
+}
+
+.panel-recursos.abierto {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+/* Valores legibles sobre fondo azul del panel expandido */
+.panel-recursos .recurso__valor {
+    color: #ffffff;
+}
+
+/* Cada recurso ocupa toda la línea */
+.panel-recursos .recurso {
+    width: 100%;
+    justify-content: flex-start;
+}
+
+/* Botón hamburguesa visible solo en móvil */
+.btn-recursos-movil {
+    display: flex;
+    margin-left: auto;
+}
+
+/* Widget de clima: icono + temperatura, sin textos extra */
+.clima-compacto {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: var(--fuente-tam-s);
+    font-weight: 600;
+    color: #ffffff;
+    white-space: nowrap;
+}
+
+.clima-compacto__icono {
+    font-size: 16px;
+}

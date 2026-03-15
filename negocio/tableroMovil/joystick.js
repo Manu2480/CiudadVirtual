@@ -4,11 +4,18 @@ Control de scroll del mapa mediante arrastre táctil.
 
 Responsabilidad:
   - Crear e inyectar el elemento joystick en el DOM
-  - Escuchar eventos touch para mover el knob
+  - Escuchar eventos touch sobre la base circular
   - Desplazar el área del mapa proporcionalmente
     a la posición del knob respecto al centro
+  - Ocultarse cuando el modo activo requiere
+    interacción directa con celdas (construccion, demolicion)
 
-Dependencias: (ninguna, opera directamente sobre #area-mapa)
+pointer-events:
+  Los listeners van en .joystick-base, no en .joystick-wrap.
+  El wrap tiene pointer-events:none en CSS para no bloquear
+  las celdas del mapa en las esquinas del cuadrado bounding box.
+
+Dependencias: tablero.js (Tablero.Estado.modo)
 ================================================ */
 
 function inicializar() {
@@ -33,9 +40,28 @@ function inicializar() {
     `;
     document.body.appendChild(wrap);
 
-    const knob   = wrap.querySelector(".joystick-knob");
-    const RADIO  = 33;   /* radio máximo de desplazamiento del knob (px) */
-    const VEL_MAX = 12;  /* píxeles de scroll por frame al máximo */
+    /* Oculta el joystick cuando el body tiene modo-construccion o modo-demolicion.
+       Se lee directamente de las clases del body que tablero.js gestiona,
+       sin depender de que Tablero.Estado esté disponible en el momento. */
+    function _actualizarVisibilidad() {
+        const cl = document.body.classList;
+        wrap.hidden = cl.contains("modo-construccion") || cl.contains("modo-demolicion");
+    }
+
+    const _observer = new MutationObserver(_actualizarVisibilidad);
+    _observer.observe(document.body, { attributes: true, attributeFilter: ["class"] });
+
+    _actualizarVisibilidad();
+
+    /* ── Lógica de arrastre ──
+       Los listeners van en la BASE, no en el wrap.
+       El wrap tiene pointer-events:none en CSS — solo la base
+       circular captura touch, liberando las esquinas del bounding box. */
+
+    const base    = wrap.querySelector(".joystick-base");
+    const knob    = wrap.querySelector(".joystick-knob");
+    const RADIO   = 33;
+    const VEL_MAX = 12;
 
     let activo   = false;
     let dx = 0, dy = 0;
@@ -70,7 +96,7 @@ function inicializar() {
         rafId = requestAnimationFrame(_scrollLoop);
     }
 
-    wrap.addEventListener("touchstart", (e) => {
+    base.addEventListener("touchstart", (e) => {
         if (activo) return;
         e.preventDefault();
         const t  = e.changedTouches[0];
@@ -81,7 +107,7 @@ function inicializar() {
         rafId = requestAnimationFrame(_scrollLoop);
     }, { passive: false });
 
-    wrap.addEventListener("touchmove", (e) => {
+    base.addEventListener("touchmove", (e) => {
         e.preventDefault();
         const t = Array.from(e.changedTouches).find(x => x.identifier === origenId);
         if (!t) return;
@@ -89,7 +115,7 @@ function inicializar() {
         _moverKnob(t.clientX - c.x, t.clientY - c.y);
     }, { passive: false });
 
-    wrap.addEventListener("touchend", (e) => {
+    base.addEventListener("touchend", (e) => {
         const t = Array.from(e.changedTouches).find(x => x.identifier === origenId);
         if (!t) return;
         activo = false;
@@ -97,7 +123,7 @@ function inicializar() {
         _resetKnob();
     });
 
-    wrap.addEventListener("touchcancel", () => {
+    base.addEventListener("touchcancel", () => {
         activo = false;
         cancelAnimationFrame(rafId);
         _resetKnob();

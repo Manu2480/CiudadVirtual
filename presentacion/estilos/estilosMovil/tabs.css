@@ -1,0 +1,22 @@
+/* ================================================
+TABS MÓVIL
+Barra de navegación inferior y botón flotante de stats.
+
+Responsabilidad:
+  - Mostrar la barra de tabs en la parte inferior
+  - Target táctil mínimo de 44px por tab
+  - Mostrar el botón flotante de estadísticas
+================================================ */
+
+.tabs-movil {
+    display: flex;
+}
+
+.tabs-movil .tab {
+    min-width: var(--btn-tap-min);
+}
+
+/* Botón flotante de estadísticas (oculto en otras vistas) */
+.btn-flotante {
+    display: flex;
+}

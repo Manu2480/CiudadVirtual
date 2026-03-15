@@ -1,0 +1,29 @@
+/* ================================================
+LAYOUT MÓVIL
+================================================ */
+
+html, body {
+    height: 100dvh;
+    overflow: hidden;
+}
+
+.contenedor-juego {
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr;
+    min-height: 0;
+}
+
+.sidebar--izquierdo,
+.sidebar--derecho {
+    display: none;
+}
+
+.area-mapa {
+    grid-column: 1;
+    grid-row: 1;
+    height: calc(100dvh - var(--alto-encabezado) - var(--alto-tabs));
+    max-height: calc(100dvh - var(--alto-encabezado) - var(--alto-tabs));
+    overflow: auto;
+    touch-action: pan-x pan-y;
+    overscroll-behavior: none;
+}

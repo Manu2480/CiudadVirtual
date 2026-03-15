@@ -18,6 +18,7 @@ console.log("controlesMovil: cargado (readyState=", document.readyState, ")");
 const _BASE = "../../negocio/tableroMovil/";
 
 const _MODULOS = [
+    "celdaAdaptable.js",   /* primero: ajusta celda antes de que el mapa se pinte */
     "tabs.js",
     "recursos.js",
     "stats.js",
@@ -43,6 +44,7 @@ function _cargarModulos(modulos, onCompleto) {
 function _inicializarControlesMovil() {
     console.log("controlesMovil: inicialización (readyState=", document.readyState, ")");
     try {
+        CeldaAdaptable.inicializar();
         TabsMovil.inicializar();
         RecursosMovil.inicializar();
         StatsMovil.inicializar();
