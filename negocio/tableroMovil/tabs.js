@@ -61,15 +61,64 @@ function inicializar() {
         btn.addEventListener("click", () => {
             const idPanel = btn.dataset.panel;
 
-            /* Si se pulsa la tab activa de nuevo:
-               - Construir: cancela el modo y vuelve a Mapa
-               - Otras: cierra el panel */
+            /* ── Tab CONSTRUIR ── */
+            if (idPanel === "menu-construccion") {
+                const catalogoAbierto = document.getElementById("menu-construccion")
+                    ?.classList.contains("abierto");
+                const yaEnConstruir = tabActivo === btn;
+
+                if (catalogoAbierto) {
+                    /* 3. Cierra el catálogo si está abierto */
+                    window.MenuConstruccionMovil?.cerrarCatalogo();
+                    return;
+                }
+
+                if (yaEnConstruir) {
+                    /* 4. Ya está en construir y catálogo cerrado: notifica */
+                    window.Notificaciones?.mostrar(
+                        "Ya estás en modo construcción. Toca una celda para construir.",
+                        "aviso"
+                    );
+                    return;
+                }
+
+                /* 1 y 2. Activa modo construcción y oculta joystick */
+                botones.forEach(t => t.classList.remove("tab--activo"));
+                btn.classList.add("tab--activo");
+                tabActivo = btn;
+                _cerrarPanel(panelActivo);
+                panelActivo = null;
+                window.Tablero?.activarModo("construccion");
+                return;
+            }
+
+            /* ── Tab MAPA ── */
+            if (idPanel === "area-mapa") {
+                if (tabActivo === btn) {
+                    /* Ya está en mapa: notifica que use el joystick */
+                    window.Notificaciones?.mostrar(
+                        "Ya estás en el mapa. Usa el joystick para desplazarte.",
+                        "aviso"
+                    );
+                    return;
+                }
+
+                botones.forEach(t => t.classList.remove("tab--activo"));
+                btn.classList.add("tab--activo");
+                tabActivo = btn;
+                _cerrarPanel(panelActivo);
+                panelActivo = null;
+                window.Tablero?.cancelarModo();   /* modo normal → joystick visible */
+                return;
+            }
+
+            /* ── Resto de tabs (recursos, stats) ── */
             if (tabActivo === btn) {
+                /* Pulsar la misma tab activa la cierra */
                 btn.classList.remove("tab--activo");
                 _cerrarPanel(panelActivo);
                 panelActivo = null;
                 tabActivo   = null;
-                window.Tablero?.cancelarModo();
                 return;
             }
 
@@ -77,24 +126,6 @@ function inicializar() {
             btn.classList.add("tab--activo");
             tabActivo = btn;
 
-            /* Tab Mapa: vuelve a modo normal, cierra cualquier panel */
-            if (idPanel === "area-mapa") {
-                _cerrarPanel(panelActivo);
-                panelActivo = null;
-                window.Tablero?.cancelarModo();
-                return;
-            }
-
-            /* Tab Construir: activa modo construccion sin abrir nada.
-               El catálogo se abre al tocar una celda vacía (menuConstruccion.js). */
-            if (idPanel === "menu-construccion") {
-                _cerrarPanel(panelActivo);
-                panelActivo = null;
-                window.Tablero?.activarModo("construccion");
-                return;
-            }
-
-            /* Resto de tabs (recursos, stats): panel deslizable normal */
             const panel = document.getElementById(idPanel);
             if (!panel) {
                 console.warn("TabsMovil: no se encontró panel", idPanel);

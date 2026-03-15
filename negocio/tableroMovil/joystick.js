@@ -53,6 +53,18 @@ function inicializar() {
 
     _actualizarVisibilidad();
 
+    /* Bloquea scroll con rueda del mouse en el área del mapa */
+    area.addEventListener("wheel", (e) => {
+        e.preventDefault();
+    }, { passive: false });
+
+    /* Bloquea scroll táctil nativo en el área del mapa.
+       Un solo dedo no debe poder desplazar el mapa —
+       solo el joystick puede hacerlo. */
+    area.addEventListener("touchmove", (e) => {
+        if (e.touches.length === 1) e.preventDefault();
+    }, { passive: false });
+
     /* ── Lógica de arrastre ──
        Los listeners van en la BASE, no en el wrap.
        El wrap tiene pointer-events:none en CSS — solo la base

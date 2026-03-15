@@ -2,11 +2,6 @@
 LAYOUT MÓVIL
 ================================================ */
 
-html, body {
-    height: 100dvh;
-    overflow: hidden;
-}
-
 .contenedor-juego {
     grid-template-columns: 1fr;
     grid-template-rows: 1fr;
@@ -18,12 +13,14 @@ html, body {
     display: none;
 }
 
+/* El mapa ocupa 100% del ancho y es scrollable.
+   padding-bottom deja espacio para las tabs fijas. */
 .area-mapa {
     grid-column: 1;
     grid-row: 1;
-    height: calc(100dvh - var(--alto-encabezado) - var(--alto-tabs));
-    max-height: calc(100dvh - var(--alto-encabezado) - var(--alto-tabs));
+    width: 100%;
     overflow: auto;
-    touch-action: pan-x pan-y;
+    touch-action: none;        /* scroll táctil deshabilitado: usar joystick */
     overscroll-behavior: none;
+    padding-bottom: var(--alto-tabs);
 }

@@ -224,9 +224,47 @@ function actualizarModo(nuevoModo) {
 }
 
 /* ================================================
+ZOOM
+Aplica transform:scale al grid. El área scrollable
+mantiene su tamaño — solo la cuadrícula escala.
+================================================ */
+function getZoom() {
+    return _mapaState.nivelZoom;
+}
+
+function setZoom(nivel) {
+    _mapaState.nivelZoom = Math.min(
+        _mapaState.zoomMax,
+        Math.max(_mapaState.zoomMin, nivel)
+    );
+    if (_gridEl) {
+        _gridEl.style.transform       = `scale(${_mapaState.nivelZoom})`;
+        _gridEl.style.transformOrigin = "top left";
+    }
+}
+
+function acercar() {
+    setZoom(_mapaState.nivelZoom + _mapaState.zoomPaso);
+}
+
+function alejar() {
+    setZoom(_mapaState.nivelZoom - _mapaState.zoomPaso);
+}
+
+
+/* ================================================
 EXPOSICIÓN GLOBAL
 ================================================ */
+function getGrid() {
+    return _mapaState.grid;
+}
+
 window.Mapa = {
     inicializar,
     actualizarModo,
+    getZoom,
+    setZoom,
+    acercar,
+    alejar,
+    getGrid,
 };
