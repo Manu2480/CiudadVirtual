@@ -1,0 +1,14 @@
+/* ================================================
+MODAL MÓVIL
+Tamaño del modal de información en vista móvil.
+
+Responsabilidad:
+  - El modal ocupa el 80% del ancho de la pantalla
+    según el criterio de aceptación HU-022
+================================================ */
+
+.modal-contenido {
+    width: 80vw;
+    max-width: 80vw;
+    padding: var(--espacio-m);
+}

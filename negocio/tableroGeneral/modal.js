@@ -85,6 +85,9 @@ Genera el HTML con los datos del edificio y abre el modal.
 Llamado desde mapa.js al hacer tap/click en un edificio.
  */
 function mostrarEdificio(edificio, fila, col) {
+    /* Calcula el reembolso del 50% para mostrarlo antes de demoler */
+    const reembolso = Math.round(edificio.costo * 0.5);
+
     const html = `
         <div class="modal-edificio">
 
@@ -97,25 +100,40 @@ function mostrarEdificio(edificio, fila, col) {
             <p class="modal-edificio__descripcion">${edificio.descripcion || ""}</p>
 
             <ul class="modal-edificio__stats">
-                ${edificio.costo         ? `<li><i class="fi fi-br-coins"></i> Costo: <strong>$${edificio.costo.toLocaleString()}</strong></li>` : ""}
-                ${edificio.capacidad     ? `<li><i class="fi fi-br-users"></i> Capacidad: <strong>+${edificio.capacidad} hab</strong></li>` : ""}
-                ${edificio.empleos       ? `<li><i class="fi fi-br-handshake"></i> Empleos: <strong>+${edificio.empleos}</strong></li>` : ""}
-                ${edificio.felicidad     ? `<li><i class="fi fi-br-smile"></i> Felicidad: <strong>${edificio.felicidad > 0 ? "+" : ""}${edificio.felicidad}</strong></li>` : ""}
-                ${edificio.electricidad  !== undefined ? `<li><i class="fi fi-br-bolt"></i> Electricidad: <strong>${edificio.electricidad > 0 ? "+" : ""}${edificio.electricidad} kW</strong></li>` : ""}
-                ${edificio.agua          !== undefined ? `<li><i class="fi fi-br-raindrops"></i> Agua: <strong>${edificio.agua > 0 ? "+" : ""}${edificio.agua} L</strong></li>` : ""}
-                ${edificio.dinero        ? `<li><i class="fi fi-br-coins"></i> Ingresos: <strong>+$${edificio.dinero.toLocaleString()}/turno</strong></li>` : ""}
-                ${edificio.alimento      ? `<li><i class="fi fi-br-wheat"></i> Alimento: <strong>+${edificio.alimento} kg</strong></li>` : ""}
+                ${edificio.costo        ? `<li><i class="fi fi-br-coins"></i> Costo original: <strong>$${edificio.costo.toLocaleString()}</strong></li>` : ""}
+                ${edificio.capacidad    ? `<li><i class="fi fi-br-users"></i> Capacidad: <strong>+${edificio.capacidad} hab</strong></li>` : ""}
+                ${edificio.empleos      ? `<li><i class="fi fi-br-handshake"></i> Empleos: <strong>+${edificio.empleos}</strong></li>` : ""}
+                ${edificio.felicidad    ? `<li><i class="fi fi-br-smile"></i> Felicidad: <strong>${edificio.felicidad > 0 ? "+" : ""}${edificio.felicidad}</strong></li>` : ""}
+                ${edificio.electricidad !== undefined ? `<li><i class="fi fi-br-bolt"></i> Electricidad: <strong>${edificio.electricidad > 0 ? "+" : ""}${edificio.electricidad} kW</strong></li>` : ""}
+                ${edificio.agua         !== undefined ? `<li><i class="fi fi-br-raindrops"></i> Agua: <strong>${edificio.agua > 0 ? "+" : ""}${edificio.agua} L</strong></li>` : ""}
+                ${edificio.dinero       ? `<li><i class="fi fi-br-coins"></i> Ingresos: <strong>+$${edificio.dinero.toLocaleString()}/turno</strong></li>` : ""}
+                ${edificio.alimento     ? `<li><i class="fi fi-br-wheat"></i> Alimento: <strong>+${edificio.alimento} kg</strong></li>` : ""}
             </ul>
 
+            <div class="modal-edificio__demoler-info">
+                <i class="fi fi-br-info"></i>
+                Demoler reembolsa el 50% del costo original:
+                <strong>$${reembolso.toLocaleString()}</strong>
+            </div>
+
             <button class="modal-edificio__demoler btn-peligro"
-                    onclick="Mapa.demolerEdificio(${fila}, ${col}); Modal.cerrar(); Tablero.cancelarModo();">
-                <i class="fi fi-br-trash"></i> Demoler
+                    id="btn-demoler-modal">
+                <i class="fi fi-br-trash"></i> Demoler ($${reembolso.toLocaleString()} de reembolso)
             </button>
 
         </div>
     `;
 
     abrir(html);
+
+    /* Registrar el listener después de insertar el HTML en el DOM */
+    document.getElementById("btn-demoler-modal")?.addEventListener("click", () => {
+        const grid   = Mapa.getGrid();
+        const gridEl = document.getElementById("mapa-grid");
+        Edificaciones.demoler(fila, col, grid, gridEl);
+        Modal.cerrar();
+        Tablero.cancelarModo();
+    });
 }
 
 

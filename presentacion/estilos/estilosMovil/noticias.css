@@ -1,0 +1,46 @@
+/* ================================================
+NOTICIAS MÓVIL
+Carrusel horizontal de noticias superpuesto al mapa.
+
+Responsabilidad:
+  - Franja fija en la parte inferior del área del mapa
+  - Scroll horizontal con snap entre tarjetas
+  - Tarjeta individual de noticia
+================================================ */
+
+.noticias-movil {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    gap: var(--espacio-m);
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    padding: var(--espacio-s) var(--espacio-m);
+    background: rgba(0, 0, 0, 0.45);
+    z-index: 10;
+    scrollbar-width: none;   /* oculta scrollbar en Firefox */
+}
+
+.noticias-movil::-webkit-scrollbar {
+    display: none;
+}
+
+.noticia-card {
+    flex: 0 0 260px;
+    scroll-snap-align: start;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: var(--radio-s);
+    padding: var(--espacio-s) var(--espacio-m);
+    font-size: var(--fuente-tam-s);
+    color: var(--color-texto);
+    line-height: 1.4;
+}
+
+.noticia-card__titulo {
+    font-weight: 600;
+    margin-bottom: 2px;
+    color: var(--color-primario);
+}
