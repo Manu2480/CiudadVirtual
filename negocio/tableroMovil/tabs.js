@@ -6,8 +6,13 @@ Responsabilidad:
   - Registrar clicks en los botones .tab
   - Abrir y cerrar paneles deslizables sobre el mapa
   - Mantener el estado de tab/panel activo
+  - Coordinar el modo del tablero según la tab activa:
+      · Tab Mapa      → modo normal, joystick visible
+      · Tab Construir → modo construccion, sin panel (el
+                        catálogo se abre al tocar una celda)
+      · Otras tabs    → modo normal, panel deslizable
 
-Dependencias: (ninguna)
+Dependencias: tablero.js (Tablero.activarModo, Tablero.cancelarModo)
 ================================================ */
 
 /* Animación de entrada compartida por todos los paneles */
@@ -23,17 +28,13 @@ document.head.appendChild(_styleSlide);
 
 function _abrirPanel(panel) {
     if (!panel) return;
-    console.log("TabsMovil: abriendo panel", panel.id);
-
-    const zIndex = panel.id === "menu-construccion" ? 2000 : 150;
-
     panel.style.cssText = `
         display: block;
         position: fixed;
         inset: var(--alto-encabezado) 0 var(--alto-tabs) 0;
         background: rgba(255,255,255,0.98);
         overflow-y: auto;
-        z-index: ${zIndex};
+        z-index: 150;
         padding: var(--espacio-m);
         animation: slideUp 0.22s ease;
         border: 2px solid rgba(0, 0, 0, 0.25);
@@ -43,7 +44,6 @@ function _abrirPanel(panel) {
 
 function _cerrarPanel(panel) {
     if (!panel) return;
-    console.log("TabsMovil: cerrando panel", panel.id);
     panel.style.cssText = "";
     panel.classList.remove("abierto");
 }
@@ -51,8 +51,6 @@ function _cerrarPanel(panel) {
 function inicializar() {
     const tabs = document.getElementById("tabs-movil");
     if (!tabs) return;
-
-    console.log("TabsMovil: inicializando tabs de navegación");
 
     let panelActivo = null;
     let tabActivo   = null;
@@ -62,11 +60,61 @@ function inicializar() {
         btn.type = "button";
         btn.addEventListener("click", () => {
             const idPanel = btn.dataset.panel;
-            console.log("TabsMovil: tab click", idPanel);
 
-            /* Si se pulsa la tab activa de nuevo, cierra el panel */
+            /* ── Tab CONSTRUIR ── */
+            if (idPanel === "menu-construccion") {
+                const catalogoAbierto = document.getElementById("menu-construccion")
+                    ?.classList.contains("abierto");
+                const yaEnConstruir = tabActivo === btn;
+
+                if (catalogoAbierto) {
+                    /* 3. Cierra el catálogo si está abierto */
+                    window.MenuConstruccionMovil?.cerrarCatalogo();
+                    return;
+                }
+
+                if (yaEnConstruir) {
+                    /* 4. Ya está en construir y catálogo cerrado: notifica */
+                    window.Notificaciones?.mostrar(
+                        "Ya estás en modo construcción. Toca una celda para construir.",
+                        "aviso"
+                    );
+                    return;
+                }
+
+                /* 1 y 2. Activa modo construcción y oculta joystick */
+                botones.forEach(t => t.classList.remove("tab--activo"));
+                btn.classList.add("tab--activo");
+                tabActivo = btn;
+                _cerrarPanel(panelActivo);
+                panelActivo = null;
+                window.Tablero?.activarModo("construccion");
+                return;
+            }
+
+            /* ── Tab MAPA ── */
+            if (idPanel === "area-mapa") {
+                if (tabActivo === btn) {
+                    /* Ya está en mapa: notifica que use el joystick */
+                    window.Notificaciones?.mostrar(
+                        "Ya estás en el mapa. Usa el joystick para desplazarte.",
+                        "aviso"
+                    );
+                    return;
+                }
+
+                botones.forEach(t => t.classList.remove("tab--activo"));
+                btn.classList.add("tab--activo");
+                tabActivo = btn;
+                _cerrarPanel(panelActivo);
+                panelActivo = null;
+                window.Tablero?.cancelarModo();   /* modo normal → joystick visible */
+                return;
+            }
+
+            /* ── Resto de tabs (recursos, stats) ── */
             if (tabActivo === btn) {
-                console.log("TabsMovil: tab activa clickeada de nuevo, cerrando panel", idPanel);
+                /* Pulsar la misma tab activa la cierra */
                 btn.classList.remove("tab--activo");
                 _cerrarPanel(panelActivo);
                 panelActivo = null;
@@ -78,13 +126,6 @@ function inicializar() {
             btn.classList.add("tab--activo");
             tabActivo = btn;
 
-            /* Tab del mapa: solo cierra cualquier panel abierto */
-            if (idPanel === "area-mapa") {
-                _cerrarPanel(panelActivo);
-                panelActivo = null;
-                return;
-            }
-
             const panel = document.getElementById(idPanel);
             if (!panel) {
                 console.warn("TabsMovil: no se encontró panel", idPanel);
@@ -94,12 +135,30 @@ function inicializar() {
             _cerrarPanel(panelActivo);
             panelActivo = panel;
             _abrirPanel(panel);
+            window.Tablero?.cancelarModo();
         });
     });
+}
+
+/* Abre el catálogo de edificios sobre el mapa.
+   Llamado desde mapa.js cuando el usuario toca una celda
+   vacía en modo construccion y aún no hay edificio seleccionado. */
+function abrirCatalogo() {
+    const menu = document.getElementById("menu-construccion");
+    if (!menu) return;
+    _abrirPanel(menu);
+}
+
+/* Cierra el catálogo. Llamado desde menuConstruccion.js
+   tras seleccionar un edificio. */
+function cerrarCatalogo() {
+    const menu = document.getElementById("menu-construccion");
+    if (!menu) return;
+    _cerrarPanel(menu);
 }
 
 
 /* ================================================
 EXPOSICIÓN GLOBAL
 ================================================ */
-window.TabsMovil = { inicializar };
+window.TabsMovil = { inicializar, abrirCatalogo, cerrarCatalogo };

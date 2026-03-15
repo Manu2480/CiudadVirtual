@@ -1,0 +1,26 @@
+/* ================================================
+LAYOUT MÓVIL
+================================================ */
+
+.contenedor-juego {
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr;
+    min-height: 0;
+}
+
+.sidebar--izquierdo,
+.sidebar--derecho {
+    display: none;
+}
+
+/* El mapa ocupa 100% del ancho y es scrollable.
+   padding-bottom deja espacio para las tabs fijas. */
+.area-mapa {
+    grid-column: 1;
+    grid-row: 1;
+    width: 100%;
+    overflow: auto;
+    touch-action: none;        /* scroll táctil deshabilitado: usar joystick */
+    overscroll-behavior: none;
+    padding-bottom: var(--alto-tabs);
+}
