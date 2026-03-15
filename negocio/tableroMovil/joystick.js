@@ -59,10 +59,11 @@ function inicializar() {
     }, { passive: false });
 
     /* Bloquea scroll táctil nativo en el área del mapa.
-       Un solo dedo no debe poder desplazar el mapa —
-       solo el joystick puede hacerlo. */
+       Un solo dedo no desplaza el mapa — solo el joystick.
+       Dos dedos se dejan pasar para que zoom.js maneje el pinch. */
     area.addEventListener("touchmove", (e) => {
         if (e.touches.length === 1) e.preventDefault();
+        /* dos dedos: no se bloquea, zoom.js lo intercepta */
     }, { passive: false });
 
     /* ── Lógica de arrastre ──
