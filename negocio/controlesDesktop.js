@@ -47,9 +47,15 @@ const _desktopState = {
 
 /* ================================================
    INICIALIZACIÓN
-   Se ejecuta cuando el DOM está listo.
+   vista.js inyecta este script dinámicamente, por lo que
+   DOMContentLoaded puede dispararse antes o después de que
+   tablero.js haya definido window.Tablero / window.Mapa.
+
+   Solución: se expone _init() para que tablero.js la invoque
+   una vez él mismo ha terminado. Si tablero.js ya terminó
+   (window.__tableroListo === true), se auto-inicializa al cargar.
 ================================================ */
-document.addEventListener("DOMContentLoaded", () => {
+function _init() {
     console.log("controlesDesktop.js: Inicializando controles desktop...");
 
     _inicializarReferencias();
@@ -60,7 +66,14 @@ document.addEventListener("DOMContentLoaded", () => {
     _inicializarTooltipsEdificios();
 
     console.log("controlesDesktop.js: Controles desktop inicializados.");
-});
+}
+
+/* Si tablero.js ya terminó su DOMContentLoaded antes de que este
+   script se cargara, se inicializa directamente. */
+if (window.__tableroListo) {
+    _init();
+}
+
 
 
 /* ================================================
@@ -222,59 +235,6 @@ function _actualizarBotonesZoom() {
     }
 }
 
-
-/* ================================================
-   SISTEMA DE ARRASTRE DEL MAPA (DRAG)
-   Permite arrastrar el mapa con el mouse.
-   El zoom permanece estático durante el arrastre.
-================================================ */
-function _inicializarArrastre() {
-    if (!_desktopState.areaMapa) return;
-
-    // Evento de inicio de arrastre
-    _desktopState.areaMapa.addEventListener("mousedown", (e) => {
-        // Solo arrastrar con clic izquierdo y fuera de botones
-        if (e.button !== 0) return;
-        if (e.target.closest(".btn-zoom") || e.target.closest(".controles-zoom")) return;
-
-        // Verificar que no esté en modo construcción o demolición
-        const estado = Tablero?.Estado;
-        if (estado && estado.modo !== "normal") return;
-
-        _desktopState.arrastrando = true;
-        _desktopState.inicioX = e.clientX;
-        _desktopState.inicioY = e.clientY;
-        _desktopState.scrollInicioX = _desktopState.areaMapa.scrollLeft;
-        _desktopState.scrollInicioY = _desktopState.areaMapa.scrollTop;
-
-        _desktopState.areaMapa.style.cursor = "grabbing";
-        e.preventDefault();
-    });
-
-    // Evento de movimiento durante arrastre
-    document.addEventListener("mousemove", (e) => {
-        if (!_desktopState.arrastrando) return;
-
-        const deltaX = _desktopState.inicioX - e.clientX;
-        const deltaY = _desktopState.inicioY - e.clientY;
-
-        _desktopState.areaMapa.scrollLeft = _desktopState.scrollInicioX + deltaX;
-        _desktopState.areaMapa.scrollTop = _desktopState.scrollInicioY + deltaY;
-    });
-
-    // Evento de fin de arrastre
-    document.addEventListener("mouseup", () => {
-        if (_desktopState.arrastrando) {
-            _desktopState.arrastrando = false;
-            _desktopState.areaMapa.style.cursor = "grab";
-        }
-    });
-
-    // Prevenir selección de texto durante el arrastre
-    _desktopState.areaMapa.addEventListener("dragstart", (e) => {
-        e.preventDefault();
-    });
-}
 
 
 /* ================================================
@@ -505,6 +465,9 @@ function _añadirTooltipEdificio(celda) {
    EXPOSICIÓN GLOBAL PARA INTEGRACIÓN
 ================================================ */
 window.ControlesDesktop = {
+    // Inicialización (llamada desde tablero.js)
+    init: _init,
+
     // Control de zoom
     acercar: _acercar,
     alejar: _alejar,
