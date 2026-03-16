@@ -115,40 +115,49 @@ Dependencias: HU-023
         display: none;
     }
 
-/* Sidebar tablet */
-.sidebar--tablet {
-    grid-column: 2;
-    grid-row: 1 / -1;
-    background-color: var(--color-texto-s);
-    display: grid; 
-    grid-template-rows: 25% 50% 25%; /* Recursos, Construcción, Estadísticas */
-    gap: 5px;
-}
+    /* Sidebar tablet */
+    .sidebar--tablet {
+        grid-column: 2;
+        grid-row: 1 / -1;
+        background-color: var(--color-texto-s);
+        display: grid; 
+        grid-template-rows: 25% 50% 25%; /* Recursos, Construcción, Estadísticas */
+        gap: 5px;
+    }
 
-.sidebar--tablet.cerrada {
-    display: none;
-}
+    .sidebar--tablet.cerrada {
+        display: none;
+    }
 
-.panel-tablet.abierto{
-    grid-row: 1 / -1;
-    background-color: var(--color-texto-s);
-    display: grid; 
-    grid-template-rows: 25% 50% 25%; /* Recursos, Construcción, Estadísticas */
-    gap: 5px;
-}
+    .panel-tablet.abierto{
+        grid-row: 1 / -1;
+        background-color: var(--color-texto-s);
+        display: grid; 
+        grid-template-rows: 25% 50% 25%; /* Recursos, Construcción, Estadísticas */
+        gap: 5px;
+    }
 
-/* Cada panel individual dentro de la sidebar */
-.panel--recursos {
-    overflow: hidden;
-}
+    /* Cada panel individual dentro de la sidebar */
+    .panel--recursos {
+        overflow: hidden;
+    }
 
-.panel--construccion {
-    overflow: auto; /* scroll si el contenido sobrepasa */
-}
+    .panel--construccion {
+        overflow: auto; /* scroll si el contenido sobrepasa */
+    }
 
-.panel--estadisticas {
-    overflow: hidden;
-}
+    .panel--estadisticas {
+        overflow: hidden;
+    }
+
+    .panel--clima{
+        grid-row: 1 / -1;
+        display: flex;
+        flex-direction: column;
+        padding: 8px;
+    }
+
+
 
 /* Opcional: títulos */
 .panel__titulo{

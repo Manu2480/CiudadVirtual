@@ -43,7 +43,8 @@ const _BASE = "../../negocio/tableroTablet/";
 
 const _MODULOS = [
     "celdasTablet.js",   /* primero: ajusta celda antes de que el mapa se pinte */
-    "sidebarTablet.js"
+    "sidebarTablet.js",
+    "clima.js"
 ];
 
 /* Carga los scripts en orden y llama al callback cuando el último termina */
@@ -64,6 +65,8 @@ function _inicializarControlesTablet() {
     console.log("controlesMovil: inicialización (readyState=", document.readyState, ")");
     try {
         CeldasTablet.inicializar();
+        SidebarTablet.inicializar();
+        ClimaTablet.inicializar();
 
         console.log("controlesTablet: inicialización completa");
     } catch (err) {
