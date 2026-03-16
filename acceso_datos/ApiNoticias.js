@@ -1,5 +1,5 @@
 class ApiNoticias{
-    constructor(url = "https://newsapi.org/v2/top-headlines?language=en&pageSize=5"){ //Organice la url de tal manera que sacara las noticias de Colombia y solo mande 5
+    constructor(url = "https://newsapi.org/v2/top-headlines?language=en&pageSize=10"){ //Organice la url de tal manera que sacara las noticias de Colombia y solo mande 5
         this.url = url;
     }
     getNoticias() {

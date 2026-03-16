@@ -13,7 +13,7 @@ function inicializar() {
         const panel = document.getElementById("panel-recursos-side");
         if (!panel) return;
 
-        panel.innerHTML = `<div class="recursos-header"><h2 class="panel__titulo">Recursos</h2></div>`;
+        panel.innerHTML = `<div class="modulo-header"><h2 class="panel__titulo">Recursos</h2></div>`;
         const contenido = document.createElement("div");
         contenido.className = "recursos-lista";
 

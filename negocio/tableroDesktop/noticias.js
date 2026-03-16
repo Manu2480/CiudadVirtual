@@ -16,7 +16,7 @@ function inicializar(reintentos = 0) {
     const api = new ApiNoticias();
     
     // Preparar panel de forma limpia
-    panel.innerHTML = `<div class="noticias-header"><h2 class="panel__titulo">Noticias</h2></div>`;
+    panel.innerHTML = `<div class="modulo-header"><h2 class="panel__titulo">Noticias</h2></div>`;
 
     api.getNoticias()
         .then(res => {
@@ -25,7 +25,7 @@ function inicializar(reintentos = 0) {
                 panel.insertAdjacentHTML("beforeend", `<p>Sin noticias</p>`);
                 return;
             }
-
+            console.log("hola",articulos.length);
             const lista = document.createElement("div");
             lista.className = "noticias-lista"; // Estilos movidos a CSS
 

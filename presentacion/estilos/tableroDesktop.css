@@ -172,7 +172,7 @@ body {
     overflow-y: auto;
 }
 
-.construccion-header{
+.modulo-header{
     text-align: center;
     background-color: #74adf7;
     border-radius: 15px;
@@ -182,22 +182,12 @@ body {
     text-align: center;
 }
 
-.clima-header{
-    text-align:center;
-    background-color: #74adf7;
-    border-radius: 15px;
-}
 
 .panel--noticias {
     min-height: 150px;
     overflow-y: auto;
 }
 
-.noticias-header{
-    text-align:center;
-    background-color: #74adf7;
-    border-radius: 15px;
-}
 
 /* Contenedor principal de la noticia */
 .noticia-contenido {
@@ -279,11 +269,6 @@ body {
     flex: 1;
 }
 
-.estadisticas-header{
-    text-align:center;
-    background-color: #74adf7;
-    border-radius: 15px;
-}
 
 /* =========================
    ÁREA DEL MAPA CON ZOOM ESTÁTICO
@@ -512,11 +497,7 @@ body.modo-demolicion .celda--construida {
     align-items: center;
 }
 
-.recursos-header {
-    text-align: center;
-    background-color: #74adf7;
-    border-radius: 15px;
-}
+
 
 .recurso-item {
     display: flex;             /* Activa el modo flexible */

@@ -13,7 +13,7 @@ function inicializar() {
         const panel = document.getElementById("panel-estadisticas");
         if (!panel) return;
 
-        panel.innerHTML = `<div class="estadisticas-header"><h2 class="panel__titulo">Estadisticas</h2></div>`;
+        panel.innerHTML = `<div class="modulo-header"><h2 class="panel__titulo">Estadisticas</h2></div>`;
         const contenido = document.createElement("div");
         contenido.className = "stats-lista";
         contenido.innerHTML = `

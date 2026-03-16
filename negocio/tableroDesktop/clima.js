@@ -18,7 +18,7 @@ function inicializar() {
         .then(datos => {
             widget.querySelector("h2")?.remove();
             widget.innerHTML = `
-                <div class="clima-header"><h2 class="panel__titulo">Clima</h2></div>
+                <div class="modulo-header"><h2 class="panel__titulo">Clima</h2></div>
                 <div class="clima-contenido">
                     <div class="clima-icono">
                         <i class="fi ${_iconoClima(datos.condicion)}"></i>
