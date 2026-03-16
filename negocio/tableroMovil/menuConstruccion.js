@@ -145,17 +145,14 @@ function cerrarCatalogo() {
 
 /* Genera el HTML de los indicadores de recursos del edificio */
 function _detallesHtml(edificio) {
-    const cat   = window.Recursos?.RECURSOS || {};
-    const icono = key => cat[key]?.icono || "fi-br-question";
-
     const indicadores = [
-        { key: "electricidad", icono: icono("electricidad"), fmt: v => `${v > 0 ? "+" : ""}${v} kW`         },
-        { key: "agua",         icono: icono("agua"),         fmt: v => `${v > 0 ? "+" : ""}${v} L`          },
-        { key: "alimento",     icono: icono("alimento"),     fmt: v => `+${v} kg`                            },
-        { key: "dinero",       icono: icono("dinero"),       fmt: v => `+$${v.toLocaleString()}/turno`       },
-        { key: "felicidad",    icono: icono("felicidad"),    fmt: v => `${v > 0 ? "+" : ""}${v}`             },
-        { key: "capacidad",    icono: icono("capacidadResidencial"), fmt: v => `+${v} hab`                   },
-        { key: "empleos",      icono: icono("capacidadLaboral"),     fmt: v => `+${v} empleos`               },
+        { key: "electricidad", icono: "fi-br-bolt",       fmt: v => `${v > 0 ? "+" : ""}${v} kW`         },
+        { key: "agua",         icono: "fi-br-raindrops",  fmt: v => `${v > 0 ? "+" : ""}${v} L`          },
+        { key: "alimento",     icono: "fi-br-wheat",      fmt: v => `+${v} kg`                            },
+        { key: "dinero",       icono: "fi-br-coins",      fmt: v => `+$${v.toLocaleString()}/turno`       },
+        { key: "felicidad",    icono: "fi-br-smile",      fmt: v => `${v > 0 ? "+" : ""}${v}`             },
+        { key: "capacidad",    icono: "fi-br-users",      fmt: v => `+${v} hab`                           },
+        { key: "empleos",      icono: "fi-br-briefcase",  fmt: v => `+${v} empleos`                       },
     ];
 
     return indicadores

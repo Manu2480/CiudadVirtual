@@ -20,3 +20,9 @@ logo.addEventListener("click", () => {
     }
 
 });
+
+/* Muestra el botón de reanudar solo si hay partida guardada */
+const wrapperReanudar = document.getElementById("wrapper-reanudar");
+if (wrapperReanudar && localStorage.getItem("ciudad")) {
+    wrapperReanudar.style.display = "";
+}

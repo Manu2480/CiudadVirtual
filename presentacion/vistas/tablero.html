@@ -58,6 +58,7 @@
     <script src="../../negocio/tableroGeneral/mapa.js"           defer></script>
     <script src="../../negocio/tableroGeneral/modal.js"          defer></script>
     <script src="../../negocio/tableroGeneral/tablero.js"        defer></script>
+    <script src="../../negocio/tableroGeneral/menuPartida.js"    defer></script>
 
     <!-- Los controles de vista los carga vista.js dinámicamente.
          Cada coordinador carga sus propios submódulos:
@@ -89,6 +90,21 @@
         <button id="btn-recursos-movil" class="btn-recursos-movil" aria-label="Ver recursos">
             <i class="fi fi-br-menu-burger"></i>
         </button>
+
+        <!-- Menú hamburguesa: guardar partida (todas las vistas) -->
+        <button id="btn-menu-partida" class="btn-menu-partida" aria-label="Opciones de partida">
+            <i class="fi fi-br-menu-dots-vertical"></i>
+        </button>
+
+        <!-- Dropdown de opciones -->
+        <div id="menu-partida" class="menu-partida" aria-hidden="true">
+            <button class="menu-partida__opcion" id="btn-guardar-local">
+                <i class="fi fi-br-floppy-disk"></i> Guardar en dispositivo
+            </button>
+            <button class="menu-partida__opcion" id="btn-exportar-json">
+                <i class="fi fi-br-download"></i> Exportar como JSON
+            </button>
+        </div>
 
     </header>
 
@@ -155,7 +171,6 @@
         <button class="tab tab--activo" data-panel="area-mapa"><i class="fi fi-br-map"></i> Mapa</button>
         <button class="tab" data-panel="menu-construccion"><i class="fi fi-br-hammer"></i> Construir</button>
         <button class="tab" data-panel="panel-recursos"><i class="fi fi-br-wheat"></i> Recursos</button>
-        <button class="tab" data-panel="panel-estadisticas"><i class="fi fi-br-chart-histogram"></i> Stats</button>
     </nav>
 
     <!-- Botón flotante de estadísticas (solo móvil, tableroMovil.css lo muestra) -->
