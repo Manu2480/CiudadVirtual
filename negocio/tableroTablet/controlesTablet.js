@@ -45,7 +45,8 @@ const _MODULOS = [
     "celdasTablet.js",   /* primero: ajusta celda antes de que el mapa se pinte */
     "sidebarTablet.js",
     "recursos.js",
-    "clima.js"
+    "clima.js",
+    "noticias.js"
 ];
 
 /* Carga los scripts en orden y llama al callback cuando el último termina */
@@ -56,7 +57,7 @@ function _cargarModulos(modulos, onCompleto) {
     /*Primero toma el primer módulo del array, resto es el resto de los módulos */
     const script = document.createElement("script");
     script.src = _BASE + primero;
-    script.onload  = () => _cargarModulos(resto, onCompleto);
+    script.onload = () => _cargarModulos(resto, onCompleto);
     /*Cuando el script carga, hace la siguiente llamada recursiva*/
     script.onerror = () => console.error("controlesTablet: error al cargar", script.src);
     document.head.appendChild(script);/*agrega el script al head del html*/
@@ -69,6 +70,7 @@ function _inicializarControlesTablet() {
         SidebarTablet.inicializar();
         ClimaTablet.inicializar();
         RecursosTablet.inicializar();
+        NoticiasTablet.inicializar();
 
 
         console.log("controlesTablet: inicialización completa");

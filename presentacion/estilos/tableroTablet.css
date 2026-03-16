@@ -127,7 +127,67 @@ Dependencias: HU-023
         grid-template-rows: 25% 50% 25%; /* Recursos, Construcción, Estadísticas */
         gap: 5px;
     }
+    /* Panel principal de noticias */
+    #panel-noticias-tablet {
+        display: flex;
+        flex-direction: column;
+        overflow-y: auto;
+        gap: 1rem; /* espacio entre noticias */
+        padding: 1rem;
+        grid-row: 1 / -1;
+    }
 
+    /* Cada noticia individual */
+    .noticia-tablet {
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        padding: 0.5rem;
+        background-color: #f9f9f9;
+    }
+
+    /* Titular con imagen y título */
+    .titular-noticia {
+        display: grid;
+        grid-template-columns: 25% 75%;
+        gap: 1rem;
+        align-items: center;
+    }
+
+    /* Imagen ajustada a la columna del 25% */
+    .foto-noticia {
+        width: 100%;        /* ocupa todo el ancho de su columna (25%) */
+        height: auto;       /* mantiene proporción */
+        max-height: 100px;  /* opcional: limita altura para que no quede gigante */
+        object-fit: cover;  /* recorta si es necesario */
+        border-radius: 4px;
+    }
+
+    /* Título en la segunda columna */
+    .panel__titulo.noticia {
+        grid-column: 2;
+        font-size: 1rem;
+        margin: 0;
+        word-break: break-word;
+    }
+
+    /* Descripción */
+    .descripcion-noticia {
+        margin-top: 0.5rem;
+        font-size: 0.9rem;
+        color: #333;
+    }
+
+    /* Enlace */
+    .noticia-tablet a {
+        display: inline-block;
+        margin-top: 0.5rem;
+        color: #0077cc;
+        text-decoration: none;
+        font-weight: bold;
+    }
+    .noticia-tablet a:hover {
+        text-decoration: underline;
+    }
     .sidebar--tablet.cerrada {
         display: none;
     }
@@ -135,47 +195,53 @@ Dependencias: HU-023
     .panel-tablet.abierto{
         grid-row: 1 / -1;
         background-color: var(--color-texto-s);
+    }
+
+    #recConEst{
         display: grid; 
         grid-template-rows: 25% 50% 25%; /* Recursos, Construcción, Estadísticas */
         gap: 5px;
     }
 
     /* Cada panel individual dentro de la sidebar */
-    .panel--recursos {
-        overflow: hidden;
-    }
 
     .panel--construccion {
         overflow: auto; /* scroll si el contenido sobrepasa */
     }
-
-    .panel--estadisticas {
-        overflow: hidden;
-    }
-
     .panel--clima{
         grid-row: 1 / -1;
         display: flex;
         flex-direction: column;
+        align-items: center;
+        overflow-y: auto;
         padding: 8px;
+        gap: 8px;
+    }
+    
+    .panel--clima .clima-compacto__icono {
+        font-size: 48px;
+        color: var(--color-primario);
+    }
+    
+    .panel--clima p.datos-clima {
+        margin: 0;
+        text-align: center;
+        width: 100%;
     }
 
-
-
-/* Opcional: títulos */
-.panel__titulo{
-    background-color: var(--color-primario-h);
-    color: white;
-    width: 100%;
-    margin:0;
-    text-align: center;
+    /* Opcional: títulos */
+    .panel__titulo{
+        background-color: var(--color-primario-h);
+        color: white;
+        width: 100%;
+        margin:0;
+        text-align: center;
 }
 
     .panel{
         padding:0;
         border-radius:12px;
         padding:0;
-        overflow:hidden;
     }
     #catalogo-edificios-tablet{
         display: flex;

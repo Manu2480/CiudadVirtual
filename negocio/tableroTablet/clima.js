@@ -13,6 +13,7 @@ function inicializar() {
             console.log("Clima recibido:", datos);
             const panelClima = document.getElementById("clima-tablet");
             if (panelClima){
+                console.log("antes de inyectar");
                 panelClima.innerHTML = `
                     <section class="panel panel--clima" id="panel-clima">
                         <h2 class="panel__titulo">${datos.condicion}</h2>
@@ -25,6 +26,7 @@ function inicializar() {
                         <p class="datos-clima">ráfaga: ${Math.round(datos.viento.rafaga)}m/s</p>
                     </section>
                 `;
+                console.log("después de inyectar");
             }
         })
         .catch(err => console.warn("ClimaTablet: no disponible.", err));
