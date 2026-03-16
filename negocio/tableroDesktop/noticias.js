@@ -16,7 +16,7 @@ function inicializar(reintentos = 0) {
     const api = new ApiNoticias();
     
     // Preparar panel de forma limpia
-    panel.innerHTML = `<h2 class="panel__titulo">Noticias</h2>`;
+    panel.innerHTML = `<div class="noticias-header"><h2 class="panel__titulo">Noticias</h2></div>`;
 
     api.getNoticias()
         .then(res => {
@@ -32,7 +32,13 @@ function inicializar(reintentos = 0) {
             articulos.slice(0, 5).forEach(art => {
                 const item = document.createElement("div");
                 item.className = "noticia-item"; // Usa CSS para el hover
-                item.innerHTML = `<a href="${art.url}" target="_blank" rel="noopener">${art.title}</a>`;
+                item.innerHTML = `<div class="noticia-contenido">
+                    <img src="${art.urlToImage || 'https://via.placeholder.com/150'}" alt="Imagen de noticia" class="noticia-imagen">
+                    <p class="noticia-titulo">${art.title}</p>
+                    <p class="noticia-descripcion">${art.description}</p>
+                    <a href="${art.url}" target="_blank" rel="noopener">${art.url}</a>
+                    <p class="noticia-fecha">${new Date(art.publishedAt).toLocaleString()}</p>
+                </div>`;
                 lista.appendChild(item);
             });
 

@@ -64,12 +64,13 @@ function _init() {
     _inicializarAtajos();
     _crearIndicadorModo();
     _inicializarTooltipsEdificios();
-    _inicializarEstadisticas();
 
     // Cargar módulos adicionales
     _cargarModuloClima();
     _cargarModuloNoticias();
     _cargarModuloMenuConstruccion();
+    _cargarModuloEstadisticas();
+    _cargarModuloRecursos();
 
     console.log("controlesDesktop.js: Controles desktop inicializados.");
 }
@@ -526,50 +527,6 @@ function _añadirTooltipEdificio(celda) {
     }
 }
 
-
-function _inicializarEstadisticas() {
-    const interval = setInterval(() => {
-        if (!window.Tablero?.Estado?.ciudad) return;
-
-        const ciudad = window.Tablero.Estado.ciudad;
-        const panel = document.getElementById("panel-estadisticas");
-        if (!panel) return;
-
-        const titulo = panel.querySelector(".panel__titulo");
-        const contenido = document.createElement("div");
-        contenido.className = "stats-lista";
-        contenido.innerHTML = `
-            <div class="stats-item">
-                <span class="stats-item__label">Población</span>
-                <span class="stats-item__valor">${ciudad.ciudadanos.length}</span>
-            </div>
-            <div class="stats-item">
-                <span class="stats-item__label">Dinero</span>
-                <span class="stats-item__valor">$${ciudad.getRecurso('dinero').toLocaleString()}</span>
-            </div>
-            <div class="stats-item">
-                <span class="stats-item__label">Felicidad</span>
-                <span class="stats-item__valor">${Math.round(ciudad.getRecurso('felicidad'))}%</span>
-            </div>
-            <div class="stats-item">
-                <span class="stats-item__label">Energía</span>
-                <span class="stats-item__valor">${ciudad.getRecurso('electricidad')}</span>
-            </div>
-            <div class="stats-item">
-                <span class="stats-item__label">Turno</span>
-                <span class="stats-item__valor">${window.Tablero.Estado.turno || 1}</span>
-            </div>
-        `;
-
-        panel.innerHTML = "";
-        if (titulo) panel.appendChild(titulo);
-        panel.appendChild(contenido);
-
-        clearInterval(interval);
-    }, 500);
-}
-
-
 function _cargarModuloClima() {
     const script = document.createElement("script");
     script.src = "../../negocio/tableroDesktop/clima.js";
@@ -600,6 +557,30 @@ function _cargarModuloMenuConstruccion() {
     script.onload = () => {
         if (window.MenuConstruccionDesktop) {
             window.MenuConstruccionDesktop.inicializar();
+        }
+    };
+    document.head.appendChild(script);
+}
+
+
+function _cargarModuloEstadisticas() {
+    const script = document.createElement("script");
+    script.src = "../../negocio/tableroDesktop/estadisticas.js";
+    script.onload = () => {
+        if (window.EstadisticasDesktop) {
+            window.EstadisticasDesktop.inicializar();
+        }
+    };
+    document.head.appendChild(script);
+}
+
+
+function _cargarModuloRecursos() {
+    const script = document.createElement("script");
+    script.src = "../../negocio/tableroDesktop/recursos.js";
+    script.onload = () => {
+        if (window.RecursosDesktop) {
+            window.RecursosDesktop.inicializar();
         }
     };
     document.head.appendChild(script);

@@ -160,6 +160,7 @@ body {
     margin-bottom: var(--espacio-s, 8px);
     padding-bottom: var(--espacio-s, 8px);
     border-bottom: 1px solid var(--color-borde, #e0e0e0);
+    font-weight: bold;
 }
 
 .panel--recursos {
@@ -171,8 +172,20 @@ body {
     overflow-y: auto;
 }
 
+.construccion-header{
+    text-align: center;
+    background-color: #74adf7;
+    border-radius: 15px;
+}
+
 .panel--clima {
     text-align: center;
+}
+
+.clima-header{
+    text-align:center;
+    background-color: #74adf7;
+    border-radius: 15px;
 }
 
 .panel--noticias {
@@ -180,8 +193,96 @@ body {
     overflow-y: auto;
 }
 
+.noticias-header{
+    text-align:center;
+    background-color: #74adf7;
+    border-radius: 15px;
+}
+
+/* Contenedor principal de la noticia */
+.noticia-contenido {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    border: 1px solid #f0f0f0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.noticia-contenido:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+}
+
+/* Imagen con bordes redondeados y ajuste perfecto */
+.noticia-imagen {
+    width: 100%;
+    height: 140px;
+    object-fit: cover;
+    border-radius: 8px;
+    background-color: #eee;
+}
+
+/* Título jerarquizado */
+.noticia-titulo {
+    font-family: 'Segoe UI', Roboto, sans-serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #1a1a1a;
+    line-height: 1.3;
+    margin: 0;
+}
+
+/* Descripción limitada para no saturar la sidebar */
+.noticia-descripcion {
+    font-size: 0.9rem;
+    color: #555;
+    line-height: 1.5;
+    margin: 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 3; /* Corta el texto a 3 líneas */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* Link estilizado como botón o texto elegante */
+.noticia-contenido a {
+    font-size: 0.8rem;
+    color: #007bff;
+    text-decoration: none;
+    font-weight: 600;
+    word-break: break-all; /* Evita que el link rompa el layout */
+    transition: color 0.2s;
+}
+
+.noticia-contenido a:hover {
+    color: #0056b3;
+    text-decoration: underline;
+}
+
+/* Fecha con estilo sutil */
+.noticia-fecha {
+    font-size: 0.75rem;
+    color: #999;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-top: 5px;
+    border-top: 1px solid #eee;
+    padding-top: 8px;
+}
+
 .panel--estadisticas {
     flex: 1;
+}
+
+.estadisticas-header{
+    text-align:center;
+    background-color: #74adf7;
+    border-radius: 15px;
 }
 
 /* =========================
@@ -411,31 +512,50 @@ body.modo-demolicion .celda--construida {
     align-items: center;
 }
 
-.recurso {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    font-size: var(--fuente-tam-s, 12px);
+.recursos-header {
+    text-align: center;
+    background-color: #74adf7;
+    border-radius: 15px;
+}
+
+.recurso-item {
+    display: flex;             /* Activa el modo flexible */
+    align-items: center;       /* Alinea verticalmente el icono y los textos al centro */
+    justify-content: space-between; /* Empuja el valor al extremo derecho */
+    padding: 10px 15px;
+    border-bottom: 1px solid #f0f0f0; /* Separador sutil entre items */
+    transition: background-color 0.2s;
+}
+
+.recurso-item:hover {
+    background-color: #f9f9f9; /* Efecto sutil al pasar el mouse */
+}
+
+/* El icono azul */
+.recurso-item__icono {
+    color: #007bff;            /* Azul estándar (puedes usar #2563eb para algo más moderno) */
+    margin-right: 12px;        /* Espacio entre el icono y el nombre */
+    font-size: 1.1rem;         /* Ajusta el tamaño del icono si es necesario */
+    flex-shrink: 0;            /* Evita que el icono se aplaste si el texto es largo */
+}
+
+/* El nombre del recurso en negro y al lado del icono */
+.recurso-item__label {
+    color: #000000;            /* Negro puro */
+    font-weight: 500;          /* Un poco de grosor para que destaque */
+    margin-right: auto;        /* Truco Pro: empuja todo lo que sigue hacia la derecha */
+    font-size: 0.85rem;
+}
+
+/* El valor en el extremo opuesto */
+.recurso-item__valor {
+    color: #444444;            /* Un gris oscuro para el valor (o #000 si lo prefieres negro) */
+    font-family: 'Courier New', monospace; /* Estilo tipo "dato" (opcional) */
     font-weight: 600;
-    white-space: nowrap;
+    text-align: right;
+    margin-left: 10px;         /* Espacio mínimo de seguridad */
+    font-size: 0.85rem;
 }
-
-.recurso__icono {
-    font-size: 14px;
-    line-height: 1;
-    display: inline-flex;
-    align-items: center;
-}
-
-.recurso__valor {
-    font-size: 13px;
-}
-
-.recurso--dinero .recurso__valor { color: var(--color-dinero, #27ae60); }
-.recurso--poblacion .recurso__valor { color: #ffffff; }
-.recurso--felicidad .recurso__valor { color: var(--color-felicidad, #f39c12); }
-.recurso--energia .recurso__valor { color: var(--color-energia, #e74c3c); }
-
 /* =========================
    MENÚ DE CONSTRUCCIÓN
 ========================= */
