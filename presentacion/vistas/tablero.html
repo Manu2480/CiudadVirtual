@@ -14,7 +14,6 @@
     <!-- Detección de vista y carga dinámica de CSS/JS específico.
          Sin defer: debe ejecutarse antes del primer pintado.
          Carga: negocio/tablero{Vista}/controles{Vista}.js -->
-    <script src="../../negocio/vista.js"></script>
 
     <!-- Modelos (orden importante por dependencias) -->
     <!-- Clases abstractas base -->
@@ -65,6 +64,8 @@
          movil   → negocio/tableroMovil/controlesMovil.js
          tablet  → negocio/tableroTablet/controlesTablet.js
          desktop → negocio/tableroDesktop/controlesDesktop.js -->
+
+    <script src="../../negocio/vista.js"></script>
 
 </head>
 

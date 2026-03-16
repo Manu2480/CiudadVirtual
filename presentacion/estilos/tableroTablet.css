@@ -231,11 +231,13 @@ Dependencias: HU-023
 
     /* Opcional: títulos */
     .panel__titulo{
-        background-color: var(--color-primario-h);
+        background-color: var(--color-primario-h); 
         color: white;
         width: 100%;
         margin:0;
-        text-align: center;
+        text-align: left;
+        font-weight: bold;
+        padding: 0.5rem 0;
 }
 
     .panel{
@@ -281,4 +283,69 @@ Dependencias: HU-023
         background-color: var(--color-primario);
         color: white;
     }
+}
+
+@media (orientation: landscape) { /* Tablet en horizontal */
+    .contenedor-juego {
+        display: grid;
+        grid-template-columns: 25% 50% 25%;
+        grid-template-rows: 1fr;
+    }
+
+    .sidebar--izquierdo {
+        display: block;
+        background-color: var(--color-superficie);
+        padding: 1rem;
+        overflow-y: auto;
+    }
+
+    .sidebar--derecho {
+        display: block;
+        background-color: var(--color-superficie);
+        padding: 1rem;
+        overflow-y: auto;
+    }
+
+    .sidebar--tablet {
+        display: none; /* Ocultar sidebar central en landscape */
+    }
+
+    .area-mapa {
+        grid-column: 2;
+        grid-row: 1;
+    }
+
+    .area-mapa.full {
+        grid-column: 1 / -1;
+    }
+
+    /* Ocultar botones de sidebar en landscape ya que los paneles están siempre visibles */
+    .btn-sidebar-tablet {
+        display: none;
+    }
+
+    /* Paneles en sidebars laterales */
+    .sidebar--izquierdo .panel--recursos {
+        margin-bottom: 1rem;
+    }
+
+    .sidebar--derecho .panel--clima,
+    .sidebar--derecho .panel--noticias {
+        margin-bottom: 1rem;
+    }
+}
+
+/* Tooltips más grandes para tablet */
+.tooltip {
+    font-size: 1.2rem;
+    padding: 0.5rem;
+    max-width: 200px;
+}
+
+/* Botones de tamaño medium para touch */
+.btn-medium {
+    padding: 12px 24px;
+    font-size: 16px;
+    border-radius: 8px;
+    min-height: 44px; /* Para accesibilidad táctil */
 } 
