@@ -148,13 +148,15 @@ class Terreno{
         let edificio = this.ubicacionInfraestructura(fila, columna);
         if (edificio){ //si el edificio existe
             let reembolso = this.reembolso(edificio);
-            if (edificio instanceof Via){
-                // Verificar si es una via critica
+            // si en la matriz hay via, entonces es una via
+            if (this.vias[fila]?.[columna] === 1) {
+
                 if (this.esViaCritica(fila, columna)) {
                     console.log("No se puede demoler esta via, es la unica conectada a uno o mas edificios.");
                     return { exito: false, reembolso: 0, mensaje: "Via critica: es la unica conectada a uno o mas edificios", edificio: null };
                 }
-                this.vias[fila][columna] = 0; //se remueve la via de la matriz de vias
+
+                this.vias[fila][columna] = 0;
                 console.log(`Via eliminada de (${fila}, ${columna}) - Reembolso: ${reembolso}`);
             }
             else if (edificio instanceof EdificioResidencial){
