@@ -1,0 +1,30 @@
+/* ================================================
+CONTENEDOR Y SIDEBARS
+Layout principal del juego. Las columnas las define
+cada vista en su propio CSS.
+================================================ */
+
+.contenedor-juego {
+    display: grid;
+    overflow: hidden;
+    height: 100%;
+    min-height: 0;
+}
+
+.sidebar {
+    background-color: var(--color-superficie);
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: var(--espacio-m);
+    padding: var(--espacio-m);
+    border-color: var(--color-borde);
+}
+
+.sidebar--izquierdo {
+    border-right: 1px solid var(--color-borde);
+}
+
+.sidebar--derecho {
+    border-left: 1px solid var(--color-borde);
+}

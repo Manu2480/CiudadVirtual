@@ -16,12 +16,8 @@ Dependencias: tablero.js (Estado), edificios.js, edificaciones.js
 ESTADO INTERNO DEL MAPA
 ================================================ */
 const _mapaState = {
-    nivelZoom:    1,
-    zoomMin:      0.4,
-    zoomMax:      2.5,
-    zoomPaso:     0.15,
-    celdaSelec:   null,
-    grid:         [],      /* grid interno [fila][col] = { tipo } */
+    celdaSelec: null,
+    grid:       [],    /* grid interno [fila][col] = { tipo } */
 };
 
 
@@ -37,6 +33,36 @@ INICIALIZAR
 Construye el grid según las dimensiones del Estado.
 Llamado desde tablero.js al arrancar.
 ================================================ */
+/* ================================================
+NORMALIZAR ID
+Los modelos generan ids únicos con contador (via1, via2,
+Granja1…). Los normaliza al id del catálogo (via, granja…)
+para que Edificios.obtener() los encuentre correctamente.
+================================================ */
+function _normalizarId(id) {
+    if (!id) return "edificio";
+    /* Si el id existe tal cual en el catálogo, lo devuelve directo */
+    if (Edificios.obtener(id)) return id;
+    /* Mapa de prefijos generados por los constructores → id del catálogo */
+    const _prefijos = {
+        "via":            "via",
+        "casa":           "casa",
+        "apartamento":    "apartamento",
+        "tienda":         "tienda",
+        "centrocomercial":"centro-comercial",
+        "fabrica":        "fabrica",
+        "granja":         "granja",
+        "hospital":       "hospital",
+        "bombero":        "bombero",
+        "policia":        "policia",
+        "parque":         "parque",
+        "luz":            "planta-electrica",
+        "agua":           "planta-hidraulica",
+    };
+    const prefijo = id.replace(/\d+$/, "").toLowerCase();
+    return _prefijos[prefijo] || id;
+}
+
 function inicializar(filas, columnas, edificiosGuardados) {
     _gridEl = document.getElementById("mapa-grid");
     _areaEl = document.getElementById("area-mapa");
@@ -68,11 +94,14 @@ function inicializar(filas, columnas, edificiosGuardados) {
         Array.from({ length: columnas }, () => ({ tipo: "vacio" }))
     );
 
-    /* Rellena celdas con edificios guardados */
+    /* Rellena celdas con edificios guardados.
+       Los ids únicos generados por los modelos (via1, via2…) se normalizan
+       al id del catálogo para que Edificios.obtener() los encuentre. */
     Object.entries(mapaEdificios).forEach(([clave, ed]) => {
         const [f, c] = clave.split("-").map(Number);
         if (_mapaState.grid[f]?.[c] !== undefined) {
-            _mapaState.grid[f][c] = { tipo: ed.id || "edificio" };
+            const tipoNormalizado = _normalizarId(ed.id);
+            _mapaState.grid[f][c] = { tipo: tipoNormalizado };
         }
     });
 
@@ -151,15 +180,12 @@ function _procesarInteraccion(celdaEl, fila, col) {
     switch (estado.modo) {
 
         case "normal":
-            /* Click en edificio: abre modal de info */
-            if (estadoCelda.tipo !== "vacio" && estadoCelda.tipo !== "agua") {
-                const edificio = Edificios.obtener(estadoCelda.tipo);
-                if (edificio) Modal.mostrarEdificio(edificio, fila, col);
-            }
-            /* Click en celda vacía: selecciona */
-            else if (estadoCelda.tipo === "vacio") {
-                _seleccionarCelda(celdaEl, fila, col);
-            }
+            /* En modo normal solo se navega — notifica al usuario
+               que debe ir a Construir para interactuar con las celdas. */
+            Notificaciones.mostrar(
+                "Ve a la tab Construir para edificar o demoler.",
+                "aviso"
+            );
             break;
 
         case "construccion":
@@ -174,11 +200,15 @@ function _procesarInteraccion(celdaEl, fila, col) {
                         detail: { fila, col, grid: _mapaState.grid, gridEl: _gridEl }
                     }));
                 }
+            } else if (estadoCelda.tipo !== "agua") {
+                /* Click en edificio construido: abre modal con info y opción de demoler */
+                const edificio = Edificios.obtener(estadoCelda.tipo);
+                if (edificio) Modal.mostrarEdificio(edificio, fila, col);
             }
             break;
 
         case "demolicion":
-            /* Click en edificio: demuele */
+            /* Click en edificio: demuele directamente sin modal */
             if (estadoCelda.tipo !== "vacio" && estadoCelda.tipo !== "agua") {
                 Edificaciones.demoler(fila, col, _mapaState.grid, _gridEl);
             }
@@ -224,35 +254,6 @@ function actualizarModo(nuevoModo) {
 }
 
 /* ================================================
-ZOOM
-Aplica transform:scale al grid. El área scrollable
-mantiene su tamaño — solo la cuadrícula escala.
-================================================ */
-function getZoom() {
-    return _mapaState.nivelZoom;
-}
-
-function setZoom(nivel) {
-    _mapaState.nivelZoom = Math.min(
-        _mapaState.zoomMax,
-        Math.max(_mapaState.zoomMin, nivel)
-    );
-    if (_gridEl) {
-        _gridEl.style.transform       = `scale(${_mapaState.nivelZoom})`;
-        _gridEl.style.transformOrigin = "top left";
-    }
-}
-
-function acercar() {
-    setZoom(_mapaState.nivelZoom + _mapaState.zoomPaso);
-}
-
-function alejar() {
-    setZoom(_mapaState.nivelZoom - _mapaState.zoomPaso);
-}
-
-
-/* ================================================
 EXPOSICIÓN GLOBAL
 ================================================ */
 function getGrid() {
@@ -262,9 +263,5 @@ function getGrid() {
 window.Mapa = {
     inicializar,
     actualizarModo,
-    getZoom,
-    setZoom,
-    acercar,
-    alejar,
     getGrid,
 };

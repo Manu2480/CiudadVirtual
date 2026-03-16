@@ -1,0 +1,22 @@
+/* ================================================
+PANELES GENÉRICOS
+Tarjeta con título y cuerpo. El contenido
+lo inyectan los JS correspondientes.
+================================================ */
+
+.panel {
+    background-color: var(--color-superficie);
+    border: 1px solid var(--color-borde);
+    border-radius: var(--radio-m);
+    padding: var(--espacio-m);
+    box-shadow: var(--sombra-s);
+}
+
+.panel__titulo {
+    font-size: var(--fuente-tam-m);
+    font-weight: 600;
+    color: var(--color-texto);
+    margin-bottom: var(--espacio-s);
+    padding-bottom: var(--espacio-s);
+    border-bottom: 1px solid var(--color-borde);
+}

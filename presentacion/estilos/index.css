@@ -310,42 +310,111 @@ TOOLTIP (PENSAMIENTO DEL BOTÓN)
 
 
 /* =========================================
-RESPONSIVE (MÓVIL / TABLET)
+RESPONSIVE — TABLET (768px - 1024px)
+3 botones en fila, más compactos.
+Tooltips siempre visibles (sin hover).
 ========================================= */
 
-@media (max-width:768px){
+@media (max-width: 1024px) and (min-width: 769px) {
 
-    .container{
-        background-image:url("../../media/inicio/fondo-movil.png");
+    .botones {
+        gap: 60px;
+        margin-top: 50px;
     }
 
-    .menu{
-        margin-bottom:40px;
+    .boton {
+        width: clamp(110px, 11vw, 150px);
     }
 
-    /* más separación del logo para que los tooltips no choquen con él */
-    .botones{
-        margin-top: 70px;
-        gap: 30px;
-    }
-
-    /* wrapper con espacio fijo arriba para el tooltip estático */
+    /* Tooltip siempre visible en tablet */
     .boton-wrapper {
-        padding-top: 50px; /* reserva el hueco del tooltip */
+        padding-top: 52px;
     }
 
-    /* tooltip siempre visible, estático, sin animación */
     .tooltip {
         opacity: 1;
         transform: translateX(-50%) scale(1);
-        font-size: clamp(9px, 2.8vw, 11px);
-        padding: 6px 10px;
+        font-size: clamp(9px, 1.1vw, 12px);
         white-space: normal;
         text-align: center;
-        width: 120px;
-        /* posicionado dentro del padding-top del wrapper */
+        width: 130px;
         bottom: auto;
         top: 0;
+    }
+
+}
+
+
+/* =========================================
+RESPONSIVE — MÓVIL (< 768px)
+Logo centrado arriba, un botón por fila.
+Tooltips encima de cada botón.
+========================================= */
+
+@media (max-width: 768px) {
+
+    .container {
+        background-image: url("../../media/inicio/fondo-movil.png");
+        align-items: center;
+        justify-content: center;
+    }
+
+    .menu {
+        margin-bottom: 0;
+        margin-top: 10vh;          /* empuja el conjunto hacia el centro */
+        align-items: center;
+        width: 100%;
+    }
+
+    /* Sube el menú menos al activarse en móvil */
+    .menu.activo {
+        transform: translateY(-40px);
+    }
+
+    .logo {
+        width: clamp(160px, 55vw, 280px);
+    }
+
+    /* Botones en columna, uno por fila */
+    .botones {
+        flex-direction: column;
+        align-items: center;
+        gap: 16px;
+        margin-top: 32px;
+        width: 100%;
+    }
+
+    .boton-wrapper {
+        padding-top: 0;
+        padding-bottom: 0;
+        width: auto;
+        flex-direction: row;       /* tooltip a la izquierda del botón */
+        align-items: center;
+        gap: 16px;
+    }
+
+    .boton {
+        width: clamp(90px, 28vw, 120px);
+        flex-shrink: 0;
+    }
+
+    /* Tooltip a la izquierda del botón, siempre visible */
+    .tooltip {
+        position: static;          /* sale del flujo absoluto */
+        transform: none;
+        opacity: 1;
+        font-size: clamp(10px, 3vw, 13px);
+        white-space: normal;
+        text-align: left;
+        width: 140px;
+        bottom: auto;
+        top: auto;
+        left: auto;
+    }
+
+    /* Quita las bolitas de pensamiento en móvil */
+    .tooltip::after {
+        display: none;
     }
 
 }

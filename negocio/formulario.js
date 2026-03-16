@@ -236,7 +236,7 @@ addEventListener("DOMContentLoaded",function(){
                 agua:         0,
                 electricidad: 0,
                 alimento:     0,
-                felicidad:    50,
+                felicidad:    0,
             };
 
             const vias = Array.from(

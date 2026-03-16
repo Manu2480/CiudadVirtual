@@ -1,0 +1,48 @@
+/* ================================================
+PANEL DE RECURSOS
+Barra de indicadores de dinero, población, etc.
+================================================ */
+
+.panel-recursos {
+    display: flex;
+    gap: var(--espacio-m);
+    align-items: center;
+}
+
+.recurso {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: var(--fuente-tam-s);
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.recurso__icono {
+    font-size: 14px;
+    line-height: 1;
+    display: inline-flex;
+    align-items: center;
+}
+
+.recurso--dinero    .recurso__valor { color: var(--color-dinero); }
+.recurso--poblacion .recurso__valor { color: #ffffff; }
+.recurso--felicidad .recurso__valor { color: var(--color-felicidad); }
+.recurso--energia   .recurso__valor { color: var(--color-energia); }
+
+/* Botón hamburguesa — oculto por defecto, solo móvil lo activa */
+.btn-recursos-movil {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    width: var(--btn-tap-min);
+    height: var(--btn-tap-min);
+    font-size: 20px;
+    color: #ffffff;
+    border-radius: var(--radio-s);
+    transition: background var(--trans-rapida);
+}
+
+.btn-recursos-movil:hover {
+    background: rgba(255,255,255,0.15);
+}
