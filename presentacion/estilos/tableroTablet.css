@@ -49,6 +49,9 @@ Dependencias: HU-023
     .btn-sidebar-tablet{
         color:white;
     }
+    .panel-recursos{
+        display: none;
+    }
     .contenedor-juego{
         display: grid;
         grid-template-columns: 70% 30%;
