@@ -1,0 +1,66 @@
+/* ================================================
+VARIABLES GLOBALES
+Paleta, espaciado y tamaños compartidos por todas las vistas.
+Las vistas específicas pueden sobreescribir estas variables.
+================================================ */
+:root {
+
+    /* Colores principales */
+    --color-primario:    #1A73E8;
+    --color-primario-h:  #1558b0;
+    --color-fondo:       #f5f5f5;
+    --color-superficie:  #ffffff;
+    --color-borde:       #e0e0e0;
+    --color-texto:       #2c2c2c;
+    --color-texto-s:     #666666;
+
+    /* Colores semánticos del juego */
+    --color-dinero:      #27ae60;
+    --color-poblacion:   #1A73E8;
+    --color-felicidad:   #f39c12;
+    --color-energia:     #e74c3c;
+
+    /* Colores del mapa */
+    --color-celda:         #7ec850;
+    --color-celda-hover:   #a3d977;
+    --color-celda-borde:   rgba(0,0,0,0.08);
+    --color-celda-agua:    #5baad4;
+    --color-celda-selec:   rgba(26,115,232,0.35);
+
+    /* Tamaño de celda del mapa */
+    --tamano-celda: 48px;
+
+    /* Espaciado */
+    --espacio-s:  8px;
+    --espacio-m:  16px;
+    --espacio-l:  24px;
+    --espacio-xl: 32px;
+
+    /* Bordes */
+    --radio-s: 6px;
+    --radio-m: 10px;
+    --radio-l: 16px;
+
+    /* Sombras */
+    --sombra-s: 0 2px 8px rgba(0,0,0,0.10);
+    --sombra-m: 0 4px 16px rgba(0,0,0,0.14);
+
+    /* Tipografía */
+    --fuente-ui:      system-ui, -apple-system, sans-serif;
+    --fuente-tam-s:   12px;
+    --fuente-tam-m:   14px;
+    --fuente-tam-l:   16px;
+    --fuente-tam-xl:  20px;
+
+    /* Alturas fijas */
+    --alto-encabezado: 60px;
+    --alto-tabs:       56px;
+
+    /* Target táctil mínimo (HU-022 y HU-023) */
+    --btn-tap-min: 44px;
+
+    /* Transiciones */
+    --trans-rapida: 0.15s ease;
+    --trans-normal: 0.25s ease;
+    --trans-lenta:  0.4s ease;
+}

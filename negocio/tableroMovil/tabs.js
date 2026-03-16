@@ -112,9 +112,26 @@ function inicializar() {
                 return;
             }
 
-            /* ── Resto de tabs (recursos, stats) ── */
+            /* ── Tab RECURSOS ── */
+            if (idPanel === "panel-recursos") {
+                if (tabActivo === btn) {
+                    btn.classList.remove("tab--activo");
+                    tabActivo = null;
+                    window.RecursosMovil?.cerrarPanel();
+                    return;
+                }
+                botones.forEach(t => t.classList.remove("tab--activo"));
+                btn.classList.add("tab--activo");
+                tabActivo = btn;
+                _cerrarPanel(panelActivo);
+                panelActivo = null;
+                window.Tablero?.cancelarModo();
+                window.RecursosMovil?.abrirPanel();
+                return;
+            }
+
+            /* ── Resto de tabs ── */
             if (tabActivo === btn) {
-                /* Pulsar la misma tab activa la cierra */
                 btn.classList.remove("tab--activo");
                 _cerrarPanel(panelActivo);
                 panelActivo = null;

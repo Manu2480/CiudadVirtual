@@ -73,6 +73,9 @@ CERRAR MODAL
  */
 function cerrar() {
     if (!_overlay) return;
+    /* Mueve el foco fuera del modal antes de ocultarlo
+       para evitar el warning de aria-hidden en elemento enfocado */
+    document.activeElement?.blur();
     _overlay.classList.remove("activo");
     _overlay.setAttribute("aria-hidden", "true");
     _cuerpo.innerHTML = "";
@@ -132,7 +135,8 @@ function mostrarEdificio(edificio, fila, col) {
         const gridEl = document.getElementById("mapa-grid");
         Edificaciones.demoler(fila, col, grid, gridEl);
         Modal.cerrar();
-        Tablero.cancelarModo();
+        /* No cancelamos el modo — el usuario se queda en construccion
+           para poder seguir editando el mapa sin ir a mapa y volver */
     });
 }
 

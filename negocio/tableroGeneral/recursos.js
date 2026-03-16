@@ -1,96 +1,78 @@
-/* recursos.js
-Puente entre la UI del tablero y Ciudad.js.
-No contiene lógica de negocio — solo lee y pinta.
-*/
+/* ================================================
+RECURSOS.JS  (tableroGeneral)
+Lógica de negocio de recursos de la ciudad.
 
-/* Catálogo de recursos: icono UIcons y etiqueta visible */
-const RECURSOS = {
-    dinero:               { nombre: "Dinero",                icono: "fi-br-coins" },
-    agua:                 { nombre: "Agua",                  icono: "fi-br-raindrops"  },
-    alimento:             { nombre: "Comida",                icono: "fi-br-wheat"      },
-    poblacion:            { nombre: "Población",             icono: "fi-br-users"  },
-    felicidad:            { nombre: "Felicidad",             icono: "fi-br-happy" },
-    electricidad:         { nombre: "Electricidad",          icono: "fi-br-bolt"       },
-    capacidadResidencial: { nombre: "Cap. residencial",      icono: "fi-br-users"  },
-    capacidadLaboral:     { nombre: "Cap. laboral",          icono: "fi-br-handshake"  },
-};
+Responsabilidades:
+  - Mantener referencia a la ciudad activa
+  - Renderizar los indicadores de recursos en el header
+  - Calcular y aplicar los recursos por turno
+  - Exponer obtenerTodos() para el modal de estadísticas
+
+Dependencias: tablero.js (ciudad), CiudadStorage.js
+================================================ */
 
 let _ciudad = null;
 
+/* Llamado desde tablero.js al cargar la ciudad */
 function setCiudad(ciudad) {
     _ciudad = ciudad;
-    _renderizarUI();
 }
 
+/* Llamado desde tablero.js en DOMContentLoaded */
 function inicializar() {
-    if (!_ciudad) { console.warn("recursos.js: llama a setCiudad() primero."); return; }
-    _renderizarUI();
+    _renderizarIndicadores();
 }
 
-function obtenerTodos() {
-    if (!_ciudad) return {};
-    const r = {
-        ..._ciudad.estadoRecursos,
-        poblacion: _ciudad.ciudadanos.length,
-    };
-    if (_ciudad.terreno) {
-        r.capacidadResidencial = _ciudad.terreno.capacidadTotalViviendas?.() ?? 0;
-        r.capacidadLaboral     = _ciudad.terreno.capacidadTotalEmpleos?.()   ?? 0;
-    }
-    return r;
-}
-
-function puedeConstructir(edificio) {
-    return _ciudad ? _ciudad.getRecurso("dinero") >= edificio.costo : false;
-}
-
-function cobrarConstruccion(edificio) {
-    if (!_ciudad) return;
-    _ciudad.modificarRecurso("dinero", -edificio.costo);
-    _renderizarUI();
-}
-
+/* Llamado desde tablero.js en avanzarTurno */
 function calcularTurno() {
     if (!_ciudad) return;
     _ciudad.ejecutarTurno();
-    _renderizarUI();
+    _renderizarIndicadores();
+    CiudadStorage.guardar(_ciudad);
 }
 
-/* Genera un <span> por cada recurso */
-function _htmlIndicadores(datos, extendido = false) {
-    const claves = extendido
-        ? Object.keys(RECURSOS)
-        : ["dinero", "poblacion", "felicidad", "electricidad"];
+/* Devuelve el estado actual de recursos */
+function obtenerTodos() {
+    return _ciudad?.estadoRecursos ?? {};
+}
 
-    return claves.map(k => {
-        const def = RECURSOS[k];
-        if (!def) return "";
-        let valor = datos[k] ?? 0;
-        if (k === "dinero")    valor = `$${Number(valor).toLocaleString()}`;
-        if (k === "felicidad") valor = `${Math.round(valor)}`;
+/* Inyecta los indicadores en #panel-recursos del header */
+function _renderizarIndicadores() {
+    const panel = document.getElementById("panel-recursos");
+    if (!panel || !_ciudad) return;
+
+    const r = _ciudad.estadoRecursos;
+
+    const indicadores = [
+        { clave: "dinero",       icono: "fi-br-coins",     label: "Dinero",       fmt: v => `$${Math.round(v).toLocaleString()}` },
+        { clave: "agua",         icono: "fi-br-raindrops", label: "Agua",         fmt: v => `${Math.round(v)} L`  },
+        { clave: "electricidad", icono: "fi-br-bolt",      label: "Electricidad", fmt: v => `${Math.round(v)} kW` },
+        { clave: "alimento",     icono: "fi-br-wheat",     label: "Alimento",     fmt: v => `${Math.round(v)} kg` },
+        { clave: "felicidad",    icono: "fi-br-smile",     label: "Felicidad",    fmt: v => `${Math.round(v)}`    },
+    ];
+
+    panel.innerHTML = indicadores.map(({ clave, icono, label, fmt }) => {
+        const valor = r[clave] ?? 0;
+        const colorVal = valor < 0 ? "var(--color-energia)" : "inherit";
         return `
-            <span class="recurso recurso--${k}">
-                <i class="fi ${def.icono} recurso__icono"></i>
-                <span class="recurso__valor">${valor}</span>
-            </span>`;
+            <div class="recurso recurso--${clave}">
+                <i class="fi ${icono} recurso__icono"></i>
+                <span class="recurso__label">${label}:</span>
+                <span class="recurso__valor" style="color:${colorVal}">
+                    ${fmt(valor)}
+                </span>
+            </div>
+        `;
     }).join("");
 }
 
-function _renderizarUI() {
-    const datos = obtenerTodos();
 
-    const header = document.getElementById("panel-recursos");
-    if (header) header.innerHTML = _htmlIndicadores(datos);
-
-    if (document.documentElement.getAttribute("data-vista") === "desktop") {
-        const side = document.getElementById("panel-recursos-side");
-        if (side) {
-            const titulo = side.querySelector(".panel__titulo");
-            side.innerHTML = "";
-            if (titulo) side.appendChild(titulo);
-            side.insertAdjacentHTML("beforeend", _htmlIndicadores(datos, true));
-        }
-    }
-}
-
-window.Recursos = { RECURSOS, setCiudad, inicializar, obtenerTodos, puedeConstructir, cobrarConstruccion, calcularTurno };
+/* ================================================
+EXPOSICIÓN GLOBAL
+================================================ */
+window.Recursos = {
+    setCiudad,
+    inicializar,
+    calcularTurno,
+    obtenerTodos,
+};

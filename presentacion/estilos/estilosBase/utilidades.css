@@ -1,0 +1,46 @@
+/* ================================================
+UTILIDADES
+Clases helper y botones de acción compartidos.
+================================================ */
+
+/* Ocultar visualmente pero accesible */
+.sr-only {
+    position: absolute;
+    width: 1px; height: 1px;
+    padding: 0; margin: -1px;
+    overflow: hidden;
+    clip: rect(0,0,0,0);
+    white-space: nowrap;
+    border: 0;
+}
+
+.oculto {
+    display: none !important;
+}
+
+/* Botón de acción destructiva (demoler) */
+.btn-peligro {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--espacio-s);
+    padding: var(--espacio-s) var(--espacio-m);
+    min-height: var(--btn-tap-min);
+    background: #e53935;
+    color: #ffffff;
+    font-size: var(--fuente-tam-m);
+    font-weight: 600;
+    border-radius: var(--radio-m);
+    cursor: pointer;
+    transition: background var(--trans-rapida), transform var(--trans-rapida);
+}
+
+.btn-peligro:hover {
+    background: #c62828;
+    transform: scale(1.02);
+}
+
+.btn-peligro:active {
+    transform: scale(0.98);
+}

@@ -17,12 +17,28 @@
     <script src="../../negocio/vista.js"></script>
 
     <!-- Modelos (orden importante por dependencias) -->
+    <!-- Clases abstractas base -->
     <script src="../../modelos/Edificio.js"             defer></script>
     <script src="../../modelos/EdificioResidencial.js"  defer></script>
     <script src="../../modelos/EdificioComercial.js"    defer></script>
     <script src="../../modelos/EdificioIndustrial.js"   defer></script>
     <script src="../../modelos/EdificioServicio.js"     defer></script>
+    <script src="../../modelos/PlantaUtilidad.js"       defer></script>
+    <!-- Clases concretas (dependen de las abstractas) -->
     <script src="../../modelos/Via.js"                  defer></script>
+    <script src="../../modelos/Casa.js"                 defer></script>
+    <script src="../../modelos/Apartamento.js"          defer></script>
+    <script src="../../modelos/Tienda.js"               defer></script>
+    <script src="../../modelos/CentroComercial.js"      defer></script>
+    <script src="../../modelos/Fabrica.js"              defer></script>
+    <script src="../../modelos/Granja.js"               defer></script>
+    <script src="../../modelos/Hospital.js"             defer></script>
+    <script src="../../modelos/EstacionBombero.js"      defer></script>
+    <script src="../../modelos/EstacionPolicia.js"      defer></script>
+    <script src="../../modelos/Parque.js"               defer></script>
+    <script src="../../modelos/PlantaElectrica.js"      defer></script>
+    <script src="../../modelos/PlantaHidraulica.js"     defer></script>
+    <!-- Otros modelos -->
     <script src="../../modelos/Ciudadano.js"            defer></script>
     <script src="../../modelos/Terreno.js"              defer></script>
     <script src="../../modelos/Ciudad.js"               defer></script>
@@ -32,7 +48,9 @@
     <script src="../../acceso_datos/ApiClima.js"        defer></script>
     <script src="../../acceso_datos/ApiNoticias.js"     defer></script>
 
-    <!-- Lógica compartida del tablero (tableroGeneral) -->
+    <!-- Lógica compartida del tablero.
+         IMPORTANTE: estos archivos deben vivir en negocio/tableroGeneral/.
+         Si aún están en negocio/ raíz, muévelos a esa carpeta. -->
     <script src="../../negocio/tableroGeneral/edificios.js"      defer></script>
     <script src="../../negocio/tableroGeneral/notificaciones.js" defer></script>
     <script src="../../negocio/tableroGeneral/recursos.js"       defer></script>
@@ -40,8 +58,10 @@
     <script src="../../negocio/tableroGeneral/mapa.js"           defer></script>
     <script src="../../negocio/tableroGeneral/modal.js"          defer></script>
     <script src="../../negocio/tableroGeneral/tablero.js"        defer></script>
+    <script src="../../negocio/tableroGeneral/menuPartida.js"    defer></script>
 
-    <!-- Los controles específicos de vista los inyecta vista.js dinámicamente:
+    <!-- Los controles de vista los carga vista.js dinámicamente.
+         Cada coordinador carga sus propios submódulos:
          movil   → negocio/tableroMovil/controlesMovil.js
          tablet  → negocio/tableroTablet/controlesTablet.js
          desktop → negocio/tableroDesktop/controlesDesktop.js -->
@@ -70,6 +90,21 @@
         <button id="btn-recursos-movil" class="btn-recursos-movil" aria-label="Ver recursos">
             <i class="fi fi-br-menu-burger"></i>
         </button>
+
+        <!-- Menú hamburguesa: guardar partida (todas las vistas) -->
+        <button id="btn-menu-partida" class="btn-menu-partida" aria-label="Opciones de partida">
+            <i class="fi fi-br-menu-dots-vertical"></i>
+        </button>
+
+        <!-- Dropdown de opciones -->
+        <div id="menu-partida" class="menu-partida" aria-hidden="true">
+            <button class="menu-partida__opcion" id="btn-guardar-local">
+                <i class="fi fi-br-floppy-disk"></i> Guardar en dispositivo
+            </button>
+            <button class="menu-partida__opcion" id="btn-exportar-json">
+                <i class="fi fi-br-download"></i> Exportar como JSON
+            </button>
+        </div>
 
     </header>
 
@@ -136,7 +171,6 @@
         <button class="tab tab--activo" data-panel="area-mapa"><i class="fi fi-br-map"></i> Mapa</button>
         <button class="tab" data-panel="menu-construccion"><i class="fi fi-br-hammer"></i> Construir</button>
         <button class="tab" data-panel="panel-recursos"><i class="fi fi-br-wheat"></i> Recursos</button>
-        <button class="tab" data-panel="panel-estadisticas"><i class="fi fi-br-chart-histogram"></i> Stats</button>
     </nav>
 
     <!-- Botón flotante de estadísticas (solo móvil, tableroMovil.css lo muestra) -->

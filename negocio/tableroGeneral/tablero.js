@@ -53,8 +53,11 @@ function _cargarCiudad() {
 
         const terreno = new Terreno(vias, datos.terreno?.edificios ?? []);
 
+        /**
+        Datos por defecto en ciudades nuevas
+         */
         const estadoRecursos = datos.estadoRecursos ?? {
-            dinero: 10000, agua: 0, electricidad: 0, alimento: 0, felicidad: 50,
+            dinero: 10000, agua: 0, electricidad: 0, alimento: 0, felicidad: 0,
         };
 
         Estado.ciudad = new Ciudad(
@@ -74,8 +77,8 @@ function _cargarCiudad() {
         }
 
         const _vias      = Estado.ciudad.terreno.vias;
-        Estado.filas     = _vias?.length       || 15;
-        Estado.columnas  = _vias?.[0]?.length  || 15;
+        Estado.filas     = _vias?.length;
+        Estado.columnas  = _vias?.[0]?.length;
         console.log(`tablero.js: mapa ${Estado.filas}x${Estado.columnas}`);
 
         Recursos.setCiudad(Estado.ciudad);

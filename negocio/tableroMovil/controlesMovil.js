@@ -18,13 +18,12 @@ console.log("controlesMovil: cargado (readyState=", document.readyState, ")");
 const _BASE = "../../negocio/tableroMovil/";
 
 const _MODULOS = [
-    "celdaAdaptable.js",   /* primero: ajusta celda antes de que el mapa se pinte */
     "tabs.js",
     "recursos.js",
     "stats.js",
+    "zoom.js",        /* zoom antes que joystick para que sus listeners tengan prioridad en pinch */
     "joystick.js",
     "menuConstruccion.js",
-    "zoom.js",
     "clima.js",
     "noticias.js",
 ];
@@ -44,13 +43,12 @@ function _cargarModulos(modulos, onCompleto) {
 function _inicializarControlesMovil() {
     console.log("controlesMovil: inicialización (readyState=", document.readyState, ")");
     try {
-        CeldaAdaptable.inicializar();
         TabsMovil.inicializar();
         RecursosMovil.inicializar();
         StatsMovil.inicializar();
+        ZoomMovil.inicializar();
         JoystickMovil.inicializar();
         MenuConstruccionMovil.inicializar();
-        ZoomMovil.inicializar();
         ClimaMovil.inicializar();
         NoticiasMovil.inicializar();
 

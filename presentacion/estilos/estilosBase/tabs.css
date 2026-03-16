@@ -1,0 +1,62 @@
+/* ================================================
+TABS Y BOTÓN FLOTANTE
+Ocultos por defecto — tableroMovil.css los activa.
+================================================ */
+
+.tabs-movil {
+    display: none;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: var(--alto-tabs);
+    background: var(--color-superficie);
+    border-top: 1px solid var(--color-borde);
+    z-index: 200;
+}
+
+.tab {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    font-size: var(--fuente-tam-s);
+    color: var(--color-texto-s);
+    min-height: var(--btn-tap-min);
+    transition: color var(--trans-rapida), background var(--trans-rapida);
+}
+
+.tab--activo {
+    color: var(--color-primario);
+    font-weight: 600;
+}
+
+.tab:hover {
+    background: var(--color-fondo);
+    color: var(--color-primario);
+}
+
+.btn-flotante {
+    display: none;
+    position: fixed;
+    bottom: calc(var(--alto-tabs) + var(--espacio-m));
+    right: var(--espacio-m);
+    width: 52px;
+    height: 52px;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    background: var(--color-primario);
+    color: #ffffff;
+    border-radius: 50%;
+    box-shadow: var(--sombra-m);
+    z-index: 201;
+    transition: transform var(--trans-rapida), box-shadow var(--trans-rapida);
+}
+
+.btn-flotante:hover {
+    transform: scale(1.08);
+    box-shadow: 0 6px 20px rgba(26,115,232,0.35);
+}
