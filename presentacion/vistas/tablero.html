@@ -66,14 +66,18 @@
             <!-- recursos.js inyecta aquí los indicadores -->
         </div>
 
-        <!-- Solo visible en móvil (tableroMovil.css) -->
+        <!-- Solo visible en móvil   (tableroMovil.css) -->
         <button id="btn-recursos-movil" class="btn-recursos-movil" aria-label="Ver recursos">
             <i class="fi fi-br-menu-burger"></i>
         </button>
-
-        <button id="btn-sidebar-tablet" class="btn-sidebar-tablet" aria-label="menús">
+        
+        <button data-panel="recConEst-tablet" id="btn-recConEst-tablet" class="btn-sidebar-tablet" aria-label="menús">
             <i class="fi fi-br-menu-burger"></i>
         </button>
+
+        <button data-panel="clima-tablet" class = "btn-sidebar-tablet" id="btn-clima-tablet"><i class="fi fi-br-cloud-sun"></i></button>
+        <button data-panel="noticias-tablet" class = "btn-sidebar-tablet" id="btn-noticias-tablet"><i class="fi fi-br-radio-alt"></i></button>
+
 
     </header>
 
@@ -90,12 +94,11 @@
                 <!-- recursos.js inyecta los indicadores -->
             </section>
 
-            <!-- En móvil aparece como panel de tab; en tablet/desktop como sidebar -->
-            <section id="menu-construccion" class="panel panel--construccion">
-                <h2 class="panel__titulo">Construir</h2>
-                <!-- menuConstruccion.js inyecta las opciones -->
-            </section>
-
+                <!-- En móvil aparece como panel de tab; en tablet/desktop como sidebar -->
+                <section id="menu-construccion" class="panel panel--construccion">
+                    <h2 class="panel__titulo">Construir</h2>
+                    <!-- menuConstruccion.js inyecta las opciones -->
+                </section>
         </aside>
 
         <!-- Área del mapa: mapa.js construye el grid según CiudadStorage -->
@@ -110,8 +113,12 @@
                 <button id=""></button>
             </div>
 
-            <div id="mapa-grid" class="mapa-grid" role="grid">
-                <!-- mapa.js genera las celdas dinámicamente -->
+            <div id="mapa-container" class="mapa-container">
+                <div id="indices-filas" class="indices-filas"></div>
+                <div id="indices-columnas" class="indices-columnas"></div>
+                <div id="viewport-mapa">
+                    <div id="mapa-grid" class="mapa-grid" role="grid"><!-- mapa.js genera las celdas dinámicamente --></div>
+                </div>
             </div>
 
         </section>
@@ -138,18 +145,27 @@
         </aside>
 
         <aside id="sidebar-tablet" class="sidebar--tablet cerrada">
-            <section id="panel-recursos-tablet" class="panel panel--recursos">
-                <h2 class="panel__titulo">Recursos</h2>
-                <!-- recursos.js inyecta los indicadores -->
-            </section> 
-            <section id="menu-construccion-tablet" class="panel panel--construccion">
-                <h2 class="panel__titulo">Construir</h2>
-                <div id="catalogo-edificios-tablet"></div>
-                <!-- mapa.js inyecta las opciones de construcción -->
+            <section id="recConEst-tablet" class="panel-tablet">
+                <section id="panel-recursos-tablet" class="panel panel--recursos">
+                    <h2 class="panel__titulo">Recursos</h2>
+                </section> 
+                <section id="menu-construccion-tablet" class="panel panel--construccion">
+                    <h2 class="panel__titulo">Construir</h2>
+                    <div id="catalogo-edificios-tablet"></div>
+                </section>
+                <section id="panel-estadisticas-tablet" class="panel panel--estadisticas">
+                    <h2 class="panel__titulo">Estadísticas</h2>
+                </section>
             </section>
-            <section id="panel-estadisticas-tablet" class="panel panel--estadisticas">
-                <h2 class="panel__titulo">Estadísticas</h2>
-                <!-- tablero.js inyecta los datos de la ciudad -->
+
+            <section id="clima-tablet" class="panel-tablet">
+                <section id="panel-clima-tablet" class="panel panel--clima">
+                </section>
+            </section>
+            
+            <section id="noticias-tablet" class="panel-tablet">
+                <section id="panel-noticias-tablet" class="panel panel--noticias">
+                </section>
             </section>
         </aside>
 
@@ -162,7 +178,6 @@
         <button class="tab" data-panel="panel-recursos"><i class="fi fi-br-wheat"></i> Recursos</button>
         <button class="tab" data-panel="panel-estadisticas"><i class="fi fi-br-chart-histogram"></i> Stats</button>
     </nav>
-
     <!-- Botón flotante de estadísticas (solo móvil, tableroMovil.css lo muestra) -->
     <button id="btn-stats-flotante" class="btn-flotante" aria-label="Ver estadísticas">
         <i class="fi fi-br-chart-histogram"></i>

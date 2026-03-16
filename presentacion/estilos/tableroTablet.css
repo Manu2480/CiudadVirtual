@@ -46,18 +46,59 @@ Dependencias: HU-023
     --color-celda-selec:   rgba(26,115,232,0.35); /* celda seleccionada */
 }
 @media (orientation: portrait){ /*Tablet en vertical*/
-    #btn-sidebar-tablet{
+    .btn-sidebar-tablet{
         color:white;
     }
     .contenedor-juego{
         display: grid;
         grid-template-columns: 70% 30%;
-        grid-template-rows: 25% 50% 25%;
+        grid-template-rows: 1fr;
     }
 
+    .mapa-container{
+        display:grid;
+        grid-template-columns:auto 1fr;
+        grid-template-rows:1fr auto;
+    }
+
+    .indice-fila, .indice-columna{
+        width: var(--tamano-celda);
+        height: var(--tamano-celda);
+
+        text-align: center;
+        font-size: 0.8rem;
+        line-height: var(--tamano-celda);
+
+        background-color: #f0f0f0;
+        border: 1px solid #ccc;
+
+        box-sizing: border-box;
+    }
+    #indices-filas{
+        grid-column:1;
+        grid-row:1;
+
+        display:flex;
+        flex-direction:column;
+    }
+    #viewport-mapa{
+        grid-column:2;
+        grid-row:1;
+        overflow:auto;
+    }
+
+    #indices-columnas{
+        grid-column:2;
+        grid-row:2;
+
+        display:flex;
+        flex-direction: row;
+    }
     .area-mapa{
         grid-column: 1;
         grid-row: 1 / -1;
+
+        height: 100%;
     }
 
     .area-mapa.full{
@@ -74,37 +115,49 @@ Dependencias: HU-023
         display: none;
     }
 
-    .sidebar--tablet{
-        grid-column: 2; /*La sidebar ocupa el 30% si está activada, si no, no se muestra*/
-        grid-row: 1 / -1;
-        background-color: var(--color-texto-s);
-        display: grid;
-        grid-template-rows: 25% 50% 25%;
-    }
+/* Sidebar tablet */
+.sidebar--tablet {
+    grid-column: 2;
+    grid-row: 1 / -1;
+    background-color: var(--color-texto-s);
+    display: grid; 
+    grid-template-rows: 25% 50% 25%; /* Recursos, Construcción, Estadísticas */
+    gap: 5px;
+}
 
-    .sidebar--tablet.cerrada{
-        display:none
-    }
+.sidebar--tablet.cerrada {
+    display: none;
+}
 
-    .panel--recursos{
-        grid-row:1;
-    }
+.panel-tablet.abierto{
+    grid-row: 1 / -1;
+    background-color: var(--color-texto-s);
+    display: grid; 
+    grid-template-rows: 25% 50% 25%; /* Recursos, Construcción, Estadísticas */
+    gap: 5px;
+}
 
-    .panel--construccion{
-        grid-row: 2;
-    }
-    
-    .panel--estadisticas{
-        grid-row: 3;
-    }
+/* Cada panel individual dentro de la sidebar */
+.panel--recursos {
+    overflow: hidden;
+}
 
-    .panel__titulo{
-        background-color: var(--color-primario-h);
-        color: white;
-        width: 100%;
-        margin:0;
-        text-align: center;
-    }
+.panel--construccion {
+    overflow: auto; /* scroll si el contenido sobrepasa */
+}
+
+.panel--estadisticas {
+    overflow: hidden;
+}
+
+/* Opcional: títulos */
+.panel__titulo{
+    background-color: var(--color-primario-h);
+    color: white;
+    width: 100%;
+    margin:0;
+    text-align: center;
+}
 
     .panel{
         padding:0;
@@ -150,13 +203,4 @@ Dependencias: HU-023
         background-color: var(--color-primario);
         color: white;
     }
-
-
-
-
-
-} 
-
-@media (orientation: portrait){ /*Tablet en horizontal*/
-    
 } 

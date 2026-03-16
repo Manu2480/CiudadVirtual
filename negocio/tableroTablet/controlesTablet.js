@@ -60,27 +60,17 @@ function _cargarModulos(modulos, onCompleto) {
     document.head.appendChild(script);/*agrega el script al head del html*/
 }
 
-function _inicializarControlesMovil() {
+function _inicializarControlesTablet() {
     console.log("controlesMovil: inicialización (readyState=", document.readyState, ")");
     try {
-        CeldaAdaptable.inicializar();
-        TabsMovil.inicializar();
-        RecursosMovil.inicializar();
-        StatsMovil.inicializar();
-        JoystickMovil.inicializar();
-        MenuConstruccionMovil.inicializar();
-        ZoomMovil.inicializar();
-        ClimaMovil.inicializar();
-        NoticiasMovil.inicializar();
+        CeldasTablet.inicializar();
 
-        console.log("controlesMovil: inicialización completa");
+        console.log("controlesTablet: inicialización completa");
     } catch (err) {
-        console.error("controlesMovil: error durante inicialización", err);
+        console.error("controlesTablet: error durante inicialización", err);
     }
 }
 
-_cargarModulos(_MODULOS, _inicializarControlesMovil);
-
-const sidebar = document.getElementById("sidebar-tablet");
-const boton = document.getElementById("btn-sidebar-tablet");
-const mapa = document.getElementById("area-mapa")
+document.addEventListener("DOMContentLoaded", () => {
+    _cargarModulos(_MODULOS, _inicializarControlesTablet);
+});

@@ -1,48 +1,87 @@
 /* ================================================
-AJUSTE DE CELDA PARA TABLET
+CELDA ADAPTABLE TABLET
 Calcula el tamaño de celda para que el grid quepa
 exactamente en el ancho del área del mapa sin scroll horizontal.
-Solo se llama cuando data-vista="tablet".
-================================================ */
-function _ajustarCeldaParaTablet(columnas) {
-    /* Ancho disponible del área del mapa (ya tiene su 70% del layout aplicado) */
-    const anchoArea = _areaEl.getBoundingClientRect().width || _areaEl.offsetWidth;
 
-    if (anchoArea <= 0) {
-        /* El área aún no tiene dimensiones (p.ej. aún no pintó el layout).
-           Reintenta en el siguiente frame. */
-        requestAnimationFrame(() => _ajustarCeldaParaTablet(columnas));
+Dependencias: Tablero.Estado.columnas
+================================================ */
+function inicializar() {
+    _ajustar();
+    window.addEventListener("resize", _ajustar);
+    mostrarIndices();
+}
+
+function _ajustar() {
+    const columnas = window.Tablero?.Estado?.columnas;
+    if (!columnas) {
+        /* Tablero aún no está listo, reintenta */
+        setTimeout(_ajustar, 100);
         return;
     }
 
-    /* Tamaño de celda = ancho disponible dividido entre el número de columnas.
-       Se acota entre 20px (mínimo legible) y 48px (tamaño base de desktop). */
-    const tamano = Math.min(48, Math.max(44, Math.floor(anchoArea / columnas)));
-    document.documentElement.style.setProperty("--tamano-celda", `${tamano}px`);
+    const areaMapa = document.getElementById("area-mapa");
+    if (!areaMapa) return;
 
-    /* Guarda el número de columnas para recalcular si cambia la orientación */
-    _mapaState.columnasTablet = columnas;
+    const anchoDisponible = areaMapa.getBoundingClientRect().width || areaMapa.offsetWidth;
+
+    // Tamaño de celda acotado entre 44 y 48px
+    const tamCelda = Math.min(48, Math.max(44, Math.floor(anchoDisponible / columnas)));
+
+    document.documentElement.style.setProperty("--tamano-celda", `${tamCelda}px`);
+    console.log(`CeldaTablet: ${columnas} columnas, ancho ${anchoDisponible}px → celda ${tamCelda}px`);
+
+    // Guardar para recalcular al rotar
+    // Nota: _mapaState puede no existir si el módulo del mapa no lo expone globalmente.
+    // Usamos un contenedor propio para evitar errores.
+    window._celdasTabletState = window._celdasTabletState || {};
+    window._celdasTabletState.columnasTablet = columnas;
 }
 
-/*===============================================
-FUNCION MOSTRAR LISTA PARA CONSTRUCCIÓN EN TABLET
-=================================================
-*/
-    /*        id:          "via",
-        nombre:      "Vía",
-        categoria:   "pavimentaria",
-        imagen:      "../../media/edificios/via.png",
-        descripcion: "Sendero necesario para conectar edificios.",
-        costo:       100, */
+function mostrarIndices() {
 
-/* ================================================
-RECALCULAR TAMAÑO DE CELDA EN TABLET AL ROTAR/REDIMENSIONAR
-En tablet la orientación puede cambiar (HU-023), lo que modifica
-el ancho disponible del área del mapa y requiere recalcular la celda.
-================================================ */
-window.addEventListener("resize", () => {
-    const vista = document.documentElement.getAttribute("data-vista");
-    if (vista === "tablet" && _mapaState.columnasTablet) {
-        _ajustarCeldaParaTablet(_mapaState.columnasTablet);
+    const { filasVisibles, columnasVisibles } = calcularCeldasVisibles();
+
+    const filasEl = document.getElementById("indices-filas");
+    const colsEl  = document.getElementById("indices-columnas");
+
+    filasEl.innerHTML = "";
+    colsEl.innerHTML = "";
+
+    for (let f = 0; f < filasVisibles; f++) {
+        const div = document.createElement("div");
+        div.className = "indice-fila";
+        div.textContent = f;
+        filasEl.appendChild(div);
     }
-});
+
+    for (let c = 0; c < columnasVisibles; c++) {
+        const div = document.createElement("div");
+        div.className = "indice-columna";
+        div.textContent = c;
+        colsEl.appendChild(div);
+    }
+}
+function calcularCeldasVisibles() {
+
+    // El contenedor real del grid en tablet es #mapa-container (no hay #viewport-mapa)
+    const viewport = document.getElementById("viewport-mapa");
+    if (!viewport) return { filasVisibles: 0, columnasVisibles: 0 };
+
+    const ancho = viewport.clientWidth;
+    const alto = viewport.clientHeight;
+
+    const tamCelda = parseInt(
+        getComputedStyle(document.documentElement)
+        .getPropertyValue("--tamano-celda")
+    );
+
+    const columnasVisibles = Math.floor(ancho / tamCelda) -1;
+    const filasVisibles = Math.floor(alto / tamCelda) -1;
+
+    return { filasVisibles, columnasVisibles };
+}
+
+window.CeldasTablet = {
+    inicializar,
+    mostrarIndices
+};
