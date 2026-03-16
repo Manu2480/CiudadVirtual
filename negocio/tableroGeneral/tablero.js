@@ -26,7 +26,7 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
     }
 
-    Mapa.inicializar(Estado.filas, Estado.columnas, Estado.ciudad.terreno.edificios);
+    Mapa.inicializar(Estado.filas, Estado.columnas, Estado.ciudad.terreno.edificios, Estado.ciudad.terreno.vias);
     Recursos.inicializar();
     Notificaciones.mostrar(`¡Bienvenido, ${Estado.ciudad.alcalde}! Tu ciudad te espera.`, "exito");
 

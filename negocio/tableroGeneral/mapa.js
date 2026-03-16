@@ -37,7 +37,7 @@ INICIALIZAR
 Construye el grid según las dimensiones del Estado.
 Llamado desde tablero.js al arrancar.
 ================================================ */
-function inicializar(filas, columnas, edificiosGuardados) {
+function inicializar(filas, columnas, edificiosGuardados, vias) {
     _gridEl = document.getElementById("mapa-grid");
     _areaEl = document.getElementById("area-mapa");
 
@@ -61,12 +61,24 @@ function inicializar(filas, columnas, edificiosGuardados) {
 
     _gridEl.style.gridTemplateColumns = `repeat(${columnas}, var(--tamano-celda))`;
     _gridEl.style.gridTemplateRows    = `repeat(${filas}, var(--tamano-celda))`;
+    _gridEl.style.gridTemplateRows    = `repeat(${filas}, var(--tamano-celda))`;
     _gridEl.innerHTML = "";
 
     /* Inicializa el grid interno vacío */
     _mapaState.grid = Array.from({ length: filas }, () =>
         Array.from({ length: columnas }, () => ({ tipo: "vacio" }))
     );
+
+    /* Marca las vías en el grid interno */
+    if (vias && Array.isArray(vias)) {
+        for (let f = 0; f < filas && f < vias.length; f++) {
+            for (let c = 0; c < columnas && c < vias[f].length; c++) {
+                if (vias[f][c] === 1) {
+                    _mapaState.grid[f][c].tipo = "via";
+                }
+            }
+        }
+    }
 
     /* Rellena celdas con edificios guardados */
     Object.entries(mapaEdificios).forEach(([clave, ed]) => {
@@ -104,10 +116,14 @@ function _crearCeldaEl(fila, col, estado) {
         el.classList.add("celda--agua");
         el.setAttribute("aria-label", "Agua");
 
+    } else if (estado.tipo === "via") {
+        el.classList.add("celda--via");
+        el.setAttribute("aria-label", "Vía");
+
     } else if (estado.tipo !== "vacio") {
         /* La celda tiene un edificio */
         el.classList.add("celda--construida");
-        const edificio = Edificios.obtener(estado.tipo);
+        const edificio = window.Edificios ? window.Edificios.obtener(estado.tipo) : null;
         if (edificio) {
             el.setAttribute("aria-label", edificio.nombre);
             const img = document.createElement("img");
@@ -131,6 +147,66 @@ Click en celda según el modo activo.
 function _registrarEventos() {
     /* Delegación de eventos: un solo listener en el grid */
     _gridEl.addEventListener("click", _manejarClickCelda);
+    _gridEl.addEventListener("dragover", _manejarDragOver);
+    _gridEl.addEventListener("dragleave", _manejarDragLeave);
+    _gridEl.addEventListener("drop", _manejarDrop);
+}
+
+function _manejarDragLeave(e) {
+    const celda = e.target.closest(".celda");
+    if (celda) {
+        celda.classList.remove("celda--dragover");
+    }
+}
+
+function _manejarDragOver(e) {
+    e.preventDefault(); // Permitir drop
+    e.dataTransfer.dropEffect = "copy";
+
+    // Resaltar la celda sobre la que se está arrastrando
+    const celda = e.target.closest(".celda");
+    if (celda && !celda.classList.contains("celda--construida") && !celda.classList.contains("celda--agua")) {
+        // Quitar clase de celdas anteriores
+        document.querySelectorAll(".celda--dragover").forEach(el => el.classList.remove("celda--dragover"));
+        celda.classList.add("celda--dragover");
+    }
+}
+
+function _manejarDrop(e) {
+    e.preventDefault();
+
+    // Quitar resaltado
+    document.querySelectorAll(".celda--dragover").forEach(el => el.classList.remove("celda--dragover"));
+
+    const celda = e.target.closest(".celda");
+    if (!celda) return;
+
+    const fila = parseInt(celda.dataset.fila);
+    const col = parseInt(celda.dataset.col);
+
+    const edificioId = e.dataTransfer.getData("text/plain");
+    if (edificioId) {
+        _procesarDropConstruccion(celda, fila, col, edificioId);
+    }
+}
+
+function _procesarDropConstruccion(celdaEl, fila, col, edificioId) {
+    const estado = Tablero.Estado;
+    if (!_mapaState.grid?.[fila]) return;
+    const estadoCelda = _mapaState.grid[fila][col] || { tipo: "vacio" };
+
+    if (estadoCelda.tipo === "vacio") {
+        if (window.Edificaciones && typeof window.Edificaciones.construir === "function") {
+            window.Edificaciones.construir(fila, col, edificioId, _mapaState.grid, _gridEl);
+        } else {
+            console.error("Edificaciones no disponible para construcción");
+        }
+    } else {
+        // Mostrar notificación de error
+        if (window.Notificaciones) {
+            Notificaciones.mostrar("No se puede construir aquí. La celda ya está ocupada.", "error");
+        }
+    }
 }
 
 function _manejarClickCelda(e) {

@@ -41,6 +41,17 @@ Dependencias: HU-023, HU-024
     --zoom-max: 2;
     --zoom-paso: 0.25;
     --zoom-actual: 1;
+
+    /* Tamaño base de celda */
+    --tamano-celda: 48px;
+
+    /* Colores de celdas */
+    --color-celda: #7ec850;
+    --color-celda-hover: #a3d977;
+    --color-celda-selec: rgba(26,115,232,0.35);
+    --color-celda-agua: #5baad4;
+    --color-celda-via: #666666;
+    --color-celda-borde: rgba(0,0,0,0.08);
 }
 
 /* =========================
@@ -165,7 +176,7 @@ body {
 }
 
 .panel--noticias {
-    max-height: 200px;
+    min-height: 150px;
     overflow-y: auto;
 }
 
@@ -203,20 +214,13 @@ body {
 
 /* =========================
    GRID DEL MAPA - ZOOM ESTÁTICO
-   El zoom se aplica mediante transform: scale()
-   transform-origin: top left asegura que el zoom
-   siempre se expanda desde la esquina superior izquierda.
+   El zoom se aplica cambiando --tamano-celda
    El zoom NO cambia cuando el usuario mueve el mapa.
 ========================= */
 .mapa-grid {
     display: grid;
-    grid-template-columns: repeat(20, var(--tamano-celda, 48px));
-    grid-template-rows: repeat(15, var(--tamano-celda, 48px));
     padding: 20px;
 }
-
-/* El zoom se implementa redimensionando --tamano-celda desde mapa.js */
-/* No se usa transform: scale() para no romper el área de scroll */
 
 /* =========================
    CELDAS DEL MAPA
@@ -258,6 +262,21 @@ body {
 .celda--agua:hover {
     background-color: var(--color-celda-agua, #5baad4);
     transform: none;
+}
+
+.celda--via {
+    background-color: var(--color-celda-via, #666666);
+    cursor: default;
+}
+
+.celda--via:hover {
+    background-color: var(--color-celda-via, #666666);
+    transform: none;
+}
+
+.celda--dragover {
+    background-color: rgba(26, 115, 232, 0.2) !important;
+    border: 2px dashed var(--color-primario, #1A73E8);
 }
 
 .celda__edificio {
@@ -467,6 +486,11 @@ body.modo-demolicion .celda--construida {
     background: #e8f4fd;
     border-color: var(--color-primario, #1A73E8);
     box-shadow: 0 2px 8px rgba(26, 115, 232, 0.3);
+}
+
+.construccion-item--dragging {
+    opacity: 0.5;
+    transform: rotate(5deg);
 }
 
 .construccion-item__icono {
@@ -751,4 +775,68 @@ button:hover:not(:disabled) {
         --sidebar-izquierdo: 200px;
         --sidebar-derecho: 260px;
     }
+}
+
+/* =========================
+   SMOOTH SCROLL BEHAVIOR
+========================= */
+.area-mapa {
+    scroll-behavior: smooth;
+}
+
+/* =========================
+   ENHANCED PANEL TRANSITIONS
+========================= */
+.panel {
+    transition: box-shadow var(--transicion), 
+                transform var(--transicion),
+                background var(--transicion);
+}
+
+.panel:hover {
+    transform: translateY(-2px);
+}
+
+/* =========================
+   CONSTRUCTION MENU GRID DESKTOP
+========================= */
+.construccion-lista {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+}
+
+/* =========================
+   STATISTICS LIST
+========================= */
+.stats-lista {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.stats-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 12px;
+    background: var(--color-fondo);
+    border-radius: var(--radio-s);
+    transition: background 0.2s;
+}
+
+.stats-item:hover {
+    background: #e8f4fd;
+}
+
+.stats-item__label {
+    font-size: 12px;
+    color: var(--color-texto-s);
+    font-weight: 500;
+}
+
+.stats-item__valor {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--color-primario);
 }

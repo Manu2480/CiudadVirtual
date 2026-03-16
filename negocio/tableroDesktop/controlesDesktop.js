@@ -64,6 +64,12 @@ function _init() {
     _inicializarAtajos();
     _crearIndicadorModo();
     _inicializarTooltipsEdificios();
+    _inicializarEstadisticas();
+
+    // Cargar módulos adicionales
+    _cargarModuloClima();
+    _cargarModuloNoticias();
+    _cargarModuloMenuConstruccion();
 
     console.log("controlesDesktop.js: Controles desktop inicializados.");
 }
@@ -130,6 +136,51 @@ function _inicializarZoom() {
 
 
 /* ================================================
+   SISTEMA DE ARRASTRE DEL MAPA (DRAG/PAN)
+   Permite mover el mapa con el mouse mientras
+   mantiene el zoom estático (no afectado por drag).
+================================================ */
+function _inicializarArrastre() {
+    if (!_desktopState.areaMapa) return;
+
+    let arrastrando = false;
+    let inicioX = 0;
+    let inicioY = 0;
+    let scrollInicioX = 0;
+    let scrollInicioY = 0;
+
+    _desktopState.areaMapa.addEventListener("mousedown", (e) => {
+        if (e.button !== 0) return;  // Solo botón izquierdo
+        if (e.target.closest(".btn-zoom") || e.target.closest(".controles-zoom")) return;
+
+        arrastrando = true;
+        inicioX = e.clientX;
+        inicioY = e.clientY;
+        scrollInicioX = _desktopState.areaMapa.scrollLeft;
+        scrollInicioY = _desktopState.areaMapa.scrollTop;
+        _desktopState.areaMapa.style.cursor = "grabbing";
+    });
+
+    document.addEventListener("mousemove", (e) => {
+        if (!arrastrando) return;
+
+        const deltaX = e.clientX - inicioX;
+        const deltaY = e.clientY - inicioY;
+
+        _desktopState.areaMapa.scrollLeft = scrollInicioX - deltaX;
+        _desktopState.areaMapa.scrollTop = scrollInicioY - deltaY;
+    });
+
+    document.addEventListener("mouseup", () => {
+        if (arrastrando) {
+            arrastrando = false;
+            _desktopState.areaMapa.style.cursor = "grab";
+        }
+    });
+}
+
+
+/* ================================================
    CREAR INDICADOR DE ZOOM
    Muestra el nivel de zoom actual entre los botones.
 ================================================ */
@@ -169,8 +220,9 @@ function _aplicarZoom(nuevoZoom) {
         Math.max(_desktopState.zoomMin, nuevoZoom)
     );
 
-    // Aplicar transform al grid
-    _desktopState.gridMapa.style.transform = `scale(${_desktopState.zoomActual})`;
+    // Aplicar zoom cambiando el tamaño de celda
+    const nuevoTamano = 48 * _desktopState.zoomActual;
+    document.documentElement.style.setProperty("--tamano-celda", `${nuevoTamano}px`);
 
     // Actualizar atributo data-zoom para CSS
     _desktopState.gridMapa.setAttribute("data-zoom", _desktopState.zoomActual);
@@ -457,7 +509,100 @@ function _añadirTooltipEdificio(celda) {
     const img = celda.querySelector(".celda__edificio");
     if (img && img.alt) {
         celda.setAttribute("data-nombre", img.alt);
+    } else {
+        // Fallback: buscar en Edificios
+        const estado = window.Tablero?.Estado;
+        if (estado?.ciudad?.terreno?.edificios) {
+            const edificio = estado.ciudad.terreno.edificios.find(ed => 
+                ed.ubicacion.fila === fila && ed.ubicacion.columna === col
+            );
+            if (edificio && window.Edificios) {
+                const def = window.Edificios.obtener(edificio.id);
+                if (def) {
+                    celda.setAttribute("data-nombre", def.nombre);
+                }
+            }
+        }
     }
+}
+
+
+function _inicializarEstadisticas() {
+    const interval = setInterval(() => {
+        if (!window.Tablero?.Estado?.ciudad) return;
+
+        const ciudad = window.Tablero.Estado.ciudad;
+        const panel = document.getElementById("panel-estadisticas");
+        if (!panel) return;
+
+        const titulo = panel.querySelector(".panel__titulo");
+        const contenido = document.createElement("div");
+        contenido.className = "stats-lista";
+        contenido.innerHTML = `
+            <div class="stats-item">
+                <span class="stats-item__label">Población</span>
+                <span class="stats-item__valor">${ciudad.ciudadanos.length}</span>
+            </div>
+            <div class="stats-item">
+                <span class="stats-item__label">Dinero</span>
+                <span class="stats-item__valor">$${ciudad.getRecurso('dinero').toLocaleString()}</span>
+            </div>
+            <div class="stats-item">
+                <span class="stats-item__label">Felicidad</span>
+                <span class="stats-item__valor">${Math.round(ciudad.getRecurso('felicidad'))}%</span>
+            </div>
+            <div class="stats-item">
+                <span class="stats-item__label">Energía</span>
+                <span class="stats-item__valor">${ciudad.getRecurso('electricidad')}</span>
+            </div>
+            <div class="stats-item">
+                <span class="stats-item__label">Turno</span>
+                <span class="stats-item__valor">${window.Tablero.Estado.turno || 1}</span>
+            </div>
+        `;
+
+        panel.innerHTML = "";
+        if (titulo) panel.appendChild(titulo);
+        panel.appendChild(contenido);
+
+        clearInterval(interval);
+    }, 500);
+}
+
+
+function _cargarModuloClima() {
+    const script = document.createElement("script");
+    script.src = "../../negocio/tableroDesktop/clima.js";
+    script.onload = () => {
+        if (window.ClimaDesktop) {
+            window.ClimaDesktop.inicializar();
+        }
+    };
+    document.head.appendChild(script);
+}
+
+
+function _cargarModuloNoticias() {
+    const script = document.createElement("script");
+    script.src = "../../negocio/tableroDesktop/noticias.js";
+    script.onload = () => {
+        if (window.NoticiasDesktop) {
+            window.NoticiasDesktop.inicializar();
+        }
+    };
+    document.head.appendChild(script);
+}
+
+
+function _cargarModuloMenuConstruccion() {
+    const script = document.createElement("script");
+    script.src = "../../negocio/tableroDesktop/menuConstruccion.js";
+    script.onload = () => {
+        if (window.MenuConstruccionDesktop) {
+            window.MenuConstruccionDesktop.inicializar();
+        }
+    };
+    document.head.appendChild(script);
 }
 
 

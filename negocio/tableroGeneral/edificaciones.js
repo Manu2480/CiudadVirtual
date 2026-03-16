@@ -163,4 +163,14 @@ function _crearInstancia(idEdificio, fila, col, edificioDef) {
 /* ================================================
 EXPOSICIÓN GLOBAL
 ================================================ */
-window.Edificaciones = { construir, demoler };
+window.Edificaciones = { 
+    construir, 
+    demoler, 
+    seleccionarEdificio: (id) => { 
+        if (window.Tablero && typeof window.Tablero.seleccionarEdificio === "function") {
+            window.Tablero.seleccionarEdificio(id);
+        } else {
+            console.warn("Tablero.seleccionarEdificio no disponible");
+        }
+    }
+};
