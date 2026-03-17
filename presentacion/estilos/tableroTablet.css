@@ -142,7 +142,7 @@ Dependencias: HU-023
     }
     /* Panel principal de noticias */
     #panel-noticias-tablet {
-        display: flex;
+        display: grid;
         flex-direction: column;
         overflow-y: auto;
         gap: 1rem; /* espacio entre noticias */
@@ -247,7 +247,6 @@ Dependencias: HU-023
         text-align: center;
         font-weight: bold;
         padding: 0.5rem 0;
-        overflow: hidden;
 }
 
     .panel{

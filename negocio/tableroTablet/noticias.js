@@ -23,6 +23,8 @@ function renderizarNoticias(noticias){
     
     // Opcional: limpiar antes de agregar
     panelNoticias.innerHTML = '<h2 class="panel__titulo">Noticias</h2>';
+
+    panelNoticias.innerHTML += '<div class="seccion-noticias-tablet">'
     
     noticias.forEach(noticia => {
         const imagenUrl = noticia.urlToImage ? noticia.urlToImage : '../../media/inicio/logo.png';
@@ -36,6 +38,6 @@ function renderizarNoticias(noticias){
         </div>`
         
     });
-
+    panelNoticias.innerHTML += '</div>'
 }
 window.NoticiasTablet = {inicializar};
