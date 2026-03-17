@@ -18,12 +18,12 @@ function inicializar() {
                     <section class="panel panel--clima" id="panel-clima">
                         <h2 class="panel__titulo">${datos.condicion}</h2>
                         <i class="fi ${_iconoClima(datos.condicion)} clima-compacto__icono"></i>
-                        <p class="datos-clima">temperatura: ${Math.round(datos.temperatura)}°C</p>
-                        <p class="datos-clima">humedad: ${Math.round(datos.humedad)}%</p>
+                        <p class="datos-clima">temperatura:<br> ${Math.round(datos.temperatura)}°C</p>
+                        <p class="datos-clima">humedad:<br> ${Math.round(datos.humedad)}%</p>
                         <h2 class="panel__titulo">viento</h2>
-                        <p class="datos-clima">velocidad: ${Math.round(datos.viento.velocidad)}m/s</p>
-                        <p class="datos-clima">dirección: ${Math.round(datos.viento.grados)}°</p>
-                        <p class="datos-clima">ráfaga: ${Math.round(datos.viento.rafaga)}m/s</p>
+                        <p class="datos-clima">velocidad:<br> ${Math.round(datos.viento.velocidad)}m/s</p>
+                        <p class="datos-clima">dirección:<br> ${Math.round(datos.viento.grados)}°</p>
+                        <p class="datos-clima">ráfaga:<br> ${Math.round(datos.viento.rafaga)}m/s</p>
                     </section>
                 `;
                 console.log("después de inyectar");

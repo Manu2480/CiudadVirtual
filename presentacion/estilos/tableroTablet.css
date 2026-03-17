@@ -57,6 +57,14 @@ Dependencias: HU-023
         grid-template-columns: 70% 30%;
         grid-template-rows: 1fr;
     }
+    
+    .sidebar--izquierdo{
+        display: none;   
+    }
+    
+    .sidebar--derecho{
+        display: none;
+    }
 
     .mapa-container{
         display:grid;
@@ -110,19 +118,24 @@ Dependencias: HU-023
         
     } /*Si la sidebar está oculta, el mapa ocupa el 100%, en caso contrario, ocupa el 70%*/
 
-    .sidebar--izquierdo{
-        display: none;   
-    }
-    
-    .sidebar--derecho{
-        display: none;
-    }
-
     /* Sidebar tablet */
     .sidebar--tablet {
         grid-column: 2;
         grid-row: 1 / -1;
         background-color: var(--color-texto-s);
+        position: relative;
+    }
+    .panel-tablet{
+        visibility: hidden;
+        position: absolute;
+        inset: 0;
+    }
+    .panel-tablet.abierto{
+        visibility: visible;
+    }
+
+    #recConEst-tablet{
+
         display: grid; 
         grid-template-rows: 25% 50% 25%; /* Recursos, Construcción, Estadísticas */
         gap: 5px;
@@ -134,7 +147,7 @@ Dependencias: HU-023
         overflow-y: auto;
         gap: 1rem; /* espacio entre noticias */
         padding: 1rem;
-        grid-row: 1 / -1;
+        height: 100%;
     }
 
     /* Cada noticia individual */
@@ -147,10 +160,9 @@ Dependencias: HU-023
 
     /* Titular con imagen y título */
     .titular-noticia {
-        display: grid;
-        grid-template-columns: 25% 75%;
-        gap: 1rem;
-        align-items: center;
+        display: flex;
+        flex-direction: column;
+        background-color: var(--color-primario);
     }
 
     /* Imagen ajustada a la columna del 25% */
@@ -197,11 +209,6 @@ Dependencias: HU-023
         background-color: var(--color-texto-s);
     }
 
-    #recConEst{
-        display: grid; 
-        grid-template-rows: 25% 50% 25%; /* Recursos, Construcción, Estadísticas */
-        gap: 5px;
-    }
 
     /* Cada panel individual dentro de la sidebar */
 
@@ -213,14 +220,16 @@ Dependencias: HU-023
         display: flex;
         flex-direction: column;
         align-items: center;
-        overflow-y: auto;
-        padding: 8px;
-        gap: 8px;
+        justify-content: space-between;
+        height: 100%;
+        font-size: 15px;
     }
-    
     .panel--clima .clima-compacto__icono {
-        font-size: 48px;
+        font-size: 60px;
         color: var(--color-primario);
+    }
+    .panel--clima h2{
+        font-size: 20px;
     }
     
     .panel--clima p.datos-clima {
@@ -235,9 +244,10 @@ Dependencias: HU-023
         color: white;
         width: 100%;
         margin:0;
-        text-align: left;
+        text-align: center;
         font-weight: bold;
         padding: 0.5rem 0;
+        overflow: hidden;
 }
 
     .panel{

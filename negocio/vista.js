@@ -12,7 +12,7 @@ Vistas:
     const w = window.innerWidth;
     console.log("vista.js: ancho de ventana", w);
     let vista;
-    if      (w < 768)   vista = "movil";
+    if      (w < 768)   vista = "tablet";
     else if (w <= 1024) vista = "tablet";
     else                vista = "desktop";
 
