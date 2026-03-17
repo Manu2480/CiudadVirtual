@@ -120,7 +120,7 @@ function inicializar(filas, columnas, edificiosGuardados) {
 /* ================================================
 CREAR ELEMENTO DE CELDA
 Devuelve un <div> con las clases y datos correctos
-según el estado de la celda (vacío, agua, edificio).
+según el estado de la celda (vacío, edificio).
 ================================================ */
 function _crearCeldaEl(fila, col, estado) {
     const el = document.createElement("div");
@@ -129,11 +129,7 @@ function _crearCeldaEl(fila, col, estado) {
     el.dataset.col  = col;
     el.setAttribute("role", "gridcell");
 
-    if (estado.tipo === "agua") {
-        el.classList.add("celda--agua");
-        el.setAttribute("aria-label", "Agua");
-
-    } else if (estado.tipo !== "vacio") {
+    if (estado.tipo !== "vacio") {
         /* La celda tiene un edificio */
         el.classList.add("celda--construida");
         const edificio = Edificios.obtener(estado.tipo);
@@ -200,7 +196,7 @@ function _procesarInteraccion(celdaEl, fila, col) {
                         detail: { fila, col, grid: _mapaState.grid, gridEl: _gridEl }
                     }));
                 }
-            } else if (estadoCelda.tipo !== "agua") {
+            } else {
                 /* Click en edificio construido: abre modal con info y opción de demoler */
                 const edificio = Edificios.obtener(estadoCelda.tipo);
                 if (edificio) Modal.mostrarEdificio(edificio, fila, col);
@@ -209,7 +205,7 @@ function _procesarInteraccion(celdaEl, fila, col) {
 
         case "demolicion":
             /* Click en edificio: demuele directamente sin modal */
-            if (estadoCelda.tipo !== "vacio" && estadoCelda.tipo !== "agua") {
+            if (estadoCelda.tipo !== "vacio") {
                 Edificaciones.demoler(fila, col, _mapaState.grid, _gridEl);
             }
             break;

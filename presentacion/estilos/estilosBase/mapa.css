@@ -49,10 +49,6 @@ Contenedor scrollable, grid de celdas y controles de zoom.
     background-color: var(--color-celda-selec);
 }
 
-.celda--agua {
-    background-color: var(--color-celda-agua);
-    cursor: not-allowed;
-}
 
 .celda__edificio {
     width: 100%;

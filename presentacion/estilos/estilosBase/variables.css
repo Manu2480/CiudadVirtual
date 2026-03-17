@@ -24,7 +24,6 @@ Las vistas específicas pueden sobreescribir estas variables.
     --color-celda:         #7ec850;
     --color-celda-hover:   #a3d977;
     --color-celda-borde:   rgba(0,0,0,0.08);
-    --color-celda-agua:    #5baad4;
     --color-celda-selec:   rgba(26,115,232,0.35);
 
     /* Tamaño de celda del mapa */
