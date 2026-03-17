@@ -48,7 +48,7 @@ function _renderizarIndicadores() {
         { clave: "agua",         icono: "fi-br-raindrops", label: "Agua",         fmt: v => `${Math.round(v)} L`  },
         { clave: "electricidad", icono: "fi-br-bolt",      label: "Electricidad", fmt: v => `${Math.round(v)} kW` },
         { clave: "alimento",     icono: "fi-br-wheat",     label: "Alimento",     fmt: v => `${Math.round(v)} kg` },
-        { clave: "felicidad",    icono: "fi-br-smile",     label: "Felicidad",    fmt: v => `${Math.round(v)}`    },
+        { clave: "felicidad",    icono: "fi fi-br-smile-beam",     label: "Felicidad",    fmt: v => `${Math.round(v)}`    },
     ];
 
     panel.innerHTML = indicadores.map(({ clave, icono, label, fmt }) => {
