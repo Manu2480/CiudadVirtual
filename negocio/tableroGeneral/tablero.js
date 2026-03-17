@@ -26,9 +26,17 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
     }
 
-    Mapa.inicializar(Estado.filas, Estado.columnas, Estado.ciudad.terreno.edificios);
+    Mapa.inicializar(Estado.filas, Estado.columnas, Estado.ciudad.terreno.edificios, Estado.ciudad.terreno.vias);
     Recursos.inicializar();
     Notificaciones.mostrar(`¡Bienvenido, ${Estado.ciudad.alcalde}! Tu ciudad te espera.`, "exito");
+
+    /* Señal para controlesDesktop.js: tablero ya está listo.
+       Si el script de controles ya se cargó, lo inicializamos ahora.
+       Si aún no cargó, detectará este flag al ejecutarse. */
+    window.__tableroListo = true;
+    if (window.ControlesDesktop?.init) {
+        window.ControlesDesktop.init();
+    }
 });
 
 function _cargarCiudad() {

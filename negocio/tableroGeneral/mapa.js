@@ -1,68 +1,73 @@
 /* ================================================
 MAPA.JS
 Render del grid e interacción con celdas.
+Compartido por todas las vistas.
 
 Responsabilidades:
-  - Construir el grid HTML según filas x columnas del Estado
-  - Manejar clicks en celdas y despachar al modo activo
-  - Gestionar la selección visual de celdas
+  - Construir el grid HTML según filas x columnas
+  - Manejar clicks y drag&drop en celdas
+  - Gestionar selección visual de celdas
+  - Exponer API de zoom para vistas que la necesiten
   - Exponer API para que tablero.js actualice el modo
 
-Dependencias: tablero.js (Estado), edificios.js, edificaciones.js
+Dependencias: tablero.js, edificios.js, edificaciones.js,
+              modal.js, notificaciones.js
 ================================================ */
 
 
 /* ================================================
-ESTADO INTERNO DEL MAPA
+ESTADO INTERNO
 ================================================ */
 const _mapaState = {
+    nivelZoom:  1,
+    zoomMin:    0.4,
+    zoomMax:    2.5,
+    zoomPaso:   0.15,
     celdaSelec: null,
-    grid:       [],    /* grid interno [fila][col] = { tipo } */
+    grid:       [],
 };
 
 
 /* ================================================
 REFERENCIAS AL DOM
 ================================================ */
-let _gridEl = null;  /* <div id="mapa-grid"> */
-let _areaEl = null;  /* <section id="area-mapa"> */
+let _gridEl = null;
+let _areaEl = null;
 
 
-/* ================================================
-INICIALIZAR
-Construye el grid según las dimensiones del Estado.
-Llamado desde tablero.js al arrancar.
-================================================ */
 /* ================================================
 NORMALIZAR ID
-Los modelos generan ids únicos con contador (via1, via2,
-Granja1…). Los normaliza al id del catálogo (via, granja…)
-para que Edificios.obtener() los encuentre correctamente.
+Los modelos generan ids únicos con contador (via1, casa2…).
+Los normaliza al id del catálogo para que Edificios.obtener()
+los encuentre correctamente al recargar desde localStorage.
 ================================================ */
 function _normalizarId(id) {
     if (!id) return "edificio";
-    /* Si el id existe tal cual en el catálogo, lo devuelve directo */
     if (Edificios.obtener(id)) return id;
-    /* Mapa de prefijos generados por los constructores → id del catálogo */
+
     const _prefijos = {
-        "via":            "via",
-        "casa":           "casa",
-        "apartamento":    "apartamento",
-        "tienda":         "tienda",
-        "centrocomercial":"centro-comercial",
-        "fabrica":        "fabrica",
-        "granja":         "granja",
-        "hospital":       "hospital",
-        "bombero":        "bombero",
-        "policia":        "policia",
-        "parque":         "parque",
-        "luz":            "planta-electrica",
-        "agua":           "planta-hidraulica",
+        "via":             "via",
+        "casa":            "casa",
+        "apartamento":     "apartamento",
+        "tienda":          "tienda",
+        "centrocomercial": "centro-comercial",
+        "fabrica":         "fabrica",
+        "granja":          "granja",
+        "hospital":        "hospital",
+        "bombero":         "bombero",
+        "policia":         "policia",
+        "parque":          "parque",
+        "luz":             "planta-electrica",
+        "agua":            "planta-hidraulica",
     };
     const prefijo = id.replace(/\d+$/, "").toLowerCase();
     return _prefijos[prefijo] || id;
 }
 
+
+/* ================================================
+INICIALIZAR
+================================================ */
 function inicializar(filas, columnas, edificiosGuardados) {
     _gridEl = document.getElementById("mapa-grid");
     _areaEl = document.getElementById("area-mapa");
@@ -72,55 +77,38 @@ function inicializar(filas, columnas, edificiosGuardados) {
         return;
     }
 
-    /* Valores de seguridad si tablero.js no pudo leer las dimensiones */
     filas    = (filas    && filas    > 0) ? filas    : 15;
     columnas = (columnas && columnas > 0) ? columnas : 15;
-
-    /* Construye un mapa de ubicacion -> edificio para pintar las celdas ocupadas */
-    const mapaEdificios = {};
-    (edificiosGuardados || []).forEach(ed => {
-        if (ed?.ubicacion) {
-            const clave = `${ed.ubicacion.fila}-${ed.ubicacion.columna}`;
-            mapaEdificios[clave] = ed;
-        }
-    });
 
     _gridEl.style.gridTemplateColumns = `repeat(${columnas}, var(--tamano-celda))`;
     _gridEl.style.gridTemplateRows    = `repeat(${filas}, var(--tamano-celda))`;
     _gridEl.innerHTML = "";
 
-    /* Inicializa el grid interno vacío */
     _mapaState.grid = Array.from({ length: filas }, () =>
         Array.from({ length: columnas }, () => ({ tipo: "vacio" }))
     );
 
-    /* Rellena celdas con edificios guardados.
-       Los ids únicos generados por los modelos (via1, via2…) se normalizan
-       al id del catálogo para que Edificios.obtener() los encuentre. */
-    Object.entries(mapaEdificios).forEach(([clave, ed]) => {
-        const [f, c] = clave.split("-").map(Number);
-        if (_mapaState.grid[f]?.[c] !== undefined) {
-            const tipoNormalizado = _normalizarId(ed.id);
-            _mapaState.grid[f][c] = { tipo: tipoNormalizado };
+    (edificiosGuardados || []).forEach(ed => {
+        if (ed?.ubicacion) {
+            const { fila: f, columna: c } = ed.ubicacion;
+            if (_mapaState.grid[f]?.[c] !== undefined) {
+                _mapaState.grid[f][c] = { tipo: _normalizarId(ed.id) };
+            }
         }
     });
 
     for (let f = 0; f < filas; f++) {
         for (let c = 0; c < columnas; c++) {
-            const celda = _crearCeldaEl(f, c, _mapaState.grid[f][c]);
-            _gridEl.appendChild(celda);
+            _gridEl.appendChild(_crearCeldaEl(f, c, _mapaState.grid[f][c]));
         }
     }
 
-    /* Registra los eventos de interacción */
     _registrarEventos();
 }
 
 
 /* ================================================
 CREAR ELEMENTO DE CELDA
-Devuelve un <div> con las clases y datos correctos
-según el estado de la celda (vacío, edificio).
 ================================================ */
 function _crearCeldaEl(fila, col, estado) {
     const el = document.createElement("div");
@@ -130,7 +118,6 @@ function _crearCeldaEl(fila, col, estado) {
     el.setAttribute("role", "gridcell");
 
     if (estado.tipo !== "vacio") {
-        /* La celda tiene un edificio */
         el.classList.add("celda--construida");
         const edificio = Edificios.obtener(estado.tipo);
         if (edificio) {
@@ -150,14 +137,48 @@ function _crearCeldaEl(fila, col, estado) {
 
 
 /* ================================================
-REGISTRAR EVENTOS DE INTERACCIÓN
-Click en celda según el modo activo.
+REGISTRAR EVENTOS
 ================================================ */
 function _registrarEventos() {
-    /* Delegación de eventos: un solo listener en el grid */
     _gridEl.addEventListener("click", _manejarClickCelda);
+
+    /* Drag & Drop — usado por la vista desktop */
+    _gridEl.addEventListener("dragover", (e) => {
+        e.preventDefault();
+        const celda = e.target.closest(".celda");
+        if (celda && !celda.classList.contains("celda--construida")) {
+            document.querySelectorAll(".celda--dragover")
+                .forEach(el => el.classList.remove("celda--dragover"));
+            celda.classList.add("celda--dragover");
+        }
+    });
+
+    _gridEl.addEventListener("drop", (e) => {
+        e.preventDefault();
+        document.querySelectorAll(".celda--dragover")
+            .forEach(el => el.classList.remove("celda--dragover"));
+        const celda = e.target.closest(".celda");
+        const id    = e.dataTransfer?.getData("text/plain");
+        if (celda && id) {
+            const f = parseInt(celda.dataset.fila);
+            const c = parseInt(celda.dataset.col);
+            Edificaciones.construir(f, c, id, _mapaState.grid, _gridEl);
+        }
+    });
 }
 
+
+/* ================================================
+MANEJAR CLICK EN CELDA
+El comportamiento varía según el modo activo y la vista.
+- modo normal:
+    · desktop → abre modal de info del edificio
+    · móvil   → notifica que vaya a Construir
+- modo construccion:
+    · si hay edificio seleccionado → construye directamente
+    · si no → dispara evento para que la vista abra el catálogo
+- modo demolicion → demuela directamente
+================================================ */
 function _manejarClickCelda(e) {
     const celda = e.target.closest(".celda");
     if (!celda) return;
@@ -165,46 +186,52 @@ function _manejarClickCelda(e) {
     const fila = parseInt(celda.dataset.fila);
     const col  = parseInt(celda.dataset.col);
 
-    _procesarInteraccion(celda, fila, col);
-}
-
-function _procesarInteraccion(celdaEl, fila, col) {
-    const estado      = Tablero.Estado;
-    if (!_mapaState.grid?.[fila]) return;   /* grid aún no inicializado */
+    if (!_mapaState.grid?.[fila]) return;
     const estadoCelda = _mapaState.grid[fila][col] || { tipo: "vacio" };
+    const estado      = Tablero.Estado;
 
     switch (estado.modo) {
 
         case "normal":
-            /* En modo normal solo se navega — notifica al usuario
-               que debe ir a Construir para interactuar con las celdas. */
-            Notificaciones.mostrar(
-                "Ve a la tab Construir para edificar o demoler.",
-                "aviso"
-            );
+            if (estadoCelda.tipo !== "vacio") {
+                /* Desktop: abre modal directamente.
+                   Móvil: tabs.js mantiene el modo normal solo para navegar,
+                   por lo que notifica al usuario que vaya a Construir. */
+                const vista = document.documentElement.getAttribute("data-vista");
+                if (vista === "movil") {
+                    Notificaciones.mostrar(
+                        "Ve a la tab Construir para edificar o demoler.",
+                        "aviso"
+                    );
+                } else {
+                    const edificio = Edificios.obtener(estadoCelda.tipo);
+                    if (edificio) Modal.mostrarEdificio(edificio, fila, col);
+                }
+            } else {
+                _seleccionarCelda(celda, fila, col);
+            }
             break;
 
         case "construccion":
             if (estadoCelda.tipo === "vacio") {
                 if (estado.edificioSeleccionado) {
-                    /* Edificio ya seleccionado: construye */
                     Edificaciones.construir(fila, col, estado.edificioSeleccionado, _mapaState.grid, _gridEl);
                 } else {
-                    /* Sin edificio seleccionado: notifica para que la vista
-                       muestre un selector. mapa.js no sabe qué vista es. */
+                    /* Sin edificio seleccionado: notifica a la vista para
+                       que muestre el selector. mapa.js no sabe qué vista es. */
                     document.dispatchEvent(new CustomEvent("mapa:celdaParaConstruir", {
                         detail: { fila, col, grid: _mapaState.grid, gridEl: _gridEl }
                     }));
                 }
             } else {
-                /* Click en edificio construido: abre modal con info y opción de demoler */
+                /* Click en edificio construido en modo construccion:
+                   abre modal con info y opción de demoler */
                 const edificio = Edificios.obtener(estadoCelda.tipo);
                 if (edificio) Modal.mostrarEdificio(edificio, fila, col);
             }
             break;
 
         case "demolicion":
-            /* Click en edificio: demuele directamente sin modal */
             if (estadoCelda.tipo !== "vacio") {
                 Edificaciones.demoler(fila, col, _mapaState.grid, _gridEl);
             }
@@ -215,17 +242,14 @@ function _procesarInteraccion(celdaEl, fila, col) {
 
 /* ================================================
 SELECCIONAR CELDA
-Resalta visualmente la celda clickeada.
 ================================================ */
 function _seleccionarCelda(celdaEl, fila, col) {
-    /* Quita selección anterior */
     if (_mapaState.celdaSelec) {
         const anterior = _gridEl.querySelector(
             `[data-fila="${_mapaState.celdaSelec[0]}"][data-col="${_mapaState.celdaSelec[1]}"]`
         );
         if (anterior) anterior.classList.remove("celda--seleccionada");
     }
-
     celdaEl.classList.add("celda--seleccionada");
     _mapaState.celdaSelec = [fila, col];
 }
@@ -233,31 +257,49 @@ function _seleccionarCelda(celdaEl, fila, col) {
 
 /* ================================================
 ACTUALIZAR MODO
-Llamado desde tablero.js cuando cambia el modo.
-Limpia la selección si corresponde.
 ================================================ */
 function actualizarModo(nuevoModo) {
-    if (nuevoModo === "normal") {
-        /* Limpia cualquier celda seleccionada */
-        if (_mapaState.celdaSelec) {
-            const el = _gridEl.querySelector(
-                `[data-fila="${_mapaState.celdaSelec[0]}"][data-col="${_mapaState.celdaSelec[1]}"]`
-            );
-            if (el) el.classList.remove("celda--seleccionada");
-            _mapaState.celdaSelec = null;
-        }
+    if (nuevoModo === "normal" && _mapaState.celdaSelec) {
+        const el = _gridEl.querySelector(
+            `[data-fila="${_mapaState.celdaSelec[0]}"][data-col="${_mapaState.celdaSelec[1]}"]`
+        );
+        if (el) el.classList.remove("celda--seleccionada");
+        _mapaState.celdaSelec = null;
     }
 }
+
+
+/* ================================================
+ZOOM
+API para vistas que manejan zoom (desktop con botones,
+móvil con pinch desde zoom.js).
+================================================ */
+function setZoom(nivel) {
+    _mapaState.nivelZoom = Math.min(
+        _mapaState.zoomMax,
+        Math.max(_mapaState.zoomMin, nivel)
+    );
+    if (_gridEl) {
+        _gridEl.style.transform       = `scale(${_mapaState.nivelZoom})`;
+        _gridEl.style.transformOrigin = "top left";
+    }
+}
+
+function getZoom()  { return _mapaState.nivelZoom; }
+function acercar()  { setZoom(_mapaState.nivelZoom + _mapaState.zoomPaso); }
+function alejar()   { setZoom(_mapaState.nivelZoom - _mapaState.zoomPaso); }
+function getGrid()  { return _mapaState.grid; }
+
 
 /* ================================================
 EXPOSICIÓN GLOBAL
 ================================================ */
-function getGrid() {
-    return _mapaState.grid;
-}
-
 window.Mapa = {
     inicializar,
     actualizarModo,
+    setZoom,
+    getZoom,
+    acercar,
+    alejar,
     getGrid,
 };
