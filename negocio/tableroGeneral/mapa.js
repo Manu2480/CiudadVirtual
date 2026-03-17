@@ -1,73 +1,102 @@
 /* ================================================
-   MAPA.JS - VERSIÓN "OBJETO ÚNICO"
-   Todo (vías y edificios) se trata como un objeto del catálogo.
-   ================================================ */
+MAPA.JS
+Render del grid e interacción con celdas.
+Compartido por todas las vistas.
 
+Responsabilidades:
+  - Construir el grid HTML según filas x columnas
+  - Manejar clicks y drag&drop en celdas
+  - Gestionar selección visual de celdas
+  - Exponer API de zoom para vistas que la necesiten
+  - Exponer API para que tablero.js actualice el modo
+
+Dependencias: tablero.js, edificios.js, edificaciones.js,
+              modal.js, notificaciones.js
+================================================ */
+
+
+/* ================================================
+ESTADO INTERNO
+================================================ */
 const _mapaState = {
-    nivelZoom: 1,
-    zoomMin: 0.4,
-    zoomMax: 2.5,
-    zoomPaso: 0.15,
+    nivelZoom:  1,
+    zoomMin:    0.4,
+    zoomMax:    2.5,
+    zoomPaso:   0.15,
     celdaSelec: null,
-    grid: []
+    grid:       [],
 };
 
+
+/* ================================================
+REFERENCIAS AL DOM
+================================================ */
 let _gridEl = null;
 let _areaEl = null;
 
-// Normalizador: asegura que "via1", "casa2", etc., busquen su imagen base
+
+/* ================================================
+NORMALIZAR ID
+Los modelos generan ids únicos con contador (via1, casa2…).
+Los normaliza al id del catálogo para que Edificios.obtener()
+los encuentre correctamente al recargar desde localStorage.
+================================================ */
 function _normalizarId(id) {
     if (!id) return "edificio";
-    if (window.Edificios?.obtener(id)) return id;
+    if (Edificios.obtener(id)) return id;
 
     const _prefijos = {
-        "via": "via",
-        "casa": "casa",
-        "apartamento": "apartamento",
-        "tienda": "tienda",
+        "via":             "via",
+        "casa":            "casa",
+        "apartamento":     "apartamento",
+        "tienda":          "tienda",
         "centrocomercial": "centro-comercial",
-        "fabrica": "fabrica",
-        "granja": "granja",
-        "hospital": "hospital",
-        "bombero": "bombero",
-        "policia": "policia",
-        "parque": "parque",
-        "luz": "planta-electrica",
-        "agua": "planta-hidraulica",
+        "fabrica":         "fabrica",
+        "granja":          "granja",
+        "hospital":        "hospital",
+        "bombero":         "bombero",
+        "policia":         "policia",
+        "parque":          "parque",
+        "luz":             "planta-electrica",
+        "agua":            "planta-hidraulica",
     };
     const prefijo = id.replace(/\d+$/, "").toLowerCase();
     return _prefijos[prefijo] || id;
 }
 
+
+/* ================================================
+INICIALIZAR
+================================================ */
 function inicializar(filas, columnas, edificiosGuardados) {
     _gridEl = document.getElementById("mapa-grid");
     _areaEl = document.getElementById("area-mapa");
 
-    if (!_gridEl) return;
+    if (!_gridEl) {
+        console.error("mapa.js: no se encontró #mapa-grid en el DOM.");
+        return;
+    }
 
-    filas = filas || 15;
-    columnas = columnas || 15;
+    filas    = (filas    && filas    > 0) ? filas    : 15;
+    columnas = (columnas && columnas > 0) ? columnas : 15;
 
     _gridEl.style.gridTemplateColumns = `repeat(${columnas}, var(--tamano-celda))`;
-    _gridEl.style.gridTemplateRows = `repeat(${filas}, var(--tamano-celda))`;
+    _gridEl.style.gridTemplateRows    = `repeat(${filas}, var(--tamano-celda))`;
     _gridEl.innerHTML = "";
 
-    // Inicializar grid vacío
     _mapaState.grid = Array.from({ length: filas }, () =>
         Array.from({ length: columnas }, () => ({ tipo: "vacio" }))
     );
 
-    // Llenar el grid (Vías y Edificios entran aquí por igual)
     (edificiosGuardados || []).forEach(ed => {
         if (ed?.ubicacion) {
             const { fila: f, columna: c } = ed.ubicacion;
-            if (_mapaState.grid[f]?.[c]) {
+            if (_mapaState.grid[f]?.[c] !== undefined) {
                 _mapaState.grid[f][c] = { tipo: _normalizarId(ed.id) };
             }
         }
     });
 
-    // Renderizar celdas
     for (let f = 0; f < filas; f++) {
         for (let c = 0; c < columnas; c++) {
             _gridEl.appendChild(_crearCeldaEl(f, c, _mapaState.grid[f][c]));
@@ -77,115 +106,200 @@ function inicializar(filas, columnas, edificiosGuardados) {
     _registrarEventos();
 }
 
+
+/* ================================================
+CREAR ELEMENTO DE CELDA
+================================================ */
 function _crearCeldaEl(fila, col, estado) {
     const el = document.createElement("div");
-    el.className = "celda";
+    el.classList.add("celda");
     el.dataset.fila = fila;
-    el.dataset.col = col;
+    el.dataset.col  = col;
+    el.setAttribute("role", "gridcell");
 
-    if (estado.tipo === "agua") {
-        el.classList.add("celda--agua");
-    } 
-    // Aquí ya NO hay "else if (tipo === via)"
-    else if (estado.tipo !== "vacio") {
+    if (estado.tipo !== "vacio") {
         el.classList.add("celda--construida");
-        
-        // BUSCA EN EL CATÁLOGO (vías, casas, etc.)
-        const edificio = window.Edificios?.obtener(estado.tipo);
+        const edificio = Edificios.obtener(estado.tipo);
         if (edificio) {
+            el.setAttribute("aria-label", edificio.nombre);
             const img = document.createElement("img");
-            img.src = edificio.imagen;
-            img.className = "celda__edificio";
+            img.src   = edificio.imagen;
+            img.alt   = edificio.nombre;
+            img.classList.add("celda__edificio");
             el.appendChild(img);
         }
+    } else {
+        el.setAttribute("aria-label", "Celda vacía");
     }
+
     return el;
 }
 
-/* --- EVENTOS (Drag&Drop y Clicks) --- */
 
+/* ================================================
+REGISTRAR EVENTOS
+================================================ */
 function _registrarEventos() {
     _gridEl.addEventListener("click", _manejarClickCelda);
-    
-    // Drag & Drop genérico
+
+    /* Drag & Drop — usado por la vista desktop */
     _gridEl.addEventListener("dragover", (e) => {
         e.preventDefault();
         const celda = e.target.closest(".celda");
         if (celda && !celda.classList.contains("celda--construida")) {
-            document.querySelectorAll(".celda--dragover").forEach(el => el.classList.remove("celda--dragover"));
+            document.querySelectorAll(".celda--dragover")
+                .forEach(el => el.classList.remove("celda--dragover"));
             celda.classList.add("celda--dragover");
         }
     });
 
     _gridEl.addEventListener("drop", (e) => {
         e.preventDefault();
-        document.querySelectorAll(".celda--dragover").forEach(el => el.classList.remove("celda--dragover"));
+        document.querySelectorAll(".celda--dragover")
+            .forEach(el => el.classList.remove("celda--dragover"));
         const celda = e.target.closest(".celda");
-        const id = e.dataTransfer.getData("text/plain");
+        const id    = e.dataTransfer?.getData("text/plain");
         if (celda && id) {
             const f = parseInt(celda.dataset.fila);
             const c = parseInt(celda.dataset.col);
-            window.Edificaciones?.construir(f, c, id, _mapaState.grid, _gridEl);
+            Edificaciones.construir(f, c, id, _mapaState.grid, _gridEl);
         }
     });
 }
 
+
+/* ================================================
+MANEJAR CLICK EN CELDA
+El comportamiento varía según el modo activo y la vista.
+- modo normal:
+    · desktop → abre modal de info del edificio
+    · móvil   → notifica que vaya a Construir
+- modo construccion:
+    · si hay edificio seleccionado → construye directamente
+    · si no → dispara evento para que la vista abra el catálogo
+- modo demolicion → demuela directamente
+================================================ */
 function _manejarClickCelda(e) {
     const celda = e.target.closest(".celda");
     if (!celda) return;
-    const f = parseInt(celda.dataset.fila);
-    const c = parseInt(celda.dataset.col);
-    
-    const modo = window.Tablero?.Estado?.modo;
-    const estadoCelda = _mapaState.grid[f][c];
 
-    switch (modo) {
+    const fila = parseInt(celda.dataset.fila);
+    const col  = parseInt(celda.dataset.col);
+
+    if (!_mapaState.grid?.[fila]) return;
+    const estadoCelda = _mapaState.grid[fila][col] || { tipo: "vacio" };
+    const estado      = Tablero.Estado;
+
+    switch (estado.modo) {
+
         case "normal":
-            // Si hay algo (vía o casa), abrir modal
-            if (estadoCelda.tipo !== "vacio" && estadoCelda.tipo !== "agua") {
-                const ed = window.Edificios?.obtener(estadoCelda.tipo);
-                if (ed) window.Modal?.mostrarEdificio(ed, f, c);
+            if (estadoCelda.tipo !== "vacio") {
+                /* Desktop: abre modal directamente.
+                   Móvil: tabs.js mantiene el modo normal solo para navegar,
+                   por lo que notifica al usuario que vaya a Construir. */
+                const vista = document.documentElement.getAttribute("data-vista");
+                if (vista === "movil") {
+                    Notificaciones.mostrar(
+                        "Ve a la tab Construir para edificar o demoler.",
+                        "aviso"
+                    );
+                } else {
+                    const edificio = Edificios.obtener(estadoCelda.tipo);
+                    if (edificio) Modal.mostrarEdificio(edificio, fila, col);
+                }
             } else {
-                _seleccionarCelda(celda, f, c);
+                _seleccionarCelda(celda, fila, col);
             }
             break;
 
         case "construccion":
             if (estadoCelda.tipo === "vacio") {
-                const selec = window.Tablero.Estado.edificioSeleccionado;
-                if (selec) window.Edificaciones.construir(f, c, selec, _mapaState.grid, _gridEl);
+                if (estado.edificioSeleccionado) {
+                    Edificaciones.construir(fila, col, estado.edificioSeleccionado, _mapaState.grid, _gridEl);
+                } else {
+                    /* Sin edificio seleccionado: notifica a la vista para
+                       que muestre el selector. mapa.js no sabe qué vista es. */
+                    document.dispatchEvent(new CustomEvent("mapa:celdaParaConstruir", {
+                        detail: { fila, col, grid: _mapaState.grid, gridEl: _gridEl }
+                    }));
+                }
+            } else {
+                /* Click en edificio construido en modo construccion:
+                   abre modal con info y opción de demoler */
+                const edificio = Edificios.obtener(estadoCelda.tipo);
+                if (edificio) Modal.mostrarEdificio(edificio, fila, col);
             }
             break;
 
         case "demolicion":
-            if (estadoCelda.tipo !== "vacio" && estadoCelda.tipo !== "agua") {
-                window.Edificaciones.demoler(f, c, _mapaState.grid, _gridEl);
+            if (estadoCelda.tipo !== "vacio") {
+                Edificaciones.demoler(fila, col, _mapaState.grid, _gridEl);
             }
             break;
     }
 }
 
+
+/* ================================================
+SELECCIONAR CELDA
+================================================ */
 function _seleccionarCelda(celdaEl, fila, col) {
-    _gridEl.querySelector(".celda--seleccionada")?.classList.remove("celda--seleccionada");
+    if (_mapaState.celdaSelec) {
+        const anterior = _gridEl.querySelector(
+            `[data-fila="${_mapaState.celdaSelec[0]}"][data-col="${_mapaState.celdaSelec[1]}"]`
+        );
+        if (anterior) anterior.classList.remove("celda--seleccionada");
+    }
     celdaEl.classList.add("celda--seleccionada");
     _mapaState.celdaSelec = [fila, col];
 }
 
-// API Pública de Zoom
+
+/* ================================================
+ACTUALIZAR MODO
+================================================ */
+function actualizarModo(nuevoModo) {
+    if (nuevoModo === "normal" && _mapaState.celdaSelec) {
+        const el = _gridEl.querySelector(
+            `[data-fila="${_mapaState.celdaSelec[0]}"][data-col="${_mapaState.celdaSelec[1]}"]`
+        );
+        if (el) el.classList.remove("celda--seleccionada");
+        _mapaState.celdaSelec = null;
+    }
+}
+
+
+/* ================================================
+ZOOM
+API para vistas que manejan zoom (desktop con botones,
+móvil con pinch desde zoom.js).
+================================================ */
+function setZoom(nivel) {
+    _mapaState.nivelZoom = Math.min(
+        _mapaState.zoomMax,
+        Math.max(_mapaState.zoomMin, nivel)
+    );
+    if (_gridEl) {
+        _gridEl.style.transform       = `scale(${_mapaState.nivelZoom})`;
+        _gridEl.style.transformOrigin = "top left";
+    }
+}
+
+function getZoom()  { return _mapaState.nivelZoom; }
+function acercar()  { setZoom(_mapaState.nivelZoom + _mapaState.zoomPaso); }
+function alejar()   { setZoom(_mapaState.nivelZoom - _mapaState.zoomPaso); }
+function getGrid()  { return _mapaState.grid; }
+
+
+/* ================================================
+EXPOSICIÓN GLOBAL
+================================================ */
 window.Mapa = {
     inicializar,
-    actualizarModo: (modo) => {
-        if (modo === "normal") {
-            _gridEl.querySelector(".celda--seleccionada")?.classList.remove("celda--seleccionada");
-            _mapaState.celdaSelec = null;
-        }
-    },
-    setZoom: (nivel) => {
-        _mapaState.nivelZoom = Math.min(_mapaState.zoomMax, Math.max(_mapaState.zoomMin, nivel));
-        _gridEl.style.transform = `scale(${_mapaState.nivelZoom})`;
-        _gridEl.style.transformOrigin = "top left";
-    },
-    acercar: () => window.Mapa.setZoom(_mapaState.nivelZoom + _mapaState.zoomPaso),
-    alejar: () => window.Mapa.setZoom(_mapaState.nivelZoom - _mapaState.zoomPaso),
-    getGrid: () => _mapaState.grid
+    actualizarModo,
+    setZoom,
+    getZoom,
+    acercar,
+    alejar,
+    getGrid,
 };
