@@ -175,7 +175,7 @@ function mostrarEstadisticas() {
             <p class="modal-stats__seccion">Puntos base</p>
             <ul class="modal-stats__lista">
                 ${fila("fi-br-users",     `Población (${m.poblacion} hab × 10)`,          d.ptsPoblacion,    "var(--color-primario)")}
-                ${fila("fi-br-smile",     `Felicidad (${Math.round(m.felicidad)} × 5)`,    d.ptsFelicidad,    "var(--color-primario)")}
+                ${fila("fi fi-br-smile-beam",     `Felicidad (${Math.round(m.felicidad)} × 5)`,    d.ptsFelicidad,    "var(--color-primario)")}
                 ${fila("fi-br-coins",     `Dinero ($${m.dinero.toLocaleString()} ÷ 100)`,  d.ptsDinero,       "var(--color-primario)")}
                 ${fila("fi-br-home",      `Edificios (${m.numEdificios} × 50)`,            d.ptsEdificios,    "var(--color-primario)")}
                 ${fila("fi-br-bolt",      `Electricidad (${m.electricidad} kW × 2)`,       d.ptsElectricidad, "var(--color-primario)")}
