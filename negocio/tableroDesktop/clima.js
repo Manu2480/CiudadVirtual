@@ -28,6 +28,12 @@ function inicializar() {
                     <div style="font-size: 12px; color: #666; margin-top: 8px;">
                         Humedad: ${datos.humedad}%
                     </div>
+                    <div class="clima-viento">
+                        <div class="clima_div"><i class="fi fi-br-wind"></i> Viento</div>
+                        <div class="clima_div"><i>Velocidad:</i> ${datos.viento.velocidad} m/s</div>
+                        <div class="clima_div"><i>Dirección:</i> ${datos.viento.grados}°</div>
+                        <div class="clima_div"><i>Ráfaga:</i></i> ${datos.viento.rafaga} m/s</div>
+                    </div>
                 </div>
             `;
         })
