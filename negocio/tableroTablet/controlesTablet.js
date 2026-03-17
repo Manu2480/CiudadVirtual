@@ -45,7 +45,8 @@ const _MODULOS = [
     "clima.js",
     "noticias.js",
     "sidebarTablet.js",
-    "recursos.js"
+    "recursos.js",
+    "estadisticas.js"
 ];
 
 /* Carga los scripts en orden y llama al callback cuando el último termina */
@@ -70,6 +71,7 @@ function _inicializarControlesTablet() {
         NoticiasTablet.inicializar();
         SidebarTablet.inicializar();
         RecursosTablet.inicializar();
+        EstadisticasTablet.inicializar();
 
 
         console.log("controlesTablet: inicialización completa");
