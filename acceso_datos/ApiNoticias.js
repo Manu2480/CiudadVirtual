@@ -5,7 +5,7 @@ class ApiNoticias{
     getNoticias() {
         return fetch(this.url, {
             method: "GET",
-            headers: { "X-Api-Key": "f7e37d4286734f7591efda2dfaddeba2"
+            headers: { "X-Api-Key": "56f0de001b9a48cd962cad248366634f"
             },
         }).then(function (res) {
             if (!res.ok) {
