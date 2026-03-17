@@ -1,4 +1,3 @@
-
 class Terreno{
     // El constructor se ejecuta cuando creamos un nuevo Terreno.
     // Recibe dos argumentos: la matriz de vías y la lista de edificios.
@@ -27,6 +26,10 @@ class Terreno{
         // Esta función recorre cada edificio para ver si la vía situada en
         // (fila,columna) es la única conexión que tiene.
         for (const edificio of this.edificios) {
+            /* Las vías no necesitan vía adyacente para existir,
+               solo los edificios no-vía deben evaluarse. */
+            if (this.vias[edificio.ubicacion?.fila]?.[edificio.ubicacion?.columna] === 1) continue;
+
             const { fila: edFila, columna: edCol } = edificio.ubicacion;
 
             let viasAdyacentes = 0;
