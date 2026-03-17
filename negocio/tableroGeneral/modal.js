@@ -143,25 +143,62 @@ function mostrarEdificio(edificio, fila, col) {
 
 /*
 MOSTRAR ESTADÍSTICAS
-Genera el HTML con las estadísticas de la ciudad.
+Genera el HTML con la puntuación y desglose completo.
 Llamado desde el botón flotante (móvil) o panel (desktop).
  */
 function mostrarEstadisticas() {
-    const estado = Tablero.Estado;
-    const recursos = Recursos.obtenerTodos();
+    const ciudad    = Tablero.Estado.ciudad;
+    const resultado = Puntuacion.calcular(ciudad);
+    const d  = resultado.desglose;
+    const b  = resultado.bonificaciones;
+    const p  = resultado.penalizaciones;
+    const m  = resultado.meta;
 
-    const ciudad = estado.ciudad;
+    function fila(icono, label, valor, color) {
+        const c = color || (valor >= 0 ? "var(--color-dinero)" : "var(--color-energia)");
+        return `<li>
+            <i class="fi ${icono}"></i>
+            <span>${label}</span>
+            <strong style="color:${c}">${valor > 0 ? "+" : ""}${valor.toLocaleString()}</strong>
+        </li>`;
+    }
+
     const html = `
         <div class="modal-stats">
             <h2><i class="fi fi-br-chart-histogram"></i> ${ciudad?.nombre || "Mi Ciudad"}</h2>
-            <p class="modal-stats__subtitulo">Turno ${ciudad?.tiempoTurno || 0}</p>
+
+            <div class="modal-stats__score">
+                <span class="modal-stats__score-label">Puntuación total</span>
+                <span class="modal-stats__score-valor">${resultado.total.toLocaleString()}</span>
+            </div>
+
+            <p class="modal-stats__seccion">Puntos base</p>
             <ul class="modal-stats__lista">
-                <li><i class="fi fi-br-coins"></i> Dinero: <strong>$${(recursos.dinero || 0).toLocaleString()}</strong></li>
-                <li><i class="fi fi-br-users"></i> Población: <strong>${(recursos.poblacion || 0).toLocaleString()}</strong></li>
-                <li><i class="fi fi-br-smile"></i> Felicidad: <strong>${Math.round(recursos.felicidad || 0)}</strong></li>
-                <li><i class="fi fi-br-bolt"></i> Electricidad: <strong>${recursos.electricidad || 0} kW</strong></li>
-                <li><i class="fi fi-br-raindrops"></i> Agua: <strong>${recursos.agua || 0} L</strong></li>
-                <li><i class="fi fi-br-wheat"></i> Alimento: <strong>${recursos.alimento || 0} kg</strong></li>
+                ${fila("fi-br-users",     `Población (${m.poblacion} hab × 10)`,          d.ptsPoblacion,    "var(--color-primario)")}
+                ${fila("fi-br-smile",     `Felicidad (${Math.round(m.felicidad)} × 5)`,    d.ptsFelicidad,    "var(--color-primario)")}
+                ${fila("fi-br-coins",     `Dinero ($${m.dinero.toLocaleString()} ÷ 100)`,  d.ptsDinero,       "var(--color-primario)")}
+                ${fila("fi-br-home",      `Edificios (${m.numEdificios} × 50)`,            d.ptsEdificios,    "var(--color-primario)")}
+                ${fila("fi-br-bolt",      `Electricidad (${m.electricidad} kW × 2)`,       d.ptsElectricidad, "var(--color-primario)")}
+                ${fila("fi-br-raindrops", `Agua (${m.agua} L × 2)`,                        d.ptsAgua,         "var(--color-primario)")}
+            </ul>
+
+            <p class="modal-stats__seccion modal-stats__seccion--bono">Bonificaciones</p>
+            <ul class="modal-stats__lista">
+                ${b.todosEmpleados   ? fila("fi-br-briefcase", "Todos empleados",       b.todosEmpleados)   : ""}
+                ${b.felicidadAlta    ? fila("fi-br-smile",     "Felicidad > 80",        b.felicidadAlta)    : ""}
+                ${b.recursosPositivos? fila("fi-br-leaf",      "Recursos positivos",    b.recursosPositivos): ""}
+                ${b.granCiudad       ? fila("fi-br-city",      "Ciudad > 1000 hab",     b.granCiudad)       : ""}
+                ${b.total === 0      ? `<li style="color:var(--color-texto-s)"><i class="fi fi-br-info"></i> <span>Sin bonificaciones aún</span></li>` : ""}
+            </ul>
+
+            <p class="modal-stats__seccion modal-stats__seccion--pena">Penalizaciones</p>
+            <ul class="modal-stats__lista">
+                ${p.dineroNeg        ? fila("fi-br-coins",     "Dinero negativo",        p.dineroNeg)        : ""}
+                ${p.electricidadNeg  ? fila("fi-br-bolt",      "Electricidad negativa",  p.electricidadNeg)  : ""}
+                ${p.aguaNeg          ? fila("fi-br-raindrops", "Agua negativa",          p.aguaNeg)          : ""}
+                ${p.felicidadBaja    ? fila("fi-br-sad",       "Felicidad < 40",         p.felicidadBaja)    : ""}
+                ${p.desempleados     ? fila("fi-br-user-minus",`${m.desempleados} desempleados × -10`, p.desempleados) : ""}
+                ${p.total === 0      ? `<li style="color:var(--color-texto-s)"><i class="fi fi-br-check"></i> <span>Sin penalizaciones</span></li>` : ""}
             </ul>
         </div>
     `;
