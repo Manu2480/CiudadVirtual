@@ -129,3 +129,119 @@ Overlay, tarjeta centrada y contenido de info de edificio.
 .modal-edificio__demoler-info strong {
     color: var(--color-dinero);
 }
+
+/* ================================================
+MODAL ESTADÍSTICAS
+================================================ */
+
+.modal-stats h2 {
+    font-size: var(--fuente-tam-l);
+    font-weight: 700;
+    color: var(--color-texto);
+    margin-bottom: var(--espacio-m);
+    display: flex;
+    align-items: center;
+    gap: var(--espacio-s);
+}
+
+.modal-stats__score {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: var(--color-primario);
+    border-radius: var(--radio-m);
+    padding: var(--espacio-m);
+    margin-bottom: var(--espacio-m);
+}
+
+.modal-stats__score-label {
+    font-size: var(--fuente-tam-s);
+    color: rgba(255,255,255,0.8);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.modal-stats__score-valor {
+    font-size: 36px;
+    font-weight: 700;
+    color: #ffffff;
+    line-height: 1.2;
+}
+
+.modal-stats__seccion {
+    font-size: var(--fuente-tam-s);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--color-texto-s);
+    margin: var(--espacio-m) 0 var(--espacio-s);
+}
+
+.modal-stats__seccion--bono { color: var(--color-dinero); }
+.modal-stats__seccion--pena { color: var(--color-energia); }
+
+.modal-stats__lista {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.modal-stats__lista li {
+    display: flex;
+    align-items: center;
+    gap: var(--espacio-s);
+    font-size: var(--fuente-tam-m);
+    padding: 6px var(--espacio-s);
+    background: var(--color-fondo);
+    border-radius: var(--radio-s);
+}
+
+.modal-stats__lista li span {
+    flex: 1;
+    color: var(--color-texto);
+}
+
+.modal-stats__lista li i {
+    color: var(--color-primario);
+    font-size: 14px;
+    flex-shrink: 0;
+}
+
+.modal-stats__lista li strong {
+    font-weight: 700;
+    font-size: var(--fuente-tam-m);
+}
+
+/* Advertencia de ciudadanos afectados al demoler */
+.modal-edificio__advertencia {
+    width: 100%;
+    display: flex;
+    align-items: flex-start;
+    gap: var(--espacio-s);
+    font-size: var(--fuente-tam-s);
+    font-weight: 600;
+    color: #7d4a00;
+    background: #fff3cd;
+    border: 1px solid #ffc107;
+    border-radius: var(--radio-s);
+    padding: var(--espacio-s) var(--espacio-m);
+}
+
+.modal-edificio__advertencia i {
+    color: #f39c12;
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+/* Badge de ocupación en la lista de stats */
+.modal-edificio__ocupacion-badge {
+    margin-left: auto;
+    background: #e74c3c;
+    color: #ffffff;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 10px;
+}

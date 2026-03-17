@@ -5,26 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ciudad Virtual — Tablero</title>
 
-    <!-- UIcons de Flaticon (bold rounded) -->
     <link rel="stylesheet" href="https://cdn-uicons.flaticon.com/uicons-bold-rounded/css/uicons-bold-rounded.css">
-
-    <!-- CSS base compartido (todas las vistas) -->
     <link rel="stylesheet" href="../estilos/tableroBase.css">
-
-    <!-- Detección de vista y carga dinámica de CSS/JS específico.
-         Sin defer: debe ejecutarse antes del primer pintado.
-         Carga: negocio/tablero{Vista}/controles{Vista}.js -->
     <script src="../../negocio/vista.js"></script>
 
-    <!-- Modelos (orden importante por dependencias) -->
-    <!-- Clases abstractas base -->
     <script src="../../modelos/Edificio.js"             defer></script>
     <script src="../../modelos/EdificioResidencial.js"  defer></script>
     <script src="../../modelos/EdificioComercial.js"    defer></script>
     <script src="../../modelos/EdificioIndustrial.js"   defer></script>
     <script src="../../modelos/EdificioServicio.js"     defer></script>
     <script src="../../modelos/PlantaUtilidad.js"       defer></script>
-    <!-- Clases concretas (dependen de las abstractas) -->
     <script src="../../modelos/Via.js"                  defer></script>
     <script src="../../modelos/Casa.js"                 defer></script>
     <script src="../../modelos/Apartamento.js"          defer></script>
@@ -38,19 +28,14 @@
     <script src="../../modelos/Parque.js"               defer></script>
     <script src="../../modelos/PlantaElectrica.js"      defer></script>
     <script src="../../modelos/PlantaHidraulica.js"     defer></script>
-    <!-- Otros modelos -->
     <script src="../../modelos/Ciudadano.js"            defer></script>
     <script src="../../modelos/Terreno.js"              defer></script>
     <script src="../../modelos/Ciudad.js"               defer></script>
 
-    <!-- Acceso a datos -->
     <script src="../../acceso_datos/CiudadStorage.js"   defer></script>
     <script src="../../acceso_datos/ApiClima.js"        defer></script>
     <script src="../../acceso_datos/ApiNoticias.js"     defer></script>
 
-    <!-- Lógica compartida del tablero.
-         IMPORTANTE: estos archivos deben vivir en negocio/tableroGeneral/.
-         Si aún están en negocio/ raíz, muévelos a esa carpeta. -->
     <script src="../../negocio/tableroGeneral/edificios.js"      defer></script>
     <script src="../../negocio/tableroGeneral/notificaciones.js" defer></script>
     <script src="../../negocio/tableroGeneral/recursos.js"       defer></script>
@@ -61,20 +46,12 @@
     <script src="../../negocio/tableroGeneral/tablero.js"        defer></script>
     <script src="../../negocio/tableroGeneral/menuPartida.js"    defer></script>
 
-    <!-- Los controles de vista los carga vista.js dinámicamente.
-         Cada coordinador carga sus propios submódulos:
-         movil   → negocio/tableroMovil/controlesMovil.js
-         tablet  → negocio/tableroTablet/controlesTablet.js
-         desktop → negocio/tableroDesktop/controlesDesktop.js -->
-
 </head>
 
 <body>
 
-    <!-- Zona de notificaciones: siempre en la parte superior -->
     <div id="zona-notificaciones" class="zona-notificaciones" aria-live="polite"></div>
 
-    <!-- Encabezado: logo + nombre de ciudad + panel de recursos -->
     <header id="encabezado" class="encabezado">
 
         <a href="index.html" class="encabezado__logo">
@@ -83,21 +60,23 @@
 
         <h1 id="nombre-ciudad" class="encabezado__titulo">Mi Ciudad</h1>
 
-        <div id="panel-recursos" class="panel-recursos">
-            <!-- recursos.js inyecta aquí los indicadores -->
-        </div>
+        <div id="panel-recursos" class="panel-recursos"></div>
 
         <!-- Solo visible en móvil (tableroMovil.css) -->
         <button id="btn-recursos-movil" class="btn-recursos-movil" aria-label="Ver recursos">
             <i class="fi fi-br-menu-burger"></i>
         </button>
 
-        <!-- Menú hamburguesa: guardar partida (todas las vistas) -->
+        <!-- Botón noticias — visible en todas las vistas -->
+        <button id="btn-noticias" class="btn-noticias" aria-label="Ver noticias">
+            <i class="fi fi-br-rss"></i>
+        </button>
+
+        <!-- Menú opciones de partida -->
         <button id="btn-menu-partida" class="btn-menu-partida" aria-label="Opciones de partida">
             <i class="fi fi-br-menu-dots-vertical"></i>
         </button>
 
-        <!-- Dropdown de opciones -->
         <div id="menu-partida" class="menu-partida" aria-hidden="true">
             <button class="menu-partida__opcion" id="btn-guardar-local">
                 <i class="fi fi-br-floppy-disk"></i> Guardar en dispositivo
@@ -109,89 +88,59 @@
 
     </header>
 
-    <!-- Contenedor principal: layout según vista
-         Móvil: columna única | Tablet: 70/30 | Desktop: 3 columnas -->
     <main id="contenedor-juego" class="contenedor-juego">
 
-        <!-- Sidebar izquierdo (tablet y desktop).
-             En móvil sus contenidos van a las tabs inferiores. -->
         <aside id="sidebar-izquierdo" class="sidebar sidebar--izquierdo">
-
             <section id="panel-recursos-side" class="panel panel--recursos">
                 <div class="modulo-header">
                     <h2 class="panel__titulo">Recursos</h2>
                 </div>
-                <!-- recursos.js inyecta los indicadores -->
             </section>
-
-            <!-- En móvil aparece como panel de tab; en tablet/desktop como sidebar -->
             <section id="menu-construccion" class="panel panel--construccion">
                 <div class="modulo-header">
                     <h2 class="panel__titulo">Construir</h2>
                 </div>
-                <!-- menuConstruccion.js inyecta las opciones -->
             </section>
-
         </aside>
 
-        <!-- Área del mapa: mapa.js construye el grid según CiudadStorage -->
         <section id="area-mapa" class="area-mapa">
-
             <div id="controles-zoom" class="controles-zoom">
                 <button id="btn-zoom-in"  class="btn-zoom" aria-label="Acercar"><i class="fi fi-br-zoom-in"></i></button>
                 <button id="btn-zoom-out" class="btn-zoom" aria-label="Alejar"><i class="fi fi-br-zoom-out"></i></button>
             </div>
-
-            <div id="mapa-grid" class="mapa-grid" role="grid">
-                <!-- mapa.js genera las celdas dinámicamente -->
-            </div>
-
+            <div id="mapa-grid" class="mapa-grid" role="grid"></div>
         </section>
 
-        <!-- Sidebar derecho (tablet y desktop).
-             En móvil las estadísticas se acceden por el botón flotante. -->
         <aside id="sidebar-derecho" class="sidebar sidebar--derecho">
-
             <section id="widget-clima" class="panel panel--clima">
                 <h2 class="panel__titulo">Clima</h2>
-                <!-- clima.js puebla según las coordenadas de la ciudad -->
             </section>
-
             <section id="panel-noticias" class="panel panel--noticias">
                 <h2 class="panel__titulo">Noticias</h2>
-                <!-- noticias.js inyecta las noticias del turno -->
             </section>
-
             <section id="panel-estadisticas" class="panel panel--estadisticas">
                 <div class="modulo-header">
                     <h2 class="panel__titulo">Estadísticas</h2>
                 </div>
-                <!-- tablero.js inyecta los datos de la ciudad -->
             </section>
-
         </aside>
 
     </main>
 
-    <!-- Tabs de navegación inferior (solo móvil, tableroMovil.css los muestra) -->
     <nav id="tabs-movil" class="tabs-movil" aria-label="Menú principal">
         <button class="tab tab--activo" data-panel="area-mapa"><i class="fi fi-br-map"></i> Mapa</button>
         <button class="tab" data-panel="menu-construccion"><i class="fi fi-br-hammer"></i> Construir</button>
         <button class="tab" data-panel="panel-recursos"><i class="fi fi-br-wheat"></i> Recursos</button>
     </nav>
 
-    <!-- Botón flotante de estadísticas (solo móvil, tableroMovil.css lo muestra) -->
     <button id="btn-stats-flotante" class="btn-flotante" aria-label="Ver estadísticas">
         <i class="fi fi-br-chart-histogram"></i>
     </button>
 
-    <!-- Modal genérico: info de edificio y estadísticas detalladas -->
     <div id="modal-overlay" class="modal-overlay" role="dialog" aria-modal="true" aria-hidden="true">
         <div id="modal-contenido" class="modal-contenido">
             <button id="modal-cerrar" class="modal-cerrar" aria-label="Cerrar"><i class="fi fi-br-cross-small"></i></button>
-            <div id="modal-cuerpo" class="modal-cuerpo">
-                <!-- modal.js inyecta el contenido dinámicamente -->
-            </div>
+            <div id="modal-cuerpo" class="modal-cuerpo"></div>
         </div>
     </div>
 
