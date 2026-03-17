@@ -112,6 +112,24 @@ function inicializar() {
                 return;
             }
 
+            /* ── Tab NOTICIAS ── */
+            if (idPanel === "noticias") {
+                if (tabActivo === btn) {
+                    btn.classList.remove("tab--activo");
+                    tabActivo = null;
+                    return;
+                }
+                botones.forEach(t => t.classList.remove("tab--activo"));
+                btn.classList.add("tab--activo");
+                tabActivo = btn;
+                _cerrarPanel(panelActivo);
+                panelActivo = null;
+                window.Tablero?.cancelarModo();
+                /* Muestra el carrusel sobre el mapa — ya está inyectado por noticias.js */
+                window.Notificaciones?.mostrar("Desliza el carrusel en la parte inferior del mapa.", "aviso");
+                return;
+            }
+
             /* ── Tab RECURSOS ── */
             if (idPanel === "panel-recursos") {
                 if (tabActivo === btn) {
