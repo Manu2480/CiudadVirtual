@@ -26,9 +26,17 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
     }
 
-    Mapa.inicializar(Estado.filas, Estado.columnas, Estado.ciudad.terreno.edificios);
+    Mapa.inicializar(Estado.filas, Estado.columnas, Estado.ciudad.terreno.edificios, Estado.ciudad.terreno.vias);
     Recursos.inicializar();
     Notificaciones.mostrar(`¡Bienvenido, ${Estado.ciudad.alcalde}! Tu ciudad te espera.`, "exito");
+
+    /* Señal para controlesDesktop.js: tablero ya está listo.
+       Si el script de controles ya se cargó, lo inicializamos ahora.
+       Si aún no cargó, detectará este flag al ejecutarse. */
+    window.__tableroListo = true;
+    if (window.ControlesDesktop?.init) {
+        window.ControlesDesktop.init();
+    }
 });
 
 function _cargarCiudad() {
@@ -45,11 +53,8 @@ function _cargarCiudad() {
 
         const terreno = new Terreno(vias, datos.terreno?.edificios ?? []);
 
-        /**
-        Datos por defecto en ciudades nuevas
-         */
         const estadoRecursos = datos.estadoRecursos ?? {
-            dinero: 10000, agua: 0, electricidad: 0, alimento: 0, felicidad: 0,
+            dinero: 10000, agua: 0, electricidad: 0, alimento: 0, felicidad: 50,
         };
 
         Estado.ciudad = new Ciudad(
@@ -69,8 +74,8 @@ function _cargarCiudad() {
         }
 
         const _vias      = Estado.ciudad.terreno.vias;
-        Estado.filas     = _vias?.length;
-        Estado.columnas  = _vias?.[0]?.length;
+        Estado.filas     = _vias?.length       || 15;
+        Estado.columnas  = _vias?.[0]?.length  || 15;
         console.log(`tablero.js: mapa ${Estado.filas}x${Estado.columnas}`);
 
         Recursos.setCiudad(Estado.ciudad);
@@ -137,7 +142,11 @@ function avanzarTurno() {
         Estado.ciudad.detenerSimulacion();
         return;
     }
-    Notificaciones.mostrar(`Turno ${Estado.ciudad.tiempoTurno} completado.`, "aviso");
+    /* Calcula y guarda puntuación del turno */
+    const resultado = Puntuacion.calcular(Estado.ciudad);
+    Puntuacion.guardarEnRanking(Estado.ciudad, resultado.total);
+
+    Notificaciones.mostrar(`Turno completado. Puntuación: ${resultado.total.toLocaleString()} pts.`, "aviso");
     guardarPartida();
 }
 

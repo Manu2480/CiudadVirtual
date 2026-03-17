@@ -88,6 +88,7 @@ function inicializar() {
                 tabActivo = btn;
                 _cerrarPanel(panelActivo);
                 panelActivo = null;
+                window.NoticiasMovil?.ocultarCarrusel();
                 window.Tablero?.activarModo("construccion");
                 return;
             }
@@ -108,7 +109,29 @@ function inicializar() {
                 tabActivo = btn;
                 _cerrarPanel(panelActivo);
                 panelActivo = null;
+                window.NoticiasMovil?.ocultarCarrusel();
                 window.Tablero?.cancelarModo();   /* modo normal → joystick visible */
+                return;
+            }
+
+            /* ── Tab NOTICIAS ── */
+            if (idPanel === "noticias") {
+                /* Si ya está activa la tab, la cierra y oculta el carrusel */
+                if (tabActivo === btn) {
+                    btn.classList.remove("tab--activo");
+                    tabActivo = null;
+                    window.NoticiasMovil?.ocultarCarrusel();
+                    return;
+                }
+
+                botones.forEach(t => t.classList.remove("tab--activo"));
+                btn.classList.add("tab--activo");
+                tabActivo = btn;
+                _cerrarPanel(panelActivo);
+                panelActivo = null;
+                window.Tablero?.cancelarModo();
+                /* Renderiza el carrusel sobre el mapa solo ahora que el usuario lo pide */
+                window.NoticiasMovil?.mostrarCarrusel();
                 return;
             }
 
@@ -125,6 +148,7 @@ function inicializar() {
                 tabActivo = btn;
                 _cerrarPanel(panelActivo);
                 panelActivo = null;
+                window.NoticiasMovil?.ocultarCarrusel();
                 window.Tablero?.cancelarModo();
                 window.RecursosMovil?.abrirPanel();
                 return;
@@ -152,6 +176,7 @@ function inicializar() {
             _cerrarPanel(panelActivo);
             panelActivo = panel;
             _abrirPanel(panel);
+            window.NoticiasMovil?.ocultarCarrusel();
             window.Tablero?.cancelarModo();
         });
     });

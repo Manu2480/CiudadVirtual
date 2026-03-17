@@ -36,6 +36,24 @@ Barra superior con logo, nombre de ciudad y recursos.
 }
 
 
+/* Botón de noticias en el header — oculto por defecto, visible en móvil */
+.btn-noticias {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    width: var(--btn-tap-min);
+    height: var(--btn-tap-min);
+    font-size: 20px;
+    color: #ffffff;
+    border-radius: var(--radio-s);
+    flex-shrink: 0;
+    transition: background var(--trans-rapida);
+}
+
+.btn-noticias:hover {
+    background: rgba(255,255,255,0.15);
+}
+
 /* Botón de opciones de partida */
 .btn-menu-partida {
     display: flex;

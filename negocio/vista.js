@@ -14,7 +14,7 @@ Vistas:
     let vista;
     if      (w < 768)   vista = "tablet";
     else if (w <= 1024) vista = "tablet";
-    else                vista = "desktop";
+    else                vista = "Desktop";
 
     document.documentElement.setAttribute("data-vista", vista);
     console.log("vista.js: detectada vista", vista);

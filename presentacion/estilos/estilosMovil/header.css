@@ -46,6 +46,11 @@ Responsabilidad:
     margin-left: auto;
 }
 
+/* Botón noticias visible solo en móvil */
+.btn-noticias {
+    display: flex;
+}
+
 /* Widget de clima: icono + temperatura, sin textos extra */
 .clima-compacto {
     display: flex;
