@@ -11,9 +11,10 @@ Siempre en la parte superior de la pantalla.
     display: flex;
     flex-direction: column;
     gap: var(--espacio-s);
-    z-index: 400;
+    z-index: 600;   /* encima del panel de ruta (z-index: 500) */
     pointer-events: none;
     width: min(460px, 90vw);
+    transition: top 0.2s ease;
 }
 
 .notificacion {

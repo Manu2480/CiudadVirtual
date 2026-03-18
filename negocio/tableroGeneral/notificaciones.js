@@ -34,6 +34,16 @@ Crea y agrega una notificación con auto-cierre.
 function mostrar(mensaje, tipo = "aviso", duracion = 3500) {
     if (!_zona) return;
 
+    /* Si el panel de ruta está activo, desplazar las notificaciones
+       para que aparezcan debajo de él y no queden tapadas */
+    const panelRuta = document.getElementById("ruta-panel-estado");
+    if (panelRuta) {
+        const altoPanelRuta = panelRuta.offsetHeight;
+        _zona.style.top = `calc(var(--alto-encabezado) + ${altoPanelRuta}px + var(--espacio-s))`;
+    } else {
+        _zona.style.top = "";
+    }
+
     const el = document.createElement("div");
     el.classList.add("notificacion", `notificacion--${tipo}`);
     el.setAttribute("role", "status");
