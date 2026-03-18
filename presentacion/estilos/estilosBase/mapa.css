@@ -55,6 +55,8 @@ Contenedor scrollable, grid de celdas y controles de zoom.
     height: 100%;
     object-fit: cover;
     pointer-events: none;
+    position: relative;
+    z-index: 0;
 }
 
 /* Controles de zoom */
