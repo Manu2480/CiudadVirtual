@@ -11,9 +11,10 @@ Siempre en la parte superior de la pantalla.
     display: flex;
     flex-direction: column;
     gap: var(--espacio-s);
-    z-index: 400;
+    z-index: 600;   /* encima del panel de ruta (z-index: 500) */
     pointer-events: none;
     width: min(460px, 90vw);
+    transition: top 0.2s ease;
 }
 
 .notificacion {
@@ -25,7 +26,19 @@ Siempre en la parte superior de la pantalla.
     font-size: var(--fuente-tam-m);
     pointer-events: all;
     animation: notif-entrar var(--trans-normal) ease forwards;
+    display: flex;
+    align-items: center;
+    gap: var(--espacio-s);
 }
+
+.notificacion i {
+    font-size: 16px;
+    flex-shrink: 0;
+}
+
+.notificacion--exito i { color: var(--color-dinero); }
+.notificacion--aviso i { color: var(--color-felicidad); }
+.notificacion--error i { color: var(--color-energia); }
 
 .notificacion--exito { border-color: var(--color-dinero); }
 .notificacion--aviso { border-color: var(--color-felicidad); }

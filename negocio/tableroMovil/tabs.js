@@ -56,6 +56,7 @@ function inicializar() {
     let tabActivo   = null;
 
     const botones = Array.from(tabs.querySelectorAll(".tab"));
+
     botones.forEach(btn => {
         btn.type = "button";
         btn.addEventListener("click", () => {
@@ -68,13 +69,11 @@ function inicializar() {
                 const yaEnConstruir = tabActivo === btn;
 
                 if (catalogoAbierto) {
-                    /* 3. Cierra el catálogo si está abierto */
                     window.MenuConstruccionMovil?.cerrarCatalogo();
                     return;
                 }
 
                 if (yaEnConstruir) {
-                    /* 4. Ya está en construir y catálogo cerrado: notifica */
                     window.Notificaciones?.mostrar(
                         "Ya estás en modo construcción. Toca una celda para construir.",
                         "aviso"
@@ -82,13 +81,13 @@ function inicializar() {
                     return;
                 }
 
-                /* 1 y 2. Activa modo construcción y oculta joystick */
                 botones.forEach(t => t.classList.remove("tab--activo"));
                 btn.classList.add("tab--activo");
                 tabActivo = btn;
                 _cerrarPanel(panelActivo);
                 panelActivo = null;
                 window.NoticiasMovil?.ocultarCarrusel();
+                window.RutaMovil?.limpiarTodo();
                 window.Tablero?.activarModo("construccion");
                 return;
             }
@@ -96,7 +95,6 @@ function inicializar() {
             /* ── Tab MAPA ── */
             if (idPanel === "area-mapa") {
                 if (tabActivo === btn) {
-                    /* Ya está en mapa: notifica que use el joystick */
                     window.Notificaciones?.mostrar(
                         "Ya estás en el mapa. Usa el joystick para desplazarte.",
                         "aviso"
@@ -110,28 +108,51 @@ function inicializar() {
                 _cerrarPanel(panelActivo);
                 panelActivo = null;
                 window.NoticiasMovil?.ocultarCarrusel();
-                window.Tablero?.cancelarModo();   /* modo normal → joystick visible */
+                window.RutaMovil?.limpiarTodo();
+                window.Tablero?.cancelarModo();
                 return;
             }
 
             /* ── Tab NOTICIAS ── */
             if (idPanel === "noticias") {
-                /* Si ya está activa la tab, la cierra y oculta el carrusel */
                 if (tabActivo === btn) {
                     btn.classList.remove("tab--activo");
                     tabActivo = null;
                     window.NoticiasMovil?.ocultarCarrusel();
                     return;
                 }
-
                 botones.forEach(t => t.classList.remove("tab--activo"));
                 btn.classList.add("tab--activo");
                 tabActivo = btn;
                 _cerrarPanel(panelActivo);
                 panelActivo = null;
                 window.Tablero?.cancelarModo();
-                /* Renderiza el carrusel sobre el mapa solo ahora que el usuario lo pide */
                 window.NoticiasMovil?.mostrarCarrusel();
+                return;
+            }
+
+            /* ── Tab RUTA ── */
+            if (idPanel === "ruta") {
+                const yaActivo = window.RutaMovil?.estaActivo();
+
+                if (yaActivo) {
+                    /* Reiniciar: limpia todo y vuelve a activar */
+                    window.RutaMovil?.limpiarTodo();
+                    window.RutaMovil?.activar();
+                    botones.forEach(t => t.classList.remove("tab--activo"));
+                    btn.classList.add("tab--activo");
+                    tabActivo = btn;
+                    return;
+                }
+
+                /* Primera activación */
+                botones.forEach(t => t.classList.remove("tab--activo"));
+                btn.classList.add("tab--activo");
+                tabActivo = btn;
+                _cerrarPanel(panelActivo);
+                panelActivo = null;
+                window.NoticiasMovil?.ocultarCarrusel();
+                window.RutaMovil?.activar();
                 return;
             }
 

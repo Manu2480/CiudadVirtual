@@ -1,0 +1,183 @@
+/* Ubicación: presentacion/estilos/estilosBase/ruta.css
+   Compartido por: tableroMovil, tableroDesktop, tableroTablet */
+
+/* ================================================
+PANEL FIJO DE ESTADO DE RUTA
+================================================ */
+
+.ruta-panel-estado {
+    position: fixed;
+    top: var(--alto-encabezado, 56px);
+    left: 0;
+    right: 0;
+    z-index: 500;
+    background: #1a1a2e;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 16px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+    gap: 12px;
+    animation: rutaPanelEntrada 0.2s ease;
+}
+
+@keyframes rutaPanelEntrada {
+    from { transform: translateY(-100%); opacity: 0; }
+    to   { transform: translateY(0);     opacity: 1; }
+}
+
+.ruta-panel-estado__pasos {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: 1;
+    min-width: 0;
+}
+
+.ruta-panel-estado__flecha {
+    color: rgba(255,255,255,0.4);
+    font-size: 14px;
+    flex-shrink: 0;
+}
+
+.ruta-paso {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: 1;
+    min-width: 0;
+    opacity: 0.4;
+    transition: opacity 0.25s;
+}
+
+.ruta-paso--activo     { opacity: 1; }
+.ruta-paso--calculando {
+    opacity: 1;
+    animation: rutaParpadeo 0.55s ease infinite alternate;
+}
+
+@keyframes rutaParpadeo {
+    from { opacity: 0.55; }
+    to   { opacity: 1; }
+}
+
+.ruta-paso__circulo {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 800;
+    flex-shrink: 0;
+}
+
+.ruta-paso__circulo--a { background: #f1c40f; color: #1a1a2e; }
+.ruta-paso__circulo--b { background: #f39c12; color: #1a1a2e; }
+
+.ruta-paso__img {
+    width: 34px;
+    height: 34px;
+    object-fit: contain;
+    border-radius: 6px;
+    background: rgba(255,255,255,0.1);
+    flex-shrink: 0;
+}
+
+.ruta-paso__info {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.ruta-paso__label {
+    font-size: 9px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: rgba(255,255,255,0.5);
+}
+
+.ruta-paso__nombre {
+    font-size: 12px;
+    font-weight: 600;
+    color: #fff;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.ruta-panel-estado__cancelar {
+    background: rgba(255,255,255,0.1);
+    border: none;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: #fff;
+    font-size: 16px;
+    flex-shrink: 0;
+    transition: background 0.15s;
+}
+
+.ruta-panel-estado__cancelar:hover {
+    background: rgba(255,255,255,0.25);
+}
+
+/* ================================================
+CELDAS DEL MAPA — overlay amarillo
+
+La imagen .celda__edificio cubre el 100% de la celda
+(object-fit: cover, sin z-index explícito).
+Solución: el ::after de la celda se posiciona encima
+de la imagen usando z-index: 1, ya que la imagen no
+tiene z-index y el contexto de apilamiento lo permite.
+================================================ */
+
+/* Asegurar que la imagen quede por debajo del overlay */
+.celda--ruta-a .celda__edificio,
+.celda--ruta-b .celda__edificio,
+.celda--ruta   .celda__edificio {
+    position: relative;
+    z-index: 0;
+}
+
+/* Overlay encima de la imagen */
+.celda--ruta-a::after,
+.celda--ruta-b::after,
+.celda--ruta::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+}
+
+/* Punto A — amarillo */
+.celda--ruta-a::after {
+    background: rgba(241, 196, 15, 0.72);
+    outline: 3px solid #c9a800;
+    outline-offset: -3px;
+}
+
+/* Punto B — naranja */
+.celda--ruta-b::after {
+    background: rgba(243, 156, 18, 0.72);
+    outline: 3px solid #c07d00;
+    outline-offset: -3px;
+}
+
+/* Vías de la ruta — amarillo pulsante */
+.celda--ruta::after {
+    animation: rutaCeldaPulso 0.75s ease infinite alternate;
+}
+
+@keyframes rutaCeldaPulso {
+    from { background: rgba(241, 196, 15, 0.60); outline: 2px solid #c9a800; outline-offset: -2px; }
+    to   { background: rgba(243, 156, 18, 0.82); outline: 2px solid #c07d00; outline-offset: -2px; }
+}

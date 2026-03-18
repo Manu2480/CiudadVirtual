@@ -34,10 +34,34 @@ Crea y agrega una notificación con auto-cierre.
 function mostrar(mensaje, tipo = "aviso", duracion = 3500) {
     if (!_zona) return;
 
+    /* Si el panel de ruta está activo, desplazar las notificaciones
+       para que aparezcan debajo de él y no queden tapadas */
+    const panelRuta = document.getElementById("ruta-panel-estado");
+    if (panelRuta) {
+        const altoPanelRuta = panelRuta.offsetHeight;
+        _zona.style.top = `calc(var(--alto-encabezado) + ${altoPanelRuta}px + var(--espacio-s))`;
+    } else {
+        _zona.style.top = "";
+    }
+
     const el = document.createElement("div");
     el.classList.add("notificacion", `notificacion--${tipo}`);
     el.setAttribute("role", "status");
-    el.textContent = mensaje;
+
+    /* Icono según tipo */
+    const iconos = {
+        exito: "fi fi-br-check",
+        aviso: "fi fi-br-info",
+        error: "fi fi-br-cross-small",
+    };
+    const icono = document.createElement("i");
+    icono.className = iconos[tipo] || "fi fi-br-info";
+
+    const texto = document.createElement("span");
+    texto.textContent = mensaje;
+
+    el.appendChild(icono);
+    el.appendChild(texto);
 
     _zona.appendChild(el);
 

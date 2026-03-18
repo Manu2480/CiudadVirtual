@@ -192,25 +192,27 @@ function _manejarClickCelda(e) {
 
     switch (estado.modo) {
 
-        case "normal":
-            if (estadoCelda.tipo !== "vacio") {
-                /* Desktop: abre modal directamente.
-                   Móvil: tabs.js mantiene el modo normal solo para navegar,
-                   por lo que notifica al usuario que vaya a Construir. */
-                const vista = document.documentElement.getAttribute("data-vista");
-                if (vista === "movil") {
-                    Notificaciones.mostrar(
-                        "Ve a la tab Construir para edificar o demoler.",
-                        "aviso"
-                    );
-                } else {
+        case "normal": {
+            const vista = document.documentElement.getAttribute("data-vista");
+            if (vista === "movil") {
+                /* En móvil cualquier click en el mapa redirige a Construir */
+                Notificaciones.mostrar(
+                    estadoCelda.tipo !== "vacio"
+                        ? "Ve a la tab Construir para edificar o demoler."
+                        : "Ve a la tab Construir para edificar.",
+                    "aviso"
+                );
+            } else {
+                /* Desktop: celda construida abre modal, vacía la selecciona */
+                if (estadoCelda.tipo !== "vacio") {
                     const edificio = Edificios.obtener(estadoCelda.tipo);
                     if (edificio) Modal.mostrarEdificio(edificio, fila, col);
+                } else {
+                    _seleccionarCelda(celda, fila, col);
                 }
-            } else {
-                _seleccionarCelda(celda, fila, col);
             }
             break;
+        }
 
         case "construccion":
             if (estadoCelda.tipo === "vacio") {
@@ -236,6 +238,15 @@ function _manejarClickCelda(e) {
                 Edificaciones.demoler(fila, col, _mapaState.grid, _gridEl);
             }
             break;
+
+        case "ruta":
+            /* Cualquier celda construida (edificio o vía) es seleccionable */
+            if (estadoCelda.tipo !== "vacio") {
+                document.dispatchEvent(new CustomEvent("mapa:celdaRuta", {
+                    detail: { fila, col, tipo: estadoCelda.tipo, celdaEl: celda }
+                }));
+            }
+            break;
     }
 }
 
@@ -259,13 +270,15 @@ function _seleccionarCelda(celdaEl, fila, col) {
 ACTUALIZAR MODO
 ================================================ */
 function actualizarModo(nuevoModo) {
-    if (nuevoModo === "normal" && _mapaState.celdaSelec) {
+    if ((nuevoModo === "normal" || nuevoModo === "ruta") && _mapaState.celdaSelec) {
         const el = _gridEl.querySelector(
             `[data-fila="${_mapaState.celdaSelec[0]}"][data-col="${_mapaState.celdaSelec[1]}"]`
         );
         if (el) el.classList.remove("celda--seleccionada");
         _mapaState.celdaSelec = null;
     }
+    /* Las marcas celda--ruta-a, celda--ruta-b y celda--ruta
+       las gestiona ruta.js mediante limpiarTodo(). No se tocan aquí. */
 }
 
 

@@ -232,7 +232,7 @@ addEventListener("DOMContentLoaded",function(){
             const generoValor = document.querySelector('input[name="genero"]:checked').value;
 
             const estadoInicial = {
-                dinero:       10000,
+                dinero:       50000,
                 agua:         0,
                 electricidad: 0,
                 alimento:     0,
