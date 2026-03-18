@@ -54,7 +54,7 @@ function _cargarCiudad() {
         const terreno = new Terreno(vias, datos.terreno?.edificios ?? []);
 
         const estadoRecursos = datos.estadoRecursos ?? {
-            dinero: 10000, agua: 0, electricidad: 0, alimento: 0, felicidad: 50,
+            dinero: 50000, agua: 0, electricidad: 0, alimento: 0, felicidad: 0,
         };
 
         Estado.ciudad = new Ciudad(

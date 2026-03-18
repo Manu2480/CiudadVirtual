@@ -192,25 +192,27 @@ function _manejarClickCelda(e) {
 
     switch (estado.modo) {
 
-        case "normal":
-            if (estadoCelda.tipo !== "vacio") {
-                /* Desktop: abre modal directamente.
-                   Móvil: tabs.js mantiene el modo normal solo para navegar,
-                   por lo que notifica al usuario que vaya a Construir. */
-                const vista = document.documentElement.getAttribute("data-vista");
-                if (vista === "movil") {
-                    Notificaciones.mostrar(
-                        "Ve a la tab Construir para edificar o demoler.",
-                        "aviso"
-                    );
-                } else {
+        case "normal": {
+            const vista = document.documentElement.getAttribute("data-vista");
+            if (vista === "movil") {
+                /* En móvil cualquier click en el mapa redirige a Construir */
+                Notificaciones.mostrar(
+                    estadoCelda.tipo !== "vacio"
+                        ? "Ve a la tab Construir para edificar o demoler."
+                        : "Ve a la tab Construir para edificar.",
+                    "aviso"
+                );
+            } else {
+                /* Desktop: celda construida abre modal, vacía la selecciona */
+                if (estadoCelda.tipo !== "vacio") {
                     const edificio = Edificios.obtener(estadoCelda.tipo);
                     if (edificio) Modal.mostrarEdificio(edificio, fila, col);
+                } else {
+                    _seleccionarCelda(celda, fila, col);
                 }
-            } else {
-                _seleccionarCelda(celda, fila, col);
             }
             break;
+        }
 
         case "construccion":
             if (estadoCelda.tipo === "vacio") {
