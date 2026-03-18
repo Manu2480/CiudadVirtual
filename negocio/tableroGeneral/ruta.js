@@ -192,7 +192,7 @@ function _onCeldaRuta(e) {
 
     /* Primer toque → A */
     if (!_puntoA) {
-        _puntoA = { fila: fila, col: col, celdaEl: celdaEl };
+        _puntoA = { fila: fila, col: col, tipo: tipo, celdaEl: celdaEl };
         celdaEl.classList.add("celda--ruta-a");
         _actualizarPanelA(nombre, imagen);
         return;
@@ -202,7 +202,7 @@ function _onCeldaRuta(e) {
        setTimeout deja al navegador renderizar el amarillo y la imagen
        antes de lanzar el fetch. */
     if (!_puntoB) {
-        _puntoB = { fila: fila, col: col, celdaEl: celdaEl };
+        _puntoB = { fila: fila, col: col, tipo: tipo, celdaEl: celdaEl };
         celdaEl.classList.add("celda--ruta-b");
         _actualizarPanelB(nombre, imagen);
         setTimeout(_calcular, 50);
@@ -219,49 +219,20 @@ function _calcular() {
     var vias = ciudad.terreno.vias;
     var mapa = vias.map(function(f) { return f.slice(); });
 
-    var startCoord = _coordParaApi(vias, _puntoA.fila, _puntoA.col);
-    var endCoord   = _coordParaApi(vias, _puntoB.fila, _puntoB.col);
-
-    if (!startCoord || !endCoord) {
-        var msg = !startCoord
-            ? "El origen no tiene vía adyacente."
-            : "El destino no tiene vía adyacente.";
-        Notificaciones.mostrar(msg, "error");
-        /* Quita solo el punto problemático */
-        if (!startCoord) {
-            _puntoA.celdaEl.classList.remove("celda--ruta-a");
-            _puntoA = null;
-            var pasoA2 = document.getElementById("ruta-paso-a");
-            var pasoB2 = document.getElementById("ruta-paso-b");
-            var nomA   = document.getElementById("ruta-paso-a-nombre");
-            var imgA   = document.getElementById("ruta-paso-a-img");
-            if (pasoA2) pasoA2.classList.add("ruta-paso--activo");
-            if (pasoB2) pasoB2.classList.remove("ruta-paso--activo");
-            if (nomA)   nomA.textContent = "Toca un punto";
-            if (imgA)  { imgA.style.display = "none"; imgA.src = ""; }
-        } else {
-            _puntoB.celdaEl.classList.remove("celda--ruta-b");
-            _puntoB = null;
-            var pasoB3 = document.getElementById("ruta-paso-b");
-            var nomB   = document.getElementById("ruta-paso-b-nombre");
-            var imgB   = document.getElementById("ruta-paso-b-img");
-            if (pasoB3) {
-                pasoB3.classList.remove("ruta-paso--calculando");
-                pasoB3.classList.add("ruta-paso--activo");
-            }
-            if (nomB) nomB.textContent = "Pendiente";
-            if (imgB) { imgB.style.display = "none"; imgB.src = ""; }
-        }
-        return;
-    }
+    /* Marcar temporalmente las celdas de los edificios como transitables (1)
+       en la copia del mapa. Así la API recibe start/end como las posiciones
+       exactas de los edificios y calcula el camino completo sin que nosotros
+       tengamos que deducir qué vía adyacente usar. */
+    mapa[_puntoA.fila][_puntoA.col] = 1;
+    mapa[_puntoB.fila][_puntoB.col] = 1;
 
     fetch(API_RUTA, {
         method:  "POST",
         headers: { "Content-Type": "application/json" },
         body:    JSON.stringify({
             map:   mapa,
-            start: [startCoord.fila, startCoord.columna],
-            end:   [endCoord.fila,   endCoord.columna]
+            start: [_puntoA.fila, _puntoA.col],
+            end:   [_puntoB.fila, _puntoB.col]
         })
     })
     .then(function(res) {
@@ -270,9 +241,8 @@ function _calcular() {
     .then(function(result) {
         if (!result.ok) {
             Notificaciones.mostrar(
-                result.data.error || "No hay ruta posible entre esos puntos.", "error"
+                result.data.error || "No hay ruta posible entre esos edificios.", "error"
             );
-            /* Resetea B para reintentar con otro destino */
             _puntoB.celdaEl.classList.remove("celda--ruta-b");
             _puntoB = null;
             var pb = document.getElementById("ruta-paso-b");
@@ -296,7 +266,7 @@ function _calcular() {
         );
     })
     .catch(function(err) {
-        console.error("Ruta API:", err);
+        console.error("Ruta API error de red:", err.message);
         Notificaciones.mostrar("No se pudo conectar con el servicio de rutas.", "error");
     });
 }
@@ -347,24 +317,6 @@ function _irATabMapa() {
 /* ================================================
 HELPERS
 ================================================ */
-function _coordParaApi(vias, fila, col) {
-    if (vias[fila] && vias[fila][col] === 1) return { fila: fila, columna: col };
-    return _viaMasCercana(vias, fila, col);
-}
-
-function _viaMasCercana(vias, fila, col) {
-    var vecinos = [
-        { fila: fila - 1, columna: col },
-        { fila: fila + 1, columna: col },
-        { fila: fila,     columna: col - 1 },
-        { fila: fila,     columna: col + 1 }
-    ];
-    for (var i = 0; i < vecinos.length; i++) {
-        var v = vecinos[i];
-        if (vias[v.fila] && vias[v.fila][v.columna] === 1) return v;
-    }
-    return null;
-}
 
 function _idCatalogo(idInstancia) {
     var mapa = {

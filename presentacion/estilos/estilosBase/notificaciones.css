@@ -25,7 +25,19 @@ Siempre en la parte superior de la pantalla.
     font-size: var(--fuente-tam-m);
     pointer-events: all;
     animation: notif-entrar var(--trans-normal) ease forwards;
+    display: flex;
+    align-items: center;
+    gap: var(--espacio-s);
 }
+
+.notificacion i {
+    font-size: 16px;
+    flex-shrink: 0;
+}
+
+.notificacion--exito i { color: var(--color-dinero); }
+.notificacion--aviso i { color: var(--color-felicidad); }
+.notificacion--error i { color: var(--color-energia); }
 
 .notificacion--exito { border-color: var(--color-dinero); }
 .notificacion--aviso { border-color: var(--color-felicidad); }

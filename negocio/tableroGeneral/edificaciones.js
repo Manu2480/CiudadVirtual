@@ -255,33 +255,28 @@ Arma un string legible con los efectos del edificio
 para mostrarlo en la notificación de éxito.
 ================================================ */
 function _mensajeConstruccion(def) {
-    /* Vías: mensaje simple */
-    if (def.categoria === "pavimentaria") {
-        return `🛤️ ${def.nombre} construida.`;
-    }
-
     const partes = [];
 
-    if (def.capacidad)    partes.push(`🏠 +${def.capacidad} hogares`);
-    if (def.empleos)      partes.push(`💼 +${def.empleos} empleos`);
-    if (def.dinero)       partes.push(`💰 +$${def.dinero.toLocaleString()}/turno`);
-    if (def.alimento)     partes.push(`🌾 +${def.alimento} alimento/turno`);
-    if (def.felicidad)    partes.push(`😊 +${def.felicidad} felicidad`);
+    if (def.capacidad)    partes.push(`+${def.capacidad} habitantes`);
+    if (def.empleos)      partes.push(`+${def.empleos} empleos`);
+    if (def.dinero)       partes.push(`+$${def.dinero.toLocaleString()}/turno`);
+    if (def.alimento)     partes.push(`+${def.alimento} alimento/turno`);
+    if (def.felicidad)    partes.push(`+${def.felicidad} felicidad`);
 
     if (def.electricidad) {
         partes.push(def.electricidad > 0
-            ? `⚡ +${def.electricidad} energía`
-            : `⚡ ${def.electricidad} energía`);
+            ? `+${def.electricidad} energía`
+            : `${def.electricidad} energía`);
     }
     if (def.agua) {
         partes.push(def.agua > 0
-            ? `💧 +${def.agua} agua`
-            : `💧 ${def.agua} agua`);
+            ? `+${def.agua} agua`
+            : `${def.agua} agua`);
     }
 
     const beneficios = partes.length > 0
-        ? `\n${partes.join("  ·  ")}`
+        ? ` — ${partes.join(" · ")}`
         : "";
 
-    return `✅ ${def.nombre} construido.${beneficios}`;
+    return `${def.nombre} construido.${beneficios}`;
 }
