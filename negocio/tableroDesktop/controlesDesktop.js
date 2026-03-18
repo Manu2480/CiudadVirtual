@@ -41,7 +41,8 @@ const _desktopState = {
     btnZoomOut: null,
     controlesZoom: null,
     zoomIndicador: null,
-    indicadorModo: null
+    indicadorModo: null,
+    btnRuta: null
 };
 
 
@@ -63,6 +64,7 @@ function _init() {
     _inicializarArrastre();
     _inicializarAtajos();
     _crearIndicadorModo();
+    _inicializarBotonRuta();
     _inicializarTooltipsEdificios();
 
     // Cargar módulos adicionales
@@ -92,6 +94,7 @@ function _inicializarReferencias() {
     _desktopState.btnZoomIn = document.getElementById("btn-zoom-in");
     _desktopState.btnZoomOut = document.getElementById("btn-zoom-out");
     _desktopState.controlesZoom = document.getElementById("controles-zoom");
+    _desktopState.btnRuta = document.getElementById("btn-ruta");
 
     if (!_desktopState.areaMapa || !_desktopState.gridMapa) {
         console.error("controlesDesktop.js: No se encontraron elementos del mapa.");
@@ -425,8 +428,31 @@ function _activarModoDemolicion() {
 
 function _cancelarModo() {
     Tablero.cancelarModo();
+    window.RutaMovil?.limpiarTodo();
     _ocultarIndicadorModo();
     Notificaciones.mostrar("Modo cancelado.", "aviso");
+}
+
+function _inicializarBotonRuta() {
+    if (!_desktopState.btnRuta) return;
+
+    _desktopState.btnRuta.addEventListener("click", () => {
+        if (!window.RutaMovil) {
+            Notificaciones.mostrar("No se pudo iniciar la búsqueda de ruta.", "error");
+            return;
+        }
+
+        if (window.RutaMovil.estaActivo && window.RutaMovil.estaActivo()) {
+            window.RutaMovil.limpiarTodo();
+        }
+        window.RutaMovil.activar();
+        _actualizarIndicadorModo("ruta", "Modo ruta: selecciona origen y destino (ESC para cancelar)");
+        Notificaciones.mostrar("Selecciona dos edificios para calcular la ruta.", "aviso");
+    });
+
+    document.addEventListener("ruta:completada", () => {
+        _ocultarIndicadorModo();
+    });
 }
 
 

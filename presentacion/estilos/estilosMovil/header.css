@@ -51,6 +51,11 @@ Responsabilidad:
     display: flex;
 }
 
+/* Ocultar botón ruta en móvil (ya está en la barra de tabs) */
+.btn-ruta {
+    display: none;
+}
+
 /* Widget de clima: icono + temperatura, sin textos extra */
 .clima-compacto {
     display: flex;
