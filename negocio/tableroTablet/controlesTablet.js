@@ -45,6 +45,7 @@ const _MODULOS = [
     "clima.js",
     "noticias.js",
     "sidebarTablet.js",
+    "construccion.js",
     "recursos.js",
     "estadisticas.js"
 ];
@@ -72,6 +73,7 @@ function _inicializarControlesTablet() {
         SidebarTablet.inicializar();
         RecursosTablet.inicializar();
         EstadisticasTablet.inicializar();
+        ConstruccionTablet.inicializar();
 
 
         console.log("controlesTablet: inicialización completa");

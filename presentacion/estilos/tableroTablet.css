@@ -45,6 +45,25 @@ Dependencias: HU-023
     --color-celda-agua:    #5baad4;
     --color-celda-selec:   rgba(26,115,232,0.35); /* celda seleccionada */
 }
+#abrir-puntaje-tablet{
+    background-color: var(--color-primario); 
+    color: white;
+    margin:0;
+    text-align: center;
+    font-weight: bold;
+    padding: 0.5rem 0;
+    align-self: center;
+    border-radius: 8px; 
+}
+.stats-item__texto{
+    display: flex;
+    align-items: center;
+    text-align: center;
+    gap: 4px;
+    font-size: var(--fuente-tam-s);
+    font-weight: 600;
+    white-space: nowrap;
+}
 @media (orientation: portrait){ /*Tablet en vertical*/
     .btn-sidebar-tablet{
         color:white;
@@ -247,6 +266,7 @@ Dependencias: HU-023
         text-align: center;
         font-weight: bold;
         padding: 0.5rem 0;
+        border-radius: 8px;
 }
 
     .panel{
@@ -273,8 +293,22 @@ Dependencias: HU-023
         background: #f3f3f3;
         border: 1px solid var(--color-texto);
         text-align: center;
-
         height: auto;
+        overflow-y: hidden;
+    }
+    .edificio__info.seleccionado{
+        display: none;
+    }
+    .tarjeta-edificio.seleccionada{
+
+        border-radius: 8px;
+        border: 8px solid var(--color-dinero);
+    }
+    .tarjeta-edificio.seleccionada .edificio__info{
+        display: none;
+    }
+    .tarjeta-edificio.seleccionada .edificio__info.seleccionado{
+        display: block;
     }
     .edificio__descripcion{
         min-height: 4.5em;
@@ -287,7 +321,7 @@ Dependencias: HU-023
 
     }
 
-    .comprar-edificio{
+    .valor-edificio{
         margin-top: auto;
         background-color: var(--color-primario);
         color: white;

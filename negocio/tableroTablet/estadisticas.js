@@ -33,26 +33,21 @@ function ejecutar(){
         contenido.className = "listado-estadisticas";
         contenido.innerHTML = `
             <div class="stats-item">
-                <span class="stats-item__label">Población:</span>
-                <span class="stats-item__valor">${ciudad.ciudadanos.length}</span>
+                <span class="stats-item__texto">Población: ${ciudad.ciudadanos.length}</span>
             </div>
             <div class="stats-item">
-                <span class="stats-item__label">Capacidad de empleo:</span>
-                <span class="stats-item__valor">${ciudad.terreno.capacidadTotalEmpleos() ?? "desconocida"}</span>
+                <span class="stats-item__texto">Capacidad de empleo: ${ciudad.terreno.capacidadTotalEmpleos() ?? "desconocida"}</span>
             </div>
             <div class="stats-item">
-                <span class="stats-item__label">Capacidad de vivienda:</span>
-                <span class="stats-item__valor">${ciudad.terreno.capacidadTotalViviendas() ?? "desconocida"}</span>
+                <span class="stats-item__texto">Capacidad de vivienda: ${ciudad.terreno.capacidadTotalViviendas() ?? "desconocida"}</span>
             </div>
             <div class="stats-item">
-                <span class="stats-item__label">Turno: </span>
-                <span class="stats-item__valor">${window.Tablero.Estado.turno ?? "desconocido"}</span>
+                <span class="stats-item__texto">Turno: ${window.Tablero.Estado.turno ?? "desconocido"}</span>
             </div>
             <div class="stats-item">
-                <span class="stats-item__label">Puntaje:</span>
-                <span class="stats-item__valor">${window.Puntuacion.calcular(ciudad).total ?? "desconocido"}</span>
+                <span class="stats-item__texto">Puntaje: ${window.Puntuacion.calcular(ciudad).total ?? "desconocido"}</span>
             </div>
-            <button id="abrir-puntaje-tablet" onClick = "window.Modal?.mostrarEstadisticas()">Ver puntaje</button>
+            <button id="abrir-puntaje-tablet" onClick = "window.Modal?.mostrarEstadisticas()">Ver detalles puntaje</button>
         `;
         panel.appendChild(contenido);
 }
