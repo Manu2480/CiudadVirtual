@@ -1,0 +1,105 @@
+:root{
+        /* Colores principales (consistentes con index y formulario) */
+    --color-primario:    #1A73E8;   /* azul principal */
+    --color-primario-h:  #1558b0;   /* azul hover */
+    --color-fondo:       #f5f5f5;   /* fondo general */
+    --color-superficie:  #ffffff;   /* tarjetas y paneles */
+    --color-borde:       #e0e0e0;   /* bordes suaves */
+    --color-texto:       #2c2c2c;   /* texto principal */
+    --color-texto-s:     #666666;   /* texto secundario */
+
+    /* Colores semánticos del juego */
+    --color-dinero:      #27ae60;
+    --color-poblacion:   #1A73E8;
+    --color-felicidad:   #f39c12;
+    --color-energia:     #e74c3c;
+
+    /* Colores del mapa */
+    --color-celda:         #7ec850;  /* hierba base */
+    --color-celda-hover:   #a3d977;  /* hover de celda vacía */
+    --color-celda-borde:   rgba(0,0,0,0.08);
+    --color-celda-agua:    #5baad4;
+    --color-celda-selec:   rgba(26,115,232,0.35); /* celda seleccionada */
+}
+#abrir-puntaje-tablet{
+    background-color: var(--color-primario); 
+    color: white;
+    margin:0;
+    text-align: center;
+    font-weight: bold;
+    padding: 0.5rem 0;
+    align-self: center;
+    border-radius: 8px; 
+}
+.stats-item__texto{
+    display: flex;
+    align-items: center;
+    text-align: center;
+    gap: 4px;
+    font-size: var(--fuente-tam-s); 
+    font-weight: 600;
+    white-space: nowrap;
+}
+.btn-sidebar-tablet, .btn-ruta{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--btn-tap-min);
+    height: var(--btn-tap-min);
+    font-size: 20px;
+    color: #ffffff;
+    border-radius: var(--radio-s);
+    flex-shrink: 0;
+    transition: background var(--trans-rapida);
+}
+.panel-recursos{
+    display: none;
+}
+.sidebar--izquierdo{
+    display: none;   
+}
+
+
+@media(orientation: portrait){
+
+    .sidebar--derecho{
+        display: none;
+    }
+    
+    /* Sidebar tablet */
+    .sidebar--tablet {
+        grid-column: 2;
+        grid-row: 1 / -1;
+        background-color: var(--color-texto-s);
+        position: relative;
+    }
+    .panel-tablet{
+        visibility: hidden;
+        position: absolute;
+        inset: 0;
+    }
+    .panel-tablet.abierto{
+        visibility: visible;
+    }
+
+}
+
+@media(orientation: landscape){
+    .sidebar--derecho{
+        grid-column: 3;
+        width: 100%;
+        height: 100%;
+    }
+    .sidebar--tablet {
+        grid-column: 1;
+        background-color: var(--color-texto-s);
+        position: relative;
+    }
+    #recConEst-tablet{
+
+        display: grid; 
+        grid-template-rows: 25% 50% 25%; /* Recursos, Construcción, Estadísticas */
+        gap: 5px;
+    }
+
+}

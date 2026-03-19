@@ -1,0 +1,264 @@
+/*
+VISTA DE SERGIO
+HU-023: Diseño Responsive - Vista Tablet
+Como jugador en tablet
+Quiero una interfaz optimizada para pantalla mediana
+Para aprovechar el espacio disponible
+Criterios de Aceptación:
+• [ ] En resoluciones 768px - 1024px:
+o Layout en dos columnas: mapa (70%) + sidebar (30%)
+o El mapa muestra grid completo sin scroll horizontal
+o Panel de recursos en sidebar superior
+o Menú de construcción en sidebar central
+o Estadísticas en sidebar inferior
+o Widget de clima y noticias en tabs laterales
+• [ ] Soporte para orientación vertical y horizontal
+• [ ] En horizontal: layout optimizado con sidebars izquierdo y derecho
+• [ ] En vertical: similar a móvil pero con más espacio
+• [ ] Tooltips más grandes al hacer hover
+• [ ] Modales ocupan 60% de la pantalla
+• [ ] Botones de tamaño medium (adecuados para touch)
+Prioridad: Media
+Dependencias: HU-023
+
+*/
+@media (orientation: portrait){ /*Tablet en vertical*/
+    #recConEst-tablet{
+
+        display: grid; 
+        grid-template-rows: 25% 50% 25%; /* Recursos, Construcción, Estadísticas */
+        gap: 5px;
+    }
+    /* Panel principal de noticias */
+    #panel-noticias-tablet {
+        display: grid;
+        flex-direction: column;
+        overflow-y: auto;
+        gap: 1rem; /* espacio entre noticias */
+        padding: 1rem;
+        height: 100%;
+    }
+
+    /* Cada noticia individual */
+    .noticia-tablet {
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        padding: 0.5rem;
+        background-color: #f9f9f9;
+    }
+
+    /* Titular con imagen y título */
+    .titular-noticia {
+        display: flex;
+        flex-direction: column;
+        background-color: var(--color-primario);
+    }
+
+    /* Imagen ajustada a la columna del 25% */
+    .foto-noticia {
+        width: 100%;        /* ocupa todo el ancho de su columna (25%) */
+        height: auto;       /* mantiene proporción */
+        max-height: 100px;  /* opcional: limita altura para que no quede gigante */
+        object-fit: cover;  /* recorta si es necesario */
+        border-radius: 4px;
+    }
+
+    /* Título en la segunda columna */
+    .panel__titulo.noticia {
+        grid-column: 2;
+        font-size: 1rem;
+        margin: 0;
+        word-break: break-word;
+    }
+
+    /* Descripción */
+    .descripcion-noticia {
+        margin-top: 0.5rem;
+        font-size: 0.9rem;
+        color: #333;
+    }
+
+    /* Enlace */
+    .noticia-tablet a {
+        display: inline-block;
+        margin-top: 0.5rem;
+        color: #0077cc;
+        text-decoration: none;
+        font-weight: bold;
+    }
+    .noticia-tablet a:hover {
+        text-decoration: underline;
+    }
+    .sidebar--tablet.cerrada {
+        display: none;
+    }
+
+    .panel-tablet.abierto{
+        grid-row: 1 / -1;
+        background-color: var(--color-texto-s);
+    }
+
+
+    /* Cada panel individual dentro de la sidebar */
+
+    .panel--construccion {
+        overflow: auto; /* scroll si el contenido sobrepasa */
+    }
+    .panel--clima{
+        grid-row: 1 / -1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-between;
+        height: 100%;
+        font-size: 15px;
+    }
+    .panel--clima .clima-compacto__icono {
+        font-size: 60px;
+        color: var(--color-primario);
+    }
+    .panel--clima h2{
+        font-size: 20px;
+    }
+    
+    .panel--clima p.datos-clima {
+        margin: 0;
+        text-align: center;
+        width: 100%;
+    }
+
+    /* Opcional: títulos */
+    .panel__titulo{
+        background-color: var(--color-primario-h); 
+        color: white;
+        width: 100%;
+        margin:0;
+        text-align: center;
+        font-weight: bold;
+        padding: 0.5rem 0;
+        border-radius: 8px;
+}
+
+    .panel{
+        padding:0;
+        border-radius:12px;
+        padding:0;
+    }
+    #catalogo-edificios-tablet{
+        display: flex;
+        flex-direction: row;
+        gap: 5px;
+        overflow-x: scroll;
+        align-items: stretch;
+    }
+
+    .tarjeta-edificio{
+        flex: 0 0 clamp(130px, 14vw, 180px);
+
+        display: flex;
+        flex-direction: column;
+
+        padding: 8px;
+        border-radius: 8px;
+        background: #f3f3f3;
+        border: 1px solid var(--color-texto);
+        text-align: center;
+        height: auto;
+        overflow-y: hidden;
+    }
+    .edificio__info.seleccionado{
+        display: none;
+    }
+    .tarjeta-edificio.seleccionada{
+
+        border-radius: 8px;
+        border: 8px solid var(--color-dinero);
+    }
+    .tarjeta-edificio.seleccionada .edificio__info{
+        display: none;
+    }
+    .tarjeta-edificio.seleccionada .edificio__info.seleccionado{
+        display: block;
+    }
+    .edificio__descripcion{
+        min-height: 4.5em;
+    }
+
+    .edificio__imagen{
+        width: 150px;
+        height: 150px;
+        object-fit: contain;
+
+    }
+
+    .valor-edificio{
+        margin-top: auto;
+        background-color: var(--color-primario);
+        color: white;
+    }
+}
+
+@media (orientation: landscape) { /* Tablet en horizontal */
+    .contenedor-juego {
+        display: grid;
+        grid-template-columns: 25% 50% 25%;
+        grid-template-rows: 1fr;
+    }
+
+    .sidebar--izquierdo {
+        display: block;
+        background-color: var(--color-superficie);
+        padding: 1rem;
+        overflow-y: auto;
+    }
+
+    .sidebar--derecho {
+        display: block;
+        background-color: var(--color-superficie);
+        padding: 1rem;
+        overflow-y: auto;
+    }
+
+    .sidebar--tablet {
+        display: none; /* Ocultar sidebar central en landscape */
+    }
+
+    .area-mapa {
+        grid-column: 2;
+        grid-row: 1;
+    }
+
+    .area-mapa.full {
+        grid-column: 1 / -1;
+    }
+
+    /* Ocultar botones de sidebar en landscape ya que los paneles están siempre visibles */
+    .btn-sidebar-tablet {
+        display: none;
+    }
+
+    /* Paneles en sidebars laterales */
+    .sidebar--izquierdo .panel--recursos {
+        margin-bottom: 1rem;
+    }
+
+    .sidebar--derecho .panel--clima,
+    .sidebar--derecho .panel--noticias {
+        margin-bottom: 1rem;
+    }
+}
+
+/* Tooltips más grandes para tablet */
+.tooltip {
+    font-size: 1.2rem;
+    padding: 0.5rem;
+    max-width: 200px;
+}
+
+/* Botones de tamaño medium para touch */
+.btn-medium {
+    padding: 12px 24px;
+    font-size: 16px;
+    border-radius: 8px;
+    min-height: 44px; /* Para accesibilidad táctil */
+} 
