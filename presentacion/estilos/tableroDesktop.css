@@ -265,11 +265,6 @@ body {
     padding-top: 8px;
 }
 
-.panel--estadisticas {
-    flex: 1;
-}
-
-
 /* =========================
    ÁREA DEL MAPA CON ZOOM ESTÁTICO
    El zoom permanece fijo durante el arrastre del mapa
@@ -308,69 +303,6 @@ body {
     padding: 20px;
 }
 
-/* =========================
-   CELDAS DEL MAPA
-========================= */
-.celda {
-    width: var(--tamano-celda, 48px);
-    height: var(--tamano-celda, 48px);
-    background-color: var(--color-celda, #7ec850);
-    border: 1px solid var(--color-celda-borde, rgba(0,0,0,0.08));
-    position: relative;
-    cursor: pointer;
-    user-select: none;
-}
-
-.celda:hover {
-    background-color: var(--color-celda-hover, #a3d977);
-    z-index: 1;
-}
-
-.celda--construida {
-    cursor: default;
-}
-
-.celda--construida:hover {
-    transform: none;
-}
-
-.celda--seleccionada {
-    outline: 3px solid var(--color-primario, #1A73E8);
-    outline-offset: -2px;
-    background-color: var(--color-celda-selec, rgba(26,115,232,0.35));
-}
-
-.celda--agua {
-    background-color: var(--color-celda-agua, #5baad4);
-    cursor: not-allowed;
-}
-
-.celda--agua:hover {
-    background-color: var(--color-celda-agua, #5baad4);
-    transform: none;
-}
-
-.celda--via {
-    background-color: var(--color-celda-via, #666666);
-    cursor: default;
-}
-
-.celda--via:hover {
-    background-color: var(--color-celda-via, #666666);
-    transform: none;
-}
-
-.celda--dragover {
-    background-color: rgba(26, 115, 232, 0.2) !important;
-    border: 2px dashed var(--color-primario, #1A73E8);
-}
-
-.celda__edificio {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    pointer-events: none;
-}
 
 /* =========================
    CONTROLES DE ZOOM
@@ -441,33 +373,6 @@ body {
     background: #999;
 }
 
-/* =========================
-   TOOLTIPS EN EDIFICIOS
-========================= */
-.celda--construida[data-nombre]::after {
-    content: attr(data-nombre);
-    position: absolute;
-    bottom: calc(100% + 5px);
-    left: 50%;
-    transform: translateX(-50%);
-    padding: 6px 10px;
-    background: rgba(0, 0, 0, 0.85);
-    color: white;
-    font-size: 12px;
-    font-weight: 500;
-    border-radius: 4px;
-    white-space: nowrap;
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity var(--transicion-rapida), visibility var(--transicion-rapida);
-    z-index: 100;
-    pointer-events: none;
-}
-
-.celda--construida[data-nombre]:hover::after {
-    opacity: 1;
-    visibility: visible;
-}
 
 /* =========================
    CURSOR PERSONALIZADO EN MODOS
@@ -736,6 +641,25 @@ body.modo-demolicion .celda--construida {
     display: none !important;
 }
 
+/* Botón ruta (desktop) */
+.btn-ruta {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    width: var(--btn-tap-min);
+    height: var(--btn-tap-min);
+    font-size: 20px;
+    color: #ffffff;
+    border-radius: var(--radio-s);
+    flex-shrink: 0;
+    transition: background var(--trans-rapida);
+}
+
+.btn-ruta:hover {
+    background: rgba(255,255,255,0.15);
+} 
+
+
 /* =========================
    EFECTOS HOVER GENERALES
 ========================= */
@@ -807,34 +731,6 @@ button:hover:not(:disabled) {
     }
 }
 
-/* =========================
-   ESTADÍSTICAS
-========================= */
-.stats-lista {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-.stats-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 8px 12px;
-    background: var(--color-fondo, #f5f5f5);
-    border-radius: var(--radio-s, 6px);
-}
-
-.stats-item__label {
-    font-size: 12px;
-    color: var(--color-texto-s, #666666);
-}
-
-.stats-item__valor {
-    font-size: 14px;
-    font-weight: 600;
-    color: var(--color-texto, #2c2c2c);
-}
 
 /* =========================
    CLIMA
@@ -957,6 +853,31 @@ button:hover:not(:disabled) {
 /* =========================
    STATISTICS LIST
 ========================= */
+.stats-seccion-score {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: var(--color-primario);
+    border-radius: var(--radio-m);
+    padding: var(--espacio-m);
+    margin-bottom: var(--espacio-m);
+}
+
+.stats__score-label {
+    font-size: var(--fuente-tam-s);
+    color: rgba(255,255,255,0.8);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.stats__score-valor {
+    font-size: 36px;
+    font-weight: 700;
+    color: #ffffff;
+    line-height: 1.2;
+}
+
 .stats-lista {
     display: flex;
     flex-direction: column;

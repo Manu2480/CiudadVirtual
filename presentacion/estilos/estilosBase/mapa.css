@@ -40,7 +40,7 @@ Contenedor scrollable, grid de celdas y controles de zoom.
 }
 
 .celda--construida:hover {
-    background-color: #d0e8fb;
+    border-color: gold;
 }
 
 .celda--seleccionada {

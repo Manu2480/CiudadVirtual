@@ -20,7 +20,10 @@ function setCiudad(ciudad) {
 
 /* Llamado desde tablero.js en DOMContentLoaded */
 function inicializar() {
-    _renderizarIndicadores();
+    setInterval(() => {
+        if (!window.Tablero?.Estado?.ciudad) return;
+        _renderizarIndicadores();
+    }, 500);
 }
 
 /* Llamado desde tablero.js en avanzarTurno */
