@@ -79,8 +79,6 @@ function inicializar() {
                 </div>
             </div>
         `;
-
-        clearInterval(interval);
     }, 500);
 }
 

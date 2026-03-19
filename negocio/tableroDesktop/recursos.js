@@ -59,8 +59,6 @@ function inicializar() {
             `;
         }).join("");
         panel.appendChild(contenido);
-
-        clearInterval(interval);
     }, 500);
 }
 

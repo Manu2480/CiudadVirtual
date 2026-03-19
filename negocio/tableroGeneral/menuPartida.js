@@ -16,6 +16,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const menu      = document.getElementById("menu-partida");
     const btnLocal  = document.getElementById("btn-guardar-local");
     const btnExport = document.getElementById("btn-exportar-json");
+    const btnRanking = document.getElementById("btn-ver-ranking");
+    const inputDuracionTurno = document.getElementById("input-duracion-turno");
+    const btnAplicarDuracionTurno = document.getElementById("btn-aplicar-duracion-turno");
 
     if (!btnMenu || !menu) return;
 
@@ -44,6 +47,35 @@ document.addEventListener("DOMContentLoaded", () => {
     /* Exportar como JSON */
     btnExport?.addEventListener("click", () => {
         Tablero.exportarJSON();
+        menu.classList.remove("abierto");
+        menu.setAttribute("aria-hidden", "true");
+    });
+
+    /* Ver Ranking */
+    btnRanking?.addEventListener("click", () => {
+        Ranking.mostrar();
+        menu.classList.remove("abierto");
+        menu.setAttribute("aria-hidden", "true");
+    });
+
+    /* Inicializar valor de duración de turno */
+    if (inputDuracionTurno && window.Tablero?.Estado?.ciudad) {
+        inputDuracionTurno.value = Math.round(window.Tablero.Estado.ciudad.tiempoTurno / 1000);
+    }
+
+    /* Aplicar duración de turnos */
+    btnAplicarDuracionTurno?.addEventListener("click", () => {
+        const segundos = Number(inputDuracionTurno?.value);
+        if (!Number.isFinite(segundos) || segundos <= 0) {
+            Notificaciones.mostrar("Ingresa un valor válido (mayor a 0).", "error");
+            return;
+        }
+
+        if (window.Tablero?.setDuracionTurno) {
+            window.Tablero.setDuracionTurno(segundos);
+            Notificaciones.mostrar(`Duración de turno ajustada a ${segundos} seg.`, "exito");
+        }
+
         menu.classList.remove("abierto");
         menu.setAttribute("aria-hidden", "true");
     });

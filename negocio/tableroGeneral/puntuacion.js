@@ -90,22 +90,44 @@ function calcular(ciudad) {
     };
 }
 
-/* Guarda la puntuación del turno en localStorage */
-function guardarEnRanking(ciudad, score) {
-    if (!ciudad) return;
+/* Guarda la puntuación final de la partida usando RankingStorage */
+function guardarEnRanking(ciudad, score, turnos) {
+    if (!ciudad) {
+        console.warn("puntuacion.js: ciudad es nula");
+        return;
+    }
+    
     try {
-        const ranking = JSON.parse(localStorage.getItem("ranking") || "[]");
-        ranking.push({
-            ciudad:    ciudad.nombre,
-            alcalde:   ciudad.alcalde,
-            score,
-            fecha:     new Date().toISOString(),
-        });
-        /* Mantiene solo los últimos 50 registros */
-        if (ranking.length > 50) ranking.splice(0, ranking.length - 50);
-        localStorage.setItem("ranking", JSON.stringify(ranking));
+        /* Verificar que RankingStorage esté disponible */
+        if (typeof RankingStorage === "undefined") {
+            console.error("puntuacion.js: RankingStorage no está disponible!");
+            return;
+        }
+
+        /* Calcular promedio de felicidad */
+        const ciudadanos = ciudad.ciudadanos || [];
+        const felicidadPromedio = ciudadanos.length > 0 
+            ? Math.round(ciudadanos.reduce((sum, c) => sum + (c.felicidad ?? 0), 0) / ciudadanos.length)
+            : 0;
+        
+        const entrada = {
+            cityName:   ciudad.nombre,
+            mayor:      ciudad.alcalde,
+            score:      score,
+            population: ciudadanos.length,
+            happiness:  felicidadPromedio,
+            turns:      turnos || 0,
+            date:       new Date().toISOString(),
+        };
+        
+        /* Usar RankingStorage para agregar la entrada */
+        const resultado = RankingStorage.agregarEntrada(entrada);
+        
+        if (!resultado) {
+            console.error("puntuacion.js: fallo al agregar entrada");
+        }
     } catch (e) {
-        console.warn("puntuacion.js: error al guardar ranking", e);
+        console.error("puntuacion.js: error al guardar ranking", e);
     }
 }
 
