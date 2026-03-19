@@ -328,10 +328,12 @@ body {
 
 .celda--construida {
     cursor: default;
+    background-color: #d0e8fb;
 }
 
 .celda--construida:hover {
     transform: none;
+    background-color: #d0e8fb;
 }
 
 .celda--seleccionada {
@@ -728,7 +730,8 @@ body.modo-demolicion .celda--construida {
     display: none !important;
 }
 
-.btn-flotante {
+.btn-flotante,
+.turnos-widget {
     display: none !important;
 }
 

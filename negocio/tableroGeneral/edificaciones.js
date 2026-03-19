@@ -240,6 +240,7 @@ EXPOSICIÓN GLOBAL
 window.Edificaciones = { 
     construir, 
     demoler, 
+    _crearInstancia,   /* expuesta para rehidratación desde tablero.js */
     seleccionarEdificio: (id) => { 
         if (window.Tablero && typeof window.Tablero.seleccionarEdificio === "function") {
             window.Tablero.seleccionarEdificio(id);
