@@ -41,11 +41,6 @@ document.addEventListener("DOMContentLoaded", () => {
     /* Inicializar módulos generales que no dependen de la vista */
     if (window.TurnosControl) {
         TurnosControl.inicializar();
-    } else {
-        /* turnosControl.js puede cargar después con defer — esperamos */
-        document.addEventListener("turnosControl:listo", function() {
-            TurnosControl.inicializar();
-        });
     }
 });
 

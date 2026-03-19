@@ -28,8 +28,7 @@ const _MODULOS = [
     "noticias.js",
 ];
 
-/* Módulos de tableroGeneral también usados en móvil
-   Nota: turnosControl.js ya se carga desde tablero.html con defer */
+/* Módulos de tableroGeneral también usados en móviL*/
 const _MODULOS_GENERAL = [
     "../../negocio/tableroGeneral/ruta.js",
 ];
