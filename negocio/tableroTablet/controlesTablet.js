@@ -74,12 +74,35 @@ function _inicializarControlesTablet() {
         RecursosTablet.inicializar();
         EstadisticasTablet.inicializar();
         ConstruccionTablet.inicializar();
+        _inicializarBotonRuta();
 
 
         console.log("controlesTablet: inicialización completa");
     } catch (err) {
         console.error("controlesTablet: error durante inicialización", err);
     }
+}
+function _inicializarBotonRuta() {
+    botonRuta = document.getElementById("btn-ruta")
+    if (!botonRuta) return;
+
+    botonRuta.addEventListener("click", () => {
+        if (!window.RutaMovil) {
+            Notificaciones.mostrar("No se pudo iniciar la búsqueda de ruta.", "error");
+            return;
+        }
+
+        if (window.RutaMovil.estaActivo && window.RutaMovil.estaActivo()) {
+            window.RutaMovil.limpiarTodo();
+        }
+        window.RutaMovil.activar();
+        _actualizarIndicadorModo("ruta", "Modo ruta: selecciona origen y destino (ESC para cancelar)");
+        Notificaciones.mostrar("Selecciona dos edificios para calcular la ruta.", "aviso");
+    });
+
+    document.addEventListener("ruta:completada", () => {
+        _ocultarIndicadorModo();
+    });
 }
 
 document.addEventListener("DOMContentLoaded", () => {
