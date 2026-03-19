@@ -15,6 +15,8 @@ const Estado = {
     modo:                 "normal",   /* "normal" | "construccion" | "demolicion" */
     edificioSeleccionado: null,
     pausado:              false,
+    turno:                0,      /* contador de turnos */
+    intervaloTurnos:      null,   /* ID del interval para el ciclo automático */
 };
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -107,10 +109,9 @@ function _cargarCiudad() {
         const _vias      = Estado.ciudad.terreno.vias;
         Estado.filas     = _vias?.length       || 15;
         Estado.columnas  = _vias?.[0]?.length  || 15;
-        console.log(`tablero.js: mapa ${Estado.filas}x${Estado.columnas}`);
+        Estado.turno     = datos.turno ?? 0;   /* Restaurar contador de turnos */
 
         Recursos.setCiudad(Estado.ciudad);
-        console.log("tablero.js: ciudad cargada.");
 
     } catch (e) {
         console.error("tablero.js: error al cargar:", e);
@@ -151,10 +152,52 @@ function _actualizarNombre() {
     if (el && Estado.ciudad) el.textContent = Estado.ciudad.nombre;
 }
 
+function _iniciarCicloTurnos() {
+    if (Estado.intervaloTurnos || !Estado.ciudad) return;
+
+    Estado.intervaloTurnos = setInterval(() => {
+        if (Estado.pausado || !Estado.ciudad) return;
+        avanzarTurno();
+    }, Estado.ciudad.tiempoTurno);
+
+    console.log(`tablero.js: ciclos de turno iniciados cada ${Estado.ciudad.tiempoTurno / 1000}s`);
+}
+
+function _detenerCicloTurnos() {
+    if (!Estado.intervaloTurnos) return;
+    clearInterval(Estado.intervaloTurnos);
+    Estado.intervaloTurnos = null;
+    console.log("tablero.js: ciclos de turno detenidos");
+}
+
+function _reiniciarCicloTurnos() {
+    _detenerCicloTurnos();
+    _iniciarCicloTurnos();
+}
+
+function setDuracionTurno(segundos) {
+    if (!Estado.ciudad) return;
+
+    const ms = Math.max(1000, Number(segundos) * 1000);
+    Estado.ciudad.modificarTiempoTurno(ms);
+    _reiniciarCicloTurnos();
+}
+
 function guardarPartida() {
     try {
         if (!Estado.ciudad) return;
-        CiudadStorage.guardar(Estado.ciudad);
+        /* Crear objeto para guardar que incluya turno */
+        const datosCompletos = JSON.parse(JSON.stringify(Estado.ciudad));
+        datosCompletos.turno = Estado.turno;
+        CiudadStorage.guardar(datosCompletos);
+
+        /* Agregar ciudad actual al ranking permanente */
+        if (typeof RankingStorage !== "undefined") {
+            const resultado = Puntuacion.calcular(Estado.ciudad);
+            Puntuacion.guardarEnRanking(Estado.ciudad, resultado.total, Estado.turno);
+            console.log("tablero.js: Ciudad agregada al ranking permanente");
+        }
+
         Notificaciones.mostrar("Partida guardada.", "exito");
     } catch (e) {
         Notificaciones.mostrar("Error al guardar.", "error");
@@ -164,10 +207,11 @@ function guardarPartida() {
 function exportarJSON() {
     if (!Estado.ciudad) return;
     const nombre = Estado.ciudad.nombre.replace(/\s+/g, "_");
+    const fecha = new Date().toISOString().split("T")[0];
     const blob   = new Blob([JSON.stringify(Estado.ciudad, null, 2)], { type: "application/json" });
     const url    = URL.createObjectURL(blob);
     const a      = document.createElement("a");
-    a.href = url; a.download = `${nombre}.json`; a.click();
+    a.href = url; a.download = `${nombre}_${fecha}.json`; a.click();
     URL.revokeObjectURL(url);
 }
 
@@ -200,11 +244,24 @@ function avanzarTurno() {
     if (!Estado.ciudad.pasarTurno()) {
         Notificaciones.mostrar("Game Over: recursos negativos.", "error");
         Estado.ciudad.detenerSimulacion();
+        _detenerCicloTurnos();
         return;
     }
+    /* Incrementar turno */
+    Estado.turno++;
+    
     /* Calcula y guarda puntuación del turno */
     const resultado = Puntuacion.calcular(Estado.ciudad);
-    Puntuacion.guardarEnRanking(Estado.ciudad, resultado.total);
+    
+    /* Actualizar ciudad actual en tiempo real */
+    if (typeof RankingStorage !== "undefined") {
+        RankingStorage.actualizarCiudadActual(Estado.ciudad, resultado.total, Estado.turno);
+    } else {
+        console.error("tablero.js: ✗ RankingStorage no está disponible!");
+    }
+    
+    /* Guardar puntuación final al ranking */
+    Puntuacion.guardarEnRanking(Estado.ciudad, resultado.total, Estado.turno);
 
     Notificaciones.mostrar(`Turno completado. Puntuación: ${resultado.total.toLocaleString()} pts.`, "aviso");
     guardarPartida();
@@ -219,4 +276,5 @@ window.Tablero = {
     seleccionarEdificio,
     togglePausa,
     avanzarTurno,
+    setDuracionTurno,
 };

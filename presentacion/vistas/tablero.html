@@ -7,6 +7,7 @@
 
     <link rel="stylesheet" href="https://cdn-uicons.flaticon.com/uicons-bold-rounded/css/uicons-bold-rounded.css">
     <link rel="stylesheet" href="../estilos/tableroBase.css">
+    <link rel="stylesheet" href="../estilos/ranking.css">
     <link rel="stylesheet" href="../estilos/estilosBase/ruta.css">
     <link rel="stylesheet" href="../estilos/estilosBase/turnosControl.css">
     <script src="../../negocio/vista.js"></script>
@@ -35,6 +36,7 @@
     <script src="../../modelos/Ciudad.js"               defer></script>
 
     <script src="../../acceso_datos/CiudadStorage.js"   defer></script>
+    <script src="../../acceso_datos/RankingStorage.js"  defer></script>
     <script src="../../acceso_datos/ApiClima.js"        defer></script>
     <script src="../../acceso_datos/ApiNoticias.js"     defer></script>
 
@@ -45,6 +47,7 @@
     <script src="../../negocio/tableroGeneral/mapa.js"           defer></script>
     <script src="../../negocio/tableroGeneral/modal.js"          defer></script>
     <script src="../../negocio/tableroGeneral/puntuacion.js"     defer></script>
+    <script src="../../negocio/tableroGeneral/ranking.js"        defer></script>
     <script src="../../negocio/tableroGeneral/tablero.js"        defer></script>
     <script src="../../negocio/tableroGeneral/menuPartida.js"    defer></script>
     <script src="../../negocio/tableroGeneral/ruta.js"            defer></script>
@@ -92,6 +95,16 @@
             </button>
             <button class="menu-partida__opcion" id="btn-exportar-json">
                 <i class="fi fi-br-download"></i> Exportar como JSON
+            </button>
+            <div class="menu-partida__seccion">
+                <label class="menu-partida__label" for="input-duracion-turno">Duración turno (segundos)</label>
+                <div class="menu-partida__input-group">
+                    <input id="input-duracion-turno" type="number" min="1" step="1" value="30" />
+                    <button id="btn-aplicar-duracion-turno" class="menu-partida__opcion">Aplicar</button>
+                </div>
+            </div>
+            <button class="menu-partida__opcion" id="btn-ver-ranking">
+                <i class="fi fi-br-trophy"></i> Ver Ranking
             </button>
         </div>
 

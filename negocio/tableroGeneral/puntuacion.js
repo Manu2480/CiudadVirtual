@@ -39,6 +39,7 @@ function calcular(ciudad) {
 
     /* ── Bonificaciones ── */
     const desempleados   = ciudadanos.filter(c => !c.empleo).length;
+    const sinVivienda     = ciudadanos.filter(c => !c.vivienda).length;
     const todosEmpleados = poblacion > 0 && desempleados === 0;
 
     const bonTodosEmpleados  = todosEmpleados       ? 500  : 0;
@@ -50,12 +51,13 @@ function calcular(ciudad) {
 
     /* ── Penalizaciones ── */
     const penDineroNeg       = dinero        < 0 ? -500 : 0;
-    const penElectricidadNeg = electricidad  < 0 ? -300 : 0;
+    const penElectricidadNeg = electricidad < 0 ? -300 : 0;
     const penAguaNeg         = agua          < 0 ? -300 : 0;
     const penFelicidadBaja   = felicidad     < 40 ? -400 : 0;
     const penDesempleados    = desempleados * -10;
+    const penSinVivienda     = sinVivienda * -10;
 
-    const totalPenas = penDineroNeg + penElectricidadNeg + penAguaNeg + penFelicidadBaja + penDesempleados;
+    const totalPenas = penDineroNeg + penElectricidadNeg + penAguaNeg + penFelicidadBaja + penDesempleados + penSinVivienda;
 
     /* ── Total ── */
     const base  = ptsPoblacion + ptsFelicidad + ptsDinero + ptsEdificios + ptsElectricidad + ptsAgua;
@@ -84,28 +86,51 @@ function calcular(ciudad) {
             aguaNeg:          penAguaNeg,
             felicidadBaja:    penFelicidadBaja,
             desempleados:     penDesempleados,
+            sinVivienda:      penSinVivienda,
             total:            totalPenas,
         },
-        meta: { poblacion, felicidad, dinero, electricidad, agua, numEdificios, desempleados },
+        meta: { poblacion, felicidad, dinero, electricidad, agua, numEdificios, desempleados, sinVivienda },
     };
 }
 
-/* Guarda la puntuación del turno en localStorage */
-function guardarEnRanking(ciudad, score) {
-    if (!ciudad) return;
+/* Guarda la puntuación final de la partida usando RankingStorage */
+function guardarEnRanking(ciudad, score, turnos) {
+    if (!ciudad) {
+        console.warn("puntuacion.js: ciudad es nula");
+        return;
+    }
+    
     try {
-        const ranking = JSON.parse(localStorage.getItem("ranking") || "[]");
-        ranking.push({
-            ciudad:    ciudad.nombre,
-            alcalde:   ciudad.alcalde,
-            score,
-            fecha:     new Date().toISOString(),
-        });
-        /* Mantiene solo los últimos 50 registros */
-        if (ranking.length > 50) ranking.splice(0, ranking.length - 50);
-        localStorage.setItem("ranking", JSON.stringify(ranking));
+        /* Verificar que RankingStorage esté disponible */
+        if (typeof RankingStorage === "undefined") {
+            console.error("puntuacion.js: RankingStorage no está disponible!");
+            return;
+        }
+
+        /* Calcular promedio de felicidad */
+        const ciudadanos = ciudad.ciudadanos || [];
+        const felicidadPromedio = ciudadanos.length > 0 
+            ? Math.round(ciudadanos.reduce((sum, c) => sum + (c.felicidad ?? 0), 0) / ciudadanos.length)
+            : 0;
+        
+        const entrada = {
+            cityName:   ciudad.nombre,
+            mayor:      ciudad.alcalde,
+            score:      score,
+            population: ciudadanos.length,
+            happiness:  felicidadPromedio,
+            turns:      turnos || 0,
+            date:       new Date().toISOString(),
+        };
+        
+        /* Usar RankingStorage para agregar la entrada */
+        const resultado = RankingStorage.agregarEntrada(entrada);
+        
+        if (!resultado) {
+            console.error("puntuacion.js: fallo al agregar entrada");
+        }
     } catch (e) {
-        console.warn("puntuacion.js: error al guardar ranking", e);
+        console.error("puntuacion.js: error al guardar ranking", e);
     }
 }
 
