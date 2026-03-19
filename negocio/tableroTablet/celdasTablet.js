@@ -10,6 +10,7 @@ function inicializar() {
     calcularCeldasVisibles(); 
     renderizarViewport();
     mostrarIndices();
+    fotoPerfil();
 }
 document.getElementById("arriba").addEventListener("click", () => moverViewport("arriba", 1));
 document.getElementById("abajo").addEventListener("click", () => moverViewport("abajo", 1));
@@ -88,7 +89,7 @@ function mostrarIndices() {
     for (let f = 0; f < viewport.filasVisibles; f++) {
         const div = document.createElement("div");
         div.className = "indice-fila";
-        div.textContent = viewport.filaInicio + f +1;
+        div.textContent = viewport.filaInicio + f + 1;
         filasEl.appendChild(div);
     }
 
@@ -122,17 +123,30 @@ function renderizarViewport() {
     const gridEl = document.getElementById("mapa-grid");
     gridEl.innerHTML = "";
     gridEl.style.display = "grid";
-    gridEl.style.gridTemplateColumns = `repeat(${viewport.columnasVisibles}, var(--tamano-celda))`;
 
-    const { filaInicio, colInicio, filasVisibles, columnasVisibles } = viewport;
+    // Tamaño de celda desde CSS
+    const tamCelda = parseInt(getComputedStyle(document.documentElement).getPropertyValue("--tamano-celda")) || 44;
 
-    const gridEstado = window.Mapa.getGrid(); // 👈 IMPORTANTE
+    // Tamaño del contenedor
+    const ancho = gridEl.parentElement.clientWidth;
+    const alto  = gridEl.parentElement.clientHeight;
 
-    for (let f = 0; f < filasVisibles; f++) {
-        for (let c = 0; c < columnasVisibles; c++) {
+    // Calcular cuántas celdas caben + 1 extra para mostrar pedacito
+    viewport.columnasVisibles = Math.floor(ancho / tamCelda) + 1;
+    viewport.filasVisibles    = Math.floor(alto / tamCelda) + 1;
 
-            const filaReal = filaInicio + f;
-            const colReal  = colInicio + c;
+    // Definir filas y columnas del grid
+    gridEl.style.gridTemplateColumns = `repeat(${viewport.columnasVisibles}, ${tamCelda}px)`;
+    gridEl.style.gridTemplateRows    = `repeat(${viewport.filasVisibles}, ${tamCelda}px)`;
+
+    // Obtener estado actual del mapa
+    const gridEstado = window.Mapa.getGrid();
+
+    // Renderizar todas las celdas visibles incluyendo el extra
+    for (let f = 0; f < viewport.filasVisibles; f++) {
+        for (let c = 0; c < viewport.columnasVisibles; c++) {
+            const filaReal = viewport.filaInicio + f;
+            const colReal  = viewport.colInicio + c;
 
             const estado = gridEstado?.[filaReal]?.[colReal] || { tipo: "vacio" };
 
@@ -141,10 +155,8 @@ function renderizarViewport() {
             celda.dataset.fila = filaReal;
             celda.dataset.col  = colReal;
 
-            // 🔥 AQUÍ ESTÁ LA CLAVE
             if (estado.tipo !== "vacio") {
                 celda.classList.add("celda--construida");
-
                 const edificio = Edificios.obtener(estado.tipo);
                 if (edificio) {
                     const img = document.createElement("img");
@@ -157,6 +169,18 @@ function renderizarViewport() {
 
             gridEl.appendChild(celda);
         }
+    }
+}
+const divFoto = document.getElementById("foto-perfil");
+const ciudad =  Tablero.Estado.ciudad;;
+const genero = ciudad.genero;
+function fotoPerfil(){
+    console.log(genero)
+    if (genero === "hombre"){
+        divFoto.innerHTML = `<img src="../../media/inicio/rey.png">`
+    }
+    else{
+        divFoto.innerHTML = `<img src="../../media/inicio/reina.png">`
     }
 }
 
