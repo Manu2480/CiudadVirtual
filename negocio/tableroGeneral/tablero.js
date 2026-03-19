@@ -30,12 +30,20 @@ document.addEventListener("DOMContentLoaded", () => {
     Recursos.inicializar();
     Notificaciones.mostrar(`¡Bienvenido, ${Estado.ciudad.alcalde}! Tu ciudad te espera.`, "exito");
 
-    /* Señal para controlesDesktop.js: tablero ya está listo.
-       Si el script de controles ya se cargó, lo inicializamos ahora.
-       Si aún no cargó, detectará este flag al ejecutarse. */
+    /* Señal para controlesDesktop.js: tablero ya está listo. */
     window.__tableroListo = true;
     if (window.ControlesDesktop?.init) {
         window.ControlesDesktop.init();
+    }
+
+    /* Inicializar módulos generales que no dependen de la vista */
+    if (window.TurnosControl) {
+        TurnosControl.inicializar();
+    } else {
+        /* turnosControl.js puede cargar después con defer — esperamos */
+        document.addEventListener("turnosControl:listo", function() {
+            TurnosControl.inicializar();
+        });
     }
 });
 
@@ -51,7 +59,30 @@ function _cargarCiudad() {
             ? filasRaw
             : Array.from({ length: 15 }, () => Array(15).fill(0));
 
-        const terreno = new Terreno(vias, datos.terreno?.edificios ?? []);
+        const terreno = new Terreno(vias, []);
+
+        /* Rehidratar edificios usando Edificaciones._crearInstancia —
+           el mismo mecanismo que usa construir() para crear instancias reales.
+           Necesario para que instanceof EdificioResidencial etc. funcione
+           al ejecutar turnos (viviendasDisponibles, empleosDisponibles). */
+        (datos.terreno?.edificios ?? []).forEach(ed => {
+            if (!ed?.ubicacion) return;
+            const idCatalogo = _normalizarIdEdificio(ed.id);
+            const def        = Edificios.obtener(idCatalogo);
+            if (!def) { console.warn("tablero.js: sin definición para", ed.id); return; }
+            const instancia  = Edificaciones._crearInstancia
+                ? Edificaciones._crearInstancia(idCatalogo, ed.ubicacion.fila, ed.ubicacion.columna, def)
+                : null;
+            if (!instancia) return;
+            /* Restaurar estado guardado */
+            if (Array.isArray(ed.ciudadanos))  instancia.ciudadanos       = ed.ciudadanos;
+            if (ed.recursosEdificio)           instancia.recursosEdificio = ed.recursosEdificio;
+            terreno.edificios.push(instancia);
+            /* Marcar vía en la matriz si corresponde */
+            if (def.categoria === "pavimentaria") {
+                terreno.vias[ed.ubicacion.fila][ed.ubicacion.columna] = 1;
+            }
+        });
 
         const estadoRecursos = datos.estadoRecursos ?? {
             dinero: 50000, agua: 0, electricidad: 0, alimento: 0, felicidad: 0,
@@ -84,6 +115,35 @@ function _cargarCiudad() {
     } catch (e) {
         console.error("tablero.js: error al cargar:", e);
     }
+}
+
+/* Traduce el id de instancia guardado (ej: "casa3") al id del catálogo (ej: "casa")
+   usando el mismo mapa que mapa.js y ruta.js */
+function _normalizarIdEdificio(id) {
+    return Mapa.getGrid ? (() => {
+        /* Reutilizar _normalizarId de mapa.js si está expuesto */
+        if (window.Mapa?._normalizarId) return window.Mapa._normalizarId(id);
+    })() || _normalizarIdLocal(id) : _normalizarIdLocal(id);
+}
+
+function _normalizarIdLocal(id) {
+    const prefijos = {
+        "via":             "via",
+        "casa":            "casa",
+        "apartamento":     "apartamento",
+        "tienda":          "tienda",
+        "centrocomercial": "centro-comercial",
+        "fabrica":         "fabrica",
+        "granja":          "granja",
+        "hospital":        "hospital",
+        "bombero":         "bombero",
+        "policia":         "policia",
+        "parque":          "parque",
+        "luz":             "planta-electrica",
+        "agua":            "planta-hidraulica",
+    };
+    const lower = (id || "").toLowerCase().replace(/\d+$/, "");
+    return prefijos[lower] || id;
 }
 
 function _actualizarNombre() {
