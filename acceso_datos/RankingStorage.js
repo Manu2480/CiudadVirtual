@@ -71,7 +71,28 @@ const RankingStorage = {
             }
 
             const ranking = this.cargar();
-            ranking.push(entrada);
+
+            /* Buscar si ya existe una entrada para la misma ciudad y alcalde */
+            const indexExistente = ranking.findIndex(e =>
+                e.cityName === entrada.cityName && e.mayor === entrada.mayor
+            );
+
+            if (indexExistente >= 0) {
+                /* Actualizar la entrada existente con los nuevos valores */
+                ranking[indexExistente] = {
+                    ...ranking[indexExistente],
+                    score: entrada.score,
+                    population: entrada.population,
+                    happiness: entrada.happiness,
+                    turns: entrada.turns,
+                    date: entrada.date,
+                };
+                console.log("RankingStorage: entrada actualizada para ciudad existente");
+            } else {
+                /* Agregar nueva entrada */
+                ranking.push(entrada);
+                console.log("RankingStorage: nueva entrada agregada");
+            }
 
             /* Ordenar por puntuación descendente */
             ranking.sort((a, b) => b.score - a.score);
@@ -82,10 +103,10 @@ const RankingStorage = {
             }
 
             this.guardar(ranking);
-            console.log("RankingStorage: entrada agregada y ranking ordenado");
+            console.log("RankingStorage: ranking ordenado y guardado");
             return true;
         } catch (e) {
-            console.error("RankingStorage: error al agregar entrada", e);
+            console.error("RankingStorage: error al agregar/actualizar entrada", e);
             return false;
         }
     },
