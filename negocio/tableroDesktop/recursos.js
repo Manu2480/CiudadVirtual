@@ -6,7 +6,7 @@
 ================================================ */
 
 function inicializar() {
-    const interval = setInterval(() => {
+    setInterval(() => {
         if (!window.Tablero?.Estado?.ciudad) return;
 
         const ciudad = window.Tablero.Estado.ciudad;
