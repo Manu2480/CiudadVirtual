@@ -45,7 +45,7 @@ Si ya se cargó un JSON válido, navega a la ciudad.
 cargaJSON.addEventListener("click", () => {
 
     if(cargaJSON.classList.contains("listo")){
-        window.location.href = "ciudad.html";
+        window.location.href = "tablero.html";
     } else {
         jsonInput.click();
     }
@@ -68,8 +68,11 @@ jsonInput.addEventListener("change", (e) => {
 
     reader.onload = (evento) => {
         try {
-            /* Intenta parsear el texto como JSON para comprobar que es válido */
-            JSON.parse(evento.target.result);
+            const jsonCrudo = JSON.parse(evento.target.result);
+            const ciudadNormalizada = validarYNormalizarCiudad(jsonCrudo);
+
+            /* Reemplaza la ciudad previa y deja listo el tablero para renderizar */
+            CiudadStorage.guardar(ciudadNormalizada);
 
             document.body.classList.remove("gris");
 
@@ -77,16 +80,85 @@ jsonInput.addEventListener("change", (e) => {
             cargaJSON.textContent = "Ver ciudad";
             cargaJSON.classList.add("listo");
 
-        } catch {
-            /* El archivo no tiene formato JSON válido */
-            alert("El archivo no es un JSON válido. Por favor intenta de nuevo.");
-            fileInput.value = ""; /* limpia el input para permitir otro intento */
+            /* Renderiza la ciudad cargada en el tablero */
+            window.location.href = "tablero.html";
+
+        } catch (error) {
+            const mensaje = error?.message || "El archivo no tiene la estructura de una ciudad válida.";
+            alert(mensaje);
+            jsonInput.value = ""; /* limpia el input para permitir otro intento */
         }
     };
 
     reader.readAsText(archivo); /* lee el archivo como texto plano */
 
 });
+
+function validarYNormalizarCiudad(data){
+    if (!data || typeof data !== "object" || Array.isArray(data)) {
+        throw new Error("El archivo no contiene un objeto JSON de ciudad válido.");
+    }
+
+    const vias = data.terreno?.vias;
+    if (!Array.isArray(vias) || vias.length === 0 || !Array.isArray(vias[0]) || vias[0].length === 0) {
+        throw new Error("La ciudad debe incluir terreno.vias como una matriz válida.");
+    }
+
+    const filas = vias.length;
+    const columnas = vias[0].length;
+    const matrizValida = vias.every(
+        (fila) => Array.isArray(fila)
+            && fila.length === columnas
+            && fila.every((celda) => Number.isInteger(celda) && (celda === 0 || celda === 1))
+    );
+
+    if (!matrizValida) {
+        throw new Error("La matriz terreno.vias debe ser rectangular y contener solo 0 o 1.");
+    }
+
+    const edificios = data.terreno?.edificios;
+    if (!Array.isArray(edificios)) {
+        throw new Error("La ciudad debe incluir terreno.edificios como un arreglo.");
+    }
+
+    const edificiosValidos = edificios.every((edificio) => {
+        const fila = edificio?.ubicacion?.fila;
+        const columna = edificio?.ubicacion?.columna;
+        return typeof edificio?.id === "string"
+            && Number.isInteger(fila)
+            && Number.isInteger(columna)
+            && fila >= 0 && fila < filas
+            && columna >= 0 && columna < columnas;
+    });
+
+    if (!edificiosValidos) {
+        throw new Error("Cada edificio debe tener id y ubicacion.fila/columna dentro del mapa.");
+    }
+
+    const estadoRecursos = data.estadoRecursos || {};
+    const recursosRequeridos = ["dinero", "agua", "electricidad", "alimento", "felicidad"];
+    const recursosValidos = recursosRequeridos.every((clave) => typeof estadoRecursos[clave] === "number");
+
+    if (!recursosValidos) {
+        throw new Error("estadoRecursos debe incluir dinero, agua, electricidad, alimento y felicidad numéricos.");
+    }
+
+    return {
+        ...data,
+        nombre: typeof data.nombre === "string" && data.nombre.trim() ? data.nombre : "Mi Ciudad",
+        alcalde: typeof data.alcalde === "string" && data.alcalde.trim() ? data.alcalde : "Alcalde",
+        latitud: typeof data.latitud === "number" ? data.latitud : 0,
+        longitud: typeof data.longitud === "number" ? data.longitud : 0,
+        tiempoTurno: typeof data.tiempoTurno === "number" && data.tiempoTurno > 0 ? data.tiempoTurno : 30000,
+        terreno: {
+            vias,
+            edificios,
+        },
+        ciudadanos: Array.isArray(data.ciudadanos) ? data.ciudadanos : [],
+        estadoRecursos,
+    };
+}
+
 cargaTxt.addEventListener("click",()=>{
     txtInput.click();
 });
