@@ -8,6 +8,10 @@ body{
     transition: filter 2s ease; /* velocidad del cambio */
 }
 
+.file{
+    display: none;
+}
+
 /* pantalla gris inicial */
 body.gris{
     filter: grayscale(100%);

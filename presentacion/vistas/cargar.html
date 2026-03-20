@@ -7,6 +7,10 @@
     <link rel="stylesheet" href="../estilos/cargar.css">
     <!-- Lógica de carga de archivo y animación de revelado -->
     <script src="../../negocio/cargar.js" defer></script>
+    <!--Lógica necesaria para la carga de txt-->
+    <script src="../../negocio/tableroGeneral/edificios.js" defer></script>
+    <script src="../../negocio/tableroGeneral/edificaciones.js" defer></script>
+    <script src="../../acceso_datos/SessionStorage.js" defer></script>
 </head>
 <body class="gris">
 
@@ -30,7 +34,8 @@
         </div>
 
         <!-- Input de archivo oculto: se activa programáticamente desde el botón -->
-        <input type="file" id="fileInput" accept=".json" style="display:none">
+        <input type="file" class="file" id="jsonInput" accept=".json">
+        <input type="file" class="file" id="txtInput" accept=".txt">
 
         <!-- Barra de navegación con botones de dirección y botón principal -->
         <div class="navContainer">
@@ -40,7 +45,9 @@
 
             <!-- Botón principal: abre el explorador de archivos o redirige a la ciudad.
                 El JS lo cambia a "Ver ciudad" cuando el JSON es válido. -->
-            <button class="cargaBtn" id="cargaBtn">Cargar Archivo JSON</button>
+            <button class="cargaBtn" id="cargaJSON">Cargar Archivo JSON</button>
+
+            <button class = "cargaBtn" id = "cargaTXT" >Cargar Archivo txt</button>
 
             <!-- Flecha derecha (navegación futura) -->
             <button class="navBtn right"></button>

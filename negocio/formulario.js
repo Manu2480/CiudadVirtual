@@ -187,6 +187,35 @@ addEventListener("DOMContentLoaded",function(){
         }
 
     })
+    function cargarViasEdificios(filas,columnas){
+        let edificios = [];
+        let vias = Array.from(
+            { length: filas },
+            () => Array(columnas).fill(0)
+        );
+        let invalidos = false;
+        infraestructura = (SessionStorage.cargar()).edificios;
+        if (infraestructura){
+            infraestructura.forEach(edificio =>{
+               if (edificio.fila <= filas-1 && edificio.columna <= columnas-1){
+                    edificios.push(Edificaciones._crearInstancia(edificio.id, edificio.fila, edificio.columna, edificio.def));
+               }
+               else{
+                    invalidos = true;
+               }
+               if (edificio.id == "via"){
+                vias[edificio.fila][edificio.columna] = 1;
+               }
+            });
+        }
+        if (invalidos){
+            alert("Hubo edificios que no cupieron dentro de las dimensiones establecidas, por eso han sido borrados")
+        }
+        return {
+            vias: vias,
+            edificios: edificios
+        }
+    }
 
     function crearCiudad(){
         let crear = true;
@@ -238,19 +267,14 @@ addEventListener("DOMContentLoaded",function(){
                 alimento:     0,
                 felicidad:    0,
             };
-
-            const vias = Array.from(
-                { length: altoNum },
-                () => Array(anchoNum).fill(0)
-            );
-
+            viasEdificios = cargarViasEdificios(anchoNum,altoNum)
             const ciudad = new Ciudad(
                 nombreCiudadACrear.value,
                 nombreAlcalde.value,
                 latitud,
                 longitud,
                 30000,
-                new Terreno(vias, []),
+                new Terreno(viasEdificios.vias, viasEdificios.edificios),
                 [],
                 estadoInicial
             );
@@ -270,7 +294,6 @@ addEventListener("DOMContentLoaded",function(){
         nombreCiudadACrear.placeholder = "Ingresa el nombre tu futura ciudad";
     }
 }
-
 actualizarPlaceholder();
 window.addEventListener("resize", actualizarPlaceholder);
 });
