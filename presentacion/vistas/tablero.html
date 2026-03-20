@@ -82,6 +82,27 @@
             <i class="fi fi-br-route"></i>
         </button>
 
+        <!-- Solo visible en móvil: controles de turnos -->
+        <button id="btn-turnos-movil" class="btn-turnos-movil" aria-label="Opciones de turnos">
+            <i class="fi fi-br-time-check"></i>
+        </button>
+
+        <div id="menu-turnos-movil" class="menu-turnos-movil" aria-hidden="true">
+            <div class="menu-turnos-movil__seccion">
+                <label class="menu-turnos-movil__label" for="input-turnos-movil-duracion">Duración turno (segundos)</label>
+                <div class="menu-turnos-movil__input-group">
+                    <input id="input-turnos-movil-duracion" type="number" min="1" step="1" value="30" />
+                    <button id="btn-turnos-movil-aplicar" class="menu-turnos-movil__opcion">Aplicar</button>
+                </div>
+            </div>
+            <button class="menu-turnos-movil__opcion" id="btn-turnos-movil-pausar">
+                <i class="fi fi-br-pause"></i> Pausar turno
+            </button>
+            <button class="menu-turnos-movil__opcion" id="btn-turnos-movil-reanudar">
+                <i class="fi fi-br-play"></i> Reanudar turno
+            </button>
+        </div>
+
         <!-- Menú opciones de partida -->
         <button id="btn-menu-partida" class="btn-menu-partida" aria-label="Opciones de partida">
             <i class="fi fi-br-menu-dots-vertical"></i>

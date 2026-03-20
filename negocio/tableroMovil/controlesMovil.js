@@ -24,6 +24,7 @@ const _MODULOS = [
     "zoom.js",        /* zoom antes que joystick para que sus listeners tengan prioridad en pinch */
     "joystick.js",
     "menuConstruccion.js",
+    "turnos.js",
     "clima.js",
     "noticias.js",
 ];
@@ -66,6 +67,7 @@ function _inicializarControlesMovil() {
         ZoomMovil.inicializar();
         JoystickMovil.inicializar();
         MenuConstruccionMovil.inicializar();
+        TurnosMovil.inicializar();
         ClimaMovil.inicializar();
         NoticiasMovil.inicializar();
         /* TurnosControl ya fue inicializado por tablero.js */
