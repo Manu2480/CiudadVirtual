@@ -14,31 +14,11 @@ addEventListener("DOMContentLoaded",function(){
     let nombreCiudad;
     let longitud;
     let latitud;
+    const dineroInicial = 50000;
     window.siguiente = siguiente;
     window.anterior = anterior;
     window.crearCiudad = crearCiudad;
 
-    // Función para detectar overflow en inputs y activar animación
-    function checkOverflow() {
-        const inputs = document.querySelectorAll('.nombre');
-        
-        inputs.forEach(input => {
-            if (input.scrollWidth > input.clientWidth){
-                input.classList.add('overflowing');
-            } else {
-                input.classList.remove('overflowing');
-            }
-        }); //Si hay overflow le agrega nombre 'overflowing', si no, se lo quita
-    }
-
-    // Verificar overflow en eventos de input y cuando el usuario manipula / deja de manipular el input
-    document.addEventListener('input', checkOverflow);
-    document.addEventListener('focusin', checkOverflow);
-    document.addEventListener('focusout', checkOverflow);
-    
-
-    // Verificar overflow inicial
-    checkOverflow();
 
     //===========================================================================
     //SECCIÓN QUE VA A PERMITIR DESPLAZARSE ENTRE VARIAS SECCIONES DEL FORMULARIO
@@ -188,32 +168,84 @@ addEventListener("DOMContentLoaded",function(){
 
     })
     function cargarViasEdificios(filas,columnas){
-        let edificios = [];
-        let vias = Array.from(
-            { length: filas },
+        /*Carga las vías y los edificios en el mapa inicial*/
+        let edificios = []; //Array donde van los edificios
+        let vias = Array.from(//Llena el array de vias con 0
+            { length: filas }, 
             () => Array(columnas).fill(0)
         );
-        let invalidos = false;
-        infraestructura = (SessionStorage.cargar()).edificios;
+        let dineroGastado = 0; //Va a contar los gastos
+        let invalidos = false; //Flag de edificios invalidos
+        let costoExcedido = false //Flag de dinero inicial excedido
+        infraestructura = (SessionStorage.cargar()).edificios;//Carga el json del session storage
+
         if (infraestructura){
+            //primer recorrido: construcción vías
             infraestructura.forEach(edificio =>{
+                //primera validación: que quepa el edificio en el mapa
                if (edificio.fila <= filas-1 && edificio.columna <= columnas-1){
-                    edificios.push(Edificaciones._crearInstancia(edificio.id, edificio.fila, edificio.columna, edificio.def));
-               }
+                    //segunda validación: que sea una vía
+                    if (edificio.id == "via"){
+                        //tercera validación: que se pueda comprar
+                        if (dineroGastado<dineroInicial-edificio.def.costo){
+                            //se marca la vía en la matriz de vias, se suma el costo de construcción, y se mete al array de edificios
+                            vias[edificio.fila][edificio.columna] = 1;
+                            dineroGastado += edificio.def.costo;
+                            edificios.push(Edificaciones._crearInstancia(edificio.id, edificio.fila, edificio.columna, edificio.def));
+                        }
+                        else{
+                            costoExcedido = true;
+                        }
+
+                    }
+                }
                else{
                     invalidos = true;
                }
-               if (edificio.id == "via"){
-                vias[edificio.fila][edificio.columna] = 1;
+            });
+
+            //segundo recorrido: construcción de otros edificios
+            infraestructura.forEach(edificio =>{
+                //primera validación: que quepa en el mapa
+               if (edificio.fila <= filas-1 && edificio.columna <= columnas-1){
+                    //segunda validación: que no sea via
+                    if (!(edificio.id == "via")){
+                        //tercera validación: que no exceda el presupuesto inicial
+                        if (dineroGastado<=dineroInicial-edificio.def.costo){
+                            //cuarta validación: que tenga via adyacente
+                            if(vias[edificio.fila]?.[edificio.columna-1] == 1 ||
+                            vias[edificio.fila]?.[edificio.columna+1] == 1 ||
+                            vias[edificio.fila-1]?.[edificio.columna] == 1 ||
+                            vias[edificio.fila+1]?.[edificio.columna] == 1){
+                                //se guarda el costo, se agrega al array de edificios
+                                dineroGastado += edificio.def.costo;
+                                edificios.push(Edificaciones._crearInstancia(edificio.id, edificio.fila, edificio.columna, edificio.def));
+                            }
+                            else{
+                                invalidos = true;
+                            }
+                        }
+                        else{
+                            costoExcedido = true;
+                        }
+                    } 
+                }
+               else{
+                    invalidos = true;
                }
             });
         }
         if (invalidos){
-            alert("Hubo edificios que no cupieron dentro de las dimensiones establecidas, por eso han sido borrados")
+            alert("Algunos edificios no fueron construidos porque no estaban adyacentes a una vía, o porque no cabían dentro de las dimensiones de mapa seleccionadas")
         }
+        if (costoExcedido){
+            alert("Algunos edificios no fueron construidos porque se excedió el presupuesto inicial de $50.000")
+        }
+        //se retorna la matriz de vias, la de edificios, y los gastos
         return {
             vias: vias,
-            edificios: edificios
+            edificios: edificios,
+            gastos: dineroGastado
         }
     }
 
@@ -259,15 +291,14 @@ addEventListener("DOMContentLoaded",function(){
         }
         if (crear) {
             const generoValor = document.querySelector('input[name="genero"]:checked').value;
-
+            viasEdificios = cargarViasEdificios(anchoNum,altoNum)
             const estadoInicial = {
-                dinero:       50000,
+                dinero:       dineroInicial - viasEdificios.gastos,
                 agua:         0,
                 electricidad: 0,
                 alimento:     0,
                 felicidad:    0,
             };
-            viasEdificios = cargarViasEdificios(anchoNum,altoNum)
             const ciudad = new Ciudad(
                 nombreCiudadACrear.value,
                 nombreAlcalde.value,

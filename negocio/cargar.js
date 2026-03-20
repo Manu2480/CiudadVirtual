@@ -16,6 +16,10 @@ const cargaJSON = document.getElementById("cargaJSON");
 const cargaTxt = document.getElementById("cargaTXT")
 const jsonInput = document.getElementById("jsonInput");
 const txtInput = document.getElementById("txtInput");
+const btnIzquierda = document.getElementById("izquierda");
+const btnDerecha = document.getElementById("derecha");
+const botonesCarga = document.querySelectorAll(".cargaBtn");
+let botonCargaActual = 0;
 
 const clavesTxt = {
     g: "terreno",
@@ -32,6 +36,32 @@ const clavesTxt = {
     U1: "planta-electrica",
     U2: "planta-hidraulica",
     P1: "parque"
+}
+/*NAVEGACIÓN ENTRE ESTILOS DE CARGA*/
+btnIzquierda.addEventListener("click",() => cambiarBotonCarga(-1));
+btnDerecha.addEventListener("click",() => cambiarBotonCarga(1))
+function cambiarBotonCarga(cantidad){
+    const cantidadNueva = botonCargaActual + cantidad;
+    const posMaxima = botonesCarga.length -1;
+    botonesCarga.forEach(boton => 
+        boton.classList.remove("activo") //dejo de mostrar los botones
+    );
+    if (cantidadNueva >= 0 && cantidadNueva <= posMaxima){
+        //si la cantidad nueva está dentro de los parámetros, se pone ese botón como activo
+        botonesCarga[cantidadNueva].classList.add("activo");
+        botonCargaActual = cantidadNueva;
+    }
+    else if (cantidadNueva < 0){
+        //si la cantidad nueva es menor a 0, significa que se debe retornar a la posición máxima
+        botonesCarga[posMaxima].classList.add("activo");
+        botonCargaActual = posMaxima;
+    }
+    else{
+        //si la posición nueva supera, entonces debe mostrarse la primera posición
+        botonesCarga[0].classList.add("activo");
+        botonCargaActual = 0;
+    }
+
 }
 
 /* =========================================
@@ -176,7 +206,7 @@ txtInput.addEventListener("change", (e) => {
         const edificios = []
         const filas = texto.trim().split("\n"); //separo las filas por saltos de linea
         filas.forEach(fila => {
-            const columnas = fila.trim().split(" ") //separo las columans por espacios,
+            const columnas = fila.trim().split(" ") //separo las columans por espacios
             contadorColumna = 0; //reinicio el contador de la columna en cada fila
             columnas.forEach(columna => {
                 if (!columna){
@@ -184,7 +214,8 @@ txtInput.addEventListener("change", (e) => {
                 }
                 const id = clavesTxt[columna]; //le saco el id según la convencion de arriba
                 if (!id){
-                    console.log(`Símbolo inválido: ${columna} en fila ${contadorFila}, columna ${contadorColumna}`);
+                    //Le reporta al usuario de convenciones inválidas
+                    alert(`Símbolo inválido: ${columna} en fila ${contadorFila}, columna ${contadorColumna}`);
                 }
                 const diccionario = crearDiccionarioEdificio(id,contadorFila,contadorColumna)
                 if (diccionario){
@@ -199,12 +230,13 @@ txtInput.addEventListener("change", (e) => {
     }
     lector.readAsText(archivo); //Este va a disparar la función definida
     //arriba cuando cargue el archivo
-    window.location.href = "formulario.html"
+    window.location.href = "formulario.html" //redirige al usuario
 });
 
 function crearDiccionarioEdificio(id,fila,columna){
     if (id == "terreno"){
         return;
+        //Si es terreno, no se guarda
     }
     const datos = Edificios.obtener(id);
     if(datos){

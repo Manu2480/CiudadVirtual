@@ -7,18 +7,12 @@ Clave usada: "txt"
 Estructura almacenada: JSON con lista de edificios reconstruida
 a partir de un txt 
 
-Estructura de cada entrada:
-{
-  "edificios": "Nueva Ciudad",
-}
+Utiliza el session storage, que se limpia cada vez que se cierra la página.
 
 Uso:
-  RankingStorage.guardar(rankingArray);  // guarda el array completo
-  const datos = RankingStorage.cargar(); // recupera (array o [])
-  RankingStorage.agregarEntrada(entrada); // agrega una entrada y ordena
-  RankingStorage.limpiar();              // elimina todo el ranking
-  RankingStorage.obtenerTop(n);          // obtiene Top N ciudades
-  RankingStorage.obtenerPosicion(nombreCiudad); // obtiene posición de una ciudad
+  SessionStorage.subirEdificios(edificios);  // guarda el array de edificios
+  SessionStorage.cargar() //retorna el json cargado en el session storage
+  
 ================================================ */
 const SessionStorage = {
     claveEdificios: "edificiosTxt", //clave del json con los edificios

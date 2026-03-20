@@ -120,8 +120,11 @@ y centra vertical y horizontalmente su contenido.
     height: auto;
     filter: drop-shadow(0px 10px 15px rgba(0,0,0,0.1));
 }
-
-.cargaBtn {
+.cargaBtn{
+    display: none;
+}
+.cargaBtn.activo {
+    display: flex;
     background-color: #ffffff;
     color: #333333;
     font-size: 1.2rem;
