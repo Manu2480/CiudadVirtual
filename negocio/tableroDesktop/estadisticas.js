@@ -72,6 +72,7 @@ function inicializar() {
                     ${p.aguaNeg         ? fila("fi-br-raindrops", "Agua negativa",         p.aguaNeg)         : ""}
                     ${p.felicidadBaja   ? fila("fi-br-sad",       "Felicidad < 40",        p.felicidadBaja)   : ""}
                     ${p.desempleados    ? fila("fi-br-user-slash", `${m.desempleados} desempleados × -10`, p.desempleados) : ""}
+                    ${p.sinVivienda     ? fila("fi-br-home",     `${m.sinVivienda} sin vivienda × -10`, p.sinVivienda)     : ""}
                     ${p.total === 0 ? `<div class="stats-item stats-item--empty">
                         <i class="fi fi-br-check"></i>
                         <span class="stats-item__label">Sin penalizaciones</span>
@@ -79,8 +80,6 @@ function inicializar() {
                 </div>
             </div>
         `;
-
-        clearInterval(interval);
     }, 500);
 }
 

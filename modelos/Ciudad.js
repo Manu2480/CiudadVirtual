@@ -94,6 +94,19 @@ class Ciudad {
         });
     }
 
+    // Costo de mantenimiento por turno (dinero) basado en edificios activos
+    aplicarCostoMantenimiento() {
+        const edificios = this.terreno.edificios || [];
+        const cantidadEdificios = edificios.filter(e => !String(e.id || "").toLowerCase().startsWith("via")).length;
+        const costoPorEdificio = 50; // monto fijo por turno
+        const costoTotal = cantidadEdificios * costoPorEdificio;
+
+        if (costoTotal > 0) {
+            console.log(`Aplicando costo de mantenimiento: ${cantidadEdificios} edificios × ${costoPorEdificio} = ${costoTotal}`);
+            this.modificarRecurso("dinero", -costoTotal);
+        }
+    }
+
     // Metodo que valida si están las condiciones necesarias para crear un ciudadano
     // Si no se cumplen las condiciones, devuelve false y escribe en consola el motivo
     aumentarPoblacion() {
@@ -337,6 +350,9 @@ class Ciudad {
         // 5. Producción/Consumo de edificios
         console.log("\n--- Producción/Consumo de edificios ---");
         this.recursosPorEdificios();
+
+        // 5.b Costo de mantenimiento por edificio (dinero)
+        this.aplicarCostoMantenimiento();
         
         // 6. Intentar crear nuevos ciudadanos
         console.log("\n--- Intento de creación de ciudadanos ---");

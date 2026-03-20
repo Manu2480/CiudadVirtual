@@ -15,6 +15,8 @@ const Estado = {
     modo:                 "normal",   /* "normal" | "construccion" | "demolicion" */
     edificioSeleccionado: null,
     pausado:              false,
+    turno:                0,      /* contador de turnos */
+    intervaloTurnos:      null,   /* ID del interval para el ciclo automático */
 };
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -30,12 +32,15 @@ document.addEventListener("DOMContentLoaded", () => {
     Recursos.inicializar();
     Notificaciones.mostrar(`¡Bienvenido, ${Estado.ciudad.alcalde}! Tu ciudad te espera.`, "exito");
 
-    /* Señal para controlesDesktop.js: tablero ya está listo.
-       Si el script de controles ya se cargó, lo inicializamos ahora.
-       Si aún no cargó, detectará este flag al ejecutarse. */
+    /* Señal para controlesDesktop.js: tablero ya está listo. */
     window.__tableroListo = true;
     if (window.ControlesDesktop?.init) {
         window.ControlesDesktop.init();
+    }
+
+    /* Inicializar módulos generales que no dependen de la vista */
+    if (window.TurnosControl) {
+        TurnosControl.inicializar();
     }
 });
 
@@ -51,7 +56,30 @@ function _cargarCiudad() {
             ? filasRaw
             : Array.from({ length: 15 }, () => Array(15).fill(0));
 
-        const terreno = new Terreno(vias, datos.terreno?.edificios ?? []);
+        const terreno = new Terreno(vias, []);
+
+        /* Rehidratar edificios usando Edificaciones._crearInstancia —
+           el mismo mecanismo que usa construir() para crear instancias reales.
+           Necesario para que instanceof EdificioResidencial etc. funcione
+           al ejecutar turnos (viviendasDisponibles, empleosDisponibles). */
+        (datos.terreno?.edificios ?? []).forEach(ed => {
+            if (!ed?.ubicacion) return;
+            const idCatalogo = _normalizarIdEdificio(ed.id);
+            const def        = Edificios.obtener(idCatalogo);
+            if (!def) { console.warn("tablero.js: sin definición para", ed.id); return; }
+            const instancia  = Edificaciones._crearInstancia
+                ? Edificaciones._crearInstancia(idCatalogo, ed.ubicacion.fila, ed.ubicacion.columna, def)
+                : null;
+            if (!instancia) return;
+            /* Restaurar estado guardado */
+            if (Array.isArray(ed.ciudadanos))  instancia.ciudadanos       = ed.ciudadanos;
+            if (ed.recursosEdificio)           instancia.recursosEdificio = ed.recursosEdificio;
+            terreno.edificios.push(instancia);
+            /* Marcar vía en la matriz si corresponde */
+            if (def.categoria === "pavimentaria") {
+                terreno.vias[ed.ubicacion.fila][ed.ubicacion.columna] = 1;
+            }
+        });
 
         const estadoRecursos = datos.estadoRecursos ?? {
             dinero: 50000, agua: 0, electricidad: 0, alimento: 0, felicidad: 0,
@@ -76,14 +104,42 @@ function _cargarCiudad() {
         const _vias      = Estado.ciudad.terreno.vias;
         Estado.filas     = _vias?.length       || 15;
         Estado.columnas  = _vias?.[0]?.length  || 15;
-        console.log(`tablero.js: mapa ${Estado.filas}x${Estado.columnas}`);
+        Estado.turno     = datos.turno ?? 0;   /* Restaurar contador de turnos */
 
         Recursos.setCiudad(Estado.ciudad);
-        console.log("tablero.js: ciudad cargada.");
 
     } catch (e) {
         console.error("tablero.js: error al cargar:", e);
     }
+}
+
+/* Traduce el id de instancia guardado (ej: "casa3") al id del catálogo (ej: "casa")
+   usando el mismo mapa que mapa.js y ruta.js */
+function _normalizarIdEdificio(id) {
+    return Mapa.getGrid ? (() => {
+        /* Reutilizar _normalizarId de mapa.js si está expuesto */
+        if (window.Mapa?._normalizarId) return window.Mapa._normalizarId(id);
+    })() || _normalizarIdLocal(id) : _normalizarIdLocal(id);
+}
+
+function _normalizarIdLocal(id) {
+    const prefijos = {
+        "via":             "via",
+        "casa":            "casa",
+        "apartamento":     "apartamento",
+        "tienda":          "tienda",
+        "centrocomercial": "centro-comercial",
+        "fabrica":         "fabrica",
+        "granja":          "granja",
+        "hospital":        "hospital",
+        "bombero":         "bombero",
+        "policia":         "policia",
+        "parque":          "parque",
+        "luz":             "planta-electrica",
+        "agua":            "planta-hidraulica",
+    };
+    const lower = (id || "").toLowerCase().replace(/\d+$/, "");
+    return prefijos[lower] || id;
 }
 
 function _actualizarNombre() {
@@ -91,10 +147,52 @@ function _actualizarNombre() {
     if (el && Estado.ciudad) el.textContent = Estado.ciudad.nombre;
 }
 
+function _iniciarCicloTurnos() {
+    if (Estado.intervaloTurnos || !Estado.ciudad) return;
+
+    Estado.intervaloTurnos = setInterval(() => {
+        if (Estado.pausado || !Estado.ciudad) return;
+        avanzarTurno();
+    }, Estado.ciudad.tiempoTurno);
+
+    console.log(`tablero.js: ciclos de turno iniciados cada ${Estado.ciudad.tiempoTurno / 1000}s`);
+}
+
+function _detenerCicloTurnos() {
+    if (!Estado.intervaloTurnos) return;
+    clearInterval(Estado.intervaloTurnos);
+    Estado.intervaloTurnos = null;
+    console.log("tablero.js: ciclos de turno detenidos");
+}
+
+function _reiniciarCicloTurnos() {
+    _detenerCicloTurnos();
+    _iniciarCicloTurnos();
+}
+
+function setDuracionTurno(segundos) {
+    if (!Estado.ciudad) return;
+
+    const ms = Math.max(1000, Number(segundos) * 1000);
+    Estado.ciudad.modificarTiempoTurno(ms);
+    _reiniciarCicloTurnos();
+}
+
 function guardarPartida() {
     try {
         if (!Estado.ciudad) return;
-        CiudadStorage.guardar(Estado.ciudad);
+        /* Crear objeto para guardar que incluya turno */
+        const datosCompletos = JSON.parse(JSON.stringify(Estado.ciudad));
+        datosCompletos.turno = Estado.turno;
+        CiudadStorage.guardar(datosCompletos);
+
+        /* Agregar ciudad actual al ranking permanente */
+        if (typeof RankingStorage !== "undefined") {
+            const resultado = Puntuacion.calcular(Estado.ciudad);
+            Puntuacion.guardarEnRanking(Estado.ciudad, resultado.total, Estado.turno);
+            console.log("tablero.js: Ciudad agregada al ranking permanente");
+        }
+
         Notificaciones.mostrar("Partida guardada.", "exito");
     } catch (e) {
         Notificaciones.mostrar("Error al guardar.", "error");
@@ -104,10 +202,11 @@ function guardarPartida() {
 function exportarJSON() {
     if (!Estado.ciudad) return;
     const nombre = Estado.ciudad.nombre.replace(/\s+/g, "_");
+    const fecha = new Date().toISOString().split("T")[0];
     const blob   = new Blob([JSON.stringify(Estado.ciudad, null, 2)], { type: "application/json" });
     const url    = URL.createObjectURL(blob);
     const a      = document.createElement("a");
-    a.href = url; a.download = `${nombre}.json`; a.click();
+    a.href = url; a.download = `${nombre}_${fecha}.json`; a.click();
     URL.revokeObjectURL(url);
 }
 
@@ -140,11 +239,24 @@ function avanzarTurno() {
     if (!Estado.ciudad.pasarTurno()) {
         Notificaciones.mostrar("Game Over: recursos negativos.", "error");
         Estado.ciudad.detenerSimulacion();
+        _detenerCicloTurnos();
         return;
     }
+    /* Incrementar turno */
+    Estado.turno++;
+    
     /* Calcula y guarda puntuación del turno */
     const resultado = Puntuacion.calcular(Estado.ciudad);
-    Puntuacion.guardarEnRanking(Estado.ciudad, resultado.total);
+    
+    /* Actualizar ciudad actual en tiempo real */
+    if (typeof RankingStorage !== "undefined") {
+        RankingStorage.actualizarCiudadActual(Estado.ciudad, resultado.total, Estado.turno);
+    } else {
+        console.error("tablero.js: ✗ RankingStorage no está disponible!");
+    }
+    
+    /* Guardar puntuación final al ranking */
+    Puntuacion.guardarEnRanking(Estado.ciudad, resultado.total, Estado.turno);
 
     Notificaciones.mostrar(`Turno completado. Puntuación: ${resultado.total.toLocaleString()} pts.`, "aviso");
     guardarPartida();
@@ -159,4 +271,5 @@ window.Tablero = {
     seleccionarEdificio,
     togglePausa,
     avanzarTurno,
+    setDuracionTurno,
 };

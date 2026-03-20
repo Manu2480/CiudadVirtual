@@ -1,0 +1,287 @@
+/* ================================================
+RANKING.CSS
+Estilos para el modal y visualización del ranking
+de ciudades en el juego.
+
+Estructura de clases:
+  .ranking-modal        → contenedor principal
+  .ranking__titulo      → título del ranking
+  .ranking-controles    → botones de control
+  .ranking-tabla-contenedor → contenedor con scroll
+  .ranking-tabla        → tabla de ranking
+  .ranking__fila--actual → fila de la ciudad actual (destacada)
+  .ranking-ciudad-actual → información de ciudad si no está en Top 10
+  .ranking-vacio        → mensaje cuando no hay datos
+================================================ */
+
+/* ══════════════════════════════════════════════════ */
+/* CONTENEDOR PRINCIPAL */
+/* ══════════════════════════════════════════════════ */
+
+.ranking-modal {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+    color: var(--color-texto);
+}
+
+.ranking__titulo {
+    text-align: center;
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+    color: var(--color-primario, #2ecc71);
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* ══════════════════════════════════════════════════ */
+/* CONTROLES */
+/* ══════════════════════════════════════════════════ */
+
+.ranking-controles {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.ranking-controles .btn {
+    padding: 10px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 500;
+}
+
+.ranking-controles .btn--primario {
+    background-color: var(--color-primario, #2ecc71);
+    color: white;
+}
+
+.ranking-controles .btn--primario:hover {
+    background-color: var(--color-primario-hover, #27ae60);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.ranking-controles .btn--secundario {
+    background-color: var(--color-secundario, #e74c3c);
+    color: white;
+}
+
+.ranking-controles .btn--secundario:hover {
+    background-color: var(--color-secundario-hover, #c0392b);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* ══════════════════════════════════════════════════ */
+/* TABLA DE RANKING */
+/* ══════════════════════════════════════════════════ */
+
+.ranking-tabla-contenedor {
+    overflow-x: auto;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    margin-bottom: 20px;
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.ranking-tabla {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+}
+
+.ranking-tabla thead {
+    background: linear-gradient(135deg, var(--color-primario, #2ecc71), var(--color-primario-oscuro, #229954));
+    color: white;
+    font-weight: bold;
+    position: sticky;
+    top: 0;
+}
+
+.ranking-tabla thead th {
+    padding: 12px 10px;
+    text-align: center;
+    border-bottom: 2px solid rgba(0, 0, 0, 0.1);
+}
+
+.ranking-tabla tbody tr {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    transition: background-color 0.2s ease;
+}
+
+.ranking-tabla tbody tr:hover {
+    background-color: rgba(46, 204, 113, 0.1);
+}
+
+.ranking-tabla tbody tr:nth-child(odd) {
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+/* Fila de la ciudad actual (destacada) */
+.ranking-tabla tbody tr.ranking__fila--actual {
+    background-color: rgba(46, 204, 113, 0.25) !important;
+    font-weight: 600;
+    box-shadow: inset 3px 0 0 var(--color-primario, #2ecc71);
+}
+
+.ranking-tabla tbody tr.ranking__fila--actual:hover {
+    background-color: rgba(46, 204, 113, 0.35) !important;
+}
+
+.ranking-tabla td {
+    padding: 10px 8px;
+    text-align: center;
+    word-break: break-word;
+}
+
+/* Columnas específicas */
+.ranking__posicion {
+    font-weight: bold;
+    color: var(--color-primario, #2ecc71);
+    min-width: 60px;
+}
+
+.ranking__ciudad {
+    min-width: 140px;
+    text-align: left;
+    color: var(--color-secundario, #3498db);
+}
+
+.ranking__alcalde {
+    min-width: 120px;
+    text-align: left;
+}
+
+.ranking__puntuacion {
+    min-width: 100px;
+    color: var(--color-acentuado, #f39c12);
+    font-weight: 600;
+}
+
+.ranking__poblacion {
+    min-width: 80px;
+}
+
+.ranking__felicidad {
+    min-width: 80px;
+    color: var(--color-primario, #2ecc71);
+}
+
+.ranking__turnos {
+    min-width: 70px;
+}
+
+.ranking__fecha {
+    min-width: 100px;
+    font-size: 0.85rem;
+    color: #888;
+}
+
+/* ══════════════════════════════════════════════════ */
+/* CIUDAD ACTUAL (SI NO ESTÁ EN TOP 10) */
+/* ══════════════════════════════════════════════════ */
+
+.ranking-ciudad-actual {
+    background: linear-gradient(135deg, rgba(46, 204, 113, 0.15), rgba(46, 204, 113, 0.05));
+    border: 2px solid var(--color-primario, #2ecc71);
+    border-radius: 8px;
+    padding: 15px 20px;
+    text-align: center;
+    margin-top: 20px;
+    font-weight: 500;
+}
+
+.ranking-ciudad-actual p {
+    margin: 0;
+    color: var(--color-primario, #2ecc71);
+    font-size: 1.1rem;
+}
+
+/* ══════════════════════════════════════════════════ */
+/* ESTADO VACÍO */
+/* ══════════════════════════════════════════════════ */
+
+.ranking-vacio {
+    text-align: center;
+    padding: 40px 20px;
+    color: #999;
+    font-style: italic;
+}
+
+/* ══════════════════════════════════════════════════ */
+/* RESPONSIVE */
+/* ══════════════════════════════════════════════════ */
+
+@media (max-width: 768px) {
+    .ranking-modal {
+        padding: 15px;
+    }
+
+    .ranking__titulo {
+        font-size: 1.4rem;
+    }
+
+    .ranking-controles {
+        gap: 8px;
+    }
+
+    .ranking-controles .btn {
+        padding: 8px 12px;
+        font-size: 0.8rem;
+    }
+
+    .ranking-tabla {
+        font-size: 0.8rem;
+    }
+
+    .ranking-tabla thead th,
+    .ranking-tabla td {
+        padding: 8px 6px;
+    }
+
+    /* Ocultar columnas menos importantes en móvil */
+    .ranking__fecha {
+        display: none;
+    }
+
+    .ranking__alcalde {
+        display: none;
+    }
+
+    .ranking__ciudad {
+        min-width: 100px;
+    }
+
+    .ranking__posicion {
+        min-width: 45px;
+    }
+}
+
+@media (max-width: 480px) {
+    .ranking-tabla {
+        font-size: 0.7rem;
+    }
+
+    .ranking-tabla thead th,
+    .ranking-tabla td {
+        padding: 6px 4px;
+    }
+
+    /* Mostrar solo las columnas más importantes */
+    .ranking__poblacion,
+    .ranking__turnos {
+        display: none;
+    }
+
+    .ranking__ciudad {
+        min-width: 80px;
+    }
+}

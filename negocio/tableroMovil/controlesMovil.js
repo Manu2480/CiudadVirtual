@@ -24,8 +24,14 @@ const _MODULOS = [
     "zoom.js",        /* zoom antes que joystick para que sus listeners tengan prioridad en pinch */
     "joystick.js",
     "menuConstruccion.js",
+    "turnos.js",
     "clima.js",
     "noticias.js",
+];
+
+/* Módulos de tableroGeneral también usados en móviL*/
+const _MODULOS_GENERAL = [
+    "../../negocio/tableroGeneral/ruta.js",
 ];
 
 /* Carga los scripts en orden y llama al callback cuando el último termina */
@@ -40,6 +46,18 @@ function _cargarModulos(modulos, onCompleto) {
     document.head.appendChild(script);
 }
 
+/* Carga scripts con ruta absoluta (módulos compartidos de tableroGeneral) */
+function _cargarModulosAbsolutos(modulos, onCompleto) {
+    if (modulos.length === 0) { onCompleto(); return; }
+
+    const [primero, ...resto] = modulos;
+    const script = document.createElement("script");
+    script.src = primero;
+    script.onload  = () => _cargarModulosAbsolutos(resto, onCompleto);
+    script.onerror = () => console.error("controlesMovil: error al cargar", script.src);
+    document.head.appendChild(script);
+}
+
 function _inicializarControlesMovil() {
     console.log("controlesMovil: inicialización (readyState=", document.readyState, ")");
     try {
@@ -49,8 +67,10 @@ function _inicializarControlesMovil() {
         ZoomMovil.inicializar();
         JoystickMovil.inicializar();
         MenuConstruccionMovil.inicializar();
+        TurnosMovil.inicializar();
         ClimaMovil.inicializar();
         NoticiasMovil.inicializar();
+        /* TurnosControl ya fue inicializado por tablero.js */
 
         console.log("controlesMovil: inicialización completa");
     } catch (err) {
@@ -58,4 +78,10 @@ function _inicializarControlesMovil() {
     }
 }
 
-_cargarModulos(_MODULOS, _inicializarControlesMovil);
+_cargarModulos(_MODULOS, function() {
+    if (_MODULOS_GENERAL.length > 0) {
+        _cargarModulosAbsolutos(_MODULOS_GENERAL, _inicializarControlesMovil);
+    } else {
+        _inicializarControlesMovil();
+    }
+});

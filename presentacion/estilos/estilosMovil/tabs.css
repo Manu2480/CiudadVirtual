@@ -20,3 +20,8 @@ Responsabilidad:
 .btn-flotante {
     display: flex;
 }
+
+/* Botón flotante de turnos visible solo en móvil */
+.btn-turnos-movil {
+    display: flex;
+}

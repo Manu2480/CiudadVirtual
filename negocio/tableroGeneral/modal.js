@@ -16,6 +16,15 @@ document.addEventListener("DOMContentLoaded", () => {
     document.addEventListener("keydown", (e) => {
         if (e.key === "Escape" && _overlay.classList.contains("activo")) cerrar();
     });
+
+    /* Refrescar estadísticas automáticamente si el modal está abierto.
+       Pequeño delay para que Ciudad.js termine de actualizar los arrays
+       de ciudadanos antes de leer los datos. */
+    document.addEventListener("turno:ejecutado", () => {
+        if (_overlay?.classList.contains("activo") && _cuerpo?.querySelector(".modal-stats")) {
+            setTimeout(mostrarEstadisticas, 50);
+        }
+    });
 });
 
 function abrir(htmlContenido) {
@@ -37,7 +46,6 @@ function cerrar() {
 function mostrarEdificio(edificio, fila, col) {
     const reembolso = Math.round(edificio.costo * 0.5);
 
-    /* Instancia real para saber ocupación actual */
     const instancia = Tablero.Estado.ciudad?.terreno?.ubicacionInfraestructura(fila, col);
     const ocupados  = instancia?.ciudadanos?.length ?? 0;
     const capacidad = instancia?.capacidad ?? 0;
@@ -112,6 +120,10 @@ function mostrarEstadisticas() {
         </li>`;
     };
 
+    /* Calcular ciudadanos sin vivienda/empleo */
+    const sinVivienda = ciudad.ciudadanos.filter(c => !c.vivienda).length;
+    const sinEmpleo   = ciudad.ciudadanos.filter(c => !c.empleo).length;
+
     const html = `
         <div class="modal-stats">
             <h2><i class="fi fi-br-chart-histogram"></i> ${ciudad?.nombre || "Mi Ciudad"}</h2>
@@ -119,6 +131,7 @@ function mostrarEstadisticas() {
                 <span class="modal-stats__score-label">Puntuación total</span>
                 <span class="modal-stats__score-valor">${resultado.total.toLocaleString()}</span>
             </div>
+
             <p class="modal-stats__seccion">Puntos base</p>
             <ul class="modal-stats__lista">
                 ${fila("fi-br-users",     `Población (${m.poblacion} hab × 10)`,         d.ptsPoblacion,    "var(--color-primario)")}
@@ -128,6 +141,18 @@ function mostrarEstadisticas() {
                 ${fila("fi-br-bolt",      `Electricidad (${m.electricidad} kW × 2)`,      d.ptsElectricidad, "var(--color-primario)")}
                 ${fila("fi-br-raindrops", `Agua (${m.agua} L × 2)`,                       d.ptsAgua,         "var(--color-primario)")}
             </ul>
+
+            <p class="modal-stats__seccion">Ciudadanos</p>
+            <ul class="modal-stats__lista">
+                ${fila("fi-br-users", "Población total", ciudad.ciudadanos.length, "var(--color-primario)")}
+                ${sinVivienda > 0
+                    ? fila("fi-br-home", "Sin vivienda", -sinVivienda, "var(--color-energia)")
+                    : fila("fi-br-home", "Todos con vivienda", 0, "var(--color-dinero)")}
+                ${sinEmpleo > 0
+                    ? fila("fi-br-briefcase", "Sin empleo", -sinEmpleo, "var(--color-energia)")
+                    : fila("fi-br-briefcase", "Todos empleados", 0, "var(--color-dinero)")}
+            </ul>
+
             <p class="modal-stats__seccion modal-stats__seccion--bono">Bonificaciones</p>
             <ul class="modal-stats__lista">
                 ${b.todosEmpleados    ? fila("fi-br-briefcase", "Todos empleados",        b.todosEmpleados)    : ""}
@@ -136,12 +161,13 @@ function mostrarEstadisticas() {
                 ${b.granCiudad        ? fila("fi-br-home",      "Ciudad > 1000 hab",      b.granCiudad)        : ""}
                 ${b.total === 0 ? `<li style="color:var(--color-texto-s)"><i class="fi fi-br-info"></i> <span>Sin bonificaciones aún</span></li>` : ""}
             </ul>
+
             <p class="modal-stats__seccion modal-stats__seccion--pena">Penalizaciones</p>
             <ul class="modal-stats__lista">
-                ${p.dineroNeg       ? fila("fi-br-coins",     "Dinero negativo",       p.dineroNeg)       : ""}
-                ${p.electricidadNeg ? fila("fi-br-bolt",      "Electricidad negativa", p.electricidadNeg) : ""}
-                ${p.aguaNeg         ? fila("fi-br-raindrops", "Agua negativa",         p.aguaNeg)         : ""}
-                ${p.felicidadBaja   ? fila("fi-br-sad",       "Felicidad < 40",        p.felicidadBaja)   : ""}
+                ${p.dineroNeg       ? fila("fi-br-coins",      "Dinero negativo",       p.dineroNeg)       : ""}
+                ${p.electricidadNeg ? fila("fi-br-bolt",       "Electricidad negativa", p.electricidadNeg) : ""}
+                ${p.aguaNeg         ? fila("fi-br-raindrops",  "Agua negativa",         p.aguaNeg)         : ""}
+                ${p.felicidadBaja   ? fila("fi-br-sad",        "Felicidad < 40",        p.felicidadBaja)   : ""}
                 ${p.desempleados    ? fila("fi-br-user-slash", `${m.desempleados} desempleados × -10`, p.desempleados) : ""}
                 ${p.total === 0 ? `<li style="color:var(--color-texto-s)"><i class="fi fi-br-check"></i> <span>Sin penalizaciones</span></li>` : ""}
             </ul>

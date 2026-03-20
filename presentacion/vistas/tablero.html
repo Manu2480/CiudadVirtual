@@ -7,6 +7,7 @@
 
     <link rel="stylesheet" href="https://cdn-uicons.flaticon.com/uicons-bold-rounded/css/uicons-bold-rounded.css">
     <link rel="stylesheet" href="../estilos/tableroBase.css">
+    <link rel="stylesheet" href="../estilos/ranking.css">
     <link rel="stylesheet" href="../estilos/estilosBase/ruta.css">
     <script src="../../negocio/vista.js"></script>
 
@@ -34,6 +35,7 @@
     <script src="../../modelos/Ciudad.js"               defer></script>
 
     <script src="../../acceso_datos/CiudadStorage.js"   defer></script>
+    <script src="../../acceso_datos/RankingStorage.js"  defer></script>
     <script src="../../acceso_datos/ApiClima.js"        defer></script>
     <script src="../../acceso_datos/ApiNoticias.js"     defer></script>
 
@@ -44,6 +46,7 @@
     <script src="../../negocio/tableroGeneral/mapa.js"           defer></script>
     <script src="../../negocio/tableroGeneral/modal.js"          defer></script>
     <script src="../../negocio/tableroGeneral/puntuacion.js"     defer></script>
+    <script src="../../negocio/tableroGeneral/ranking.js"        defer></script>
     <script src="../../negocio/tableroGeneral/tablero.js"        defer></script>
     <script src="../../negocio/tableroGeneral/menuPartida.js"    defer></script>
     <script src="../../negocio/tableroGeneral/ruta.js"            defer></script>
@@ -87,6 +90,32 @@
             <i class="fi fi-br-rss"></i>
         </button>
 
+        <!-- Botón ruta (desktop) -->
+        <button id="btn-ruta" class="btn-ruta" aria-label="Calcular ruta entre dos edificios">
+            <i class="fi fi-br-route"></i>
+        </button>
+
+        <!-- Solo visible en móvil: controles de turnos -->
+        <button id="btn-turnos-movil" class="btn-turnos-movil" aria-label="Opciones de turnos">
+            <i class="fi fi-br-time-check"></i>
+        </button>
+
+        <div id="menu-turnos-movil" class="menu-turnos-movil" aria-hidden="true">
+            <div class="menu-turnos-movil__seccion">
+                <label class="menu-turnos-movil__label" for="input-turnos-movil-duracion">Duración turno (segundos)</label>
+                <div class="menu-turnos-movil__input-group">
+                    <input id="input-turnos-movil-duracion" type="number" min="1" step="1" value="30" />
+                    <button id="btn-turnos-movil-aplicar" class="menu-turnos-movil__opcion">Aplicar</button>
+                </div>
+            </div>
+            <button class="menu-turnos-movil__opcion" id="btn-turnos-movil-pausar">
+                <i class="fi fi-br-pause"></i> Pausar turno
+            </button>
+            <button class="menu-turnos-movil__opcion" id="btn-turnos-movil-reanudar">
+                <i class="fi fi-br-play"></i> Reanudar turno
+            </button>
+        </div>
+
         <!-- Menú opciones de partida -->
         <button id="btn-menu-partida" class="btn-menu-partida" aria-label="Opciones de partida">
             <i class="fi fi-br-menu-dots-vertical"></i>
@@ -98,6 +127,16 @@
             </button>
             <button class="menu-partida__opcion" id="btn-exportar-json">
                 <i class="fi fi-br-download"></i> Exportar como JSON
+            </button>
+            <div class="menu-partida__seccion">
+                <label class="menu-partida__label" for="input-duracion-turno">Duración turno (segundos)</label>
+                <div class="menu-partida__input-group">
+                    <input id="input-duracion-turno" type="number" min="1" step="1" value="30" />
+                    <button id="btn-aplicar-duracion-turno" class="menu-partida__opcion">Aplicar</button>
+                </div>
+            </div>
+            <button class="menu-partida__opcion" id="btn-ver-ranking">
+                <i class="fi fi-br-trophy"></i> Ver Ranking
             </button>
         </div>
 

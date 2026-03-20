@@ -11,7 +11,7 @@ Overlay, tarjeta centrada y contenido de info de edificio.
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 500;
+    z-index: 1200; /* encima del joystick, panel de ruta y cualquier flotante */
     opacity: 0;
     pointer-events: none;
     transition: opacity var(--trans-normal);

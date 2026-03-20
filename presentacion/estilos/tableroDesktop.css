@@ -633,7 +633,8 @@ body.modo-demolicion .celda--construida {
     display: none !important;
 }
 
-.btn-flotante {
+.btn-flotante,
+.turnos-widget {
     display: none !important;
 }
 
