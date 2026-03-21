@@ -75,7 +75,7 @@ const Ranking = (() => {
         /* Generar tabla con Top 10 */
         let html = `
             <div class="ranking-modal">
-                <h2 class="ranking__titulo">🏆 Ranking de Ciudades 🏆</h2>
+                <h2 class="ranking__titulo"><img src="../../media/recursos/trofeo.png" alt="Trofeo" class="ranking__icono"> Ranking de Ciudades <img src="../../media/recursos/trofeo.png" alt="Trofeo" class="ranking__icono"></h2>
                 
                 <div class="ranking-controles">
                     <button id="btn-exportar-ranking" class="btn btn--primario" title="Descargar ranking como JSON">
