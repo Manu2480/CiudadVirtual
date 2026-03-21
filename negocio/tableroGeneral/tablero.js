@@ -252,7 +252,7 @@ function avanzarTurno() {
     if (typeof RankingStorage !== "undefined") {
         RankingStorage.actualizarCiudadActual(Estado.ciudad, resultado.total, Estado.turno);
     } else {
-        console.error("tablero.js: ✗ RankingStorage no está disponible!");
+        console.error("tablero.js: RankingStorage no está disponible!");
     }
     
     /* Guardar puntuación final al ranking */
