@@ -57,6 +57,12 @@ Dependencias: HU-023, HU-024
 /* =========================
    RESET Y BASE
 ========================= */
+
+.panel-tablet{
+    display: none;
+}
+
+
 * {
     margin: 0;
     padding: 0;

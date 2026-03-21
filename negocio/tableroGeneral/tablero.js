@@ -203,7 +203,9 @@ function exportarJSON() {
     if (!Estado.ciudad) return;
     const nombre = Estado.ciudad.nombre.replace(/\s+/g, "_");
     const fecha = new Date().toISOString().split("T")[0];
-    const blob   = new Blob([JSON.stringify(Estado.ciudad, null, 2)], { type: "application/json" });
+    const datosCompletos = JSON.parse(JSON.stringify(Estado.ciudad));
+    datosCompletos.turno = Estado.turno;
+    const blob   = new Blob([JSON.stringify(datosCompletos, null, 2)], { type: "application/json" });
     const url    = URL.createObjectURL(blob);
     const a      = document.createElement("a");
     a.href = url; a.download = `${nombre}_${fecha}.json`; a.click();
