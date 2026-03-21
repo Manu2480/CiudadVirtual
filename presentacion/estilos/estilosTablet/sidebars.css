@@ -1,3 +1,6 @@
+#panel-titulo {
+  flex: 0 0 auto; /* altura fija según su contenido */
+}
 .sidebar--derecho{
     display: none;
 }
@@ -106,18 +109,17 @@
     #sidebar-derecho-tablet{
         grid-column: 3;
         display: grid;
-        grid-template-rows: 33% 33% 1fr;
+        grid-template-rows: 35% 40% 1fr;
+    }
+    #sidebar-izquierdo-tablet{
+        grid-column: 1;
+        display: grid;
+        grid-template-rows: 30%,70%;
     }
     .sidebar--tablet {
         grid-column: 1;
         background-color: var(--color-texto-s);
         position: relative;
-    }
-    #recConEst-tablet{
-
-        display: grid; 
-        grid-template-rows: 25% 50% 25%; /* Recursos, Construcción, Estadísticas */
-        gap: 5px;
     }
     .sidebar--tablet {
         display: none; /* Ocultar sidebar central en landscape */
@@ -127,13 +129,9 @@
     }
 
     /* Paneles en sidebars laterales */
-    .sidebar--izquierdo .panel--recursos {
-        margin-bottom: 1rem;
-    }
 
-    .sidebar--derecho .panel--clima,
-    .sidebar--derecho .panel--noticias {
-        margin-bottom: 1rem;
-    }
+    #panel-recursos-tablet-horizontal{
+        grid-row: 1;
+    }   
 
 }

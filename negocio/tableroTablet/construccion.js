@@ -1,14 +1,20 @@
-const construccionTablet = document.getElementById("catalogo-edificios-tablet");
+const construccionTabletVertical = document.getElementById("catalogo-edificios-tablet-vertical");
+const construccionTabletHorizontal = document.getElementById("catalogo-edificios-tablet-horizontal");
 let edificioSeleccionado = null;
 function inicializar(){
     // Crear catálogo de edificios
     const catalogo = Edificios.todos();
     for (const edificio of catalogo){
-        construccionTablet.insertAdjacentHTML("beforeend", _htmlCatalogo(edificio));
+        construccionTabletVertical.insertAdjacentHTML("beforeend", _htmlCatalogo(edificio));
+        construccionTabletHorizontal.insertAdjacentHTML("beforeend", _htmlCatalogo(edificio));
     }
 }
-construccionTablet.addEventListener("click", (e) => {
-    const tarjeta = e.target.closest(".tarjeta-edificio");
+construccionTabletVertical.addEventListener("click", manejarClickTarjeta);
+construccionTabletHorizontal.addEventListener("click", manejarClickTarjeta);
+
+function manejarClickTarjeta(elemento){
+    /*Guarda la variable de la tarjeta del edificio seleccionado */
+    const tarjeta = elemento.target.closest(".tarjeta-edificio");
     if (!tarjeta) return;
 
     const id = tarjeta.dataset.id;
@@ -33,7 +39,8 @@ construccionTablet.addEventListener("click", (e) => {
     Tablero.seleccionarEdificio(id);
 
     console.log("Edificio seleccionado:",Tablero.Estado.edificioSeleccionado);
-});
+}
+
 
 function _htmlCatalogo(edificio){
     return `
