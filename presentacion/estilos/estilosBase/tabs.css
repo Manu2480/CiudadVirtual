@@ -55,7 +55,11 @@ Ocultos por defecto — tableroMovil.css los activa.
     z-index: 201;
     transition: transform var(--trans-rapida), box-shadow var(--trans-rapida);
 }
-
+/*Ocultando botones extra solo visibles para tablet*/
+#mov-x, #mov-y, #sidebar-tablet, #btn-recConEst-tablet,
+#btn-sidebar-tablet, #btn-noticias-tablet, #btn-clima-tablet {
+    display: none;
+}
 .btn-flotante:hover {
     transform: scale(1.08);
     box-shadow: 0 6px 20px rgba(26,115,232,0.35);

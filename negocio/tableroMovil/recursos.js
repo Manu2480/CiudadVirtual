@@ -92,7 +92,11 @@ function _renderizarRecursos() {
         agua:         "fi-br-raindrops",
         electricidad: "fi-br-bolt",
         alimento:     "fi-br-wheat",
+<<<<<<< HEAD
+        felicidad:    "<fi fi-br-grin",
+=======
         felicidad:    "fi fi-br-smile-beam",
+>>>>>>> 8bce1a30474102ef61cceac9686f5c1ca1f38fac
     };
 
     const _nombres = {
@@ -108,7 +112,7 @@ function _renderizarRecursos() {
         agua:         " L",
         electricidad: " kW",
         alimento:     " kg",
-        felicidad:    "",
+        felicidad:    "%",
     };
 
     panel.innerHTML = `

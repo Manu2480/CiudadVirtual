@@ -21,4 +21,20 @@ o Widget de clima y noticias en tabs laterales
 Prioridad: Media
 Dependencias: HU-023
 
-*/
+
+@media (orientation: landscape) { /* Tablet en horizontal */
+
+/* Tooltips más grandes para tablet */
+.tooltip {
+    font-size: 1.2rem;
+    padding: 0.5rem;
+    max-width: 200px;
+}
+
+/* Botones de tamaño medium para touch */
+.btn-medium {
+    padding: 12px 24px;
+    font-size: 16px;
+    border-radius: 8px;
+    min-height: 44px; /* Para accesibilidad táctil */
+} 

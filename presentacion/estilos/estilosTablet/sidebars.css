@@ -1,0 +1,136 @@
+#abrir-puntaje-tablet{
+    background-color: var(--color-primario); 
+    color: white;
+    margin:0;
+    text-align: center;
+    font-weight: bold;
+    padding: 0.5rem 0;
+    align-self: center;
+    border-radius: 8px; 
+}
+.stats-item__texto{
+    display: flex;
+    align-items: center;
+    text-align: center;
+    gap: 4px;
+    font-size: var(--fuente-tam-s); 
+    font-weight: 600;
+    white-space: nowrap;
+}
+.btn-sidebar-tablet, .btn-ruta{
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    width: var(--btn-tap-min);
+    height: var(--btn-tap-min);
+    font-size: 20px;
+    color: #ffffff;
+    border-radius: var(--radio-s);
+    flex-shrink: 0;
+    transition: background var(--trans-rapida);
+}
+.panel-recursos{
+    display: none;
+}
+.sidebar--izquierdo{
+    display: none;   
+}
+.sidebar--tablet.cerrada {
+    display: none !important;
+}
+.sidebar--tablet {
+    display: block !important; /* Ocultar sidebar central en landscape */
+}
+.panel-tablet.abierto{
+    grid-row: 1 / -1;
+    background-color: var(--color-texto-s);
+    visibility: visible !important;
+}
+.panel__titulo{
+    background-color: var(--color-primario-h); 
+    color: white;
+    width: 100%;
+    margin:0;
+    text-align: center;
+    font-weight: bold;
+    padding: 0.5rem 0;
+    border-radius: 8px;
+}
+
+.panel{
+    padding:0;
+    border-radius:12px;
+    padding:0;
+}
+
+@media(orientation: portrait){
+
+    .sidebar--derecho{
+        display: none;
+    }
+    
+    /* Sidebar tablet */
+    .sidebar--tablet {
+        grid-column: 2;
+        grid-row: 1 / -1;
+        background-color: var(--color-texto-s);
+        position: relative;
+    }
+    .panel-tablet{
+        visibility: hidden;
+        position: absolute;
+        inset: 0;
+    }
+    #recConEst-tablet{
+        display: grid !important; 
+        grid-template-rows: 25% 50% 25%; /* Recursos, Construcción, Estadísticas */
+        gap: 5px;
+    }
+
+}
+
+@media(orientation: landscape){
+    .sidebar--izquierdo {
+        display: block;
+        background-color: var(--color-superficie);
+        padding: 1rem;
+        overflow-y: auto;
+    }
+    .sidebar--derecho{
+        display: block;
+        background-color: var(--color-superficie);
+        padding: 1rem;
+        overflow-y: auto;
+        grid-column: 3;
+        width: 100%;
+        height: 100%;
+    }
+    .sidebar--tablet {
+        grid-column: 1;
+        background-color: var(--color-texto-s);
+        position: relative;
+    }
+    #recConEst-tablet{
+
+        display: grid; 
+        grid-template-rows: 25% 50% 25%; /* Recursos, Construcción, Estadísticas */
+        gap: 5px;
+    }
+    .sidebar--tablet {
+        display: none; /* Ocultar sidebar central en landscape */
+    }
+    .btn-sidebar-tablet {
+        display: none;
+    }
+
+    /* Paneles en sidebars laterales */
+    .sidebar--izquierdo .panel--recursos {
+        margin-bottom: 1rem;
+    }
+
+    .sidebar--derecho .panel--clima,
+    .sidebar--derecho .panel--noticias {
+        margin-bottom: 1rem;
+    }
+
+}

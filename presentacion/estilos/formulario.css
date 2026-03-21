@@ -268,7 +268,9 @@ INPUTS
     white-space: nowrap;
 }
 
-
+.territorio select{
+    width: 100%
+}
 /*
 ================================
 SECCION DE SELECCIÓN HOMBRE/MUJER
@@ -347,8 +349,7 @@ En escritorio se muestran las dos a la vez.
     transition: all 0.3s ease;
 }
 
-
-/*TOOLTIPS
+/*TOOLTIPS*/
 
 /* =========================================
 TOOLTIP (PENSAMIENTO DEL BOTÓN)
@@ -397,6 +398,7 @@ TOOLTIP (PENSAMIENTO DEL BOTÓN)
     letter-spacing: 2px;
     line-height: 1;
 }
+
 
 /* hover en desktop: cada wrapper activa solo su tooltip */
 @media (hover: hover) {

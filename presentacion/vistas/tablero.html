@@ -67,19 +67,27 @@
 
         <div id="panel-recursos" class="panel-recursos"></div>
 
-        <!-- Solo visible en móvil (tableroMovil.css) -->
+        <!-- Botón ruta (desktop y tablet) -->
+        <button id="btn-ruta" class="btn-ruta" aria-label="Calcular ruta entre dos edificios">
+            <i class="fi fi-br-route"></i>
+        </button>
+
+        <!-- Solo visible en móvil   (tableroMovil.css) -->
         <button id="btn-recursos-movil" class="btn-recursos-movil" aria-label="Ver recursos">
             <i class="fi fi-br-menu-burger"></i>
         </button>
+        
+        <button data-panel="recConEst-tablet" id="btn-recConEst-tablet" class="btn-sidebar-tablet" aria-label="menús">
+            <i class="fi fi-br-menu-burger"></i>
+        </button>
+
+        <button data-panel="clima-tablet" class = "btn-sidebar-tablet" id="btn-clima-tablet"><i class="fi fi-br-cloud-sun"></i></button>
+        <button data-panel="noticias-tablet" class = "btn-sidebar-tablet" id="btn-noticias-tablet"><i class="fi fi-br-radio-alt"></i></button>
+
 
         <!-- Botón noticias — visible en todas las vistas -->
         <button id="btn-noticias" class="btn-noticias" aria-label="Ver noticias">
             <i class="fi fi-br-rss"></i>
-        </button>
-
-        <!-- Botón ruta (desktop) -->
-        <button id="btn-ruta" class="btn-ruta" aria-label="Calcular ruta entre dos edificios">
-            <i class="fi fi-br-route"></i>
         </button>
 
         <!-- Solo visible en móvil: controles de turnos -->
@@ -144,12 +152,30 @@
             </section>
         </aside>
 
-        <section id="area-mapa" class="area-mapa">
+        <section id="area-mapa" class="area-mapa full">
             <div id="controles-zoom" class="controles-zoom">
                 <button id="btn-zoom-in"  class="btn-zoom" aria-label="Acercar"><i class="fi fi-br-zoom-in"></i></button>
                 <button id="btn-zoom-out" class="btn-zoom" aria-label="Alejar"><i class="fi fi-br-zoom-out"></i></button>
             </div>
-            <div id="mapa-grid" class="mapa-grid" role="grid"></div>
+
+            <div id="mapa-container" class="mapa-container">
+                <div id="mov-y" class="mover-tablet">
+                    <button id="arriba" class="boton-movimiento"><i class="fi fi-br-arrow-up"></i></button>
+                    <button id="abajo" class="boton-movimiento"><i class="fi fi-br-arrow-down"></i></button>
+                </div>
+                <div id="mov-x" class="mover-tablet">
+                    <button id="derecha" class="boton-movimiento"><i class="fi fi-br-arrow-right"></i></button>
+                    <button id="izquierda" class="boton-movimiento"><i class="fi fi-br-arrow-left"></i></button>
+                </div>
+                <div id="foto-perfil"></div>
+
+                <div id="indices-filas" class="indices-filas"></div>
+                <div id="indices-columnas" class="indices-columnas"></div>
+                <div id="viewport-mapa">
+                    <div id="mapa-grid" class="mapa-grid" role="grid"><!-- mapa.js genera las celdas dinámicamente --></div>
+                </div>
+            </div>
+
         </section>
 
         <aside id="sidebar-derecho" class="sidebar sidebar--derecho">
@@ -159,10 +185,35 @@
             <section id="panel-noticias" class="panel panel--noticias">
                 <h2 class="panel__titulo">Noticias</h2>
             </section>
+            <section id="noticias-tablet-horizontal" class="panel-tablet">
+                <section id="panel-noticias-tablet-horizontal" class="panel panel--noticias">
+            </section>
             <section id="panel-estadisticas" class="panel panel--estadisticas">
                 <div class="modulo-header">
                     <h2 class="panel__titulo">Estadísticas</h2>
                 </div>
+            </section>
+        </aside>
+
+        <aside id="sidebar-tablet" class="sidebar--tablet cerrada">
+            <section id="recConEst-tablet" class="panel-tablet">
+                <section id="panel-recursos-tablet" class="panel panel--recursos">
+                    <h2 class="panel__titulo">Recursos</h2>
+                </section> 
+                <section id="menu-construccion-tablet" class="panel panel--construccion">
+                    <h2 class="panel__titulo">Construir</h2>
+                    <div id="catalogo-edificios-tablet"></div>
+                </section>
+                <section id="panel-estadisticas-tablet" class="panel panel--estadisticas">
+                    <h2 class="panel__titulo">Estadísticas</h2>
+                </section>
+            </section>
+            <section id="clima-tablet" class="panel-tablet">
+            </section>
+            
+            <section id="noticias-tablet-vertical" class="panel-tablet">
+                <section id="panel-noticias-tablet-vertical" class="panel panel--noticias">
+                </section>
             </section>
         </aside>
 
@@ -174,7 +225,6 @@
         <button class="tab" data-panel="panel-recursos"><i class="fi fi-br-wheat"></i> Recursos</button>
         <button class="tab" data-panel="ruta"><i class="fi fi-br-route"></i> Ruta</button>
     </nav>
-
     <button id="btn-stats-flotante" class="btn-flotante" aria-label="Ver estadísticas">
         <i class="fi fi-br-chart-histogram"></i>
     </button>

@@ -123,12 +123,11 @@ addEventListener("DOMContentLoaded",function(){
             if(idDepartamento) {
                 cargarCiudades(idDepartamento);
                 nombreDepartamento = this.options[this.selectedIndex].text;
-                nombreCiudad = null;
                 longitud = null;
                 latitud = null; //Hago esto para que si el usuario no selecciona una ciudad con el nuevo departamento, no manden la solicitud con una ciudad en un departamento equivocado
             } else {
                 // Si no se selecciona nada, puedes vaciar el select de ciudades
-                document.getElementById("ciudad").innerHTML = "";
+                document.getElementById("ciudad").innerHTML = '<option value="" disabled selected hidden>Seleccione...</option>';;
             }
     });
     function cargarCiudades(departamentoId) {
