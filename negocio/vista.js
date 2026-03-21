@@ -40,7 +40,7 @@ Vistas:
     } else {
         script.src = `../../negocio/tablero${nombreVista}/controles${nombreVista}.js?v=${Date.now()}`;
     }
-    // script.defer = true;  // Removido para que se ejecute inmediatamente
+    script.defer = true;  // Necesario para que el DOM esté listo antes de ejecutar
     script.onload  = () => console.log("vista.js: JS de controles cargado", script.src);
     script.onerror = () => console.error("vista.js: error al cargar JS de controles", script.src);
     document.head.appendChild(script);

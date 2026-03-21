@@ -61,20 +61,37 @@ function _cargarModulosAbsolutos(modulos, onCompleto) {
 function _inicializarControlesMovil() {
     console.log("controlesMovil: inicialización (readyState=", document.readyState, ")");
     try {
-        TabsMovil.inicializar();
-        RecursosMovil.inicializar();
-        StatsMovil.inicializar();
-        ZoomMovil.inicializar();
-        JoystickMovil.inicializar();
-        MenuConstruccionMovil.inicializar();
-        TurnosMovil.inicializar();
-        ClimaMovil.inicializar();
-        NoticiasMovil.inicializar();
-        /* TurnosControl ya fue inicializado por tablero.js */
+        // Log de verificación de objetos cargados
+        console.log("TabsMovil disponible?", !!window.TabsMovil);
+        console.log("RecursosMovil disponible?", !!window.RecursosMovil);
+        console.log("StatsMovil disponible?", !!window.StatsMovil);
+        console.log("ZoomMovil disponible?", !!window.ZoomMovil);
+        console.log("JoystickMovil disponible?", !!window.JoystickMovil);
+        console.log("MenuConstruccionMovil disponible?", !!window.MenuConstruccionMovil);
+        console.log("TurnosMovil disponible?", !!window.TurnosMovil);
+        console.log("ClimaMovil disponible?", !!window.ClimaMovil);
+        console.log("NoticiasMovil disponible?", !!window.NoticiasMovil);
+        
+        if (window.TabsMovil) {
+            window.TabsMovil.inicializar();
+            console.log("✓ TabsMovil inicializado");
+        } else {
+            console.error("✗ TabsMovil NO CARGADO");
+        }
+        
+        if (window.RecursosMovil) window.RecursosMovil.inicializar();
+        if (window.StatsMovil) window.StatsMovil.inicializar();
+        if (window.ZoomMovil) window.ZoomMovil.inicializar();
+        if (window.JoystickMovil) window.JoystickMovil.inicializar();
+        if (window.MenuConstruccionMovil) window.MenuConstruccionMovil.inicializar();
+        if (window.TurnosMovil) window.TurnosMovil.inicializar();
+        if (window.ClimaMovil) window.ClimaMovil.inicializar();
+        if (window.NoticiasMovil) window.NoticiasMovil.inicializar();
 
         console.log("controlesMovil: inicialización completa");
     } catch (err) {
         console.error("controlesMovil: error durante inicialización", err);
+        console.error("Stack:", err.stack);
     }
 }
 
