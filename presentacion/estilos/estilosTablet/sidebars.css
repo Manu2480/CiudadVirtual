@@ -1,3 +1,7 @@
+.sidebar--derecho{
+    display: none;
+}
+
 #abrir-puntaje-tablet{
     background-color: var(--color-primario); 
     color: white;
@@ -17,7 +21,7 @@
     font-weight: 600;
     white-space: nowrap;
 }
-.btn-sidebar-tablet, .btn-ruta{
+.btn-ruta{
     display: flex !important;
     align-items: center;
     justify-content: center;
@@ -64,10 +68,19 @@
 }
 
 @media(orientation: portrait){
-
-    .sidebar--derecho{
-        display: none;
+    .btn-sidebar-tablet{
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
+        width: var(--btn-tap-min);
+        height: var(--btn-tap-min);
+        font-size: 20px;
+        color: #ffffff;
+        border-radius: var(--radio-s);
+        flex-shrink: 0;
+        transition: background var(--trans-rapida);
     }
+
     
     /* Sidebar tablet */
     .sidebar--tablet {
@@ -90,20 +103,10 @@
 }
 
 @media(orientation: landscape){
-    .sidebar--izquierdo {
-        display: block;
-        background-color: var(--color-superficie);
-        padding: 1rem;
-        overflow-y: auto;
-    }
-    .sidebar--derecho{
-        display: block;
-        background-color: var(--color-superficie);
-        padding: 1rem;
-        overflow-y: auto;
+    #sidebar-derecho-tablet{
         grid-column: 3;
-        width: 100%;
-        height: 100%;
+        display: grid;
+        grid-template-rows: 33% 33% 1fr;
     }
     .sidebar--tablet {
         grid-column: 1;
