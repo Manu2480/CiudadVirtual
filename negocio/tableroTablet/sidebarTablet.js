@@ -7,7 +7,7 @@ function inicializar() {
     const botonNoticias = document.getElementById("btn-noticias-tablet");
     const paneles = {
         recConEst: document.getElementById("recConEst-tablet"),
-        clima:    document.getElementById("clima-tablet"),
+        clima:    document.getElementById("clima-tablet-vertical"),
         noticias: document.getElementById("noticias-tablet-vertical")
     };
     const mapa = document.getElementById("area-mapa");
