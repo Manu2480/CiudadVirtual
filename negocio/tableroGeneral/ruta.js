@@ -26,6 +26,7 @@ var _estado     = "inactivo";   /* "inactivo" | "eligiendo" | "resultado" */
 var _puntoA     = null;         /* { fila, col, celdaEl } */
 var _puntoB     = null;
 var _celdasRuta = [];           /* celdas de la ruta pintada */
+var _coordsRuta = [];           /* Coordenadas de la ruta pintada para tablet*/
 
 /* ── Acceso al estado del juego ── */
 function _getCiudad() {
@@ -73,6 +74,7 @@ function limpiarTodo() {
     /* Quitar amarillo de la ruta */
     _celdasRuta.forEach(function(c) { c.classList.remove("celda--ruta"); });
     _celdasRuta = [];
+    _coordsRuta = [];
 
     _eliminarPanel();
     _estado = "inactivo";
@@ -158,8 +160,7 @@ function _actualizarPanelB(nombre, imagen) {
         pasoB.classList.add("ruta-paso--calculando");
     }
 }
-
-/* ================================================
+/* =================0===============================
 CLICK EN CELDA DESDE MAPA.JS
 ================================================ */
 function _onCeldaRuta(e) {
@@ -279,6 +280,10 @@ function _pintarRuta(ruta) {
     var gridEl = document.getElementById("mapa-grid");
     if (!gridEl) return;
     ruta.forEach(function(coord) {
+        _coordsRuta.push({
+            fila: coord[0],
+            col: coord[1]
+        });
         var celda = gridEl.querySelector(
             '[data-fila="' + coord[0] + '"][data-col="' + coord[1] + '"]'
         );
@@ -313,7 +318,51 @@ function _irATabMapa() {
     }
     document.dispatchEvent(new CustomEvent("ruta:completada"));
 }
+document.addEventListener("mapa:renderizado", function() {
+    if (_estado === "inactivo") return;
 
+    // A
+    if (_puntoA) {
+        const celda = document.querySelector(
+            `[data-fila="${_puntoA.fila}"][data-col="${_puntoA.col}"]`
+        );
+        if (celda) {
+            celda.classList.add("celda--ruta-a");
+            _puntoA.celdaEl = celda;
+        }
+    }
+
+    // B
+    if (_puntoB) {
+        const celda = document.querySelector(
+            `[data-fila="${_puntoB.fila}"][data-col="${_puntoB.col}"]`
+        );
+        if (celda) {
+            celda.classList.add("celda--ruta-b");
+            _puntoB.celdaEl = celda;
+        }
+    }
+
+    // Ruta
+    _repintarRuta();
+});
+function _repintarRuta() {
+    var gridEl = document.getElementById("mapa-grid");
+    if (!gridEl) return;
+
+    _celdasRuta = []; // 🔥 reset DOM actual
+
+    _coordsRuta.forEach(function(coord) {
+        var celda = gridEl.querySelector(
+            '[data-fila="' + coord.fila + '"][data-col="' + coord.col + '"]'
+        );
+
+        if (celda) {
+            celda.classList.add("celda--ruta");
+            _celdasRuta.push(celda); // 👈 vuelve a llenar DOM
+        }
+    });
+}
 /* ================================================
 HELPERS
 ================================================ */
@@ -339,6 +388,7 @@ function _idCatalogo(idInstancia) {
     }
     return idInstancia;
 }
+
 
 /* ================================================
 EXPOSICIÓN GLOBAL
