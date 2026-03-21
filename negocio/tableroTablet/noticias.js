@@ -63,4 +63,4 @@ function renderizarNoticias(noticias,panel){
     });
     panel.innerHTML += '</div>'
 }
-window.NoticiasTablet = {inicializar};
+window.NoticiasTablet = {inicializar, llamarNoticias};

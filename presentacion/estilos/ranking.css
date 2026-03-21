@@ -268,8 +268,6 @@ Estructura de clases:
         padding: 8px 6px;
     }
 
-    /* Ocultar columnas menos importantes en móvil */
-
 
     .ranking__ciudad {
         min-width: 100px;
@@ -301,7 +299,6 @@ Estructura de clases:
     }
 
     /* Mostrar solo las columnas más importantes */
-
 
     .ranking__ciudad {
         min-width: 80px;

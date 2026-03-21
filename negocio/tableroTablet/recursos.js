@@ -1,7 +1,7 @@
 function inicializar(){
-    renderizarRecursos();
+    llamarRecursos();
 }
-function renderizarRecursos() {
+function llamarRecursos() {
     let recursos = {};
     try {
         const raw = CiudadStorage.cargar();
@@ -9,10 +9,19 @@ function renderizarRecursos() {
     } catch (e) {
         recursos = window.Tablero?.Estado?.ciudad?.estadoRecursos ?? {};
     }
-    const panelTablet = document.getElementById("panel-recursos-tablet")
-    panelTablet.innerHTML = "";
-    panelTablet.innerHTML= '<h2 class="panel__titulo">Recursos</h2>';
-    if (!panelTablet || !recursos) return;
+    const panelTabletVertical = document.getElementById("panel-recursos-tablet-vertical");
+    const panelTabletHorizontal = document.getElementById("panel-recursos-tablet-horizontal");
+    renderizarRecursos(recursos,panelTabletVertical);
+    renderizarRecursos(recursos,panelTabletHorizontal);
+}
+function renderizarRecursos(recursos,panel){
+
+    if (!panel || !recursos){
+        console.log("No se encontró el panel de recursos")
+        return;
+    }
+    panel.innerHTML = "";
+    panel.innerHTML= '<h2 class="panel__titulo">Recursos</h2>';
 
     const indicadores = [
         { clave: "dinero",       icono: "fi-br-coins",     label: "Dinero",       fmt: v => `$${Math.round(v).toLocaleString()}` },
@@ -22,7 +31,7 @@ function renderizarRecursos() {
         { clave: "felicidad",    icono: "fi fi-br-smile-beam",     label: "Felicidad",    fmt: v => `${Math.round(v)}%`    },
     ];
 
-    panelTablet.innerHTML += indicadores.map(({ clave, icono, label, fmt }) => {
+    panel.innerHTML += indicadores.map(({ clave, icono, label, fmt }) => {
         const valor = recursos[clave] ?? 0;
         const colorVal = valor < 0 ? "var(--color-energia)" : "inherit";
         return `
@@ -35,6 +44,7 @@ function renderizarRecursos() {
             </div>
         `;
     }).join("");
+
 }
 
 window.RecursosTablet = {inicializar, renderizarRecursos};
