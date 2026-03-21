@@ -31,13 +31,10 @@ function inicializar() {
 
 function _consultarNoticias() {
     const api = new ApiNoticias();
-    api.getNoticias()
-        .then(res => {
-            _articulos = (res.articles || [])
-                .filter(a => a.title && a.title !== "[Removed]")
-                .slice(0, 5);
-        })
-        .catch(err => console.warn("NoticiasMovil: no disponibles.", err));
+    const res = api.getNoticias();
+    _articulos = (res.articles || [])
+        .filter(a => a.title && a.title !== "[Removed]")
+        .slice(0, 5);
 }
 
 /* ── Construcción del modal (solo una vez) ── */
