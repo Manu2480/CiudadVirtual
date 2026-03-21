@@ -74,9 +74,9 @@ function _inicializarControlesMovil() {
         
         if (window.TabsMovil) {
             window.TabsMovil.inicializar();
-            console.log("✓ TabsMovil inicializado");
+            console.log("TabsMovil inicializado");
         } else {
-            console.error("✗ TabsMovil NO CARGADO");
+            console.error("TabsMovil NO CARGADO");
         }
         
         if (window.RecursosMovil) window.RecursosMovil.inicializar();
