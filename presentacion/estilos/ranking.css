@@ -269,13 +269,7 @@ Estructura de clases:
     }
 
     /* Ocultar columnas menos importantes en móvil */
-    .ranking__fecha {
-        display: none;
-    }
 
-    .ranking__alcalde {
-        display: none;
-    }
 
     .ranking__ciudad {
         min-width: 100px;
@@ -307,10 +301,7 @@ Estructura de clases:
     }
 
     /* Mostrar solo las columnas más importantes */
-    .ranking__poblacion,
-    .ranking__turnos {
-        display: none;
-    }
+
 
     .ranking__ciudad {
         min-width: 80px;
