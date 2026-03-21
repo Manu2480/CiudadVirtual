@@ -2,27 +2,32 @@
     overflow: auto; /* scroll si el contenido sobrepasa */
 }
 #catalogo-edificios-tablet{
-        display: flex;
-        flex-direction: row;
-        gap: 5px;
-        overflow-x: scroll;
-        align-items: stretch;
-    }
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+    overflow-x: scroll;
+    align-items: stretch;
+    height: 100%;
+}
+#menu-construccion-tablet{
+    display: flex;
+    flex-direction: column;
+}
 
-    .tarjeta-edificio{
-        flex: 0 0 clamp(130px, 14vw, 180px);
+.tarjeta-edificio{
+    flex: 0 0 clamp(130px, 14vw, 180px);
 
-        display: flex;
-        flex-direction: column;
+    display: flex;
+    flex-direction: column;
 
-        padding: 8px;
-        border-radius: 8px;
-        background: #f3f3f3;
-        border: 1px solid var(--color-texto);
-        text-align: center;
-        height: auto;
-        overflow-y: hidden;
-    }
+    padding: 8px;
+    border-radius: 8px;
+    background: #f3f3f3;
+    border: 1px solid var(--color-texto);
+    text-align: center;
+    height: auto;
+    overflow-y: hidden;
+}
     .edificio__info.seleccionado{
         display: none;
     }

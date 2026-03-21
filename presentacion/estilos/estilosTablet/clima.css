@@ -20,3 +20,28 @@
     text-align: center;
     width: 100%;
 }
+
+@media (orientation: portrait){
+    .panel--clima{
+        grid-row: 1 / -1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-between;
+        height: 100%;
+        font-size: 15px;
+    }
+}
+
+@media (orientation: landscape) {
+    .panel--clima{
+        grid-row: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-between;
+        height: 100%;
+        font-size: 15px;
+    }
+    
+}

@@ -1,3 +1,6 @@
+#panel-titulo {
+  flex: 0 0 auto; /* altura fija según su contenido */
+}
 .sidebar--derecho{
     display: none;
 }
