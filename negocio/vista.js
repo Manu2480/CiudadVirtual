@@ -3,9 +3,9 @@ Detecta el tamaño de pantalla y carga el CSS y JS específico de la vista.
 Debe ejecutarse sin defer para aplicar estilos antes del primer pintado.
 
 Vistas:
-  < 768px      → movil    → negocio/tableroMovil/controlesMovil.js
-  768-1024px   → tablet   → negocio/tableroTablet/controlesTablet.js
-  > 1024px     → desktop  → negocio/tableroDesktop/controlesDesktop.js
+  < 768px      => movil    => negocio/tableroMovil/controlesMovil.js
+  768-1024px   => tablet   => negocio/tableroTablet/controlesTablet.js
+  > 1024px     => desktop  => negocio/tableroDesktop/controlesDesktop.js
 */
 
 (function() {
@@ -36,3 +36,18 @@ Vistas:
     script.onerror = () => console.error("vista.js: error al cargar JS de controles", script.src);
     document.head.appendChild(script);
 })();
+
+// Agregar listener para cambios de tamaño de ventana (útil en dev tools)
+window.addEventListener('resize', function() {
+    const w = window.innerWidth;
+    let nuevaVista;
+    if      (w < 768)   nuevaVista = "movil";
+    else if (w <= 1024) nuevaVista = "tablet";
+    else                nuevaVista = "Desktop";
+
+    const vistaActual = document.documentElement.getAttribute("data-vista");
+    if (nuevaVista !== vistaActual) {
+        console.log("vista.js: cambio de vista detectado, recargando página");
+        window.location.reload();
+    }
+});
