@@ -57,3 +57,10 @@
 .noticia-tablet a:hover {
     text-decoration: underline;
 }
+
+@media (orientation: landscape) {
+    #panel-noticias-tablet-horizontal{
+        grid-row: 2;
+    }
+    
+}

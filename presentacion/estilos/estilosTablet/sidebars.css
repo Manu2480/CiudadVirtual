@@ -1,3 +1,10 @@
+#panel-titulo {
+  flex: 0 0 auto; /* altura fija según su contenido */
+}
+.sidebar--derecho{
+    display: none;
+}
+
 #abrir-puntaje-tablet{
     background-color: var(--color-primario); 
     color: white;
@@ -17,7 +24,7 @@
     font-weight: 600;
     white-space: nowrap;
 }
-.btn-sidebar-tablet, .btn-ruta{
+.btn-ruta{
     display: flex !important;
     align-items: center;
     justify-content: center;
@@ -64,10 +71,19 @@
 }
 
 @media(orientation: portrait){
-
-    .sidebar--derecho{
-        display: none;
+    .btn-sidebar-tablet{
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
+        width: var(--btn-tap-min);
+        height: var(--btn-tap-min);
+        font-size: 20px;
+        color: #ffffff;
+        border-radius: var(--radio-s);
+        flex-shrink: 0;
+        transition: background var(--trans-rapida);
     }
+
     
     /* Sidebar tablet */
     .sidebar--tablet {
@@ -90,31 +106,20 @@
 }
 
 @media(orientation: landscape){
-    .sidebar--izquierdo {
-        display: block;
-        background-color: var(--color-superficie);
-        padding: 1rem;
-        overflow-y: auto;
-    }
-    .sidebar--derecho{
-        display: block;
-        background-color: var(--color-superficie);
-        padding: 1rem;
-        overflow-y: auto;
+    #sidebar-derecho-tablet{
         grid-column: 3;
-        width: 100%;
-        height: 100%;
+        display: grid;
+        grid-template-rows: 35% 40% 1fr;
+    }
+    #sidebar-izquierdo-tablet{
+        grid-column: 1;
+        display: grid;
+        grid-template-rows: 30%,70%;
     }
     .sidebar--tablet {
         grid-column: 1;
         background-color: var(--color-texto-s);
         position: relative;
-    }
-    #recConEst-tablet{
-
-        display: grid; 
-        grid-template-rows: 25% 50% 25%; /* Recursos, Construcción, Estadísticas */
-        gap: 5px;
     }
     .sidebar--tablet {
         display: none; /* Ocultar sidebar central en landscape */
@@ -124,13 +129,9 @@
     }
 
     /* Paneles en sidebars laterales */
-    .sidebar--izquierdo .panel--recursos {
-        margin-bottom: 1rem;
-    }
 
-    .sidebar--derecho .panel--clima,
-    .sidebar--derecho .panel--noticias {
-        margin-bottom: 1rem;
-    }
+    #panel-recursos-tablet-horizontal{
+        grid-row: 1;
+    }   
 
 }

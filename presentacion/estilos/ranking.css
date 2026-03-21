@@ -31,6 +31,22 @@ Estructura de clases:
     margin-bottom: 20px;
     color: var(--color-primario, #2ecc71);
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    white-space: nowrap;        /* evita que rompa línea */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+/* ══════════════════════════════════════════════════ */
+/* ÍCONO TROFEO EN EL TÍTULO */
+/* ══════════════════════════════════════════════════ */
+
+.ranking__icono {
+    width: 34px;
+    height: 34px;
+    flex-shrink: 0;             /* evita que se comprima */
+    object-fit: contain;
 }
 
 /* ══════════════════════════════════════════════════ */
@@ -221,12 +237,17 @@ Estructura de clases:
 /* ══════════════════════════════════════════════════ */
 
 @media (max-width: 768px) {
-    .ranking-modal {
-        padding: 15px;
+    .ranking__titulo {
+        font-size: 1.2rem;      /* más pequeño para caber en una línea */
+        gap: 8px;
     }
 
-    .ranking__titulo {
-        font-size: 1.4rem;
+    .ranking__icono {
+        width: 28px;
+        height: 28px;
+    }
+    .ranking-modal {
+        padding: 15px;
     }
 
     .ranking-controles {
@@ -247,14 +268,6 @@ Estructura de clases:
         padding: 8px 6px;
     }
 
-    /* Ocultar columnas menos importantes en móvil */
-    .ranking__fecha {
-        display: none;
-    }
-
-    .ranking__alcalde {
-        display: none;
-    }
 
     .ranking__ciudad {
         min-width: 100px;
@@ -266,6 +279,16 @@ Estructura de clases:
 }
 
 @media (max-width: 480px) {
+    .ranking__titulo {
+        font-size: 0.95rem;
+        gap: 6px;
+    }
+
+    .ranking__icono {
+        width: 22px;
+        height: 22px;
+    }
+
     .ranking-tabla {
         font-size: 0.7rem;
     }
@@ -276,10 +299,6 @@ Estructura de clases:
     }
 
     /* Mostrar solo las columnas más importantes */
-    .ranking__poblacion,
-    .ranking__turnos {
-        display: none;
-    }
 
     .ranking__ciudad {
         min-width: 80px;
