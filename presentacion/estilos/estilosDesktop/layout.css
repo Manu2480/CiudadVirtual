@@ -1,0 +1,36 @@
+/*
+=================================================================
+LAYOUT.CSS
+Layout principal y estructura de la página (3 columnas)
+=================================================================
+*/
+
+/* =========================
+   LAYOUT DESKTOP - 3 COLUMNAS
+========================= */
+.contenedor-juego {
+    display: grid;
+    grid-template-columns: var(--sidebar-izquierdo) 1fr var(--sidebar-derecho);
+    height: calc(100vh - var(--alto-encabezado));
+    overflow: hidden;
+}
+
+/* =========================
+   SIDEBARS
+========================= */
+.sidebar {
+    background-color: var(--color-superficie, #ffffff);
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: var(--espacio-m, 16px);
+    padding: var(--espacio-m, 16px);
+}
+
+.sidebar--izquierdo {
+    border-right: 1px solid var(--color-borde, #e0e0e0);
+}
+
+.sidebar--derecho {
+    border-left: 1px solid var(--color-borde, #e0e0e0);
+}

@@ -1,0 +1,79 @@
+/*
+=================================================================
+MENU-CONSTRUCCION.CSS
+Menú de construcción
+=================================================================
+*/
+
+.menu-construccion {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.construccion-categoria {
+    margin-bottom: 12px;
+}
+
+.construccion-categoria__titulo {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--color-texto-s, #666666);
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.construccion-lista {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+}
+
+.construccion-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px 8px;
+    background: var(--color-fondo, #f5f5f5);
+    border: 2px solid transparent;
+    border-radius: var(--radio-s, 6px);
+    cursor: pointer;
+    transition: all var(--transicion-rapida);
+}
+
+.construccion-item:hover {
+    background: #e8f4fd;
+    border-color: var(--color-primario, #1A73E8);
+    transform: translateY(-2px);
+}
+
+.construccion-item--seleccionado {
+    background: #e8f4fd;
+    border-color: var(--color-primario, #1A73E8);
+    box-shadow: 0 2px 8px rgba(26, 115, 232, 0.3);
+}
+
+.construccion-item--dragging {
+    opacity: 0.5;
+    transform: rotate(5deg);
+}
+
+.construccion-item__icono {
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
+    margin-bottom: 4px;
+}
+
+.construccion-item__nombre {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--color-texto, #2c2c2c);
+    text-align: center;
+}
+
+.construccion-item__costo {
+    font-size: 10px;
+    color: var(--color-dinero, #27ae60);
+}

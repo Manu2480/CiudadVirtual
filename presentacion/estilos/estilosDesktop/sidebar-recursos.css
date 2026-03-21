@@ -1,0 +1,48 @@
+/*
+=================================================================
+SIDEBAR-RECURSOS.CSS
+Panel de recursos en sidebar izquierdo
+=================================================================
+*/
+
+.panel-recursos {
+    display: flex;
+    gap: var(--espacio-m, 16px);
+    align-items: center;
+}
+
+.recurso-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 15px;
+    border-bottom: 1px solid #f0f0f0;
+    transition: background-color 0.2s;
+}
+
+.recurso-item:hover {
+    background-color: #f9f9f9;
+}
+
+.recurso-item__icono {
+    color: #007bff;
+    margin-right: 12px;
+    font-size: 1.1rem;
+    flex-shrink: 0;
+}
+
+.recurso-item__label {
+    color: #000000;
+    font-weight: 500;
+    margin-right: auto;
+    font-size: 0.85rem;
+}
+
+.recurso-item__valor {
+    color: #444444;
+    font-family: 'Courier New', monospace;
+    font-weight: 600;
+    text-align: right;
+    margin-left: 10px;
+    font-size: 0.85rem;
+}

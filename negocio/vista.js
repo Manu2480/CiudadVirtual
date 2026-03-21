@@ -14,7 +14,7 @@ Vistas:
     let vista;
     if      (w < 768)   vista = "movil";
     else if (w <= 1024) vista = "tablet";
-    else                vista = "Desktop";
+    else                vista = "desktop";
 
     document.documentElement.setAttribute("data-vista", vista);
     console.log("vista.js: detectada vista", vista);
@@ -23,7 +23,7 @@ Vistas:
     const link = document.createElement("link");
     link.rel  = "stylesheet";
     if (vista === "desktop") {
-        link.href = "../estilos/MICHAELtableroDesktop.css";
+        link.href = "../estilos/tableroDesktop.css";
     } else {
         link.href = `../estilos/tablero${vista.charAt(0).toUpperCase() + vista.slice(1)}.css`;
     }
@@ -36,7 +36,7 @@ Vistas:
     const nombreVista = vista.charAt(0).toUpperCase() + vista.slice(1);
     const script = document.createElement("script");
     if (vista === "desktop") {
-        script.src = "../../negocio/MICHAELcontrolesDesktop.js";
+        script.src = "../../negocio/tableroDesktop/controlesDesktop.js";
     } else {
         script.src = `../../negocio/tablero${nombreVista}/controles${nombreVista}.js?v=${Date.now()}`;
     }
@@ -52,7 +52,7 @@ window.addEventListener('resize', function() {
     let nuevaVista;
     if      (w < 768)   nuevaVista = "movil";
     else if (w <= 1024) nuevaVista = "tablet";
-    else                nuevaVista = "Desktop";
+    else                nuevaVista = "desktop";
 
     const vistaActual = document.documentElement.getAttribute("data-vista");
     if (nuevaVista !== vistaActual) {

@@ -1,0 +1,59 @@
+/*
+=================================================================
+BOTONES.CSS
+Estilos de botones y elementos interactivos
+=================================================================
+*/
+
+button {
+    font-family: inherit;
+    cursor: pointer;
+    border: none;
+    background: none;
+    transition: opacity var(--transicion-rapida), transform var(--transicion-rapida);
+}
+
+button:hover:not(:disabled) {
+    opacity: 0.85;
+}
+
+.tab {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    font-size: var(--fuente-tam-s, 12px);
+    color: var(--color-texto-s, #666666);
+    min-height: var(--btn-tap-min, 44px);
+    transition: color var(--transicion-rapida), background var(--transicion-rapida);
+}
+
+.tab--activo {
+    color: var(--color-primario, #1A73E8);
+    font-weight: 600;
+}
+
+.tab:hover {
+    background: var(--color-fondo, #f5f5f5);
+    color: var(--color-primario, #1A73E8);
+}
+
+/* Botón ruta (desktop) */
+.btn-ruta {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    width: var(--btn-tap-min);
+    height: var(--btn-tap-min);
+    font-size: 20px;
+    color: #ffffff;
+    border-radius: var(--radio-s);
+    flex-shrink: 0;
+    transition: background var(--trans-rapida);
+}
+
+.btn-ruta:hover {
+    background: rgba(255,255,255,0.15);
+}

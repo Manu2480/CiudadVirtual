@@ -1,0 +1,53 @@
+/*
+=================================================================
+PANELES.CSS
+Estilos generales de paneles
+=================================================================
+*/
+
+.panel {
+    background-color: var(--color-superficie, #ffffff);
+    border: 1px solid var(--color-borde, #e0e0e0);
+    border-radius: var(--radio-m, 10px);
+    padding: var(--espacio-m, 16px);
+    box-shadow: var(--sombra-s, 0 2px 8px rgba(0,0,0,0.10));
+    transition: box-shadow var(--transicion), transform var(--transicion);
+}
+
+.panel:hover {
+    box-shadow: var(--sombra-m, 0 4px 16px rgba(0,0,0,0.14));
+}
+
+.panel__titulo {
+    font-size: var(--fuente-tam-m, 14px);
+    font-weight: 600;
+    color: var(--color-texto, #2c2c2c);
+    margin-bottom: var(--espacio-s, 8px);
+    padding-bottom: var(--espacio-s, 8px);
+    border-bottom: 1px solid var(--color-borde, #e0e0e0);
+    font-weight: bold;
+}
+
+.panel--recursos {
+    background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+}
+
+.panel--construccion {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.modulo-header {
+    text-align: center;
+    background-color: #74adf7;
+    border-radius: 15px;
+}
+
+.panel--clima {
+    text-align: center;
+}
+
+.panel--noticias {
+    min-height: 250px;
+    overflow-y: auto;
+}
