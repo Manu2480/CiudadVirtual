@@ -44,7 +44,7 @@ function _iconoClima(condicion = "") {
     if (c.includes("tormenta"))                          return "fi-br-thunderstorm";
     if (c.includes("nieve"))                             return "fi-br-snowflake";
     if (c.includes("niebla") || c.includes("neblina"))  return "fi-br-cloud-fog";
-    if (c.includes("nube") || c.includes("nublado"))    return "fi-br-clouds";
+    if (c.includes("nube") || c.includes("nublado") || c.includes("nuboso"))    return "fi-br-clouds";
     if (c.includes("parcialmente"))                      return "fi-br-cloud-sun";
     return "fi-br-sun";
 }

@@ -202,7 +202,7 @@ class Terreno{
         let contador = 0;
         this.edificios.forEach(edificio => {
             if (edificio instanceof EdificioComercial){ //Valida que el edificio contenga empleados para agregar su capacidad al contador
-                contador += edificio.capacidadEmpleos;
+                contador += edificio.capacidad;
             }
         });
         return contador;
@@ -212,7 +212,7 @@ class Terreno{
         let contador = 0;
         this.edificios.forEach(edificio => {
             if (edificio instanceof EdificioResidencial){//Valida que el edificio contenga inquilinos para agregar al contador su capacidad
-                contador += edificio.capacidadViviendas;
+                contador += edificio.capacidad;
             }
         });
         return contador;

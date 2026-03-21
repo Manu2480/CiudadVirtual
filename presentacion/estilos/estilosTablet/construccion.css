@@ -1,7 +1,7 @@
 .panel--construccion {
     overflow: auto; /* scroll si el contenido sobrepasa */
 }
-#catalogo-edificios-tablet{
+.catalogo-edificios-tablet{
     display: flex;
     flex-direction: row;
     gap: 5px;
@@ -9,7 +9,7 @@
     align-items: stretch;
     height: 100%;
 }
-#menu-construccion-tablet{
+#menu-construccion-tablet-vertical, #menu-construccion-tablet-horizontal{
     display: flex;
     flex-direction: column;
 }
@@ -28,33 +28,33 @@
     height: auto;
     overflow-y: hidden;
 }
-    .edificio__info.seleccionado{
-        display: none;
-    }
-    .tarjeta-edificio.seleccionada{
+.edificio__info.seleccionado{
+    display: none;
+}
+.tarjeta-edificio.seleccionada{
 
-        border-radius: 8px;
-        border: 8px solid var(--color-dinero);
-    }
-    .tarjeta-edificio.seleccionada .edificio__info{
-        display: none;
-    }
-    .tarjeta-edificio.seleccionada .edificio__info.seleccionado{
-        display: block;
-    }
-    .edificio__descripcion{
-        min-height: 4.5em;
-    }
+    border-radius: 8px;
+    border: 8px solid var(--color-dinero);
+}
+.tarjeta-edificio.seleccionada .edificio__info{
+    display: none;
+}
+.tarjeta-edificio.seleccionada .edificio__info.seleccionado{
+    display: block;
+}
+.edificio__descripcion{
+    min-height: 4.5em;
+}
 
-    .edificio__imagen{
-        width: 150px;
-        height: 150px;
-        object-fit: contain;
+.edificio__imagen{
+    width: 150px;
+    height: 150px;
+    object-fit: contain;
 
-    }
+}
 
-    .valor-edificio{
-        margin-top: auto;
-        background-color: var(--color-primario);
-        color: white;
-    }
+.valor-edificio{
+    margin-top: auto;
+    background-color: var(--color-primario);
+    color: white;
+}
