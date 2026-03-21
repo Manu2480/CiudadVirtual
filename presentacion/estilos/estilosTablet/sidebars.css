@@ -1,26 +1,3 @@
-:root{
-        /* Colores principales (consistentes con index y formulario) */
-    --color-primario:    #1A73E8;   /* azul principal */
-    --color-primario-h:  #1558b0;   /* azul hover */
-    --color-fondo:       #f5f5f5;   /* fondo general */
-    --color-superficie:  #ffffff;   /* tarjetas y paneles */
-    --color-borde:       #e0e0e0;   /* bordes suaves */
-    --color-texto:       #2c2c2c;   /* texto principal */
-    --color-texto-s:     #666666;   /* texto secundario */
-
-    /* Colores semánticos del juego */
-    --color-dinero:      #27ae60;
-    --color-poblacion:   #1A73E8;
-    --color-felicidad:   #f39c12;
-    --color-energia:     #e74c3c;
-
-    /* Colores del mapa */
-    --color-celda:         #7ec850;  /* hierba base */
-    --color-celda-hover:   #a3d977;  /* hover de celda vacía */
-    --color-celda-borde:   rgba(0,0,0,0.08);
-    --color-celda-agua:    #5baad4;
-    --color-celda-selec:   rgba(26,115,232,0.35); /* celda seleccionada */
-}
 #abrir-puntaje-tablet{
     background-color: var(--color-primario); 
     color: white;
@@ -41,7 +18,7 @@
     white-space: nowrap;
 }
 .btn-sidebar-tablet, .btn-ruta{
-    display: flex;
+    display: flex !important;
     align-items: center;
     justify-content: center;
     width: var(--btn-tap-min);
@@ -58,7 +35,33 @@
 .sidebar--izquierdo{
     display: none;   
 }
+.sidebar--tablet.cerrada {
+    display: none !important;
+}
+.sidebar--tablet {
+    display: block !important; /* Ocultar sidebar central en landscape */
+}
+.panel-tablet.abierto{
+    grid-row: 1 / -1;
+    background-color: var(--color-texto-s);
+    visibility: visible !important;
+}
+.panel__titulo{
+    background-color: var(--color-primario-h); 
+    color: white;
+    width: 100%;
+    margin:0;
+    text-align: center;
+    font-weight: bold;
+    padding: 0.5rem 0;
+    border-radius: 8px;
+}
 
+.panel{
+    padding:0;
+    border-radius:12px;
+    padding:0;
+}
 
 @media(orientation: portrait){
 
@@ -78,14 +81,26 @@
         position: absolute;
         inset: 0;
     }
-    .panel-tablet.abierto{
-        visibility: visible;
+    #recConEst-tablet{
+        display: grid !important; 
+        grid-template-rows: 25% 50% 25%; /* Recursos, Construcción, Estadísticas */
+        gap: 5px;
     }
 
 }
 
 @media(orientation: landscape){
+    .sidebar--izquierdo {
+        display: block;
+        background-color: var(--color-superficie);
+        padding: 1rem;
+        overflow-y: auto;
+    }
     .sidebar--derecho{
+        display: block;
+        background-color: var(--color-superficie);
+        padding: 1rem;
+        overflow-y: auto;
         grid-column: 3;
         width: 100%;
         height: 100%;
@@ -100,6 +115,22 @@
         display: grid; 
         grid-template-rows: 25% 50% 25%; /* Recursos, Construcción, Estadísticas */
         gap: 5px;
+    }
+    .sidebar--tablet {
+        display: none; /* Ocultar sidebar central en landscape */
+    }
+    .btn-sidebar-tablet {
+        display: none;
+    }
+
+    /* Paneles en sidebars laterales */
+    .sidebar--izquierdo .panel--recursos {
+        margin-bottom: 1rem;
+    }
+
+    .sidebar--derecho .panel--clima,
+    .sidebar--derecho .panel--noticias {
+        margin-bottom: 1rem;
     }
 
 }

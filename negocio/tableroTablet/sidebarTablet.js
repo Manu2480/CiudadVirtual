@@ -7,7 +7,7 @@ function inicializar() {
     const paneles = {
         recConEst: document.getElementById("recConEst-tablet"),
         clima:    document.getElementById("clima-tablet"),
-        noticias: document.getElementById("noticias-tablet")
+        noticias: document.getElementById("noticias-tablet-vertical")
     };
     const mapa = document.getElementById("area-mapa");
     // Si algún elemento todavía no existe, reintentar en 50ms
