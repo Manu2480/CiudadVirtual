@@ -177,9 +177,10 @@ function validarYNormalizarCiudad(data){
         ...data,
         nombre: typeof data.nombre === "string" && data.nombre.trim() ? data.nombre : "Mi Ciudad",
         alcalde: typeof data.alcalde === "string" && data.alcalde.trim() ? data.alcalde : "Alcalde",
-        latitud: typeof data.latitud === "number" ? data.latitud : 0,
-        longitud: typeof data.longitud === "number" ? data.longitud : 0,
-        tiempoTurno: typeof data.tiempoTurno === "number" && data.tiempoTurno > 0 ? data.tiempoTurno : 30000,
+        latitud: parseFloat(data.latitud) || 0,
+        longitud: parseFloat(data.longitud) || 0,
+        tiempoTurno: parseInt(data.tiempoTurno) || 0,
+        turno: Number.isInteger(data.turno) && data.turno >= 0 ? data.turno : 0,
         terreno: {
             vias,
             edificios,
