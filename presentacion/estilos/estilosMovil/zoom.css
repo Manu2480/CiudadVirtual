@@ -1,13 +1,15 @@
-/* ================================================
-ZOOM MÓVIL
-Controles de zoom en vista móvil.
-
-Responsabilidad:
-  - Ocultar los botones de zoom (usa pinch en su lugar)
-  - El zoom táctil lo gestiona ZoomMovil.inicializar()
-    mediante eventos touchstart/touchmove en #area-mapa
-================================================ */
-
+/* zoom.css */
 .controles-zoom {
     display: none;
+}
+
+#area-mapa {
+    touch-action: none;
+    overflow: hidden; /* era auto — bloquea scroll que compite con pinch */
+}
+
+/* Forzar que el transform del JS no sea sobreescrito */
+#mapa-grid {
+    will-change: transform;
+    transform: scale(1); /* valor inicial explícito — rompe el override del CSS base */
 }

@@ -358,7 +358,7 @@ class Ciudad {
         console.log("\n--- Intento de creación de ciudadanos ---");
         let contador = 1;
         while (this.aumentarPoblacion() && contador <= 3) {
-            this.crearCiudadano(-1, -1, -1);
+            this.crearCiudadano(-1, -2, -3);
             contador++; 
         }
         console.log("\n========== FIN DEL TURNO ==========");

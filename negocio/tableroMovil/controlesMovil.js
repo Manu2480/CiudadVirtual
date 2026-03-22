@@ -21,7 +21,7 @@ const _MODULOS = [
     "tabs.js",
     "recursos.js",
     "stats.js",
-    "zoom.js",        /* zoom antes que joystick para que sus listeners tengan prioridad en pinch */
+    "zoom.js",        
     "joystick.js",
     "menuConstruccion.js",
     "turnos.js",

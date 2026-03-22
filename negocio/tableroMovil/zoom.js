@@ -1,76 +1,62 @@
-/* ================================================
-ZOOM MÓVIL
-Zoom del mapa mediante pinch (dos dedos).
+// zoom con dos dedos
+(function() {
+    const _zoomState = {
+        nivel:            1,
+        min:              0.4,
+        max:              2.5,
+        distanciaInicial: null,
+        nivelInicial:     null,
+    };
 
-Responsabilidad:
-  - Detectar gesto pinch sobre #area-mapa
-  - Aplicar transform:scale solo al #mapa-grid
-  - Mantener el nivel de zoom dentro de los límites
+    function inicializar() {
+        const area = document.getElementById("area-mapa");
+        if (!area) return;
 
-Dependencias: (ninguna — opera directamente sobre el DOM)
-================================================ */
+        area.addEventListener("touchstart", _onTouchStart, { passive: false });
+        area.addEventListener("touchmove",  _onTouchMove,  { passive: false });
+        area.addEventListener("touchend",   _onTouchEnd,   { passive: true  });
+        area.addEventListener("touchcancel",_onTouchEnd,   { passive: true  });
+    }
 
-const _zoomState = {
-    nivel:           1,
-    min:             0.4,
-    max:             2.5,
-    distanciaInicial: null,
-    nivelInicial:     null,
-};
+    function _distancia(t1, t2) {
+        const dx = t1.clientX - t2.clientX;
+        const dy = t1.clientY - t2.clientY;
+        return Math.sqrt(dx * dx + dy * dy);
+    }
 
-function inicializar() {
-    const area = document.getElementById("area-mapa");
-    if (!area) return;
+    function _aplicarZoom() {
+        const gridEl = document.getElementById("mapa-grid");
+        if (!gridEl) return;
+        gridEl.style.transform       = `scale(${_zoomState.nivel})`;
+        gridEl.style.transformOrigin = "top left";
+    }
 
-    area.addEventListener("touchstart", _onTouchStart, { passive: false });
-    area.addEventListener("touchmove",  _onTouchMove,  { passive: false });
-    area.addEventListener("touchend",   _onTouchEnd,   { passive: true  });
-    area.addEventListener("touchcancel",_onTouchEnd,   { passive: true  });
-}
+    function _onTouchStart(e) {
+        if (e.touches.length === 2) {
+            e.preventDefault();
+            _zoomState.distanciaInicial = _distancia(e.touches[0], e.touches[1]);
+            _zoomState.nivelInicial     = _zoomState.nivel;
+        }
+    }
 
-function _distancia(t1, t2) {
-    const dx = t1.clientX - t2.clientX;
-    const dy = t1.clientY - t2.clientY;
-    return Math.sqrt(dx * dx + dy * dy);
-}
-
-function _aplicarZoom() {
-    const gridEl = document.getElementById("mapa-grid");
-    if (!gridEl) return;
-    gridEl.style.transform       = `scale(${_zoomState.nivel})`;
-    gridEl.style.transformOrigin = "top left";
-}
-
-function _onTouchStart(e) {
-    if (e.touches.length === 2) {
+    function _onTouchMove(e) {
+        if (e.touches.length !== 2 || _zoomState.distanciaInicial === null) return;
         e.preventDefault();
-        _zoomState.distanciaInicial = _distancia(e.touches[0], e.touches[1]);
-        _zoomState.nivelInicial     = _zoomState.nivel;
+        const distActual = _distancia(e.touches[0], e.touches[1]);
+        const ratio      = distActual / _zoomState.distanciaInicial;
+        _zoomState.nivel = Math.min(
+            _zoomState.max,
+            Math.max(_zoomState.min, _zoomState.nivelInicial * ratio)
+        );
+        _aplicarZoom();
     }
-}
 
-function _onTouchMove(e) {
-    if (e.touches.length !== 2 || _zoomState.distanciaInicial === null) return;
-    e.preventDefault();
-    const distActual = _distancia(e.touches[0], e.touches[1]);
-    const ratio      = distActual / _zoomState.distanciaInicial;
-    _zoomState.nivel = Math.min(
-        _zoomState.max,
-        Math.max(_zoomState.min, _zoomState.nivelInicial * ratio)
-    );
-    _aplicarZoom();
-}
-
-function _onTouchEnd(e) {
-    /* Resetea cuando quedan menos de 2 dedos */
-    if (e.touches.length < 2) {
-        _zoomState.distanciaInicial = null;
-        _zoomState.nivelInicial     = null;
+    function _onTouchEnd(e) {
+        if (e.touches.length < 2) {
+            _zoomState.distanciaInicial = null;
+            _zoomState.nivelInicial     = null;
+        }
     }
-}
 
-
-/* ================================================
-EXPOSICIÓN GLOBAL
-================================================ */
-window.ZoomMovil = { inicializar };
+    window.ZoomMovil = { inicializar };
+})();
