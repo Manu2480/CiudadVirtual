@@ -1,0 +1,35 @@
+/*
+=================================================================
+UTILIDADES.CSS
+Clases de utilidad y efectos generales
+=================================================================
+*/
+
+/* =========================
+   ELEMENTOS OCULTOS (SOLO MÓVIL)
+========================= */
+.tabs-movil {
+    display: none !important;
+}
+
+.btn-flotante,
+.turnos-widget {
+    display: none !important;
+}
+
+.btn-recursos-movil {
+    display: none !important;
+}
+
+/* =========================
+   ENHANCED PANEL TRANSITIONS
+========================= */
+.panel {
+    transition: box-shadow var(--transicion), 
+                transform var(--transicion),
+                background var(--transicion);
+}
+
+.panel:hover {
+    transform: translateY(-2px);
+}

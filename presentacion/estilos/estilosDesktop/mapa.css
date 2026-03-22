@@ -1,0 +1,111 @@
+/*
+=================================================================
+MAPA.CSS
+Área del mapa, grid y controles de zoom
+=================================================================
+*/
+
+/* =========================
+   ÁREA DEL MAPA CON ZOOM ESTÁTICO
+   El zoom permanece fijo durante el arrastre del mapa
+========================= */
+.area-mapa {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    overflow: auto;
+    background: linear-gradient(180deg, #87ceeb 0%, #e0e5ec 100%);
+    width: 100%;
+    height: 100%;
+    cursor: grab;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    scroll-behavior: smooth;
+}
+
+.area-mapa::-webkit-scrollbar {
+    display: none;
+}
+
+.area-mapa:active {
+    cursor: grabbing;
+}
+
+/* =========================
+   GRID DEL MAPA - ZOOM ESTÁTICO
+   El zoom se aplica cambiando --tamano-celda
+   El zoom NO cambia cuando el usuario mueve el mapa.
+========================= */
+.mapa-grid {
+    display: grid;
+    padding: 20px;
+}
+
+/* =========================
+   CONTROLES DE ZOOM
+   Posicionados de forma sticky para que siempre
+   estén visibles en el área del mapa
+========================= */
+.controles-zoom {
+    position: sticky;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+    background: rgba(255, 255, 255, 0.95);
+    padding: 12px 20px;
+    border-radius: var(--radio-m, 10px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    gap: 12px;
+    pointer-events: auto;
+    margin: 20px auto;
+    width: fit-content;
+}
+
+.zoom-indicador {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--color-texto-s, #666666);
+    min-width: 45px;
+    text-align: center;
+    padding: 4px 8px;
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 4px;
+}
+
+/* =========================
+   BOTONES DE ZOOM
+========================= */
+.btn-zoom {
+    width: 40px;
+    height: 40px;
+    min-width: 40px;
+    border: none;
+    border-radius: var(--radio-s, 6px);
+    background: var(--color-primario, #1A73E8);
+    color: white;
+    cursor: pointer;
+    transition: background var(--transicion-rapida), transform var(--transicion-rapida);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+}
+
+.btn-zoom:hover:not(:disabled) {
+    background: var(--color-primario-h, #1558b0);
+    transform: scale(1.08);
+}
+
+.btn-zoom:active:not(:disabled) {
+    transform: scale(0.95);
+}
+
+.btn-zoom:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    background: #999;
+}

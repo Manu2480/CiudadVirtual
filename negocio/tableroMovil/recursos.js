@@ -92,7 +92,7 @@ function _renderizarRecursos() {
         agua:         "fi-br-raindrops",
         electricidad: "fi-br-bolt",
         alimento:     "fi-br-wheat",
-        felicidad:    "fi-br-smile-beam",
+        felicidad:    "fi fi-br-smile-beam",
     };
 
     const _nombres = {

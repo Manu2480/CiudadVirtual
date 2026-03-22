@@ -1,0 +1,42 @@
+/*
+=================================================================
+ANIMACIONES.CSS
+Keyframes y animaciones
+=================================================================
+*/
+
+/*  Modal animations */
+@keyframes modalEntrada {
+    from {
+        opacity: 0;
+        transform: translateY(-20px) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* Notification animations */
+@keyframes notificacionEntrada {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Indicator animations */
+@keyframes indicadorEntrada {
+    from {
+        opacity: 0;
+        transform: translateX(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}

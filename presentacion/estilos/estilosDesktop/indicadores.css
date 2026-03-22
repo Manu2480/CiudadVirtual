@@ -1,0 +1,28 @@
+/*
+=================================================================
+INDICADORES.CSS
+Indicadores y elementos de estado
+=================================================================
+*/
+
+/* =========================
+   INDICADOR DE MODO ACTIVO
+========================= */
+.indicador-modo {
+    position: fixed;
+    top: calc(var(--alto-encabezado) + 15px);
+    right: calc(var(--sidebar-derecho) + 20px);
+    padding: 8px 16px;
+    background: var(--color-primario, #1A73E8);
+    color: white;
+    border-radius: var(--radio-m, 10px);
+    font-size: 13px;
+    font-weight: 500;
+    z-index: 50;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    animation: indicadorEntrada 0.3s ease;
+}
+
+.indicador-modo--demolicion {
+    background: var(--color-energia, #e74c3c);
+}
