@@ -3,7 +3,7 @@ class ApiNoticias{
         this.url = url;
     }
     getNoticias(){
-        return {
+        return Promise.resolve({
             articles:[
     {
         "source": {
@@ -69,10 +69,10 @@ class ApiNoticias{
         "urlToImage": "https://static.dw.com/image/76373524_6.jpg",
         "publishedAt": "2026-03-16T11:51:20Z",
         "content": "Germany does not see a role for NATO in addressing the blockade of the Strait of Hormuz, German Foreign Minister Johann Wadephul said in Brussels.\r\n\"I don't see that NATO has made any decision in thi… [+1113 chars]"
-    }
-]
-        }
-    }
+    },
+]})
+}
+
     getNoticiasAPI() {
         return fetch(this.url, {
             method: "GET",
@@ -85,4 +85,5 @@ class ApiNoticias{
             return res.json();
         });
     }
+
 }
