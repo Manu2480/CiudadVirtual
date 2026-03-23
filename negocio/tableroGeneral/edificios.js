@@ -167,4 +167,35 @@ function porCategoria(categoria){ return _catalogo.filter(e => e.categoria === c
 function categorias()           { return [...new Set(_catalogo.map(e => e.categoria))]; }
 function todos()                { return _catalogo; }
 
-window.Edificios = { obtener, porCategoria, categorias, todos };
+function tooltip(edificioOId) {
+    const edificio = typeof edificioOId === "string"
+        ? obtener(edificioOId)
+        : edificioOId;
+
+    if (!edificio) return "";
+
+    const lineas = [
+        `${edificio.nombre}`,
+        `Categoria: ${edificio.categoria}`,
+        `Costo: $${(edificio.costo || 0).toLocaleString()}`,
+    ];
+
+    if (edificio.descripcion) lineas.push(edificio.descripcion);
+    if (edificio.capacidad)   lineas.push(`Capacidad: +${edificio.capacidad} habitantes`);
+    if (edificio.empleos)     lineas.push(`Empleos: +${edificio.empleos}`);
+    if (edificio.dinero)      lineas.push(`Dinero por turno: +$${edificio.dinero.toLocaleString()}`);
+    if (edificio.electricidad) {
+        lineas.push(
+            `Electricidad: ${edificio.electricidad > 0 ? "+" : ""}${edificio.electricidad}`
+        );
+    }
+    if (edificio.agua) {
+        lineas.push(`Agua: ${edificio.agua > 0 ? "+" : ""}${edificio.agua}`);
+    }
+    if (edificio.alimento)  lineas.push(`Alimento por turno: +${edificio.alimento}`);
+    if (edificio.felicidad) lineas.push(`Felicidad: +${edificio.felicidad}`);
+
+    return lineas.join("\n");
+}
+
+window.Edificios = { obtener, porCategoria, categorias, todos, tooltip };
