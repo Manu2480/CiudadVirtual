@@ -122,6 +122,7 @@ function _crearCeldaEl(fila, col, estado) {
         const edificio = Edificios.obtener(estado.tipo);
         if (edificio) {
             el.setAttribute("aria-label", edificio.nombre);
+            el.title = Edificios.tooltip ? Edificios.tooltip(edificio) : edificio.nombre;
             const img = document.createElement("img");
             img.src   = edificio.imagen;
             img.alt   = edificio.nombre;

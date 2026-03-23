@@ -31,6 +31,9 @@ function inicializar() {
         btn.type = "button";
         btn.className = "construccion-item";
         btn.setAttribute("aria-label", `Construir ${edificio.nombre} — $${edificio.costo}`);
+        btn.title = window.Edificios.tooltip
+            ? window.Edificios.tooltip(edificio)
+            : `${edificio.nombre} - $${edificio.costo.toLocaleString()}`;
 
         btn.innerHTML = `
             <img src="${edificio.imagen}" alt="${edificio.nombre}" class="construccion-item__icono" />

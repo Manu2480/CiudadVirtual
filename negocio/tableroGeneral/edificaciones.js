@@ -131,6 +131,7 @@ function _pintarCeldaConstruida(fila, col, edificioDef, gridEl) {
     img.classList.add("celda__edificio");
     celdaEl.appendChild(img);
     celdaEl.setAttribute("aria-label", edificioDef.nombre);
+    celdaEl.title = Edificios.tooltip ? Edificios.tooltip(edificioDef) : edificioDef.nombre;
 }
 
 function _pintarCeldaVacia(fila, col, gridEl) {
@@ -139,6 +140,7 @@ function _pintarCeldaVacia(fila, col, gridEl) {
     celdaEl.innerHTML = "";
     celdaEl.classList.remove("celda--construida");
     celdaEl.setAttribute("aria-label", "Celda vacía");
+    celdaEl.removeAttribute("title");
 }
 
 
