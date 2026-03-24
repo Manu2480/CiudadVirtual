@@ -59,8 +59,9 @@
 
     <header id="encabezado" class="encabezado">
 
-        <a href="index.html" class="encabezado__logo">
+        <a href="index.html" class="encabezado__logo hover">
             <img src="../../media/inicio/logo.png" alt="Ciudad Virtual">
+            <p class="tooltip">menú principal</p>
         </a>
 
         <h1 id="nombre-ciudad" class="encabezado__titulo">Mi Ciudad</h1>
@@ -68,8 +69,9 @@
         <div id="panel-recursos" class="panel-recursos"></div>
 
         <!-- Botón ruta (desktop y tablet) -->
-        <button id="btn-ruta" class="btn-ruta" aria-label="Calcular ruta entre dos edificios">
+        <button id="btn-ruta" class="btn-ruta hover" aria-label="Calcular ruta entre dos edificios">
             <i class="fi fi-br-route"></i>
+            <p class="tooltip">Calcular ruta entre dos puntos</p>
         </button>
 
         <!-- Solo visible en móvil   (tableroMovil.css) -->
@@ -77,12 +79,19 @@
             <i class="fi fi-br-menu-burger"></i>
         </button>
         
-        <button data-panel="recConEst-tablet" id="btn-recConEst-tablet" class="btn-sidebar-tablet" aria-label="menús">
+        <button data-panel="recConEst-tablet" id="btn-recConEst-tablet" class="btn-sidebar-tablet hover" aria-label="menús">
             <i class="fi fi-br-menu-burger"></i>
+            <p class="tooltip">Panel de recursos, construcción y estadísticas</p>
         </button>
 
-        <button data-panel="clima-tablet" class = "btn-sidebar-tablet" id="btn-clima-tablet"><i class="fi fi-br-cloud-sun"></i></button>
-        <button data-panel="noticias-tablet" class = "btn-sidebar-tablet" id="btn-noticias-tablet"><i class="fi fi-br-radio-alt"></i></button>
+        <button data-panel="clima-tablet" class = "btn-sidebar-tablet hover" id="btn-clima-tablet">
+            <i class="fi fi-br-cloud-sun"></i>
+            <p class="tooltip">Panel del clima</p>
+        </button>
+        <button data-panel="noticias-tablet" class = "btn-sidebar-tablet hover" id="btn-noticias-tablet">
+            <i class="fi fi-br-radio-alt"></i>
+            <p class="tooltip">Panel de noticias</p>
+        </button>
 
 
         <!-- Botón noticias — visible en todas las vistas -->
@@ -112,8 +121,9 @@
         </div>
 
         <!-- Menú opciones de partida -->
-        <button id="btn-menu-partida" class="btn-menu-partida" aria-label="Opciones de partida">
+        <button id="btn-menu-partida" class="btn-menu-partida hover" aria-label="Opciones de partida">
             <i class="fi fi-br-menu-dots-vertical"></i>
+            <p class="tooltip">Opciones</p>
         </button>
 
         <div id="menu-partida" class="menu-partida" aria-hidden="true">

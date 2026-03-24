@@ -1,10 +1,31 @@
+.encabezado__logo img {
+    height: 55px;
+}
+
+#nombre-ciudad{
+    font-size: 30px;
+}
 #panel-titulo {
   flex: 0 0 auto; /* altura fija según su contenido */
 }
 .sidebar--derecho{
     display: none;
 }
+    .hover-activo .tooltip{
+        display: block !important;
+        position: fixed;
+        background-color: var(--color-primario-h);
+        border-radius: 10px;
 
+        z-index: 1000;
+    }
+.btn-ruta, .btn-menu-partida{
+    min-width: 55px;
+    min-height: 55px;
+    font-size: 40px;
+    padding-left: 10px;
+    padding-right: 10px;
+}
 #abrir-puntaje-tablet{
     background-color: var(--color-primario); 
     color: white;
@@ -28,9 +49,9 @@
     display: flex !important;
     align-items: center;
     justify-content: center;
-    width: var(--btn-tap-min);
-    height: var(--btn-tap-min);
-    font-size: 20px;
+    min-height: 55px;
+    min-width: 55px;
+    font-size: 40px;
     color: #ffffff;
     border-radius: var(--radio-s);
     flex-shrink: 0;
@@ -75,9 +96,11 @@
         display: flex !important;
         align-items: center;
         justify-content: center;
-        width: var(--btn-tap-min);
-        height: var(--btn-tap-min);
-        font-size: 20px;
+        padding-left: 10px;
+        padding-right: 10px;
+        font-size: 40px;
+        min-height: 55px;
+        min-width: 55px;
         color: #ffffff;
         border-radius: var(--radio-s);
         flex-shrink: 0;

@@ -11,7 +11,7 @@ function inicializar() {
 function llamarNoticias() {
     /*Objetivo: llamar y renderizar las noticias */
     const articulos = apiNoticias.getNoticias() //Se llaman los artículos
-    //api.getNoticias().then((articulos) => {
+    apiNoticias.getNoticias().then((articulos) => {
         if (articulos && articulos.articles) {//Se confirma que se obtuvo respuesta, y que además existen artículos dentro del json
             const noticias = articulos.articles; //Se seleccionan las noticias
 
@@ -22,10 +22,10 @@ function llamarNoticias() {
         } else {
             console.warn("No se encontraron artículos en la respuesta de noticias.");
         }
-    //})
-    //.catch(error => {
-        //console.error("Error al obtener noticias:", error);
-    //});
+    })
+    .catch(error => {
+        console.error("Error al obtener noticias:", error);
+    });
 }
 function llamadoConIntervalo(){
     setInterval(llamarNoticias(),1800000)

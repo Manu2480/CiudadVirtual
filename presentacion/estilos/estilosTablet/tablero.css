@@ -18,85 +18,85 @@
     background-color: var(--color-dinero);
 }
 
-    .indice-fila, .indice-columna{
-        width: var(--tamano-celda);
-        height: var(--tamano-celda);
-        text-align: center;
-        font-size: 0.8rem;
-        line-height: var(--tamano-celda);
-        background-color: #f0f0f0;
-        border: 1px solid #ccc;
-        box-sizing: border-box;
-        overflow: hidden;
-    }
-    #indices-filas{
-        grid-column:2;
-        grid-row:1;
+.indice-fila, .indice-columna{
+    width: var(--tamano-celda);
+    height: var(--tamano-celda);
+    text-align: center;
+    font-size: 0.8rem;
+    line-height: var(--tamano-celda);
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+#indices-filas{
+    grid-column:2;
+    grid-row:1;
 
-        display:flex;
-        flex-direction:column;
-    }
-    #viewport-mapa{
-        grid-column:3;
-        grid-row:1;
-        overflow: hidden;
-        height: 100%;
-        width: 100%;
-    }
-    .boton-movimiento{
-        color: white;
-        background-color: var(--color-poblacion);
-        border-radius: 8px;
-        border:5px solid var(--color-primario-h);
+    display:flex;
+    flex-direction:column;
+}
+#viewport-mapa{
+    grid-column:3;
+    grid-row:1;
+    overflow: hidden;
+    height: 100%;
+    width: 100%;
+}
+.boton-movimiento{
+    color: white;
+    background-color: var(--color-poblacion);
+    border-radius: 8px;
+    border:5px solid var(--color-primario-h);
 
-    }
-    #mov-x {
-        display: grid;
-        grid-template-columns: 50% 50%;
-        grid-row: 3;    
-        grid-column: 3;
-        width: 100%;
-    }
-    #izquierda{
-        grid-column: 1;
-        grid-row: 1;
-        width: 100%;
-        height: 100%;
-    }
-    #derecha{
-        grid-row: 1;
-        grid-column: 2;
-        width: 100%;
-        height: 100%;
-    }
+}
+#mov-x {
+    display: grid;
+    grid-template-columns: 50% 50%;
+    grid-row: 3;    
+    grid-column: 3;
+    width: 100%;
+}
+#izquierda{
+    grid-column: 1;
+    grid-row: 1;
+    width: 100%;
+    height: 100%;
+}
+#derecha{
+    grid-row: 1;
+    grid-column: 2;
+    width: 100%;
+    height: 100%;
+}
 
-    #mov-y {
-        display: grid;
-        grid-template-rows: 50% 50%;
-        grid-column: 1 / 2;
-        height: 100%;
-    }
-    #arriba{
-        height: 100%;
-        grid-row: 1;
-    }
-    #abajo{
-        height: 100%;
-        grid-row: 2;
-    }
+#mov-y {
+    display: grid;
+    grid-template-rows: 50% 50%;
+    grid-column: 1 / 2;
+    height: 100%;
+}
+#arriba{
+    height: 100%;
+    grid-row: 1;
+}
+#abajo{
+    height: 100%;
+    grid-row: 2;
+}
 
-    #indices-columnas{
-        grid-column:3;
-        grid-row:2;
+#indices-columnas{
+    grid-column:3;
+    grid-row:2;
 
-        display:flex;
-        flex-direction: row;
-    }
-    .area-mapa{
-        grid-column: 1;
-        grid-row: 1 / -1;
-        height: 100%;
-    }
+    display:flex;
+    flex-direction: row;
+}
+.area-mapa{
+    grid-column: 1;
+    grid-row: 1 / -1;
+    height: 100%;
+}
 
 @media(orientation: portrait){
     .contenedor-juego{

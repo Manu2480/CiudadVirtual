@@ -10,6 +10,7 @@ function inicializar() {
         clima:    document.getElementById("clima-tablet-vertical"),
         noticias: document.getElementById("noticias-tablet-vertical")
     };
+    const elementosHover = document.querySelectorAll(".hover");
     const mapa = document.getElementById("area-mapa");
     // Si algún elemento todavía no existe, reintentar en 50ms
     if (!sidebar || !botonRecConEst || !botonClima || !botonNoticias ||
@@ -46,8 +47,43 @@ function inicializar() {
     botonRecConEst.addEventListener("click", () => togglePanel("recConEst"));
     botonClima.addEventListener("click", () => togglePanel("clima"));
     botonNoticias.addEventListener("click", () => togglePanel("noticias"));
+   elementosHover.forEach((elemento) => {
+    elemento.addEventListener("touchstart", () => {
+        const tooltip = elemento.querySelector(".tooltip");
+        const rect = elemento.getBoundingClientRect(); //Da las medidas del elemento y su posición en pantalla
+        const padding = 10;
+        elemento.classList.add("hover-activo");
 
-    console.log("SidebarTablet: inicialización completa, DOM listo");
+        // Posición base (centrado respecto al elemento)
+        let left = rect.left + rect.width / 2;
+        let top = rect.top;
+
+        const tooltipRect = tooltip.getBoundingClientRect();
+
+        // Calcular borde izquierdo real (restando la mitad del ancho del tooltip)
+        let finalLeft = left - tooltipRect.width / 2;
+
+        // Limitar por la izquierda
+        if (finalLeft < padding) {
+            finalLeft = padding;
+        }
+
+        // Limitar por la derecha
+        if (finalLeft + tooltipRect.width > window.innerWidth - padding) {
+            finalLeft = window.innerWidth - tooltipRect.width - padding;
+        }
+
+        // Aplicar posición final
+        tooltip.style.left = finalLeft + "px";
+        tooltip.style.top = top + "px";
+
+    });
+
+
+    elemento.addEventListener("touchend", () => {
+        elemento.classList.remove("hover-activo");
+    });
+});
 }
 
 window.SidebarTablet = { inicializar };
