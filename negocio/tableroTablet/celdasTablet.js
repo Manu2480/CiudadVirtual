@@ -107,8 +107,8 @@ function _ajustar() {
 
     const anchoDisponible = areaMapa.getBoundingClientRect().width || areaMapa.offsetWidth;
 
-    // Tamaño de celda acotado entre 44 y 48px
-    const tamCelda = Math.min(anchoDisponible / columnas);
+    // Tamaño de celda acotado entre 50 y 60px
+    const tamCelda = Math.min(60, Math.max(50, Math.floor(anchoDisponible / columnas)));
 
     document.documentElement.style.setProperty("--tamano-celda", `${tamCelda}px`);
     console.log(`CeldaTablet: ${columnas} columnas, ancho ${anchoDisponible}px → celda ${tamCelda}px`);
@@ -209,5 +209,6 @@ function fotoPerfil(){
 
 window.CeldasTablet = {
     inicializar,
-    mostrarIndices
+    mostrarIndices,
+    renderizarViewport
 };

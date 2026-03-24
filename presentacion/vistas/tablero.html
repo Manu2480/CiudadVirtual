@@ -58,6 +58,10 @@
     <div id="zona-notificaciones" class="zona-notificaciones" aria-live="polite"></div>
 
     <header id="encabezado" class="encabezado">
+        <button data-panel="sidebar-izquierdo-tablet" id="btn-sidebar-izquierdo-tablet" class="btn-sidebar-tablet horizontal hover" aria-label="menús">
+            <i class="fi fi-br-menu-burger"></i>
+            <p class="tooltip">Panel de recursos y construcción</p>
+        </button>
 
         <a href="index.html" class="encabezado__logo hover">
             <img src="../../media/inicio/logo.png" alt="Ciudad Virtual">
@@ -67,6 +71,11 @@
         <h1 id="nombre-ciudad" class="encabezado__titulo">Mi Ciudad</h1>
 
         <div id="panel-recursos" class="panel-recursos"></div>
+
+        <button data-panel="sidebar-derecho-tablet" id="btn-sidebar-derecho-tablet" class="btn-sidebar-tablet horizontal hover" aria-label="menús">
+            <i class="fi fi-br-menu-burger"></i>
+            <p class="tooltip">Panel de clima, noticias y estadísticas</p>
+        </button>
 
         <!-- Botón ruta (desktop y tablet) -->
         <button id="btn-ruta" class="btn-ruta hover" aria-label="Calcular ruta entre dos edificios">
@@ -79,16 +88,16 @@
             <i class="fi fi-br-menu-burger"></i>
         </button>
         
-        <button data-panel="recConEst-tablet" id="btn-recConEst-tablet" class="btn-sidebar-tablet hover" aria-label="menús">
+        <button data-panel="recConEst-tablet" id="btn-recConEst-tablet" class="btn-sidebar-tablet vertical hover" aria-label="menús">
             <i class="fi fi-br-menu-burger"></i>
             <p class="tooltip">Panel de recursos, construcción y estadísticas</p>
         </button>
 
-        <button data-panel="clima-tablet" class = "btn-sidebar-tablet hover" id="btn-clima-tablet">
+        <button data-panel="clima-tablet" class = "btn-sidebar-tablet vertical hover" id="btn-clima-tablet">
             <i class="fi fi-br-cloud-sun"></i>
             <p class="tooltip">Panel del clima</p>
         </button>
-        <button data-panel="noticias-tablet" class = "btn-sidebar-tablet hover" id="btn-noticias-tablet">
+        <button data-panel="noticias-tablet" class = "btn-sidebar-tablet vertical hover" id="btn-noticias-tablet">
             <i class="fi fi-br-radio-alt"></i>
             <p class="tooltip">Panel de noticias</p>
         </button>
@@ -161,7 +170,7 @@
                 </div>
             </section>
         </aside>
-        <aside id="sidebar-izquierdo-tablet" class="sidebar sidebar--derecho">
+        <aside id="sidebar-izquierdo-tablet" class="sidebar sidebar--izquierdo">
             <section id="panel-recursos-tablet-horizontal" class="panel panel--recursos">
                 <h2 class="panel__titulo">Recursos</h2>
             </section>

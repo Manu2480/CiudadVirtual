@@ -8,6 +8,10 @@
     height: 100%;
 }
 
+#controles-zoom{
+    display: none;
+}
+
 #foto-perfil{
     grid-row: 2 / -1;
     grid-column: 1 / 3;
@@ -124,8 +128,24 @@
         grid-template-columns: 250px 1fr 300px;
         grid-template-rows: 1fr;
     }
-    #area-mapa{
-        grid-column: 2;
+    /* Caso base: mapa ocupa todo */
+    #area-mapa {
+        grid-column: 1 / 4; /* ocupa las 3 columnas */
+    }
+
+    /* Si solo está abierto el izquierdo */
+    #area-mapa.izquierdo {
+        grid-column: 2 / 4; /* ocupa centro + derecha */
+    }
+
+    /* Si solo está abierto el derecho */
+    #area-mapa.derecho {
+        grid-column: 1 / 3; /* ocupa izquierda + centro */
+    }
+
+    /* Si ambos están abiertos */
+    #area-mapa.izquierdo.derecho {
+        grid-column: 2; /* solo la columna central */
     }
 
 }
