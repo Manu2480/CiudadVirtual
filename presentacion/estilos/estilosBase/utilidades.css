@@ -18,6 +18,13 @@ Clases helper y botones de acción compartidos.
     display: none !important;
 }
 
+.hover .tooltip{ /*Tooltips ocultos*/
+    display: none;
+}
+.hover{
+    position: relative;
+}
+
 /* Botón de acción destructiva (demoler) */
 .btn-peligro {
     width: 100%;

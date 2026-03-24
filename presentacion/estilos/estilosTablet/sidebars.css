@@ -1,10 +1,31 @@
+.encabezado__logo img {
+    height: 55px;
+}
+
+#nombre-ciudad{
+    font-size: 30px;
+}
 #panel-titulo {
   flex: 0 0 auto; /* altura fija según su contenido */
 }
 .sidebar--derecho{
     display: none;
 }
+.hover-activo .tooltip{
+    display: block !important;
+    position: fixed;
+    background-color: var(--color-primario-h);
+    border-radius: 10px;
 
+    z-index: 1000;
+}
+.btn-ruta, .btn-menu-partida{
+    min-width: 55px;
+    min-height: 55px;
+    font-size: 40px;
+    padding-left: 10px;
+    padding-right: 10px;
+}
 #abrir-puntaje-tablet{
     background-color: var(--color-primario); 
     color: white;
@@ -28,9 +49,22 @@
     display: flex !important;
     align-items: center;
     justify-content: center;
-    width: var(--btn-tap-min);
-    height: var(--btn-tap-min);
-    font-size: 20px;
+    min-height: 55px;
+    min-width: 55px;
+    font-size: 40px;
+    color: #ffffff;
+    border-radius: var(--radio-s);
+    flex-shrink: 0;
+    transition: background var(--trans-rapida);
+}
+.btn-sidebar-tablet{
+    align-items: center;
+    justify-content: center;
+    padding-left: 10px;
+    padding-right: 10px;
+    font-size: 40px;
+    min-height: 55px;
+    min-width: 55px;
     color: #ffffff;
     border-radius: var(--radio-s);
     flex-shrink: 0;
@@ -72,19 +106,11 @@
 
 @media(orientation: portrait){
     .btn-sidebar-tablet{
-        display: flex !important;
-        align-items: center;
-        justify-content: center;
-        width: var(--btn-tap-min);
-        height: var(--btn-tap-min);
-        font-size: 20px;
-        color: #ffffff;
-        border-radius: var(--radio-s);
-        flex-shrink: 0;
-        transition: background var(--trans-rapida);
+        display: none;
     }
-
-    
+    .btn-sidebar-tablet.vertical{
+        display: flex !important;
+    }
     /* Sidebar tablet */
     .sidebar--tablet {
         grid-column: 2;
@@ -106,14 +132,17 @@
 }
 
 @media(orientation: landscape){
-    #sidebar-derecho-tablet{
+    .btn-sidebar-tablet.horizontal{
+        display: flex !important;
+    }
+    #sidebar-derecho-tablet.abierta{
+        display: grid !important;
         grid-column: 3;
-        display: grid;
         grid-template-rows: 35% 40% 1fr;
     }
-    #sidebar-izquierdo-tablet{
+    #sidebar-izquierdo-tablet.abierta{
+        display: grid !important;
         grid-column: 1;
-        display: grid;
         grid-template-rows: 30%,70%;
     }
     .sidebar--tablet {
@@ -132,6 +161,6 @@
 
     #panel-recursos-tablet-horizontal{
         grid-row: 1;
-    }   
+    }
 
 }

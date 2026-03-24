@@ -82,6 +82,7 @@ function _inicializarControlesTablet() {
         console.error("controlesTablet: error durante inicialización", err);
     }
 }
+
 function _inicializarBotonRuta() {
     botonRuta = document.getElementById("btn-ruta")
     if (!botonRuta) return;
@@ -105,6 +106,11 @@ function _inicializarBotonRuta() {
     });
 }
 
-document.addEventListener("DOMContentLoaded", () => {
+if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", () => {
+        _cargarModulos(_MODULOS, _inicializarControlesTablet);
+    });
+} else {
+    // El DOM ya está listo o casi listo
     _cargarModulos(_MODULOS, _inicializarControlesTablet);
-});
+}

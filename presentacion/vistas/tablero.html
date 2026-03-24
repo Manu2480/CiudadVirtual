@@ -58,18 +58,29 @@
     <div id="zona-notificaciones" class="zona-notificaciones" aria-live="polite"></div>
 
     <header id="encabezado" class="encabezado">
+        <button data-panel="sidebar-izquierdo-tablet" id="btn-sidebar-izquierdo-tablet" class="btn-sidebar-tablet horizontal hover" aria-label="menús">
+            <i class="fi fi-br-menu-burger"></i>
+            <p class="tooltip">Panel de recursos y construcción</p>
+        </button>
 
-        <a href="index.html" class="encabezado__logo">
+        <a href="index.html" class="encabezado__logo hover">
             <img src="../../media/inicio/logo.png" alt="Ciudad Virtual">
+            <p class="tooltip">menú principal</p>
         </a>
 
         <h1 id="nombre-ciudad" class="encabezado__titulo">Mi Ciudad</h1>
 
         <div id="panel-recursos" class="panel-recursos"></div>
 
+        <button data-panel="sidebar-derecho-tablet" id="btn-sidebar-derecho-tablet" class="btn-sidebar-tablet horizontal hover" aria-label="menús">
+            <i class="fi fi-br-menu-burger"></i>
+            <p class="tooltip">Panel de clima, noticias y estadísticas</p>
+        </button>
+
         <!-- Botón ruta (desktop y tablet) -->
-        <button id="btn-ruta" class="btn-ruta" aria-label="Calcular ruta entre dos edificios">
+        <button id="btn-ruta" class="btn-ruta hover" aria-label="Calcular ruta entre dos edificios">
             <i class="fi fi-br-route"></i>
+            <p class="tooltip">Calcular ruta entre dos puntos</p>
         </button>
 
         <!-- Solo visible en móvil   (tableroMovil.css) -->
@@ -77,12 +88,19 @@
             <i class="fi fi-br-menu-burger"></i>
         </button>
         
-        <button data-panel="recConEst-tablet" id="btn-recConEst-tablet" class="btn-sidebar-tablet" aria-label="menús">
+        <button data-panel="recConEst-tablet" id="btn-recConEst-tablet" class="btn-sidebar-tablet vertical hover" aria-label="menús">
             <i class="fi fi-br-menu-burger"></i>
+            <p class="tooltip">Panel de recursos, construcción y estadísticas</p>
         </button>
 
-        <button data-panel="clima-tablet" class = "btn-sidebar-tablet" id="btn-clima-tablet"><i class="fi fi-br-cloud-sun"></i></button>
-        <button data-panel="noticias-tablet" class = "btn-sidebar-tablet" id="btn-noticias-tablet"><i class="fi fi-br-radio-alt"></i></button>
+        <button data-panel="clima-tablet" class = "btn-sidebar-tablet vertical hover" id="btn-clima-tablet">
+            <i class="fi fi-br-cloud-sun"></i>
+            <p class="tooltip">Panel del clima</p>
+        </button>
+        <button data-panel="noticias-tablet" class = "btn-sidebar-tablet vertical hover" id="btn-noticias-tablet">
+            <i class="fi fi-br-radio-alt"></i>
+            <p class="tooltip">Panel de noticias</p>
+        </button>
 
 
         <!-- Botón noticias — visible en todas las vistas -->
@@ -112,8 +130,9 @@
         </div>
 
         <!-- Menú opciones de partida -->
-        <button id="btn-menu-partida" class="btn-menu-partida" aria-label="Opciones de partida">
+        <button id="btn-menu-partida" class="btn-menu-partida hover" aria-label="Opciones de partida">
             <i class="fi fi-br-menu-dots-vertical"></i>
+            <p class="tooltip">Opciones</p>
         </button>
 
         <div id="menu-partida" class="menu-partida" aria-hidden="true">
@@ -151,7 +170,7 @@
                 </div>
             </section>
         </aside>
-        <aside id="sidebar-izquierdo-tablet" class="sidebar sidebar--derecho">
+        <aside id="sidebar-izquierdo-tablet" class="sidebar sidebar--izquierdo">
             <section id="panel-recursos-tablet-horizontal" class="panel panel--recursos">
                 <h2 class="panel__titulo">Recursos</h2>
             </section>

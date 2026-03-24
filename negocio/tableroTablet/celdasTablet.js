@@ -13,6 +13,9 @@ function inicializar() {
     document.dispatchEvent(new Event("mapa:renderizado"));
     fotoPerfil();
 }
+let distanciaInicial = null;
+let zoomInicial = 1;
+const areaMapa = document.getElementById("area-mapa");
 document.getElementById("arriba").addEventListener("click", () => moverViewport("arriba", 1));
 document.getElementById("abajo").addEventListener("click", () => moverViewport("abajo", 1));
 document.getElementById("izquierda").addEventListener("click", () => moverViewport("izquierda", 1));
@@ -61,6 +64,36 @@ const viewport = {
     filasVisibles: 0,
     columnasVisibles: 0
 };
+areaMapa.addEventListener("touchstart", (e) => {
+    if (e.touches.length === 2) {
+        const dx = e.touches[0].clientX - e.touches[1].clientX;
+        const dy = e.touches[0].clientY - e.touches[1].clientY;
+
+        distanciaInicial = Math.sqrt(dx * dx + dy * dy);
+        zoomInicial = window.Mapa.getZoom();
+    }
+});
+areaMapa.addEventListener("touchmove", (e) => {
+    if (e.touches.length === 2) {
+        e.preventDefault();
+
+        const dx = e.touches[0].clientX - e.touches[1].clientX;
+        const dy = e.touches[0].clientY - e.touches[1].clientY;
+
+        const distanciaActual = Math.sqrt(dx * dx + dy * dy);
+
+        if (!distanciaInicial) return;
+
+        const factor = distanciaActual / distanciaInicial;
+
+        const nuevoZoom = zoomInicial * factor;
+
+        window.Mapa.setZoom(nuevoZoom);
+    }
+}, { passive: false });
+areaMapa.addEventListener("touchend", () => {
+    distanciaInicial = null;
+});
 function _ajustar() {
     const columnas = window.Tablero?.Estado?.columnas;
     if (!columnas) {
@@ -74,8 +107,8 @@ function _ajustar() {
 
     const anchoDisponible = areaMapa.getBoundingClientRect().width || areaMapa.offsetWidth;
 
-    // Tamaño de celda acotado entre 44 y 48px
-    const tamCelda = Math.min(48, Math.max(44, Math.floor(anchoDisponible / columnas)));
+    // Tamaño de celda acotado entre 50 y 60px
+    const tamCelda = Math.min(60, Math.max(50, Math.floor(anchoDisponible / columnas)));
 
     document.documentElement.style.setProperty("--tamano-celda", `${tamCelda}px`);
     console.log(`CeldaTablet: ${columnas} columnas, ancho ${anchoDisponible}px → celda ${tamCelda}px`);
@@ -155,8 +188,6 @@ function renderizarViewport() {
             const colReal  = viewport.colInicio + c;
 
             const estado = gridEstado?.[filaReal]?.[colReal] || { tipo: "vacio" };
-
-            // 🔥 USAR EL ORIGINAL
             const celda = _crearCeldaEl(filaReal, colReal, estado);
 
             gridEl.appendChild(celda);
@@ -178,5 +209,6 @@ function fotoPerfil(){
 
 window.CeldasTablet = {
     inicializar,
-    mostrarIndices
+    mostrarIndices,
+    renderizarViewport
 };
