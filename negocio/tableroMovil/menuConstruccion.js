@@ -62,8 +62,10 @@ function inicializar() {
         btn.className = "construccion-item";
         btn.setAttribute("aria-label", `Construir ${edificio.nombre} — $${edificio.costo}`);
 
+        //modificado para que muestre el edificio padre
         btn.innerHTML = `
             <img src="${edificio.imagen}" alt="${edificio.nombre}" class="construccion-item__imagen" />
+            <span class="edificio-categoria edificio-categoria--${edificio.categoria}">${edificio.categoria}</span>
             <span class="construccion-item__nombre">${edificio.nombre}</span>
             <span class="construccion-item__costo">$${edificio.costo.toLocaleString()}</span>
             <p class="construccion-item__desc">${edificio.descripcion || ""}</p>

@@ -35,8 +35,10 @@ function inicializar() {
             ? window.Edificios.tooltip(edificio)
             : `${edificio.nombre} - $${edificio.costo.toLocaleString()}`;
 
+        //modificado para que muestre el edificio padre
         btn.innerHTML = `
             <img src="${edificio.imagen}" alt="${edificio.nombre}" class="construccion-item__icono" />
+            <span class="edificio-categoria edificio-categoria--${edificio.categoria}">${edificio.categoria}</span>
             <span class="construccion-item__nombre">${edificio.nombre}</span>
             <span class="construccion-item__costo">$${edificio.costo.toLocaleString()}</span>
         `;
