@@ -245,3 +245,102 @@ MODAL ESTADÍSTICAS
     padding: 2px 8px;
     border-radius: 10px;
 }
+
+/*Confirmación para demoler*/
+.modal-demoler__advertencia-header {
+    display: flex;
+    align-items: center;
+    gap: var(--espacio-s);
+    color: var(--color-energia);
+    margin-bottom: var(--espacio-s);
+}
+
+.modal-demoler__advertencia-header i {
+    font-size: 24px;
+}
+
+.modal-demoler__subtitulo {
+    color: var(--color-texto-s);
+    margin-bottom: var(--espacio-s);
+    font-size: 14px;
+}
+
+.modal-demoler__afectaciones {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--espacio-xs);
+    margin-bottom: var(--espacio-m);
+}
+
+.modal-demoler__afectaciones li {
+    display: flex;
+    align-items: center;
+    gap: var(--espacio-s);
+    padding: var(--espacio-xs) var(--espacio-s);
+    background: var(--color-fondo);
+    border-radius: var(--radio-s);
+    font-size: 14px;
+}
+
+.modal-demoler__sin-afectaciones {
+    color: var(--color-texto-s);
+    font-size: 14px;
+    margin-bottom: var(--espacio-m);
+}
+
+.modal-demoler__reembolso {
+    display: flex;
+    align-items: center;
+    gap: var(--espacio-s);
+    color: var(--color-dinero);
+    font-size: 15px;
+    margin-bottom: var(--espacio-m);
+}
+
+/* Botones del modal de confirmación de demoler */
+.modal-demoler__acciones {
+    display: flex;
+    gap: var(--espacio-s);
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.modal-demoler__acciones #btn-cancelar-demoler {
+    display: flex;
+    align-items: center;
+    gap: var(--espacio-xs);
+    padding: var(--espacio-s) var(--espacio-m);
+    background: transparent;
+    color: var(--color-primario);
+    border: 1.5px solid var(--color-primario);
+    border-radius: var(--radio-s);
+    font-size: var(--fuente-tam-m);
+    font-weight: 600;
+    cursor: pointer;
+    transition: background var(--trans-rapida);
+}
+
+.modal-demoler__acciones #btn-cancelar-demoler:hover {
+    background: color-mix(in srgb, var(--color-primario) 10%, transparent);
+}
+
+.modal-demoler__acciones #btn-confirmar-demoler {
+    display: flex;
+    align-items: center;
+    gap: var(--espacio-xs);
+    padding: var(--espacio-s) var(--espacio-m);
+    background: var(--color-energia);
+    color: #fff;
+    border: none;
+    border-radius: var(--radio-s);
+    font-size: var(--fuente-tam-m);
+    font-weight: 600;
+    cursor: pointer;
+    transition: background var(--trans-rapida);
+}
+
+.modal-demoler__acciones #btn-confirmar-demoler:hover {
+    background: color-mix(in srgb, var(--color-energia) 85%, black);
+}

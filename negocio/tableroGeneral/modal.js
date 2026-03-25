@@ -118,8 +118,7 @@ function mostrarEdificio(edificio, fila, col) {
     abrir(html);
 
     document.getElementById("btn-demoler-modal")?.addEventListener("click", () => {
-        Edificaciones.demoler(fila, col, Mapa.getGrid(), document.getElementById("mapa-grid"));
-        Modal.cerrar();
+        _mostrarConfirmacionDemoler(fila, col, edificio, instancia);
     });
 }
 
@@ -197,4 +196,82 @@ function mostrarEstadisticas() {
     abrir(html);
 }
 
-window.Modal = { abrir, cerrar, mostrarEdificio, mostrarEstadisticas };
+/*Confirmación para demoler*/
+function _mostrarConfirmacionDemoler(fila, col, edificio, instancia) {
+    const reembolso = Math.round(edificio.costo * 0.5);
+    const ocupados  = instancia?.ciudadanos?.length ?? 0;
+    const esResidencial = edificio.capacidad && !edificio.empleos;
+    const esComercial   = edificio.empleos;
+
+    // Calcular afectaciones
+    const afectaciones = [];
+    if (ocupados > 0) {
+        if (esResidencial) afectaciones.push(`
+            <li><i class="fi fi-br-house-chimney"></i> 
+                <strong>${ocupados}</strong> ciudadano${ocupados > 1 ? "s" : ""} 
+                perder${ocupados > 1 ? "án" : "á"} su vivienda
+            </li>`);
+        if (esComercial) afectaciones.push(`
+            <li><i class="fi fi-br-briefcase"></i> 
+                <strong>${ocupados}</strong> ciudadano${ocupados > 1 ? "s" : ""} 
+                perder${ocupados > 1 ? "án" : "á"} su empleo
+            </li>`);
+    }
+    if (edificio.electricidad < 0) afectaciones.push(`
+        <li><i class="fi fi-br-bolt"></i> 
+            Se liberan <strong>${Math.abs(edificio.electricidad)} kW</strong> de consumo
+        </li>`);
+    if (edificio.agua < 0) afectaciones.push(`
+        <li><i class="fi fi-br-raindrops"></i> 
+            Se liberan <strong>${Math.abs(edificio.agua)} L</strong> de consumo de agua
+        </li>`);
+    if (edificio.dinero) afectaciones.push(`
+        <li><i class="fi fi-br-coins"></i> 
+            Se pierden <strong>$${edificio.dinero.toLocaleString()}/turno</strong> de ingresos
+        </li>`);
+    if (edificio.alimento) afectaciones.push(`
+        <li><i class="fi fi-br-wheat"></i> 
+            Se pierden <strong>${edificio.alimento} kg</strong> de alimento/turno
+        </li>`);
+    if (edificio.felicidad) afectaciones.push(`
+        <li><i class="fi fi-br-smile"></i> 
+            Se pierden <strong>${edificio.felicidad} puntos</strong> de felicidad
+        </li>`);
+
+    const afectacionesHtml = afectaciones.length > 0
+        ? `<ul class="modal-demoler__afectaciones">${afectaciones.join("")}</ul>`
+        : `<p class="modal-demoler__sin-afectaciones">No hay ciudadanos afectados.</p>`;
+
+    const html = `
+        <div class="modal-demoler">
+            <div class="modal-demoler__advertencia-header">
+                <i class="fi fi-br-triangle-warning"></i>
+                <h2>¿Demoler ${edificio.nombre}?</h2>
+            </div>
+            <p class="modal-demoler__subtitulo">Esta acción no se puede deshacer. Consecuencias:</p>
+            ${afectacionesHtml}
+            <div class="modal-demoler__reembolso">
+                <i class="fi fi-br-coins"></i>
+                Reembolso: <strong>$${reembolso.toLocaleString()}</strong>
+            </div>
+            <div class="modal-demoler__acciones">
+                <button class="btn-secundario" id="btn-cancelar-demoler">
+                    <i class="fi fi-br-cross"></i> Cancelar
+                </button>
+                <button class="btn-peligro" id="btn-confirmar-demoler">
+                    <i class="fi fi-br-trash"></i> Sí, demoler
+                </button>
+            </div>
+        </div>
+    `;
+
+    abrir(html);
+
+    document.getElementById("btn-cancelar-demoler")?.addEventListener("click", cerrar);
+    document.getElementById("btn-confirmar-demoler")?.addEventListener("click", () => {
+        Edificaciones.demoler(fila, col, Mapa.getGrid(), document.getElementById("mapa-grid"));
+        cerrar();
+    });
+}
+
+window.Modal = { abrir, cerrar, mostrarEdificio, mostrarEstadisticas, mostrarConfirmacionDemoler: _mostrarConfirmacionDemoler };
