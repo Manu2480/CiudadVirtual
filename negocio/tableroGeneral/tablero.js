@@ -208,7 +208,7 @@ function exportarJSON() {
     const blob   = new Blob([JSON.stringify(datosCompletos, null, 2)], { type: "application/json" });
     const url    = URL.createObjectURL(blob);
     const a      = document.createElement("a");
-    a.href = url; a.download = `${nombre}_${fecha}.json`; a.click();
+    a.href = url; a.download = `ciudad_${nombre}_${fecha}.json`; a.click();
     URL.revokeObjectURL(url);
 }
 
