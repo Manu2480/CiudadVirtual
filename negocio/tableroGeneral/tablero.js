@@ -205,6 +205,7 @@ function exportarJSON() {
     const fecha = new Date().toISOString().split("T")[0];
     const datosCompletos = JSON.parse(JSON.stringify(Estado.ciudad));
     datosCompletos.turno = Estado.turno;
+    datosCompletos.fecha = fecha;
     const blob   = new Blob([JSON.stringify(datosCompletos, null, 2)], { type: "application/json" });
     const url    = URL.createObjectURL(blob);
     const a      = document.createElement("a");
