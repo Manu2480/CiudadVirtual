@@ -13,6 +13,10 @@ function llamarRecursos() {
     const panelTabletHorizontal = document.getElementById("panel-recursos-tablet-horizontal");
     renderizarRecursos(recursos,panelTabletVertical);
     renderizarRecursos(recursos,panelTabletHorizontal);
+    const botonesRecursos = document.querySelectorAll(".abrirModalRecursos");
+    botonesRecursos.forEach((boton) => {
+        boton.addEventListener("click",  ModalRecursos.mostrar);
+    });
 }
 function renderizarRecursos(recursos,panel){
 
@@ -44,7 +48,8 @@ function renderizarRecursos(recursos,panel){
             </div>
         `;
     }).join("");
-
+    panel.innerHTML += 
+    `<button class="abrirModalRecursos">Menú recursos</button>`
 }
 
 window.RecursosTablet = {inicializar, renderizarRecursos};

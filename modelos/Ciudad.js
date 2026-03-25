@@ -1,7 +1,138 @@
 
 class Ciudad {
+    recursosPorEdificioPredeterminado = [
+        {
+            id: "via",
+            recursos: {
+                dinero: -50,
+                electricidad: 0,
+                agua: 0,
+                alimentos: 0,
+            },
+            felicidad:0
+        },
+        {
+            id: "casa",
+            recursos: {
+                dinero: -50,
+                electricidad: -3,
+                agua: -3,
+                alimentos: 0,
+            },
+            felicidad:0
+        },
+        {
+            id: "apartamento",
+            recursos: {
+                dinero: -50,
+                electricidad: -15,
+                agua: -10,
+                alimentos: 0,
+            },
+            felicidad:0
+        },
+        {
+            id: "tienda",
+            recursos: {
+                dinero: 500,
+                electricidad: -8,
+                agua: 0,
+                alimentos: 0,
+            },
+            felicidad:0
+        },
+        {
+            recursos: {
+                dinero: 2000,
+                electricidad: -25,
+                agua: 0,
+                alimentos: 0,
+            },
+            felicidad:0
+        },
+        {
+            id: "fabrica",
+            recursos: {
+                dinero: 800,
+                electricidad: -20,
+                agua: -15,
+                alimentos: 0,
+            },
+            felicidad:0
+        },
+        {
+            id: "granja",
+            recursos: {
+                dinero: -50,
+                electricidad: 0,
+                agua: -10,
+                alimentos: 50,
+            },
+            felicidad:0
+        },
 
-    constructor(nombre, alcalde, latitud, longitud, tiempoTurno, terreno, ciudadanos, estadoRecursos) {
+        {
+            id: "hospital",
+            recursos: {
+                dinero: -50,
+                electricidad: -20,
+                agua: -10,
+                alimentos: 0
+            },
+            felicidad:0
+        },
+        {
+            id: "bombero",
+            recursos: {
+                dinero: -50,
+                electricidad: -15,
+                agua: 0,
+                alimentos: 0,
+            },
+            felicidad:10
+        },
+        {
+            id: "policia",
+            recursos: {
+                dinero: -50,
+                electricidad: -15,
+                agua: 0,
+                alimentos: 0,
+            },
+            felicidad:0
+        },
+        {   id: "parque",
+            recursos: {
+                dinero: -50,
+                electricidad: 0,
+                agua: 0,
+                alimentos: 0,
+            },
+            felicidad:5
+        },
+        {
+            id: "planta-electrica",
+            recursos: {
+                dinero: -50,
+                electricidad: 200,
+                agua: 0,
+                alimentos: 0,
+            },
+            felicidad:0
+        },
+        {   
+            id: "planta-hidraulica",
+            recursos: {
+                dinero: -50,
+                electricidad: -20,
+                agua: 150,
+                alimentos: 0,
+            },
+            felicidad:0
+        }
+    ]
+
+    constructor(nombre, alcalde, latitud, longitud, tiempoTurno, terreno, ciudadanos, estadoRecursos, historicoRecursos) {
 
         this.nombre = nombre;
         this.alcalde = alcalde;
@@ -13,6 +144,10 @@ class Ciudad {
         this.terreno = terreno;
         this.ciudadanos = ciudadanos;
         this.estadoRecursos = estadoRecursos;
+        this.historicoRecursos = historicoRecursos;
+        if (!historicoRecursos){
+            this.historicoRecursos = [];
+        }
     }
 
     // El método modificarRecurso se encarga de modificar la cantidad de un recurso específico en el estado de recursos de la ciudad.
@@ -325,7 +460,15 @@ class Ciudad {
         }
         return negativos;
     }
-
+    guardarRecursos(){
+        if (!this.historicoRecursos){
+            this.historicoRecursos = [];
+        }
+        if (this.historicoRecursos.length >= 20){
+            this.historicoRecursos = this.historicoRecursos.slice(1); //El array nuevo empieza desde la posición 1, para así evitar exceder los 20
+        }
+        this.historicoRecursos.push(this.estadoRecursos);
+    }
     // Metodo que se encarga de ejecutar todas las acciones necesarias para avanzar un turno en el juego
     ejecutarTurno(){
         console.log("\n========== EJECUTANDO TURNO ==========");
@@ -362,6 +505,10 @@ class Ciudad {
             contador++; 
         }
         console.log("\n========== FIN DEL TURNO ==========");
+
+        // 7. Guardar historial de recursos
+        this.guardarRecursos();
+
     }
     
     // Metodo para validar si se puede jugar otro turno o si se acaba el juego

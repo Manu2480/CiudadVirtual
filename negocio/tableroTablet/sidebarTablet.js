@@ -52,8 +52,8 @@ function inicializar() {
         const panel = panelesHorizontal[panelKey];
         panel.classList.toggle("abierta");
         mapa.classList.toggle(panelKey);
-        celdasTablet.renderizarViewport();
-        celdasTablet.mostrarIndices();
+        CeldasTablet.renderizarViewport();
+        CeldasTablet.mostrarIndices();
 
     }
 

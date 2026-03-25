@@ -50,7 +50,8 @@ class ControladorStorage{
             datos.tiempoTurno,
             terreno,
             ciudadanos,
-            datos.estadoRecursos
+            datos.estadoRecursos,
+            datos.historicoRecursos
         )
         //Se realiza la rehidratación de los ciudadanos
         this.rehidratarCiudadanos(ciudad);

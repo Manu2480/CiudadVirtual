@@ -1,0 +1,151 @@
+.modal-recursos {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+    color: var(--color-texto);
+}
+.modal-recursos section {
+    margin-bottom: 25px;
+    padding: 15px;
+    border-radius: 10px;
+    background: rgba(255,255,255,0.05);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.modal-recursos h2 {
+    text-align: center;
+    margin-bottom: 15px;
+    color: var(--color-primario, #2ecc71);
+    font-size: 1.4rem;
+}
+.grid-recursos {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 12px;
+}
+.recurso-modal {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+
+    padding: 10px;
+    border-radius: 8px;
+
+    background: rgba(0,0,0,0.15);
+    transition: all 0.2s ease;
+}
+
+.recurso-modal:hover {
+    transform: translateY(-3px);
+    background: rgba(46, 204, 113, 0.1);
+}
+
+.recurso-modal i {
+    font-size: 22px;
+    color: var(--color-primario, #2ecc71);
+}
+
+.recurso-modal span:nth-child(2) {
+    font-size: 0.9rem;
+    color: #bbb;
+}
+
+.recurso-modal span:nth-child(3) {
+    font-weight: bold;
+    font-size: 1rem;
+}
+.recurso-modal input {
+    margin-top: 5px;
+    width: 100%;
+    padding: 5px;
+    border-radius: 5px;
+    border: none;
+    text-align: center;
+    font-size: 0.85rem;
+}
+.grid-edificios {
+    display: flex;
+    gap: 10px;
+    overflow-x: auto;
+    padding-bottom: 5px;
+}
+.modal-recursos .tarjeta-edificio {
+    flex: 0 0 120px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    padding: 8px;
+    border-radius: 8px;
+
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.1);
+
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.modal-recursos .tarjeta-edificio:hover {
+    transform: scale(1.05);
+    border-color: var(--color-primario);
+}
+
+.modal-recursos .tarjeta-edificio img {
+    width: 70px;
+    height: 70px;
+    object-fit: contain;
+}
+
+#panel-edificio-contenido {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.mod-edificio {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    align-items: center;
+
+    padding: 8px;
+    border-radius: 6px;
+    background: rgba(0,0,0,0.1);
+}
+
+.mod-edificio span {
+    text-align: center;
+}
+
+.mod-edificio input {
+    padding: 4px;
+    border-radius: 5px;
+    border: none;
+    text-align: center;
+}
+
+.graficas {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.graficas canvas {
+    width: 100%;
+    display: block;
+}
+@media (max-width: 768px) {
+    .modal-recursos {
+        padding: 15px;
+    }
+
+    .grid-recursos {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .mod-edificio {
+        grid-template-columns: 1fr;
+        gap: 5px;
+    }
+}
