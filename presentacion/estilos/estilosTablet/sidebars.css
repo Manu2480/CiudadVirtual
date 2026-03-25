@@ -6,7 +6,7 @@
     font-size: 30px;
 }
 #panel-titulo {
-  flex: 0 0 auto; /* altura fija según su contenido */
+  flex: 0 0 auto;
 }
 .sidebar--derecho{
     display: none;
@@ -16,7 +16,6 @@
     position: fixed;
     background-color: var(--color-primario-h);
     border-radius: 10px;
-
     z-index: 1000;
 }
 .btn-ruta, .btn-menu-partida{
@@ -57,7 +56,10 @@
     flex-shrink: 0;
     transition: background var(--trans-rapida);
 }
-.btn-sidebar-tablet{
+
+/* ── Oculto por defecto en TODAS las vistas ── */
+.btn-sidebar-tablet {
+    display: none;
     align-items: center;
     justify-content: center;
     padding-left: 10px;
@@ -70,6 +72,7 @@
     flex-shrink: 0;
     transition: background var(--trans-rapida);
 }
+
 .panel-recursos{
     display: none;
 }
@@ -80,7 +83,7 @@
     display: none !important;
 }
 .sidebar--tablet {
-    display: block !important; /* Ocultar sidebar central en landscape */
+    display: block !important;
 }
 .panel-tablet.abierto{
     grid-row: 1 / -1;
@@ -101,66 +104,60 @@
 .panel{
     padding:0;
     border-radius:12px;
-    padding:0;
 }
 
-@media(orientation: portrait){
-    .btn-sidebar-tablet{
-        display: none;
-    }
-    .btn-sidebar-tablet.vertical{
-        display: flex !important;
-    }
-    /* Sidebar tablet */
-    .sidebar--tablet {
-        grid-column: 2;
-        grid-row: 1 / -1;
-        background-color: var(--color-texto-s);
-        position: relative;
-    }
-    .panel-tablet{
-        visibility: hidden;
-        position: absolute;
-        inset: 0;
-    }
-    #recConEst-tablet{
-        display: grid !important; 
-        grid-template-rows: 25% 50% 25%; /* Recursos, Construcción, Estadísticas */
-        gap: 5px;
-    }
-
+/* ── Solo tablet portrait ── */
+:root[data-vista="tablet"] .btn-sidebar-tablet.vertical {
+    display: flex !important;
+}
+:root[data-vista="tablet"] .btn-sidebar-tablet.horizontal {
+    display: none !important;
 }
 
-@media(orientation: landscape){
-    .btn-sidebar-tablet.horizontal{
+/* ── Solo tablet landscape ── */
+@media (orientation: landscape) {
+    :root[data-vista="tablet"] .btn-sidebar-tablet.horizontal {
         display: flex !important;
     }
-    #sidebar-derecho-tablet.abierta{
+    :root[data-vista="tablet"] .btn-sidebar-tablet.vertical {
+        display: none !important;
+    }
+}
+
+/* ── Sidebar tablet portrait ── */
+:root[data-vista="tablet"] .sidebar--tablet {
+    grid-column: 2;
+    grid-row: 1 / -1;
+    background-color: var(--color-texto-s);
+    position: relative;
+}
+:root[data-vista="tablet"] .panel-tablet {
+    visibility: hidden;
+    position: absolute;
+    inset: 0;
+}
+:root[data-vista="tablet"] #recConEst-tablet {
+    display: grid !important; 
+    grid-template-rows: 25% 50% 25%;
+    gap: 5px;
+}
+
+/* ── Sidebar tablet landscape ── */
+@media (orientation: landscape) {
+    :root[data-vista="tablet"] #sidebar-derecho-tablet.abierta {
         display: grid !important;
         grid-column: 3;
         grid-template-rows: 35% 40% 1fr;
     }
-    #sidebar-izquierdo-tablet.abierta{
+    :root[data-vista="tablet"] #sidebar-izquierdo-tablet.abierta {
         display: grid !important;
         grid-column: 1;
-        grid-template-rows: 30%,70%;
+        grid-template-rows: 30% 70%;
     }
-    .sidebar--tablet {
-        grid-column: 1;
-        background-color: var(--color-texto-s);
-        position: relative;
-    }
-    .sidebar--tablet {
-        display: none; /* Ocultar sidebar central en landscape */
-    }
-    .btn-sidebar-tablet {
+    :root[data-vista="tablet"] .sidebar--tablet {
         display: none;
     }
-
-    /* Paneles en sidebars laterales */
-
-    #panel-recursos-tablet-horizontal{
+    :root[data-vista="tablet"] #panel-recursos-tablet-horizontal {
         grid-row: 1;
     }
-
 }

@@ -105,6 +105,10 @@ function _cargarCiudad() {
         Estado.filas     = _vias?.length       || 15;
         Estado.columnas  = _vias?.[0]?.length  || 15;
         Estado.turno     = datos.turno ?? 0;   /* Restaurar contador de turnos */
+        /* Restaurar fecha: si no existe en el JSON guardado, usar la fecha actual */
+        Estado.ciudad.fecha = (typeof datos.fecha === "string" && datos.fecha.trim())
+            ? datos.fecha
+            : new Date().toISOString().split("T")[0];
 
         Recursos.setCiudad(Estado.ciudad);
 
@@ -184,6 +188,9 @@ function guardarPartida() {
         /* Crear objeto para guardar que incluya turno */
         const datosCompletos = JSON.parse(JSON.stringify(Estado.ciudad));
         datosCompletos.turno = Estado.turno;
+        datosCompletos.fecha = (typeof Estado.ciudad.fecha === "string" && Estado.ciudad.fecha.trim())
+            ? Estado.ciudad.fecha
+            : new Date().toISOString().split("T")[0];
         CiudadStorage.guardar(datosCompletos);
 
         /* Agregar ciudad actual al ranking permanente */
