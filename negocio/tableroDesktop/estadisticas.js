@@ -39,7 +39,11 @@ function inicializar() {
                     <span class="stats__score-label">Puntuación total</span>
                     <span class="stats__score-valor">${resultado.total.toLocaleString()}</span>
                 </div>
-
+                <!-- Turno actual -->
+                <div class="stats-seccion-turno">
+                    <span class="stats__turno-label">Turno actual: </span>
+                    <span class="stats__turno-valor">${window.Tablero.Estado.turno || 0}</span>
+                </div>
                 <!-- Puntos base -->
                 <div class="stats-seccion">
                     <h3 class="stats-seccion__titulo">Puntos Base</h3>

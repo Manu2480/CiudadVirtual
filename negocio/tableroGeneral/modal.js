@@ -150,7 +150,10 @@ function mostrarEstadisticas() {
                 <span class="modal-stats__score-label">Puntuación total</span>
                 <span class="modal-stats__score-valor">${resultado.total.toLocaleString()}</span>
             </div>
-
+            <div class="modal-stats__turno">
+                <span class="modal-stats__turno-label">Turno Actual: </span>
+                <span class="modal-stats__turno-valor">${Tablero.Estado.turno || 0}</span>
+            </div>
             <p class="modal-stats__seccion">Puntos base</p>
             <ul class="modal-stats__lista">
                 ${fila("fi-br-users",     `Población (${m.poblacion} hab × 10)`,         d.ptsPoblacion,    "var(--color-primario)")}
