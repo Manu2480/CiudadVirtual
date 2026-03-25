@@ -54,6 +54,25 @@ function mostrarEdificio(edificio, fila, col) {
     const esResidencial = edificio.capacidad && !edificio.empleos;
     const esComercial   = edificio.empleos;
 
+    // Felicidad promedio de los residentes por edificio residencial casa/apartamento
+    let felicidadPromedioHtml = "";
+    if (esResidencial && ocupados > 0) {
+        const totalFelicidad = instancia.ciudadanos.reduce((sum, c) => sum + (c.felicidad ?? 0), 0);
+        const promedio = Math.round(totalFelicidad / ocupados);
+        const color = promedio >= 70 ? "var(--color-dinero)"
+                    : promedio >= 40 ? "var(--color-aviso, orange)"
+                    : "var(--color-energia)";
+        const icono = promedio >= 70 ? "fi-br-smile" 
+                    : promedio >= 40 ? "fi-br-meh" 
+                    : "fi-br-sad";
+        felicidadPromedioHtml = `
+            <li>
+                <i class="fi ${icono}" style="color:${color}"></i>
+                Felicidad promedio residentes: 
+                <strong style="color:${color}">${promedio}/100</strong>
+            </li>`;
+    }
+
     const ocupacionHtml = capacidad > 0 ? `
         <li>
             <i class="fi fi-br-users"></i>
@@ -76,6 +95,7 @@ function mostrarEdificio(edificio, fila, col) {
             <ul class="modal-edificio__stats">
                 ${edificio.costo        ? `<li><i class="fi fi-br-coins"></i> Costo original: <strong>$${edificio.costo.toLocaleString()}</strong></li>` : ""}
                 ${ocupacionHtml}
+                ${felicidadPromedioHtml}
                 ${edificio.empleos      ? `<li><i class="fi fi-br-briefcase"></i> Empleos: <strong>${edificio.empleos}</strong></li>` : ""}
                 ${edificio.felicidad    ? `<li><i class="fi fi-br-smile"></i> Felicidad: <strong>${edificio.felicidad > 0 ? "+" : ""}${edificio.felicidad}</strong></li>` : ""}
                 ${edificio.electricidad !== undefined ? `<li><i class="fi fi-br-bolt"></i> Electricidad: <strong>${edificio.electricidad > 0 ? "+" : ""}${edificio.electricidad} kW</strong></li>` : ""}
