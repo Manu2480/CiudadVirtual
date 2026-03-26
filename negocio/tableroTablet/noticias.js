@@ -4,13 +4,15 @@ let panelNoticiasVertical = document.getElementById("panel-noticias-tablet-verti
 let panelNoticiasHorizontal = document.getElementById("panel-noticias-tablet-horizontal");
 
 function inicializar() {
-    llamarNoticias() //Se llaman las noticias
-    llamadoConIntervalo(); //Se inicia a llamar las noticias cada 30 minutos
+    // Primera carga inmediata
+    llamarNoticias();
+    
+    // 🔁 Actualizar cada 30 minutos
+    setInterval(llamarNoticias, 1800000);
 }
 
 function llamarNoticias() {
     /*Objetivo: llamar y renderizar las noticias */
-    const articulos = apiNoticias.getNoticias() //Se llaman los artículos
     apiNoticias.getNoticias().then((articulos) => {
         if (articulos && articulos.articles) {//Se confirma que se obtuvo respuesta, y que además existen artículos dentro del json
             const noticias = articulos.articles; //Se seleccionan las noticias
@@ -26,9 +28,6 @@ function llamarNoticias() {
     .catch(error => {
         console.error("Error al obtener noticias:", error);
     });
-}
-function llamadoConIntervalo(){
-    setInterval(llamarNoticias(),1800000)
 }
 function renderizarNoticias(noticias,panel){
     if (!panel) {
