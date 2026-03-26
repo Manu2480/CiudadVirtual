@@ -42,6 +42,10 @@ document.addEventListener("DOMContentLoaded", () => {
     if (window.TurnosControl) {
         TurnosControl.inicializar();
     }
+
+    /* Iniciar automáticamente el ciclo de turnos al cargar la página */
+    _iniciarCicloTurnos();
+    console.log("tablero.js: ciclo de turnos iniciado automáticamente al cargar el DOM");
 });
 
 function _cargarCiudad() {
