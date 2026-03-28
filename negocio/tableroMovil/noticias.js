@@ -105,9 +105,8 @@ function _renderizarNoticia() {
 
     cuerpo.innerHTML = `
         ${art.urlToImage ? `
-            <img class="noticias-modal__imagen"
-                 src="${art.urlToImage}" alt="${art.title}"
-                 onerror="this.style.display='none'">` : ""}
+            <img class="noticias-modal__imagen" id="noticias-img"
+                src="${art.urlToImage}" alt="${art.title}">` : ""}
         <div class="noticias-modal__contenido">
             <p class="noticias-modal__fuente">${art.source?.name || ""}</p>
             <h4 class="noticias-modal__noticia-titulo">${art.title}</h4>
@@ -120,6 +119,10 @@ function _renderizarNoticia() {
                 </a>` : ""}
         </div>
     `;
+            
+    //para evitar imágenes rotas, oculta la imagen si no carga correctamente
+    const img = cuerpo.querySelector(".noticias-modal__imagen");
+    if (img) img.addEventListener("error", () => img.classList.add("oculta"));
 
     /* Puntos indicadores */
     dots.innerHTML = _articulos.map((_, i) => `

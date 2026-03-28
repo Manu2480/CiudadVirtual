@@ -1,0 +1,132 @@
+/* ================================================
+CLIMA — Chip compacto + Modal detalle
+================================================ */
+
+/* ── Chip del header ── */
+
+.clima-compacto {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+    color: #fff;
+}
+
+.clima-compacto__icono {
+    font-size: 16px;
+    color: #fff;
+}
+
+/* ── Overlay oscuro ── */
+
+.clima-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    z-index: 1299;
+    display: none;
+}
+
+.clima-overlay.abierto {
+    display: block;
+}
+
+/* ── Panel modal ── */
+
+.clima-panel {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 85vw;
+    max-width: 340px;
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+    z-index: 1300;
+    padding: 24px;
+    display: none;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.clima-panel.abierto {
+    display: flex;
+}
+
+/* Encabezado: icono grande + temperatura */
+
+.clima-panel__encabezado {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 4px;
+}
+
+.clima-panel__icono-principal {
+    font-size: 36px;
+    color: var(--color-primario);
+}
+
+.clima-panel__temperatura {
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--color-texto);
+}
+
+.clima-panel__condicion {
+    font-size: 13px;
+    color: var(--color-texto-s);
+    text-transform: capitalize;
+}
+
+/* Separador */
+
+.clima-panel__separador {
+    border: none;
+    border-top: 1px solid var(--color-borde);
+    margin: 0;
+}
+
+/* Filas de detalle */
+
+.clima-panel__detalle {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.clima-panel__fila {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+}
+
+.clima-panel__icono-fila {
+    color: var(--color-primario);
+    width: 20px;
+    text-align: center;
+    flex-shrink: 0;
+}
+
+.clima-panel__etiqueta {
+    flex: 1;
+    color: var(--color-texto-s);
+}
+
+/* Botón cerrar */
+
+.clima-panel__btn-cerrar {
+    margin-top: 8px;
+    padding: 10px;
+    background: var(--color-primario);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+}

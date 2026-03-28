@@ -50,8 +50,7 @@ function _renderizarChip(datos) {
         else document.querySelector(".encabezado")?.appendChild(chip);
     }
 
-    chip.title   = `${datos.condicion} · Toca para más info`;
-    chip.style.cursor = "pointer";
+    chip.title = `${datos.condicion} · Toca para más info`;
     chip.innerHTML = `
         <i class="fi ${ClimaService.iconoCondicion(datos.condicion)} clima-compacto__icono"></i>
         <span>${Math.round(datos.temperatura)}°C</span>
@@ -69,11 +68,7 @@ function _mostrarModalClima() {
     if (!overlay) {
         overlay = document.createElement("div");
         overlay.id = "clima-overlay";
-        overlay.style.cssText = `
-            position:fixed; inset:0;
-            background:rgba(0,0,0,0.45);
-            z-index:1299; display:none;
-        `;
+        overlay.className = "clima-overlay";
         overlay.addEventListener("click", _cerrarModalClima);
         document.body.appendChild(overlay);
     }
@@ -83,63 +78,50 @@ function _mostrarModalClima() {
     if (!panel) {
         panel = document.createElement("div");
         panel.id = "clima-panel";
-        panel.style.cssText = `
-            position:fixed; top:50%; left:50%;
-            transform:translate(-50%,-50%);
-            width:85vw; max-width:340px;
-            background:#fff; border-radius:16px;
-            box-shadow:0 8px 32px rgba(0,0,0,0.25);
-            z-index:1300; padding:24px;
-            display:none; flex-direction:column; gap:12px;
-        `;
+        panel.className = "clima-panel";
         document.body.appendChild(panel);
     }
 
     panel.innerHTML = `
-        <div style="display:flex;align-items:center;gap:12px;margin-bottom:4px;">
-            <i class="fi ${ClimaService.iconoCondicion(d.condicion)}" style="font-size:36px;color:var(--color-primario)"></i>
+        <div class="clima-panel__encabezado">
+            <i class="fi ${ClimaService.iconoCondicion(d.condicion)} clima-panel__icono-principal"></i>
             <div>
-                <div style="font-size:32px;font-weight:700;color:var(--color-texto);">
-                    ${Math.round(d.temperatura)}°C
-                </div>
-                <div style="font-size:13px;color:var(--color-texto-s);text-transform:capitalize;">
-                    ${d.condicion}
-                </div>
+                <div class="clima-panel__temperatura">${Math.round(d.temperatura)}°C</div>
+                <div class="clima-panel__condicion">${d.condicion}</div>
             </div>
         </div>
-        <hr style="border:none;border-top:1px solid var(--color-borde);">
-        <div style="display:flex;flex-direction:column;gap:10px;">
-            <div style="display:flex;align-items:center;gap:10px;font-size:14px;">
-                <i class="fi fi-br-raindrops" style="color:var(--color-primario);width:20px;text-align:center;"></i>
-                <span style="flex:1;color:var(--color-texto-s);">Humedad</span>
+        <hr class="clima-panel__separador">
+        <div class="clima-panel__detalle">
+            <div class="clima-panel__fila">
+                <i class="fi fi-br-raindrops clima-panel__icono-fila"></i>
+                <span class="clima-panel__etiqueta">Humedad</span>
                 <strong>${d.humedad}%</strong>
             </div>
-            <div style="display:flex;align-items:center;gap:10px;font-size:14px;">
-                <i class="fi fi-br-wind" style="color:var(--color-primario);width:20px;text-align:center;"></i>
-                <span style="flex:1;color:var(--color-texto-s);">Viento</span>
+            <div class="clima-panel__fila">
+                <i class="fi fi-br-wind clima-panel__icono-fila"></i>
+                <span class="clima-panel__etiqueta">Viento</span>
                 <strong>${Math.round((d.viento?.velocidad || 0) * 3.6)} km/h</strong>
             </div>
             ${d.viento?.rafaga ? `
-            <div style="display:flex;align-items:center;gap:10px;font-size:14px;">
-                <i class="fi fi-br-thunderstorm" style="color:var(--color-primario);width:20px;text-align:center;"></i>
-                <span style="flex:1;color:var(--color-texto-s);">Ráfagas</span>
+            <div class="clima-panel__fila">
+                <i class="fi fi-br-thunderstorm clima-panel__icono-fila"></i>
+                <span class="clima-panel__etiqueta">Ráfagas</span>
                 <strong>${Math.round(d.viento.rafaga * 3.6)} km/h</strong>
             </div>` : ""}
         </div>
-        <button onclick="document.getElementById('clima-overlay').style.display='none';document.getElementById('clima-panel').style.display='none';"
-            style="margin-top:8px;padding:10px;background:var(--color-primario);color:#fff;
-                   border:none;border-radius:8px;font-weight:600;cursor:pointer;">
-            Cerrar
-        </button>
+        <button class="clima-panel__btn-cerrar" id="clima-btn-cerrar">Cerrar</button>
     `;
 
-    overlay.style.display = "block";
-    panel.style.display   = "flex";
+    document.getElementById("clima-btn-cerrar")
+        .addEventListener("click", _cerrarModalClima);
+
+    overlay.classList.add("abierto");
+    panel.classList.add("abierto");
 }
 
 function _cerrarModalClima() {
-    document.getElementById("clima-overlay").style.display = "none";
-    document.getElementById("clima-panel").style.display   = "none";
+    document.getElementById("clima-overlay")?.classList.remove("abierto");
+    document.getElementById("clima-panel")?.classList.remove("abierto");
 }
 
 window.ClimaMovil = { inicializar };

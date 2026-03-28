@@ -78,6 +78,10 @@ NOTICIAS — Modal carrusel
     flex-shrink: 0;
 }
 
+.noticias-modal__imagen.oculta {
+    display: none;
+}
+
 .noticias-modal__contenido {
     padding: 18px 16px 12px;
     display: flex;
