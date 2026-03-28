@@ -1,16 +1,19 @@
-
 class EstacionPolicia extends EdificioServicio {
 
     static contador = 0;
 
-    constructor(ubicacion) {
+    static catalogoInfo = {
+        costo:        4000,
+        capacidad:    0,
+        felicidad:    10,
+        electricidad: -15,
+    };
 
-        EstacionPolicia.contador += 1; // Incrementa el contador cada vez que se crea una nueva estación de policía
-        const idEstacionPolicia = "Policia" + EstacionPolicia.contador; // Genera un ID único para la estación de policía
-        
-        super(idEstacionPolicia, 4000, ubicacion, 0); 
-        this.recursosEdificio["electricidad"] = -15; //El valor va negativo para que se sepa que es consume y no produce
-        
+    constructor(ubicacion) {
+        EstacionPolicia.contador += 1;
+        const idEstacionPolicia = "Policia" + EstacionPolicia.contador;
+        super(idEstacionPolicia, EstacionPolicia.catalogoInfo.costo, ubicacion, EstacionPolicia.catalogoInfo.capacidad);
+        this.recursosEdificio["electricidad"] = EstacionPolicia.catalogoInfo.electricidad;
     }
 
     static fromData(obj) {
@@ -22,11 +25,6 @@ class EstacionPolicia extends EdificioServicio {
         }
         const instance = Object.create(EstacionPolicia.prototype);
         Object.assign(instance, obj);
-        /*
-        if (obj.ciudadanos && Array.isArray(obj.ciudadanos)) {
-            const Ciudadano = require("./Ciudadano");
-            instance.ciudadanos = obj.ciudadanos.map(c => Ciudadano.fromData(c));
-        }*/
         return instance;
     }
 }

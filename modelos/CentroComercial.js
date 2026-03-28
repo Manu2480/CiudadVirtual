@@ -1,13 +1,20 @@
-
 class CentroComercial extends EdificioComercial {
 
     static contador = 0;
+
+    static catalogoInfo = {
+        costo:        8000,
+        capacidad:    20,
+        dinero:       2000,
+        electricidad: -25,
+    };
+
     constructor(ubicacion) {
-        CentroComercial.contador += 1; // Incrementa el contador cada vez que se crea un nuevo centro comercial
+        CentroComercial.contador += 1;
         const idCentroComercial = "centroComercial" + CentroComercial.contador;
-        super(idCentroComercial, 8000, ubicacion, 20);
-        this.recursosEdificio["dinero"] = 2000;
-        this.recursosEdificio["electricidad"] = -25;
+        super(idCentroComercial, CentroComercial.catalogoInfo.costo, ubicacion, CentroComercial.catalogoInfo.capacidad);
+        this.recursosEdificio["dinero"]       = CentroComercial.catalogoInfo.dinero;
+        this.recursosEdificio["electricidad"] = CentroComercial.catalogoInfo.electricidad;
     }
 
     static fromData(obj) {
@@ -19,11 +26,6 @@ class CentroComercial extends EdificioComercial {
         }
         const instance = Object.create(CentroComercial.prototype);
         Object.assign(instance, obj);
-        /*
-        if (obj.ciudadanos && Array.isArray(obj.ciudadanos)) {
-            const Ciudadano = require("./Ciudadano");
-            instance.ciudadanos = obj.ciudadanos.map(c => Ciudadano.fromData(c));
-        }*/
         return instance;
     }
 }

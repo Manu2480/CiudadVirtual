@@ -1,15 +1,18 @@
-
 class Parque extends Edificio {
 
     static contador = 0;
 
+    static catalogoInfo = {
+        costo:     1500,
+        capacidad: 0,
+        felicidad: 5,
+    };
+
     constructor(ubicacion) {
-
-        Parque.contador += 1; // Incrementa el contador cada vez que se crea un nuevo parque
-        const idParque = "Parque" + Parque.contador; // Genera un ID único para el parque
-
-        super(idParque, 1500, ubicacion, 0); // por enunciado el costo es 1500 
-        this.recursosEdificio = {felicidad: 5}; // por enunciado el parque aumenta la felicidad en 5
+        Parque.contador += 1;
+        const idParque = "Parque" + Parque.contador;
+        super(idParque, Parque.catalogoInfo.costo, ubicacion, Parque.catalogoInfo.capacidad);
+        this.recursosEdificio = { felicidad: Parque.catalogoInfo.felicidad };
         this.ciudadanos = [];
     }
 
@@ -21,13 +24,7 @@ class Parque extends Edificio {
             if (num > Parque.contador) Parque.contador = num;
         }
         const instance = Object.create(Parque.prototype);
-        
         Object.assign(instance, obj);
-        /*
-        if (obj.ciudadanos && Array.isArray(obj.ciudadanos)) {
-            const Ciudadano = require("./Ciudadano");
-            instance.ciudadanos = obj.ciudadanos.map(c => Ciudadano.fromData(c));
-        }*/
         return instance;
     }
 }
