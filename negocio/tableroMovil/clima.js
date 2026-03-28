@@ -13,19 +13,25 @@ Dependencias: tablero.js, ApiClima.js
 let _datosClima = null;
 
 function inicializar() {
-    const ciudad = window.Tablero?.Estado?.ciudad;
-    if (!ciudad?.latitud || !ciudad?.longitud) {
-        setTimeout(inicializar, 300);
-        return;
-    }
-    _consultarClima(ciudad);
-    /* Actualiza cada 30 minutos */
-    setInterval(() => _consultarClima(ciudad), 30 * 60 * 1000);
+    ActualizacionesPeriodicas.esperarConReintentos({
+        condicion: () => {
+            const ciudad = window.Tablero?.Estado?.ciudad;
+            return Boolean(ciudad?.latitud && ciudad?.longitud);
+        },
+        alCumplir: () => {
+            ActualizacionesPeriodicas.iniciarTrabajoPeriodico({
+                id: "clima:movil",
+                accion: () => _consultarClima(window.Tablero?.Estado?.ciudad),
+                intervaloMs: ActualizacionesPeriodicas.INTERVALOS_MS.INTERVALO_CLIMA,
+                ejecutarAhora: true,
+            });
+        },
+        delayMs: ActualizacionesPeriodicas.INTERVALOS_MS.REINTENTO_CORTO,
+    });
 }
 
 function _consultarClima(ciudad) {
-    const api = new ApiClima();
-    api.getDatosClima(ciudad.longitud, ciudad.latitud)
+    ClimaService.obtenerClimaCiudad(ciudad)
         .then(datos => {
             _datosClima = datos;
             _renderizarChip(datos);
@@ -47,7 +53,7 @@ function _renderizarChip(datos) {
     chip.title   = `${datos.condicion} · Toca para más info`;
     chip.style.cursor = "pointer";
     chip.innerHTML = `
-        <i class="fi ${_iconoClima(datos.condicion)} clima-compacto__icono"></i>
+        <i class="fi ${ClimaService.iconoCondicion(datos.condicion)} clima-compacto__icono"></i>
         <span>${Math.round(datos.temperatura)}°C</span>
     `;
 
@@ -91,7 +97,7 @@ function _mostrarModalClima() {
 
     panel.innerHTML = `
         <div style="display:flex;align-items:center;gap:12px;margin-bottom:4px;">
-            <i class="fi ${_iconoClima(d.condicion)}" style="font-size:36px;color:var(--color-primario)"></i>
+            <i class="fi ${ClimaService.iconoCondicion(d.condicion)}" style="font-size:36px;color:var(--color-primario)"></i>
             <div>
                 <div style="font-size:32px;font-weight:700;color:var(--color-texto);">
                     ${Math.round(d.temperatura)}°C
@@ -134,17 +140,6 @@ function _mostrarModalClima() {
 function _cerrarModalClima() {
     document.getElementById("clima-overlay").style.display = "none";
     document.getElementById("clima-panel").style.display   = "none";
-}
-
-function _iconoClima(condicion = "") {
-    const c = condicion.toLowerCase();
-    if (c.includes("lluvia") || c.includes("llovizna")) return "fi-br-raindrops";
-    if (c.includes("tormenta"))                          return "fi-br-thunderstorm";
-    if (c.includes("nieve"))                             return "fi-br-snowflake";
-    if (c.includes("niebla") || c.includes("neblina"))  return "fi-br-cloud-fog";
-    if (c.includes("nube") || c.includes("nublado") || c.includes("nuboso"))    return "fi-br-clouds";
-    if (c.includes("parcialmente"))                      return "fi-br-cloud-sun";
-    return "fi-br-sun";
 }
 
 window.ClimaMovil = { inicializar };

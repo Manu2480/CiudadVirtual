@@ -16,8 +16,12 @@ let _indiceActual = 0;
 /* ── Inicialización ── */
 
 function inicializar() {
-    _consultarNoticias();
-    setInterval(_consultarNoticias, 30 * 60 * 1000);
+    ActualizacionesPeriodicas.iniciarTrabajoPeriodico({
+        id: "noticias:movil",
+        accion: _consultarNoticias,
+        intervaloMs: ActualizacionesPeriodicas.INTERVALOS_MS.INTERVALO_NOTICIAS,
+        ejecutarAhora: true,
+    });
 
     function _conectarBtn() {
         const btn = document.getElementById("btn-noticias");
@@ -30,12 +34,9 @@ function inicializar() {
 /* ── Consulta API ── */
 
 function _consultarNoticias() {
-    const api = new ApiNoticias();
-    api.getNoticias()
-        .then(res => {
-            _articulos = (res.articles || [])
-                .filter(a => a.title && a.title !== "[Removed]")
-                .slice(0, 5);
+    NoticiasService.obtenerNoticias({ limite: 5 })
+        .then(articulos => {
+            _articulos = articulos;
         })
         .catch(err => {
             console.error("Error al cargar noticias móvil:", err);

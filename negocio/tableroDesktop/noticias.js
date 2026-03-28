@@ -4,14 +4,11 @@ Panel de noticias en el sidebar derecho.
 */
 
 function cargarNoticias(panel) {
-    const api = new ApiNoticias();
-
     // Limpiar contenido (sin borrar el header)
     panel.querySelectorAll(".noticias-lista, p").forEach(e => e.remove());
 
-    api.getNoticias()
-        .then(res => {
-            const articulos = res.articles || [];
+    NoticiasService.obtenerNoticias({ limite: 5 })
+        .then(articulos => {
 
             if (articulos.length === 0) {
                 panel.insertAdjacentHTML("beforeend", `<p>Sin noticias</p>`);
@@ -44,30 +41,33 @@ function cargarNoticias(panel) {
 }
 
 
-function inicializar(reintentos = 0) {
-    const panel = document.getElementById("panel-noticias");
-    if (!panel || reintentos > 10) return;
+function inicializar() {
+    ActualizacionesPeriodicas.esperarConReintentos({
+        condicion: () => {
+            const panel = document.getElementById("panel-noticias");
+            return Boolean(panel && window.Tablero?.Estado?.ciudad);
+        },
+        alCumplir: () => {
+            const panel = document.getElementById("panel-noticias");
+            if (!panel) return;
 
-    if (!window.Tablero?.Estado?.ciudad) {
-        setTimeout(() => inicializar(reintentos + 1), 300);
-        return;
-    }
+            // Crear header una sola vez
+            panel.innerHTML = `
+                <div class="modulo-header">
+                    <h2 class="panel__titulo">Noticias</h2>
+                </div>
+            `;
 
-    // Crear header una sola vez
-    panel.innerHTML = `
-        <div class="modulo-header">
-            <h2 class="panel__titulo">Noticias</h2>
-        </div>
-    `;
-
-    // Primera carga inmediata
-    cargarNoticias(panel);
-
-    // 🔁 Actualizar cada 30 minutos
-    setInterval(() => {
-        console.log("Actualizando noticias...");
-        cargarNoticias(panel);
-    }, 30 * 60 * 1000); // 30 minutos
+            ActualizacionesPeriodicas.iniciarTrabajoPeriodico({
+                id: "noticias:desktop",
+                accion: () => cargarNoticias(panel),
+                intervaloMs: ActualizacionesPeriodicas.INTERVALOS_MS.INTERVALO_NOTICIAS,
+                ejecutarAhora: true,
+            });
+        },
+        maxIntentos: 10,
+        delayMs: ActualizacionesPeriodicas.INTERVALOS_MS.REINTENTO_CORTO,
+    });
 }
 
 window.NoticiasDesktop = { inicializar };
