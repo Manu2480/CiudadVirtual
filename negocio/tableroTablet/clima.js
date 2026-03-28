@@ -1,19 +1,30 @@
 let panelClimaVertical = document.getElementById("clima-tablet-vertical"); 
 let panelClimaHorizontal = document.getElementById("clima-tablet-horizontal");
-const apiClima = new ApiClima();
+let _ciudadClima = null;
 
 function inicializar() {
-    /* Tablero.Estado.ciudad puede no estar listo aún; reintenta */
-    const ciudad = window.Tablero?.Estado?.ciudad;
-    if (!ciudad?.latitud || !ciudad?.longitud) {
-        setTimeout(inicializar, 300); //se vuelve a inicializar en 300ms
-        return;
-    }
-    consultarClima() //se consulta el clima
-    setInterval(consultarClima,1800000) //se inicia el ciclo de consulta cada 30 minutos
+    ActualizacionesPeriodicas.esperarConReintentos({
+        condicion: () => {
+            const ciudad = window.Tablero?.Estado?.ciudad;
+            return Boolean(ciudad?.latitud && ciudad?.longitud);
+        },
+        alCumplir: () => {
+            _ciudadClima = window.Tablero?.Estado?.ciudad;
+
+            ActualizacionesPeriodicas.iniciarTrabajoPeriodico({
+                id: "clima:tablet",
+                accion: consultarClima,
+                intervaloMs: ActualizacionesPeriodicas.INTERVALOS_MS.INTERVALO_CLIMA,
+                ejecutarAhora: true,
+            });
+        },
+        delayMs: ActualizacionesPeriodicas.INTERVALOS_MS.REINTENTO_CORTO,
+    });
 }
 function consultarClima(){
-    apiClima.getDatosClima(ciudad.longitud, ciudad.latitud)
+    if (!_ciudadClima) return;
+
+    ClimaService.obtenerClimaCiudad(_ciudadClima)
     .then(datos => {
         mostrarDatos(datos,panelClimaVertical, true);
         mostrarDatos(datos,panelClimaHorizontal, false);
@@ -25,8 +36,8 @@ function mostrarDatos(datos, panel, saltoDeLinea){
     if (panel && datos){
         panel.innerHTML = `
             <section class="panel panel--clima" id="panel-clima">
-                <h2 class="panel__titulo">${saltoDeLinea ? " ": `<i class="fi ${_iconoClima(datos.condicion)}"></i>`} ${datos.condicion} ${saltoDeLinea ? " ": `<i class="fi ${_iconoClima(datos.condicion)}"></i>`}</h2>
-                ${saltoDeLinea ? `<i class="fi ${_iconoClima(datos.condicion)} clima-compacto__icono"></i>` : " "}
+                <h2 class="panel__titulo">${saltoDeLinea ? " ": `<i class="fi ${ClimaService.iconoCondicion(datos.condicion)}"></i>`} ${datos.condicion} ${saltoDeLinea ? " ": `<i class="fi ${ClimaService.iconoCondicion(datos.condicion)}"></i>`}</h2>
+                ${saltoDeLinea ? `<i class="fi ${ClimaService.iconoCondicion(datos.condicion)} clima-compacto__icono"></i>` : " "}
                 <p class="datos-clima">temperatura:${saltoDeLinea ? "<br>" : " "} ${Math.round(datos.temperatura)}°C</p>
                 <p class="datos-clima">humedad:${saltoDeLinea ? "<br>" : " "} ${Math.round(datos.humedad)}%</p>
                 <${saltoDeLinea ? "h2" : "p"} class="panel__titulo">viento<${saltoDeLinea ? "/h2" : "/p"}>
@@ -37,18 +48,6 @@ function mostrarDatos(datos, panel, saltoDeLinea){
         `;// con ${saltoDeLinea ? "<br>" : " "} estoy insertando los saltos de linea solo si saltoDeLinea es true, lo mismo con lo de los íconos
     }
 }
-/* Mapea la descripción de OpenWeather a un icono de UIcons */
-function _iconoClima(condicion = "") {
-    const c = condicion.toLowerCase();
-    if (c.includes("lluvia") || c.includes("llovizna")) return "fi-br-raindrops";
-    if (c.includes("tormenta"))                          return "fi-br-thunderstorm";
-    if (c.includes("nieve"))                             return "fi-br-snowflake";
-    if (c.includes("niebla") || c.includes("neblina"))  return "fi-br-cloud-fog";
-    if (c.includes("nube") || c.includes("nublado") || c.includes("nuboso"))    return "fi-br-clouds";
-    if (c.includes("parcialmente"))                      return "fi-br-cloud-sun";
-    return "fi-br-sun";
-}
-
 
 /* ================================================
 EXPOSICIÓN GLOBAL

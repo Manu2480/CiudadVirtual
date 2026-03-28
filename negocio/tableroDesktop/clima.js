@@ -3,9 +3,7 @@ CLIMA DESKTOP
 Widget de clima en el sidebar derecho.
 */
 function cargarClima(widget, ciudad) {
-    const api = new ApiClima();
-
-    api.getDatosClima(ciudad.longitud, ciudad.latitud)
+    ClimaService.obtenerClimaCiudad(ciudad)
         .then(datos => {
             widget.innerHTML = `
                 <div class="modulo-header">
@@ -13,7 +11,7 @@ function cargarClima(widget, ciudad) {
                 </div>
                 <div class="clima-contenido">
                     <div class="clima-icono">
-                        <i class="fi ${_iconoClima(datos.condicion)}"></i>
+                        <i class="fi ${ClimaService.iconoCondicion(datos.condicion)}"></i>
                     </div>
                     <div class="clima-temperatura">${Math.round(datos.temperatura)}°C</div>
                     <div class="clima-descripcion">${datos.condicion}</div>
@@ -41,39 +39,28 @@ function cargarClima(widget, ciudad) {
 }
 
 
-function inicializar(reintentos = 0) {
-    const ciudad = window.Tablero?.Estado?.ciudad;
-    const widget = document.getElementById("widget-clima");
+function inicializar() {
+    ActualizacionesPeriodicas.esperarConReintentos({
+        condicion: () => {
+            const ciudad = window.Tablero?.Estado?.ciudad;
+            const widget = document.getElementById("widget-clima");
+            return Boolean(widget && ciudad?.latitud && ciudad?.longitud);
+        },
+        alCumplir: () => {
+            const ciudad = window.Tablero?.Estado?.ciudad;
+            const widget = document.getElementById("widget-clima");
+            if (!widget || !ciudad) return;
 
-    if (!widget || reintentos > 10) return;
-
-    if (!ciudad?.latitud || !ciudad?.longitud) {
-        setTimeout(() => inicializar(reintentos + 1), 300);
-        return;
-    }
-
-    // Primera carga inmediata
-    cargarClima(widget, ciudad);
-
-    // 🔁 Actualización cada 30 minutos
-    if (!window._climaInterval) {
-        window._climaInterval = setInterval(() => {
-            console.log("Actualizando clima...");
-            cargarClima(widget, ciudad);
-        }, 30 * 60 * 1000);
-    }
-}
-
-
-function _iconoClima(condicion = "") {
-    const c = condicion.toLowerCase();
-    if (c.includes("lluvia") || c.includes("llovizna")) return "fi-br-raindrops";
-    if (c.includes("tormenta")) return "fi-br-thunderstorm";
-    if (c.includes("nieve")) return "fi-br-snowflake";
-    if (c.includes("niebla") || c.includes("neblina")) return "fi-br-cloud-fog";
-    if (c.includes("nube") || c.includes("nublado") || c.includes("nuboso")) return "fi-br-clouds";
-    if (c.includes("parcialmente")) return "fi-br-cloud-sun";
-    return "fi-br-sun";
+            ActualizacionesPeriodicas.iniciarTrabajoPeriodico({
+                id: "clima:desktop",
+                accion: () => cargarClima(widget, ciudad),
+                intervaloMs: ActualizacionesPeriodicas.INTERVALOS_MS.INTERVALO_CLIMA,
+                ejecutarAhora: true,
+            });
+        },
+        maxIntentos: 10,
+        delayMs: ActualizacionesPeriodicas.INTERVALOS_MS.REINTENTO_CORTO,
+    });
 }
 
 window.ClimaDesktop = { inicializar };
