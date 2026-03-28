@@ -95,14 +95,16 @@ class Ciudad {
     }
 
     // Costo de mantenimiento por turno (dinero) basado en edificios activos
+    // Cada edificio cuesta el 1% de su costo original por turno
     aplicarCostoMantenimiento() {
         const edificios = this.terreno.edificios || [];
-        const cantidadEdificios = edificios.filter(e => !String(e.id || "").toLowerCase().startsWith("via")).length;
-        const costoPorEdificio = 50; // monto fijo por turno
-        const costoTotal = cantidadEdificios * costoPorEdificio;
-
+ 
+        const costoTotal = edificios
+            .filter(e => !String(e.id || "").toLowerCase().startsWith("via"))
+            .reduce((total, e) => total + (e.costo || 0) * 0.01, 0);
+ 
         if (costoTotal > 0) {
-            console.log(`Aplicando costo de mantenimiento: ${cantidadEdificios} edificios × ${costoPorEdificio} = ${costoTotal}`);
+            console.log(`Aplicando costo de mantenimiento: $${costoTotal.toFixed(2)}`);
             this.modificarRecurso("dinero", -costoTotal);
         }
     }
