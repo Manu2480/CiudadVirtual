@@ -51,7 +51,9 @@ class ControladorStorage{
             terreno,
             ciudadanos,
             datos.estadoRecursos,
-            datos.historicoRecursos
+            datos.historicoRecursos,
+            datos.ercursosPorEdificio,
+            datos.recursosPorCiudadano
         )
         //Se realiza la rehidratación de los ciudadanos
         this.rehidratarCiudadanos(ciudad);

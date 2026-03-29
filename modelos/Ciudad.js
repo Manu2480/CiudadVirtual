@@ -7,19 +7,20 @@ class Ciudad {
                 dinero: -50,
                 electricidad: 0,
                 agua: 0,
-                alimentos: 0,
+                alimento: 0,
+                felicidad:0
             },
-            felicidad:0
         },
         {
             id: "casa",
             recursos: {
                 dinero: -50,
-                electricidad: -3,
+                electricidad: -5,
                 agua: -3,
-                alimentos: 0,
+                alimento: 0,
+                felicidad:0
             },
-            felicidad:0
+
         },
         {
             id: "apartamento",
@@ -27,9 +28,9 @@ class Ciudad {
                 dinero: -50,
                 electricidad: -15,
                 agua: -10,
-                alimentos: 0,
+                alimento: 0,
+                felicidad:0
             },
-            felicidad:0
         },
         {
             id: "tienda",
@@ -37,18 +38,19 @@ class Ciudad {
                 dinero: 500,
                 electricidad: -8,
                 agua: 0,
-                alimentos: 0,
+                alimento: 0,
+                felicidad:0
             },
-            felicidad:0
         },
-        {
+        {   
+            id: "centro-comercial",
             recursos: {
                 dinero: 2000,
                 electricidad: -25,
                 agua: 0,
-                alimentos: 0,
+                alimento: 0,
+                felicidad:0
             },
-            felicidad:0
         },
         {
             id: "fabrica",
@@ -56,9 +58,9 @@ class Ciudad {
                 dinero: 800,
                 electricidad: -20,
                 agua: -15,
-                alimentos: 0,
+                alimento: 0,
+                felicidad:0
             },
-            felicidad:0
         },
         {
             id: "granja",
@@ -66,9 +68,9 @@ class Ciudad {
                 dinero: -50,
                 electricidad: 0,
                 agua: -10,
-                alimentos: 50,
+                alimento: 50,
+                felicidad:0
             },
-            felicidad:0
         },
 
         {
@@ -77,9 +79,9 @@ class Ciudad {
                 dinero: -50,
                 electricidad: -20,
                 agua: -10,
-                alimentos: 0
+                alimento: 0,
+                felicidad:10
             },
-            felicidad:0
         },
         {
             id: "bombero",
@@ -87,9 +89,9 @@ class Ciudad {
                 dinero: -50,
                 electricidad: -15,
                 agua: 0,
-                alimentos: 0,
+                alimento: 0,
+                felicidad:10
             },
-            felicidad:10
         },
         {
             id: "policia",
@@ -97,18 +99,18 @@ class Ciudad {
                 dinero: -50,
                 electricidad: -15,
                 agua: 0,
-                alimentos: 0,
+                alimento: 0,
+                felicidad:0
             },
-            felicidad:0
         },
         {   id: "parque",
             recursos: {
                 dinero: -50,
                 electricidad: 0,
                 agua: 0,
-                alimentos: 0,
+                alimento: 0,
+                felicidad:5
             },
-            felicidad:5
         },
         {
             id: "planta-electrica",
@@ -116,9 +118,9 @@ class Ciudad {
                 dinero: -50,
                 electricidad: 200,
                 agua: 0,
-                alimentos: 0,
+                alimento: 0,
+                felicidad:0
             },
-            felicidad:0
         },
         {   
             id: "planta-hidraulica",
@@ -126,13 +128,19 @@ class Ciudad {
                 dinero: -50,
                 electricidad: -20,
                 agua: 150,
-                alimentos: 0,
+                alimento: 0,
+                felicidad:0
             },
-            felicidad:0
         }
     ]
+    recursosPorCiudadanoPredeterminado = {
+        dinero: 0,
+        electricidad: -1,
+        agua: -1,
+        alimento: -5
+    }
 
-    constructor(nombre, alcalde, latitud, longitud, tiempoTurno, terreno, ciudadanos, estadoRecursos, historicoRecursos) {
+    constructor(nombre, alcalde, latitud, longitud, tiempoTurno, terreno, ciudadanos, estadoRecursos, historicoRecursos, recursosPorEdificio, recursosPorCiudadano) {
 
         this.nombre = nombre;
         this.alcalde = alcalde;
@@ -147,6 +155,15 @@ class Ciudad {
         this.historicoRecursos = historicoRecursos;
         if (!historicoRecursos){
             this.historicoRecursos = [];
+        }
+
+        this.recursosPorEdificio = recursosPorEdificio;
+        if (!recursosPorEdificio){
+            this.recursosPorEdificio = this.recursosPorEdificioPredeterminado;
+        }
+        this.recursosPorCiudadano = recursosPorCiudadano;
+        if (!recursosPorCiudadano){
+            this.recursosPorCiudadano = this.recursosPorCiudadanoPredeterminado;
         }
     }
 
@@ -218,13 +235,37 @@ class Ciudad {
     // Metodo que calcula los recursos proporcionados o gastados por los edificios, se llama una vez en cada turno
     recursosPorEdificios() {
         this.terreno.edificios.forEach(edificio => {
-            let recursos = edificio.recursosEdificio;
+            //const id = edificio.id.replace(/[0-9]/g, ''); //Elimina los números del id del edificio
+            console.log(id);
+            //let recursos = edificio.recursosEdificio;
+            /*let recursos = this.recursosPorEdificioPredeterminado;
+            recursos.forEach((dicEdificio) =>{
+                console.log(edificio.id);
+                console.log(dicEdificio);
+                if (dicEdificio.id.includes(id)){
+                    console.log(id + " está en " + dicEdificio.id);
+                    for (const recurso in dicEdificio.recursos){
+                        console.log(recurso + " cantidad a cambiar: " + dicEdificio.recursos[recurso]);
+                        if (recurso != "felicidad"){
+                            this.modificarRecurso(recurso,dicEdificio.recursos[recurso]);
+                        }
+                    }
+                }
+            });*/
+
             for (const recurso in recursos) {
                 // suma(producción)/resta(consumo) el recurso correspondiente 
                 if (recurso != "felicidad"){
                     this.modificarRecurso(recurso, recursos[recurso]);
                 }
                 //VALIDAR QUE SI ES UNA PLANTA Y NO HAY ELECTRICIDAD NO SE PRODUZCA AGUA 
+            }
+        });
+    }
+    cambiarRecursosEdificio(claveEdificio, recurso, nuevoValor){
+        this.terreno.edificios.forEach(edificio =>{
+            if (edificio.id.toLowerCase().startsWith(claveEdificio)){
+                edificio.recursosEdificio[recurso] = nuevoValor;
             }
         });
     }

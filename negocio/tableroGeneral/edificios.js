@@ -22,7 +22,7 @@ const _catalogo = [
         categoria:   "pavimentaria",
         imagen:      "../../media/edificios/via.png",
         descripcion: "Sendero necesario para conectar edificios.",
-        costo:       100,
+        costo:       500,
     },
 
     /* Residencial */

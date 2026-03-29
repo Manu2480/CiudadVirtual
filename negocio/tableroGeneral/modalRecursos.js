@@ -22,7 +22,7 @@ const ModalRecursos = (() => {
         { clave: "agua",         icono: "fi-br-raindrops", label: "Agua",         fmt: v => `${Math.round(v)} L`  },
         { clave: "electricidad", icono: "fi-br-bolt",      label: "Electricidad", fmt: v => `${Math.round(v)} kW` },
         { clave: "alimento",     icono: "fi-br-wheat",     label: "Alimento",     fmt: v => `${Math.round(v)} kg` },
-        { clave: "felicidad",    icono: "fi-br-smile-beam",label: "Felicidad",    fmt: v => `${Math.round(v)}`    },
+        { clave: "felicidad",    icono: "fi-br-smile-beam",label: "Felicidad",    fmt: v => `${Math.round(v)} Pts`    },
     ];
 
     /* =========================
@@ -43,29 +43,6 @@ const ModalRecursos = (() => {
     function _edificios() {
         return Edificios.todos() || [];
     }
-
-    /* =========================
-       SECCIÓN: RECURSOS ACTUALES
-    ========================= */
-    function _generarRecursosActuales() {
-        const recursos = _recursos();
-
-        return `
-            <section>
-                <h2>Recursos actuales</h2>
-                <div class="grid-recursos">
-                    ${INDICADORES.map(r => `
-                        <div class="recurso-modal">
-                            <i class="fi ${r.icono}"></i>
-                            <span>${r.label}</span>
-                            <span>${r.fmt(recursos[r.clave] ?? 0)}</span>
-                        </div>
-                    `).join("")}
-                </div>
-            </section>
-        `;
-    }
-
     /* =========================
        SECCIÓN: MODIFICAR RECURSOS
     ========================= */
@@ -150,6 +127,7 @@ const ModalRecursos = (() => {
                         <span>${r.label}</span>
                         <span>${r.fmt(valor)}</span>
                         <input type="number" id="edit-${edificio.id}-${r.clave}" placeholder="Nuevo valor">
+                        <button class="btn-aceptar" data-clave="${r.clave} data-id="${edificio.id}">Aceptar</button>
                     </div>
                 `;
             }).join("")}
@@ -178,7 +156,6 @@ const ModalRecursos = (() => {
     function _generarHTML() {
         return `
             <div class="modal-recursos">
-                ${_generarRecursosActuales()}
                 ${_generarModificadoresGlobales()}
                 ${_generarEdificios()}
                 ${_generarPanelEdificio()}
@@ -190,7 +167,7 @@ const ModalRecursos = (() => {
     /* =========================
        EVENTOS
     ========================= */
-function _activarEventos() {
+    function _activarEventos() {
     document.querySelectorAll(".tarjeta-edificio").forEach(el => {
         el.addEventListener("click", () => {
             const id = el.dataset.id;
@@ -201,9 +178,9 @@ function _activarEventos() {
         });
     });
 
-    const grids = document.querySelectorAll(".grid-recursos");
+    const gridsRecursos = document.querySelectorAll(".grid-recursos");
 
-    grids.forEach(grid => {
+    gridsRecursos.forEach(grid => {
         grid.addEventListener("click", (e) => {
 
             if (!e.target.classList.contains("btn-aceptar")) return;

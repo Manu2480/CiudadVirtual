@@ -307,7 +307,9 @@ addEventListener("DOMContentLoaded",function(){
                 new Terreno(viasEdificios.vias, viasEdificios.edificios),
                 [],
                 estadoInicial,
-                []
+                [],
+                null,
+                null
             );
             ciudad.genero = generoValor;
 
