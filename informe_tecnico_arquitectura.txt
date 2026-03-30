@@ -1,0 +1,346 @@
+PROMPT:
+Actúa como un arquitecto de software senior experto en SOLID, Clean Code y arquitectura en capas.
+
+Analiza TODO el proyecto y genera un reporte técnico exhaustivo identificando problemas en:
+
+Separación de tecnologías
+HTML, CSS y JavaScript deben estar separados
+❌ No deben coexistir en un mismo archivo
+✅ EXCEPCIÓN: carpeta "modelo" puede tener HTML + JS
+❌ PROHIBIDO: CSS dentro de "modelo"
+Reporta:
+
+Archivos con mezcla
+Tipo de mezcla
+Gravedad
+2. Duplicación de código (DRY)
+
+Detecta lógica repetida en múltiples archivos o vistas.
+
+Reporta:
+
+Código duplicado
+Ubicación
+Impacto (ej: cambios en múltiples archivos)
+Propuesta de abstracción (función/módulo reutilizable)
+3. Arquitectura en capas
+
+Verifica separación estricta:
+
+❌ Vista NO debe contener lógica de negocio
+❌ Modelo NO debe acceder a datos (DB/APIs)
+❌ No mezclar capas
+
+Reporta:
+
+Violaciones
+Capas involucradas
+Solución propuesta
+4. Principios SOLID
+
+Evalúa:
+
+SRP: múltiples responsabilidades
+OCP: difícil de extender
+LSP: mal uso de herencia
+ISP: interfaces innecesarias
+DIP: dependencias directas
+
+Reporta:
+
+Violación
+Ubicación
+Explicación
+Solución
+FORMATO DE SALIDA
+Resumen general
+Mezcla de tecnologías
+Duplicación de código
+Problemas de arquitectura
+Violaciones SOLID
+Recomendaciones
+
+Sé técnico, preciso y detecta TODOS los problemas posibles
+
+
+INFORME TECNICO DE ARQUITECTURA - CIUDADVIRTUAL
+Fecha: 2026-03-27
+
+RESUMEN GENERAL
+Se realizo un analisis estatico completo del repositorio (HTML, JS y acoplamientos por capas) con busqueda global de patrones y validacion manual de modulos criticos.
+
+Diagnostico global:
+1. Hay mezcla de tecnologias en al menos 24 archivos, concentrada en movil y modulos compartidos de negocio.
+2. Hay duplicacion relevante entre desktop, movil y tablet (clima, noticias, recursos, inicializacion periodica).
+3. La capa negocio esta fuertemente acoplada a DOM, almacenamiento y APIs, por lo que no hay separacion estricta de capas.
+4. Hay violaciones claras de SRP, OCP y DIP; LSP e ISP muestran riesgos de diseno por jerarquias y contratos implicitos.
+5. La carpeta de modelos cumple la restriccion principal: no se detecto CSS embebido ni acceso DOM/API/storage en modelos.
+
+Cobertura:
+- Mezcla por archivo: inventario automatico + validacion manual.
+- Duplicacion DRY: comparacion entre modulos equivalentes por dispositivo.
+- Capas y SOLID: revision de modulos orquestadores y dominio.
+
+------------------------------------------------------------
+MEZCLA DE TECNOLOGIAS
+(Formato: archivo, tipo de mezcla, gravedad)
+------------------------------------------------------------
+
+1) negocio/tableroMovil/clima.js
+Tipo: JS + CSS embebido (cssText) + HTML en template + estilos inline.
+Evidencia: lineas aprox. 66, 80, 92, 93, 124.
+Gravedad: CRITICA.
+
+2) negocio/tableroMovil/recursos.js
+Tipo: JS + CSS embebido + HTML en template + estilos inline.
+Evidencia: lineas aprox. 45, 57, 114, 115.
+Gravedad: CRITICA.
+
+3) negocio/tableroMovil/menuConstruccion.js
+Tipo: JS + CSS embebido + HTML en template.
+Evidencia: lineas aprox. 66, 102, 116.
+Gravedad: ALTA.
+
+4) negocio/tableroMovil/tabs.js
+Tipo: JS + inyeccion de CSS dinamica + cssText.
+Evidencia: lineas aprox. 19, 31.
+Gravedad: ALTA.
+
+5) negocio/tableroGeneral/modal.js
+Tipo: JS + HTML dinamico + estilos inline dentro del HTML.
+Evidencia: lineas aprox. 32, 70, 138, 184.
+Gravedad: ALTA.
+
+6) negocio/tableroGeneral/ruta.js
+Tipo: JS + construccion de HTML por concatenacion + estilos inline en string.
+Evidencia: lineas aprox. 95, 99, 108.
+Gravedad: ALTA.
+
+7) negocio/tableroDesktop/clima.js
+Tipo: JS + HTML dinamico + estilo inline.
+Evidencia: lineas aprox. 10, 20.
+Gravedad: MEDIA.
+
+8) negocio/tableroGeneral/recursos.js
+Tipo: JS + HTML dinamico + estilo inline puntual.
+Evidencia: lineas aprox. 57, 64.
+Gravedad: MEDIA.
+
+9) negocio/tableroTablet/recursos.js
+Tipo: JS + HTML dinamico + estilo inline puntual.
+Evidencia: lineas aprox. 24, 41.
+Gravedad: MEDIA.
+
+10) presentacion/vistas/index.html
+Tipo: HTML + estilo inline.
+Evidencia: linea aprox. 51.
+Gravedad: BAJA.
+
+11) negocio/tableroMovil/noticias.js
+Tipo: JS + HTML dinamico + comportamiento inline en atributo HTML.
+Evidencia: lineas aprox. 105, 109.
+Gravedad: MEDIA.
+
+Validacion de la excepcion en modelo:
+- No se detecto CSS embebido en carpeta modelos.
+- Tampoco se detecto mezcla DOM/API/storage en modelos.
+
+------------------------------------------------------------
+DUPLICACION DE CODIGO (DRY)
+------------------------------------------------------------
+
+1) Mapeo de recursos duplicado en 3 vistas
+Ubicacion:
+- negocio/tableroDesktop/recursos.js (aprox. 20)
+- negocio/tableroMovil/recursos.js (aprox. 90)
+- negocio/tableroTablet/recursos.js (aprox. 26)
+Impacto:
+- Cambios de iconos/nombres/unidades en 3 archivos.
+- Riesgo de divergencia de formato.
+Propuesta:
+- Modulo unico de metadatos de recursos y formateadores.
+
+2) Funcion de icono de clima duplicada en 3 modulos
+Ubicacion:
+- negocio/tableroDesktop/clima.js (aprox. 68)
+- negocio/tableroMovil/clima.js (aprox. 139)
+- negocio/tableroTablet/clima.js (aprox. 41)
+Impacto:
+- Cualquier ajuste requiere 3 cambios.
+Propuesta:
+- Helper compartido de normalizacion/mapeo de condicion climatica.
+
+3) Patron de actualizacion cada 30 min repetido
+Ubicacion:
+- Clima: desktop, movil, tablet
+- Noticias: desktop, movil, tablet
+Impacto:
+- Variaciones de notacion y riesgo de inconsistencias.
+Propuesta:
+- Constante compartida de intervalos + scheduler reutilizable.
+
+4) Patron fetch/render de noticias repetido en desktop/movil/tablet
+Ubicacion:
+- negocio/tableroDesktop/noticias.js
+- negocio/tableroMovil/noticias.js
+- negocio/tableroTablet/noticias.js
+Impacto:
+- Ajustes de contrato API y reglas de filtrado en 3 lugares.
+Propuesta:
+- Servicio de noticias unico + renderers por vista.
+
+5) Normalizacion de IDs de edificios duplicada
+Ubicacion:
+- negocio/tableroGeneral/mapa.js
+- negocio/tableroGeneral/tablero.js
+- negocio/tableroGeneral/ruta.js
+Impacto:
+- Riesgo alto de bugs de mapeo al agregar tipos.
+Propuesta:
+- Normalizador unico de IDs de infraestructura.
+
+6) Construccion de overlay/modal repetida en movil
+Ubicacion:
+- negocio/tableroMovil/clima.js
+- negocio/tableroMovil/recursos.js
+- negocio/tableroMovil/noticias.js
+- negocio/tableroMovil/menuConstruccion.js
+Impacto:
+- Mantenimiento visual fragmentado y UX inconsistente.
+Propuesta:
+- Factory de modal/overlay reutilizable.
+
+------------------------------------------------------------
+PROBLEMAS DE ARQUITECTURA EN CAPAS
+------------------------------------------------------------
+
+Reglas objetivo:
+- Vista no debe contener logica de negocio.
+- Modelo no debe acceder a datos externos.
+- No mezclar capas.
+
+1) Negocio con responsabilidades de presentacion (DOM directo)
+Capas involucradas: Negocio + Presentacion.
+Ubicacion:
+- negocio/tableroGeneral/edificaciones.js
+- negocio/tableroGeneral/recursos.js
+- negocio/tableroGeneral/mapa.js
+- negocio/tableroGeneral/modal.js
+- negocio/tableroGeneral/ranking.js
+Problema:
+- La capa negocio manipula HTML/CSS/eventos en vez de exponer estado/comandos.
+Solucion:
+- Extraer capa de presentacion/adaptadores UI.
+
+2) Negocio acoplado a persistencia/storage sin puertos
+Capas involucradas: Negocio + Acceso a datos.
+Ubicacion:
+- negocio/tableroGeneral/tablero.js
+- negocio/tableroGeneral/edificaciones.js
+- negocio/tableroGeneral/recursos.js
+- negocio/formulario.js
+Problema:
+- Dependencias directas a CiudadStorage/RankingStorage dentro del flujo de negocio.
+Solucion:
+- Introducir repositorios/puertos (CiudadRepository, RankingRepository).
+
+3) Negocio acoplado a APIs HTTP directamente
+Capas involucradas: Negocio + Acceso externo.
+Ubicacion:
+- negocio/formulario.js
+- negocio/tableroDesktop/clima.js
+- negocio/tableroMovil/clima.js
+- negocio/tableroTablet/clima.js
+- negocio/tableroDesktop/noticias.js
+- negocio/tableroMovil/noticias.js
+- negocio/tableroTablet/noticias.js
+Problema:
+- No hay capa de servicio estable ni contratos.
+Solucion:
+- Servicios de aplicacion por caso de uso (ClimaService, NoticiasService).
+
+4) formulario.js mezcla UI, validacion, reglas y construccion de dominio
+Capas involucradas: Presentacion + Negocio + Datos.
+Ubicacion:
+- negocio/formulario.js
+Problema:
+- Orquestador monolitico dificil de testear y mantener.
+Solucion:
+- Separar FormController, FormValidator, CiudadFactory, InfraestructuraImporter.
+
+5) Modelo accediendo a datos externos
+Estado:
+- No se detectaron violaciones en carpeta modelos.
+
+------------------------------------------------------------
+VIOLACIONES SOLID
+------------------------------------------------------------
+
+1) SRP (Single Responsibility Principle)
+- negocio/tableroGeneral/tablero.js:
+  Carga ciudad, rehidratacion dominio, control de turnos, guardado, exportacion, ranking y modos UI.
+  Solucion: separar en servicios de aplicacion (TurnoService, PartidaService, ModoService, ExportService).
+
+- negocio/formulario.js:
+  Navegacion de pasos, integracion APIs, validacion, carga infraestructura, creacion ciudad, redireccion.
+  Solucion: dividir en modulos especializados.
+
+- negocio/tableroMovil/clima.js:
+  Consulta API + render chip + render modal + estilos + eventos + cierre.
+  Solucion: separar datos y presentacion.
+
+2) OCP (Open/Closed Principle)
+- modelos/Terreno.js:
+  Cadenas de instanceof y condicionales por tipo para demolicion, conteos y comportamiento.
+  Solucion: polimorfismo por comportamiento o estrategias por tipo.
+
+- Normalizaciones duplicadas de tipos/ids en varios modulos:
+  Solucion: registro central de tipos y metadatos.
+
+3) LSP (Liskov Substitution Principle)
+- Riesgo en jerarquia Via/Edificio:
+  El sistema requiere excepciones por subtipo (tratamientos especiales).
+  Solucion: separar jerarquias (vial vs edificacion) o definir contratos explicitos por capacidad.
+
+4) ISP (Interface Segregation Principle)
+- Objeto global window.Tablero con interfaz amplia y consumidores parciales.
+  Solucion: puertos pequenos por caso de uso (TurnoPort, ConstruccionPort, NavegacionPort).
+
+5) DIP (Dependency Inversion Principle)
+- Dependencias concretas a storage y APIs dentro de negocio.
+  Solucion: invertir dependencias con puertos/adaptadores e inyeccion de dependencias.
+
+------------------------------------------------------------
+RECOMENDACIONES
+------------------------------------------------------------
+
+Plan priorizado:
+
+1) Crear nucleo de aplicacion sin DOM
+- Servicios para turnos, puntuacion, guardado, clima y noticias.
+- La vista solo renderiza y despacha eventos.
+
+2) Introducir arquitectura de puertos y adaptadores
+- Puertos: CiudadRepository, RankingRepository, WeatherProvider, NewsProvider.
+- Adaptadores actuales: CiudadStorage, RankingStorage, ApiClima, ApiNoticias.
+
+3) Consolidar duplicacion transversal
+- Catalogo unico de recursos.
+- Normalizador unico de IDs.
+- Constantes de intervalos.
+- Helper comun de modales/overlays.
+
+4) Eliminar mezcla CSS/HTML dentro de JS
+- Mover estilos inline y cssText a CSS.
+- Dejar en JS solo binding de eventos y actualizacion de estado.
+
+5) Reducir responsabilidades de modulos criticos
+- Dividir tablero.js y formulario.js en componentes cohesionados.
+- Definir limites de capa explicitos por carpeta.
+
+6) Endurecer calidad automatizada
+- ESLint con reglas de complejidad/tamano de funcion.
+- Regla para prohibir style inline en templates JS.
+- Pruebas unitarias para servicios puros e integracion para adaptadores.
+
+FIN DEL INFORME

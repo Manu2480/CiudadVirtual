@@ -40,6 +40,10 @@
     <script src="../../acceso_datos/ApiClima.js"        defer></script>
     <script src="../../acceso_datos/ApiNoticias.js"     defer></script>
 
+    <script src="../../negocio/tableroGeneral/actualizacionesPeriodicas.js" defer></script>
+    <script src="../../negocio/tableroGeneral/climaService.js"              defer></script>
+    <script src="../../negocio/tableroGeneral/noticiasService.js"           defer></script>
+
     <script src="../../negocio/tableroGeneral/edificios.js"      defer></script>
     <script src="../../negocio/tableroGeneral/notificaciones.js" defer></script>
     <script src="../../negocio/tableroGeneral/recursos.js"       defer></script>
@@ -140,6 +144,9 @@
         <div id="menu-partida" class="menu-partida" aria-hidden="true">
             <button class="menu-partida__opcion" id="btn-guardar-local">
                 <i class="fi fi-br-floppy-disk"></i> Guardar en dispositivo
+            </button>
+            <button class="menu-partida__opcion" id="btn-eliminar-partida">
+                <i class="fi fi-br-trash"></i> Eliminar partida guardada
             </button>
             <button class="menu-partida__opcion" id="btn-exportar-json">
                 <i class="fi fi-br-download"></i> Exportar como JSON

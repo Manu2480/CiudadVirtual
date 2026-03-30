@@ -15,6 +15,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const btnMenu   = document.getElementById("btn-menu-partida");
     const menu      = document.getElementById("menu-partida");
     const btnLocal  = document.getElementById("btn-guardar-local");
+    const btnEliminarPartida = document.getElementById("btn-eliminar-partida");
     const btnExport = document.getElementById("btn-exportar-json");
     const btnRanking = document.getElementById("btn-ver-ranking");
     const inputDuracionTurno = document.getElementById("input-duracion-turno");
@@ -42,6 +43,20 @@ document.addEventListener("DOMContentLoaded", () => {
         Tablero.guardarPartida();
         menu.classList.remove("abierto");
         menu.setAttribute("aria-hidden", "true");
+    });
+
+    /* Eliminar partida guardada */
+    btnEliminarPartida?.addEventListener("click", () => {
+        const confirmar = window.confirm("¿Deseas eliminar la partida guardada?");
+        if (!confirmar) return;
+
+        if (CiudadStorage?.limpiar) {
+            CiudadStorage.limpiar();
+        }
+
+        menu.classList.remove("abierto");
+        menu.setAttribute("aria-hidden", "true");
+        window.location.href = "index.html";
     });
 
     /* Exportar como JSON */

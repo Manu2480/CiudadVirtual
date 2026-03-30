@@ -1,16 +1,20 @@
-
 class PlantaHidraulica extends PlantaUtilidad {
 
     static contador = 0;
 
+    static catalogoInfo = {
+        costo:        8000,
+        capacidad:    0,
+        electricidad: -20,
+        agua:         150,
+    };
+
     constructor(ubicacion) {
-
-        PlantaHidraulica.contador += 1; // Incrementa el contador cada vez que se crea una nueva planta hidráulica
-        const idPlanta = "Agua" + PlantaHidraulica.contador; // Genera un ID único para la planta hidráulica
-
-        super(idPlanta, 8000, ubicacion, 0);
-        this.recursosEdificio["electricidad"] = -20;
-        this.recursosEdificio["agua"] = 150; // El valor es positivo porque produce agua
+        PlantaHidraulica.contador += 1;
+        const idPlanta = "Agua" + PlantaHidraulica.contador;
+        super(idPlanta, PlantaHidraulica.catalogoInfo.costo, ubicacion, PlantaHidraulica.catalogoInfo.capacidad);
+        this.recursosEdificio["electricidad"] = PlantaHidraulica.catalogoInfo.electricidad;
+        this.recursosEdificio["agua"]         = PlantaHidraulica.catalogoInfo.agua;
     }
 
     static fromData(obj) {
@@ -22,14 +26,8 @@ class PlantaHidraulica extends PlantaUtilidad {
         }
         const instance = Object.create(PlantaHidraulica.prototype);
         Object.assign(instance, obj);
-        /*
-        if (obj.ciudadanos && Array.isArray(obj.ciudadanos)) {
-            const Ciudadano = require("./Ciudadano");
-            instance.ciudadanos = obj.ciudadanos.map(c => Ciudadano.fromData(c));
-        }*/
         return instance;
     }
 
     //Si al descontar la electricidad el recurso quedo negativo, no podra producir agua
 }
-

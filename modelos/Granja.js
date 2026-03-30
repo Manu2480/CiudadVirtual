@@ -1,16 +1,20 @@
-
 class Granja extends EdificioIndustrial {
 
     static contador = 0;
 
+    static catalogoInfo = {
+        costo:    3000,
+        capacidad: 8,
+        alimento: 50,
+        agua:     -10,
+    };
+
     constructor(ubicacion) {
-
-        Granja.contador += 1; // Incrementa el contador cada vez que se crea una nueva fábrica
-        const idGranja = "Granja" + Granja.contador; // Genera un ID único para la fábrica
-
-        super(idGranja, 3000, ubicacion, 8); 
-        this.recursosEdificio["alimento"] = 50;
-        this.recursosEdificio["agua"] = -10;
+        Granja.contador += 1;
+        const idGranja = "Granja" + Granja.contador;
+        super(idGranja, Granja.catalogoInfo.costo, ubicacion, Granja.catalogoInfo.capacidad);
+        this.recursosEdificio["alimento"] = Granja.catalogoInfo.alimento;
+        this.recursosEdificio["agua"]     = Granja.catalogoInfo.agua;
     }
 
     static fromData(obj) {
@@ -22,12 +26,6 @@ class Granja extends EdificioIndustrial {
         }
         const instance = Object.create(Granja.prototype);
         Object.assign(instance, obj);
-        /*
-        if (obj.ciudadanos && Array.isArray(obj.ciudadanos)) {
-            const Ciudadano = require("./Ciudadano");
-            instance.ciudadanos = obj.ciudadanos.map(c => Ciudadano.fromData(c));
-        }*/
         return instance;
     }
 }
-

@@ -2,18 +2,12 @@
 Catálogo de edificios disponibles para construir.
 Compartido por todas las vistas.
 
-Atributos por edificio:
-  id, nombre, categoria, imagen, descripcion, costo
-  capacidad    → habitantes que puede albergar
-  empleos      → puestos de trabajo que genera
-  dinero       → ingresos por turno
-  electricidad → consumo (-) o producción (+) de energía
-  agua         → consumo (-) o producción (+) de agua
-  alimento     → producción de alimento por turno
-  felicidad    → impacto en la felicidad ciudadana
+Los datos numéricos (costo, capacidad, recursos) se leen directamente
+de cada clase modelo mediante su propiedad estática `catalogoInfo`,
+evitando duplicación y garantizando una única fuente de verdad.
 */
 
-const _catalogo = [
+let _catalogo = [
 
     /* Pavimentaria */
     {
@@ -22,7 +16,8 @@ const _catalogo = [
         categoria:   "pavimentaria",
         imagen:      "../../media/edificios/via.png",
         descripcion: "Sendero necesario para conectar edificios.",
-        costo:       500,
+        clase: Via,
+        ...Via.catalogoInfo,
     },
 
     /* Residencial */
@@ -32,10 +27,8 @@ const _catalogo = [
         categoria:   "residencial",
         imagen:      "../../media/edificios/casa.png",
         descripcion: "Hogar para familias. Aumenta la población.",
-        costo:       1000,
-        capacidad:   4,
-        electricidad: -3,
-        agua:        -3,
+        clase: Casa,
+        ...Casa.catalogoInfo,
     },
     {
         id:          "apartamento",
@@ -43,10 +36,8 @@ const _catalogo = [
         categoria:   "residencial",
         imagen:      "../../media/edificios/departamentos.png",
         descripcion: "Edificio multifamiliar. Alta densidad de población.",
-        costo:       3000,
-        capacidad:   12,
-        electricidad: -15,
-        agua:        -10,
+        clase: Apartamento,
+        ...Apartamento.catalogoInfo,
     },
 
     /* Comercial */
@@ -56,10 +47,9 @@ const _catalogo = [
         categoria:   "comercial",
         imagen:      "../../media/edificios/tienda.png",
         descripcion: "Genera ingresos.",
-        costo:       2000,
-        empleos:     6,
-        dinero:      500,
-        electricidad: -8,
+        empleos:     Tienda.catalogoInfo.capacidad,
+        clase: Tienda,
+        ...Tienda.catalogoInfo,
     },
     {
         id:          "centro-comercial",
@@ -67,10 +57,9 @@ const _catalogo = [
         categoria:   "comercial",
         imagen:      "../../media/edificios/centro-comercial.png",
         descripcion: "Gran centro comercial que genera muchos ingresos.",
-        costo:       8000,
-        empleos:     20,
-        dinero:      2000,
-        electricidad: -25,
+        empleos:     CentroComercial.catalogoInfo.capacidad,
+        clase: CentroComercial,
+        ...CentroComercial.catalogoInfo,
     },
 
     /* Industrial */
@@ -79,12 +68,10 @@ const _catalogo = [
         nombre:      "Fábrica",
         categoria:   "industrial",
         imagen:      "../../media/edificios/fabrica.png",
-        descripcion: "Produce bienes..",
-        costo:       5000,
-        empleos:     15,
-        dinero:      800,
-        electricidad: -20,
-        agua:        -15,
+        descripcion: "Produce bienes.",
+        empleos:     Fabrica.catalogoInfo.capacidad,
+        clase: Fabrica,
+        ...Fabrica.catalogoInfo,
     },
     {
         id:          "granja",
@@ -92,10 +79,9 @@ const _catalogo = [
         categoria:   "industrial",
         imagen:      "../../media/edificios/granja.png",
         descripcion: "Provee alimento para la ciudad.",
-        costo:       3000,
-        empleos:     8,
-        alimento:    50,
-        agua:        -10,
+        empleos:     Granja.catalogoInfo.capacidad,
+        clase: Granja,
+        ...Granja.catalogoInfo,
     },
 
     /* Servicios */
@@ -105,10 +91,8 @@ const _catalogo = [
         categoria:   "servicios",
         imagen:      "../../media/edificios/hospital.png",
         descripcion: "Mejora la salud y la felicidad de la población.",
-        costo:       6000,
-        felicidad:   10,
-        electricidad: -20,
-        agua:        -10,
+        clase: Hospital,
+        ...Hospital.catalogoInfo,
     },
     {
         id:          "bombero",
@@ -116,9 +100,8 @@ const _catalogo = [
         categoria:   "servicios",
         imagen:      "../../media/edificios/bombero.png",
         descripcion: "Reduce desastres y aumenta la seguridad del barrio.",
-        costo:       4000,
-        felicidad:   10,
-        electricidad: -15,
+        clase: EstacionBombero,
+        ...EstacionBombero.catalogoInfo,
     },
     {
         id:          "policia",
@@ -126,9 +109,8 @@ const _catalogo = [
         categoria:   "servicios",
         imagen:      "../../media/edificios/policia.png",
         descripcion: "Mantiene el orden y mejora la felicidad ciudadana.",
-        costo:       4000,
-        felicidad:   10,
-        electricidad: -15,
+        clase: EstacionPolicia,
+        ...EstacionPolicia.catalogoInfo,
     },
     {
         id:          "parque",
@@ -136,8 +118,8 @@ const _catalogo = [
         categoria:   "servicios",
         imagen:      "../../media/edificios/parque.png",
         descripcion: "Espacio verde que mejora la felicidad del área.",
-        costo:       1500,
-        felicidad:   5,
+        clase: Parque,
+        ...Parque.catalogoInfo,
     },
 
     /* Infraestructura */
@@ -147,8 +129,8 @@ const _catalogo = [
         categoria:   "infraestructura",
         imagen:      "../../media/edificios/electrica.png",
         descripcion: "Genera energía para toda la ciudad.",
-        costo:       10000,
-        electricidad: 200,
+        clase: PlantaElectrica,
+        ...PlantaElectrica.catalogoInfo,
     },
     {
         id:          "planta-hidraulica",
@@ -156,16 +138,15 @@ const _catalogo = [
         categoria:   "infraestructura",
         imagen:      "../../media/edificios/agua.png",
         descripcion: "Provee agua para la ciudad.",
-        costo:       8000,
-        electricidad: -20,
-        agua:        150,
+        clase: PlantaHidraulica,
+        ...PlantaHidraulica.catalogoInfo,
     },
 ];
 
-function obtener(id)            { return _catalogo.find(e => e.id === id) || null; }
-function porCategoria(categoria){ return _catalogo.filter(e => e.categoria === categoria); }
-function categorias()           { return [...new Set(_catalogo.map(e => e.categoria))]; }
-function todos()                { return _catalogo; }
+function obtener(id)             { return _catalogo.find(e => e.id === id) || null; }
+function porCategoria(categoria) { return _catalogo.filter(e => e.categoria === categoria); }
+function categorias()            { return [...new Set(_catalogo.map(e => e.categoria))]; }
+function todos()                 { return _catalogo; }
 
 function tooltip(edificioOId) {
     const edificio = typeof edificioOId === "string"
@@ -180,22 +161,30 @@ function tooltip(edificioOId) {
         `Costo: $${(edificio.costo || 0).toLocaleString()}`,
     ];
 
-    if (edificio.descripcion) lineas.push(edificio.descripcion);
-    if (edificio.capacidad)   lineas.push(`Capacidad: +${edificio.capacidad} habitantes`);
-    if (edificio.empleos)     lineas.push(`Empleos: +${edificio.empleos}`);
-    if (edificio.dinero)      lineas.push(`Dinero por turno: +$${edificio.dinero.toLocaleString()}`);
+    if (edificio.descripcion)  lineas.push(edificio.descripcion);
+    if (edificio.capacidad)    lineas.push(`Capacidad: +${edificio.capacidad} habitantes`);
+    if (edificio.empleos)      lineas.push(`Empleos: +${edificio.empleos}`);
+    if (edificio.dinero)       lineas.push(`Dinero por turno: +$${edificio.dinero.toLocaleString()}`);
     if (edificio.electricidad) {
-        lineas.push(
-            `Electricidad: ${edificio.electricidad > 0 ? "+" : ""}${edificio.electricidad}`
-        );
+        lineas.push(`Electricidad: ${edificio.electricidad > 0 ? "+" : ""}${edificio.electricidad}`);
     }
-    if (edificio.agua) {
-        lineas.push(`Agua: ${edificio.agua > 0 ? "+" : ""}${edificio.agua}`);
-    }
-    if (edificio.alimento)  lineas.push(`Alimento por turno: +${edificio.alimento}`);
-    if (edificio.felicidad) lineas.push(`Felicidad: +${edificio.felicidad}`);
+    if (edificio.agua)         lineas.push(`Agua: ${edificio.agua > 0 ? "+" : ""}${edificio.agua}`);
+    if (edificio.alimento)     lineas.push(`Alimento por turno: +${edificio.alimento}`);
+    if (edificio.felicidad)    lineas.push(`Felicidad: +${edificio.felicidad}`);
 
     return lineas.join("\n");
 }
 
-window.Edificios = { obtener, porCategoria, categorias, todos, tooltip };
+function modificarRecursoEdificio(id,recurso,valor){
+    const edificio = _catalogo.find(e => e.id == id);
+    if (!edificio || !edificio.clase) {
+    console.warn("Edificio no encontrado:", id);
+    return;
+    }
+    if (edificio.id == id){
+        edificio.clase.catalogoInfo[recurso] = valor;
+    }
+    console.log(edificio.clase.catalogoInfo);
+}
+
+window.Edificios = { obtener, porCategoria, categorias, todos, tooltip, modificarRecursoEdificio };

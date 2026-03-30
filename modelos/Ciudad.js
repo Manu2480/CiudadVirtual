@@ -1,138 +1,5 @@
 
 class Ciudad {
-    recursosPorEdificioPredeterminado = [
-        {
-            id: "via",
-            recursos: {
-                dinero: -50,
-                electricidad: 0,
-                agua: 0,
-                alimento: 0,
-                felicidad:0
-            },
-        },
-        {
-            id: "casa",
-            recursos: {
-                dinero: -50,
-                electricidad: -5,
-                agua: -3,
-                alimento: 0,
-                felicidad:0
-            },
-
-        },
-        {
-            id: "apartamento",
-            recursos: {
-                dinero: -50,
-                electricidad: -15,
-                agua: -10,
-                alimento: 0,
-                felicidad:0
-            },
-        },
-        {
-            id: "tienda",
-            recursos: {
-                dinero: 500,
-                electricidad: -8,
-                agua: 0,
-                alimento: 0,
-                felicidad:0
-            },
-        },
-        {   
-            id: "centro-comercial",
-            recursos: {
-                dinero: 2000,
-                electricidad: -25,
-                agua: 0,
-                alimento: 0,
-                felicidad:0
-            },
-        },
-        {
-            id: "fabrica",
-            recursos: {
-                dinero: 800,
-                electricidad: -20,
-                agua: -15,
-                alimento: 0,
-                felicidad:0
-            },
-        },
-        {
-            id: "granja",
-            recursos: {
-                dinero: -50,
-                electricidad: 0,
-                agua: -10,
-                alimento: 50,
-                felicidad:0
-            },
-        },
-
-        {
-            id: "hospital",
-            recursos: {
-                dinero: -50,
-                electricidad: -20,
-                agua: -10,
-                alimento: 0,
-                felicidad:10
-            },
-        },
-        {
-            id: "bombero",
-            recursos: {
-                dinero: -50,
-                electricidad: -15,
-                agua: 0,
-                alimento: 0,
-                felicidad:10
-            },
-        },
-        {
-            id: "policia",
-            recursos: {
-                dinero: -50,
-                electricidad: -15,
-                agua: 0,
-                alimento: 0,
-                felicidad:0
-            },
-        },
-        {   id: "parque",
-            recursos: {
-                dinero: -50,
-                electricidad: 0,
-                agua: 0,
-                alimento: 0,
-                felicidad:5
-            },
-        },
-        {
-            id: "planta-electrica",
-            recursos: {
-                dinero: -50,
-                electricidad: 200,
-                agua: 0,
-                alimento: 0,
-                felicidad:0
-            },
-        },
-        {   
-            id: "planta-hidraulica",
-            recursos: {
-                dinero: -50,
-                electricidad: -20,
-                agua: 150,
-                alimento: 0,
-                felicidad:0
-            },
-        }
-    ]
     recursosPorCiudadanoPredeterminado = {
         dinero: 0,
         electricidad: -1,
@@ -140,7 +7,7 @@ class Ciudad {
         alimento: -5
     }
 
-    constructor(nombre, alcalde, latitud, longitud, tiempoTurno, terreno, ciudadanos, estadoRecursos, historicoRecursos, recursosPorEdificio, recursosPorCiudadano) {
+    constructor(nombre, alcalde, latitud, longitud, tiempoTurno, terreno, ciudadanos, estadoRecursos, historicoRecursos, recursosPorCiudadano) {
 
         this.nombre = nombre;
         this.alcalde = alcalde;
@@ -155,11 +22,6 @@ class Ciudad {
         this.historicoRecursos = historicoRecursos;
         if (!historicoRecursos){
             this.historicoRecursos = [];
-        }
-
-        this.recursosPorEdificio = recursosPorEdificio;
-        if (!recursosPorEdificio){
-            this.recursosPorEdificio = this.recursosPorEdificioPredeterminado;
         }
         this.recursosPorCiudadano = recursosPorCiudadano;
         if (!recursosPorCiudadano){
@@ -178,6 +40,7 @@ class Ciudad {
 
         // sólo sumamos una vez; el console.log no debe volver a modificar el valor
         this.estadoRecursos[tipo] += cantidad;
+        console.log(cantidad);
         console.log(`Se modificó el recurso: ${tipo} -> ${this.estadoRecursos[tipo]}`);
     }   
 
@@ -236,8 +99,8 @@ class Ciudad {
     recursosPorEdificios() {
         this.terreno.edificios.forEach(edificio => {
             //const id = edificio.id.replace(/[0-9]/g, ''); //Elimina los números del id del edificio
-            console.log(id);
-            //let recursos = edificio.recursosEdificio;
+            console.log(edificio.id);
+            const recursos = edificio.recursosEdificio;
             /*let recursos = this.recursosPorEdificioPredeterminado;
             recursos.forEach((dicEdificio) =>{
                 console.log(edificio.id);
@@ -256,9 +119,9 @@ class Ciudad {
             for (const recurso in recursos) {
                 // suma(producción)/resta(consumo) el recurso correspondiente 
                 if (recurso != "felicidad"){
+                    console.log("Modificando " + recurso);
                     this.modificarRecurso(recurso, recursos[recurso]);
                 }
-                //VALIDAR QUE SI ES UNA PLANTA Y NO HAY ELECTRICIDAD NO SE PRODUZCA AGUA 
             }
         });
     }
@@ -271,14 +134,16 @@ class Ciudad {
     }
 
     // Costo de mantenimiento por turno (dinero) basado en edificios activos
+    // Cada edificio cuesta el 0,01% de su costo original por turno
     aplicarCostoMantenimiento() {
         const edificios = this.terreno.edificios || [];
-        const cantidadEdificios = edificios.filter(e => !String(e.id || "").toLowerCase().startsWith("via")).length;
-        const costoPorEdificio = 50; // monto fijo por turno
-        const costoTotal = cantidadEdificios * costoPorEdificio;
-
+ 
+        const costoTotal = edificios
+            .filter(e => !String(e.id || "").toLowerCase().startsWith("via"))
+            .reduce((total, e) => total + (e.costo || 0) * 0.01, 0);
+ 
         if (costoTotal > 0) {
-            console.log(`Aplicando costo de mantenimiento: ${cantidadEdificios} edificios × ${costoPorEdificio} = ${costoTotal}`);
+            console.log(`Aplicando costo de mantenimiento: $${costoTotal.toFixed(2)}`);
             this.modificarRecurso("dinero", -costoTotal);
         }
     }

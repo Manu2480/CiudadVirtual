@@ -77,6 +77,7 @@ function limpiarTodo() {
     _coordsRuta = [];
 
     _eliminarPanel();
+    _ocultarCargando();
     _estado = "inactivo";
     _setTabIcono("ruta");
 }
@@ -160,6 +161,31 @@ function _actualizarPanelB(nombre, imagen) {
         pasoB.classList.add("ruta-paso--calculando");
     }
 }
+/* ================================================
+OVERLAY DE CARGA
+================================================ */
+function _mostrarCargando() {
+    var el = document.getElementById("ruta-cargando");
+    if (!el) {
+        el = document.createElement("div");
+        el.id        = "ruta-cargando";
+        el.className = "ruta-cargando";
+        el.innerHTML =
+            '<div class="ruta-cargando__tarjeta">'
+          +   '<div class="ruta-cargando__spinner"></div>'
+          +   '<span class="ruta-cargando__texto">Calculando ruta\u2026</span>'
+          + '</div>';
+        document.body.appendChild(el);
+    }
+    el.offsetHeight; /* forzar reflow para activar la transición */
+    el.classList.add("activo");
+}
+
+function _ocultarCargando() {
+    var el = document.getElementById("ruta-cargando");
+    if (el) el.classList.remove("activo");
+}
+
 /* =================0===============================
 CLICK EN CELDA DESDE MAPA.JS
 ================================================ */
@@ -217,6 +243,9 @@ function _calcular() {
     var ciudad = _getCiudad();
     if (!ciudad || !_puntoA || !_puntoB) return;
 
+    _mostrarCargando();
+    var _tiempoInicio = Date.now();
+
     var vias = ciudad.terreno.vias;
     var mapa = vias.map(function(f) { return f.slice(); });
 
@@ -240,33 +269,42 @@ function _calcular() {
         return res.json().then(function(data) { return { ok: res.ok, data: data }; });
     })
     .then(function(result) {
-        if (!result.ok) {
+        var MIN_MS   = 1000;//tiempo mínimo que debe durar la pantalla de carga antes de mostrar la ruta
+        var elapsed  = Date.now() - _tiempoInicio;
+        var restante = Math.max(0, MIN_MS - elapsed);
+
+        setTimeout(function() {
+            _ocultarCargando();
+
+            if (!result.ok) {
+                Notificaciones.mostrar(
+                    result.data.error || "No hay ruta posible entre esos edificios.", "error"
+                );
+                _puntoB.celdaEl.classList.remove("celda--ruta-b");
+                _puntoB = null;
+                var pb = document.getElementById("ruta-paso-b");
+                var nb = document.getElementById("ruta-paso-b-nombre");
+                var ib = document.getElementById("ruta-paso-b-img");
+                if (pb) { pb.classList.remove("ruta-paso--calculando"); pb.classList.add("ruta-paso--activo"); }
+                if (nb) nb.textContent = "Pendiente";
+                if (ib) { ib.style.display = "none"; ib.src = ""; }
+                return;
+            }
+
+            /* Éxito: pintar ruta, dejar A y B amarillos, cerrar panel,
+               salir del modo "eligiendo" pero mantener amarillos */
+            _pintarRuta(result.data.route);
+            _eliminarPanel();
+            _desactivarModo();
+            _estado = "resultado";
+
             Notificaciones.mostrar(
-                result.data.error || "No hay ruta posible entre esos edificios.", "error"
+                "Ruta: " + result.data.route.length + " pasos.", "exito"
             );
-            _puntoB.celdaEl.classList.remove("celda--ruta-b");
-            _puntoB = null;
-            var pb = document.getElementById("ruta-paso-b");
-            var nb = document.getElementById("ruta-paso-b-nombre");
-            var ib = document.getElementById("ruta-paso-b-img");
-            if (pb) { pb.classList.remove("ruta-paso--calculando"); pb.classList.add("ruta-paso--activo"); }
-            if (nb) nb.textContent = "Pendiente";
-            if (ib) { ib.style.display = "none"; ib.src = ""; }
-            return;
-        }
-
-        /* Éxito: pintar ruta, dejar A y B amarillos, cerrar panel,
-           salir del modo "eligiendo" pero mantener amarillos */
-        _pintarRuta(result.data.route);
-        _eliminarPanel();
-        _desactivarModo();
-        _estado = "resultado";
-
-        Notificaciones.mostrar(
-            "Ruta: " + result.data.route.length + " pasos.", "exito"
-        );
+        }, restante);
     })
     .catch(function(err) {
+        _ocultarCargando();
         console.error("Ruta API error de red:", err.message);
         Notificaciones.mostrar("No se pudo conectar con el servicio de rutas.", "error");
     });
@@ -350,7 +388,7 @@ function _repintarRuta() {
     var gridEl = document.getElementById("mapa-grid");
     if (!gridEl) return;
 
-    _celdasRuta = []; // 🔥 reset DOM actual
+    _celdasRuta = []; //  reset DOM actual
 
     _coordsRuta.forEach(function(coord) {
         var celda = gridEl.querySelector(
@@ -359,7 +397,7 @@ function _repintarRuta() {
 
         if (celda) {
             celda.classList.add("celda--ruta");
-            _celdasRuta.push(celda); // 👈 vuelve a llenar DOM
+            _celdasRuta.push(celda); //  vuelve a llenar DOM
         }
     });
 }

@@ -1,15 +1,20 @@
-
 class Tienda extends EdificioComercial {
 
     static contador = 0;
 
-    constructor(ubicacion) {
+    static catalogoInfo = {
+        costo:        2000,
+        capacidad:    6,
+        dinero:       500,
+        electricidad: -8,
+    };
 
+    constructor(ubicacion) {
         Tienda.contador += 1;
-        const idTienda = "tienda" + Tienda.contador; // Genera un ID único para la tienda
-        super(idTienda, 2000, ubicacion, 6);
-        this.recursosEdificio["dinero"] = 500;
-        this.recursosEdificio["electricidad"] = -8;
+        const idTienda = "tienda" + Tienda.contador;
+        super(idTienda, Tienda.catalogoInfo.costo, ubicacion, Tienda.catalogoInfo.capacidad);
+        this.recursosEdificio["dinero"]       = Tienda.catalogoInfo.dinero;
+        this.recursosEdificio["electricidad"] = Tienda.catalogoInfo.electricidad;
     }
 
     static fromData(obj) {
@@ -21,14 +26,6 @@ class Tienda extends EdificioComercial {
         }
         const instance = Object.create(Tienda.prototype);
         Object.assign(instance, obj);
-        /*
-        if (obj.ciudadanos && Array.isArray(obj.ciudadanos)) {
-            const Ciudadano = require("./Ciudadano");
-            instance.ciudadanos = obj.ciudadanos.map(c => Ciudadano.fromData(c));
-        }*/
         return instance;
     }
-    
-    //sin electricidad no dan ingresos
 }
-

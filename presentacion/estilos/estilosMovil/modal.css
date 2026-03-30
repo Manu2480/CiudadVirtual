@@ -31,6 +31,7 @@ Overlay, tarjeta centrada y contenido de info de edificio.
     max-height: 90dvh;
     overflow-y: auto;
     padding: var(--espacio-l);
+    margin-inline: var(--espacio-m);
 }
 
 /* Botón cerrar */

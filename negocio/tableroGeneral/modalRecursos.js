@@ -127,7 +127,7 @@ const ModalRecursos = (() => {
                         <span>${r.label}</span>
                         <span>${r.fmt(valor)}</span>
                         <input type="number" id="edit-${edificio.id}-${r.clave}" placeholder="Nuevo valor">
-                        <button class="btn-aceptar" data-clave="${r.clave} data-id="${edificio.id}">Aceptar</button>
+                        <button class="btn-aceptar" data-clave="${r.clave}" data-id="${edificio.id}">Aceptar</button>
                     </div>
                 `;
             }).join("")}
@@ -205,6 +205,40 @@ const ModalRecursos = (() => {
             input.value = "";
             CiudadStorage.guardar(ciudad);
         });
+    });
+
+    const panel = document.getElementById("panel-edificio-contenido");
+
+    panel.addEventListener("click", (e) => {
+
+        if (!e.target.classList.contains("btn-aceptar")) return;
+
+        const id = e.target.dataset.id;
+        const clave = e.target.dataset.clave;
+
+        //Solo manejar si es botón de edificio
+        if (!id) return;
+
+        const contenedor = e.target.closest(".mod-edificio");
+        const input = contenedor.querySelector("input");
+
+        const valor = Number(input.value);
+
+        console.log("Edificio:", id);
+        console.log("Recurso:", clave);
+        console.log("Nuevo valor:", valor);
+
+        Edificios.modificarRecursoEdificio(id,clave,valor);
+        const ciudad = _ciudad();
+        ciudad.cambiarRecursosEdificio(id,clave,valor);
+
+        // actualizar UI
+        const spanValor = contenedor.querySelectorAll("span")[1];
+        spanValor.textContent = INDICADORES
+            .find(r => r.clave === clave)
+            .fmt(valor);
+
+        input.value = "";
     });
 }
 

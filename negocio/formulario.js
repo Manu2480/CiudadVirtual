@@ -308,7 +308,6 @@ addEventListener("DOMContentLoaded",function(){
                 [],
                 estadoInicial,
                 [],
-                null,
                 null
             );
             ciudad.genero = generoValor;

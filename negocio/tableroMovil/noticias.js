@@ -16,8 +16,12 @@ let _indiceActual = 0;
 /* ── Inicialización ── */
 
 function inicializar() {
-    _consultarNoticias();
-    setInterval(_consultarNoticias, 30 * 60 * 1000);
+    ActualizacionesPeriodicas.iniciarTrabajoPeriodico({
+        id: "noticias:movil",
+        accion: _consultarNoticias,
+        intervaloMs: ActualizacionesPeriodicas.INTERVALOS_MS.INTERVALO_NOTICIAS,
+        ejecutarAhora: true,
+    });
 
     function _conectarBtn() {
         const btn = document.getElementById("btn-noticias");
@@ -30,11 +34,13 @@ function inicializar() {
 /* ── Consulta API ── */
 
 function _consultarNoticias() {
-    const api = new ApiNoticias();
-    const res = api.getNoticias();
-    _articulos = (res.articles || [])
-        .filter(a => a.title && a.title !== "[Removed]")
-        .slice(0, 5);
+    NoticiasService.obtenerNoticias({ limite: 5 })
+        .then(articulos => {
+            _articulos = articulos;
+        })
+        .catch(err => {
+            console.error("Error al cargar noticias móvil:", err);
+        });
 }
 
 /* ── Construcción del modal (solo una vez) ── */
@@ -99,9 +105,8 @@ function _renderizarNoticia() {
 
     cuerpo.innerHTML = `
         ${art.urlToImage ? `
-            <img class="noticias-modal__imagen"
-                 src="${art.urlToImage}" alt="${art.title}"
-                 onerror="this.style.display='none'">` : ""}
+            <img class="noticias-modal__imagen" id="noticias-img"
+                src="${art.urlToImage}" alt="${art.title}">` : ""}
         <div class="noticias-modal__contenido">
             <p class="noticias-modal__fuente">${art.source?.name || ""}</p>
             <h4 class="noticias-modal__noticia-titulo">${art.title}</h4>
@@ -114,6 +119,10 @@ function _renderizarNoticia() {
                 </a>` : ""}
         </div>
     `;
+            
+    //para evitar imágenes rotas, oculta la imagen si no carga correctamente
+    const img = cuerpo.querySelector(".noticias-modal__imagen");
+    if (img) img.addEventListener("error", () => img.classList.add("oculta"));
 
     /* Puntos indicadores */
     dots.innerHTML = _articulos.map((_, i) => `

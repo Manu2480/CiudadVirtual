@@ -51,3 +51,22 @@ Clases helper y botones de acción compartidos.
 .btn-peligro:active {
     transform: scale(0.98);
 }
+
+/* Etiquetas de categoría en el catálogo de construcción */
+.edificio-categoria {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 2px 7px;
+    border-radius: 10px;
+    margin-bottom: 4px;
+}
+
+.edificio-categoria--residencial    { background: #d0e8fb; color: #185FA5; }
+.edificio-categoria--comercial      { background: #faeeda; color: #854F0B; }
+.edificio-categoria--industrial     { background: #fbeaf0; color: #993556; }
+.edificio-categoria--servicios      { background: #e1f5ee; color: #0F6E56; }
+.edificio-categoria--infraestructura{ background: #eeedfe; color: #534AB7; }
+.edificio-categoria--pavimentaria   { background: #f1efe8; color: #5F5E5A; }

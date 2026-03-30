@@ -42,10 +42,11 @@ function manejarClickTarjeta(elemento){
 }
 
 
+// modificado para que muestre el edificio padre
 function _htmlCatalogo(edificio){
     return `
         <div class="tarjeta-edificio" data-id="${edificio.id}">
-            
+            <span class="edificio-categoria edificio-categoria--${edificio.categoria}">${edificio.categoria}</span>
             <div class="edificio-nombre">
                 <span class="edificio__nombre">${edificio.nombre}</span>
             </div>
@@ -56,8 +57,8 @@ function _htmlCatalogo(edificio){
             <div class="edificio__info seleccionado">
                 <div class="construccion-item__detalles">${_detallesHtml(edificio)}</div>
             </div>
-                            <br>
-                <span class="valor-edificio">$${edificio.costo.toLocaleString()}</span>
+            <br>
+            <span class="valor-edificio">$${edificio.costo.toLocaleString()}</span>
         </div>
     `;
 }

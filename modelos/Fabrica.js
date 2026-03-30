@@ -1,17 +1,22 @@
-
 class Fabrica extends EdificioIndustrial {
 
     static contador = 0;
 
+    static catalogoInfo = {
+        costo:        5000,
+        capacidad:    15,
+        dinero:       800,
+        electricidad: -20,
+        agua:         -15,
+    };
+
     constructor(ubicacion) {
-
-        Fabrica.contador += 1; // Incrementa el contador cada vez que se crea una nueva fábrica
-        const idFabrica = "Fabrica" + Fabrica.contador; // Genera un ID único para la fábrica
-
-        super(idFabrica, 5000, ubicacion, 15); 
-        this.recursosEdificio["dinero"] = 800;
-        this.recursosEdificio["electricidad"] = -20;
-        this.recursosEdificio["agua"] = -15;
+        Fabrica.contador += 1;
+        const idFabrica = "Fabrica" + Fabrica.contador;
+        super(idFabrica, Fabrica.catalogoInfo.costo, ubicacion, Fabrica.catalogoInfo.capacidad);
+        this.recursosEdificio["dinero"]       = Fabrica.catalogoInfo.dinero;
+        this.recursosEdificio["electricidad"] = Fabrica.catalogoInfo.electricidad;
+        this.recursosEdificio["agua"]         = Fabrica.catalogoInfo.agua;
     }
 
     static fromData(obj) {
@@ -23,12 +28,6 @@ class Fabrica extends EdificioIndustrial {
         }
         const instance = Object.create(Fabrica.prototype);
         Object.assign(instance, obj);
-        /*
-        if (obj.ciudadanos && Array.isArray(obj.ciudadanos)) {
-            const Ciudadano = require("./Ciudadano");
-            instance.ciudadanos = obj.ciudadanos.map(c => Ciudadano.fromData(c));
-        }*/
         return instance;
     }
 }
-

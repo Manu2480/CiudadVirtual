@@ -236,7 +236,9 @@ function _manejarClickCelda(e) {
 
         case "demolicion":
             if (estadoCelda.tipo !== "vacio") {
-                Edificaciones.demoler(fila, col, _mapaState.grid, _gridEl);
+                const edificio = Edificios.obtener(estadoCelda.tipo);
+                const instancia = Tablero.Estado.ciudad?.terreno?.ubicacionInfraestructura(fila, col);
+                if (edificio) Modal.mostrarConfirmacionDemoler(fila, col, edificio, instancia);
             }
             break;
 

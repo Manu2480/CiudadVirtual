@@ -1,4 +1,3 @@
-
 /* =========================================
 CARGAR.JS
 Maneja la interacción de la pantalla de carga:
@@ -181,6 +180,7 @@ function validarYNormalizarCiudad(data){
         longitud: parseFloat(data.longitud) || 0,
         tiempoTurno: parseInt(data.tiempoTurno) || 0,
         turno: Number.isInteger(data.turno) && data.turno >= 0 ? data.turno : 0,
+        fecha: typeof data.fecha === "string" && data.fecha.trim() ? data.fecha : new Date().toISOString().split("T")[0],
         terreno: {
             vias,
             edificios,
@@ -249,6 +249,3 @@ function crearDiccionarioEdificio(id,fila,columna){
         };
     }
 }
-
-
-

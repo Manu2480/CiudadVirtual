@@ -1,16 +1,19 @@
-
 class EstacionBombero extends EdificioServicio {
 
     static contador = 0;
 
-    constructor(ubicacion) {
+    static catalogoInfo = {
+        costo:        4000,
+        capacidad:    0,
+        felicidad:    10,
+        electricidad: -15,
+    };
 
+    constructor(ubicacion) {
         EstacionBombero.contador += 1;
         const idEstacionBomberos = "Bombero" + EstacionBombero.contador;
-
-        super(idEstacionBomberos, 4000, ubicacion, 0); 
-        this.recursosEdificio["electricidad"] = -15; //El valor va negativo para que se sepa que es consume y no produce
-        
+        super(idEstacionBomberos, EstacionBombero.catalogoInfo.costo, ubicacion, EstacionBombero.catalogoInfo.capacidad);
+        this.recursosEdificio["electricidad"] = EstacionBombero.catalogoInfo.electricidad;
     }
 
     static fromData(obj) {
@@ -22,12 +25,6 @@ class EstacionBombero extends EdificioServicio {
         }
         const instance = Object.create(EstacionBombero.prototype);
         Object.assign(instance, obj);
-        /*
-        if (obj.ciudadanos && Array.isArray(obj.ciudadanos)) {
-            const Ciudadano = require("./Ciudadano");
-            instance.ciudadanos = obj.ciudadanos.map(c => Ciudadano.fromData(c));
-        }*/
         return instance;
     }
 }
-
