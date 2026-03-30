@@ -115,6 +115,27 @@
 }
 
 /* ── Solo tablet landscape ── */
+@media (orientation: portrait) {
+
+    /* ── Sidebar tablet portrait ── */
+    :root[data-vista="tablet"] .sidebar--tablet {
+        grid-column: 2;
+        grid-row: 1 / -1;
+        background-color: var(--color-texto-s);
+        position: relative;
+    }
+    :root[data-vista="tablet"] .panel-tablet {
+        visibility: hidden;
+        position: absolute;
+        inset: 0;
+    }
+    :root[data-vista="tablet"] #recConEst-tablet {
+        display: grid !important; 
+        grid-template-rows: 25% 50% 25%;
+        gap: 5px;
+    }
+}
+/* ── Sidebar tablet landscape ── */
 @media (orientation: landscape) {
     :root[data-vista="tablet"] .btn-sidebar-tablet.horizontal {
         display: flex !important;
@@ -122,28 +143,6 @@
     :root[data-vista="tablet"] .btn-sidebar-tablet.vertical {
         display: none !important;
     }
-}
-
-/* ── Sidebar tablet portrait ── */
-:root[data-vista="tablet"] .sidebar--tablet {
-    grid-column: 2;
-    grid-row: 1 / -1;
-    background-color: var(--color-texto-s);
-    position: relative;
-}
-:root[data-vista="tablet"] .panel-tablet {
-    visibility: hidden;
-    position: absolute;
-    inset: 0;
-}
-:root[data-vista="tablet"] #recConEst-tablet {
-    display: grid !important; 
-    grid-template-rows: 25% 50% 25%;
-    gap: 5px;
-}
-
-/* ── Sidebar tablet landscape ── */
-@media (orientation: landscape) {
     :root[data-vista="tablet"] #sidebar-derecho-tablet.abierta {
         display: grid !important;
         grid-column: 3;

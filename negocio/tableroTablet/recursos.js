@@ -51,5 +51,6 @@ function renderizarRecursos(recursos,panel){
     panel.innerHTML += 
     `<button class="abrirModalRecursos">Menú recursos</button>`
 }
+document.addEventListener("recursosModificados",llamarRecursos);
 
-window.RecursosTablet = {inicializar, renderizarRecursos};
+window.RecursosTablet = {inicializar};

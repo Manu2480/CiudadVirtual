@@ -183,6 +183,7 @@ function modificarRecursoEdificio(id,recurso,valor){
     }
     if (edificio.id == id){
         edificio.clase.catalogoInfo[recurso] = valor;
+        edificio[recurso] = valor; 
     }
     console.log(edificio.clase.catalogoInfo);
 }

@@ -42,11 +42,68 @@ class Ciudad {
         this.estadoRecursos[tipo] += cantidad;
         console.log(cantidad);
         console.log(`Se modificó el recurso: ${tipo} -> ${this.estadoRecursos[tipo]}`);
+        console.log("Despachando evento");
+        document.dispatchEvent(new CustomEvent("recursosModificados"));
     }   
 
     getRecurso(tipo) {
         return this.estadoRecursos[tipo];
     }
+
+    calcularProduccionNeta() {
+    const resultado = {
+        produccion: {},
+        consumo: {},
+        neto: {}
+    };
+
+    // Inicializar recursos dinámicamente según estadoRecursos
+    for (const recurso in this.estadoRecursos) {
+        resultado.produccion[recurso] = 0;
+        resultado.consumo[recurso] = 0;
+        resultado.neto[recurso] = 0;
+    }
+
+    // 1. PRODUCCIÓN / CONSUMO DE EDIFICIOS
+    this.terreno.edificios.forEach(edificio => {
+        const recursos = edificio.recursosEdificio;
+
+        for (const recurso in recursos) {
+            const valor = recursos[recurso];
+
+            if (valor > 0) {
+                resultado.produccion[recurso] += valor;
+            } else {
+                resultado.consumo[recurso] += valor;
+            }
+        }
+    });
+
+    // 2. CONSUMO DE CIUDADANOS
+    this.ciudadanos.forEach(ciudadano => {
+        const consumo = ciudadano.consumoCiudadano;
+
+        for (const recurso in consumo) {
+            resultado.consumo[recurso] += consumo[recurso];
+        }
+    });
+
+    // 3. COSTO DE MANTENIMIENTO (dinero)
+    const edificios = this.terreno.edificios || [];
+    const costoTotal = edificios
+        .filter(e => !String(e.id || "").toLowerCase().startsWith("via"))
+        .reduce((total, e) => total + (e.costo || 0) * 0.01, 0);
+
+    resultado.consumo["dinero"] -= costoTotal;
+
+    // 4. NETO = producción + consumo (consumo ya es negativo)
+    for (const recurso in resultado.neto) {
+        resultado.neto[recurso] =
+            resultado.produccion[recurso] + resultado.consumo[recurso];
+    }
+
+    return resultado;
+}
 
     //Modificar tiempo del turno nuevoTiempo debe estar en milisegundos
     modificarTiempoTurno(nuevoTiempo) {
@@ -54,6 +111,9 @@ class Ciudad {
             throw new Error("El tiempo del turno debe ser un número positivo");
         }
         this.tiempoTurno = nuevoTiempo;
+    }
+    calcularProduccionNeta(){
+
     }
 
     // El método asignarFelicidadInicial se encarga de aumentar la felicidad del ciudadano creado en función de la infraestructura presente en el terreno.
@@ -93,6 +153,13 @@ class Ciudad {
                 this.modificarRecurso(recurso, consumo[recurso]); 
             }
         });
+    }
+    cambiarConsumoCiudadanos(clave, nuevoValor){
+        this.recursosPorCiudadano[clave] = nuevoValor;
+        this.ciudadanos.forEach(ciudadano=>{
+            ciudadano.consumoCiudadano = this.recursosPorCiudadano;
+        });
+        
     }
 
     // Metodo que calcula los recursos proporcionados o gastados por los edificios, se llama una vez en cada turno
@@ -244,7 +311,7 @@ class Ciudad {
             if (!Number.isNaN(n) && n > Ciudad.contador) Ciudad.contador = n;
 
             console.log(`[OK] ${nuevoCiudadano.id} cargado - Felicidad: ${nuevoCiudadano.felicidad}, Vivienda: ${nuevoCiudadano.vivienda}, Empleo: ${nuevoCiudadano.empleo}`);
-
+            nuevoCiudadano.consumoCiudadano = this.recursosPorCiudadano;
             return nuevoCiudadano;
         }
 
@@ -373,7 +440,7 @@ class Ciudad {
         if (this.historicoRecursos.length >= 20){
             this.historicoRecursos = this.historicoRecursos.slice(1); //El array nuevo empieza desde la posición 1, para así evitar exceder los 20
         }
-        this.historicoRecursos.push(this.estadoRecursos);
+        this.historicoRecursos.push({...this.estadoRecursos});
     }
     // Metodo que se encarga de ejecutar todas las acciones necesarias para avanzar un turno en el juego
     ejecutarTurno(){
@@ -390,7 +457,9 @@ class Ciudad {
         // 2. Validar si hay ciudadanos sin empleo o vivienda y asignarselos en caso de que se pueda
         this.asignarInfraestructuras();
         
-        // 3. (no es necesario recalcular aquí, ya se hará al inicio del siguiente turno)
+        // 3. Poniendo en ceros el recurso agua y electricidad
+        this.estadoRecursos.agua = 0;
+        this.estadoRecursos.electricidad = 0;
         
         // 4. Consumo de ciudadanos
         console.log("\n--- Consumo de ciudadanos ---");
@@ -411,6 +480,7 @@ class Ciudad {
             contador++; 
         }
         console.log("\n========== FIN DEL TURNO ==========");
+        document.dispatchEvent(new CustomEvent("recursosModificados"));
 
         // 7. Guardar historial de recursos
         this.guardarRecursos();

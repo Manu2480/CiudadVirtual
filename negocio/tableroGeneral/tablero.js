@@ -89,6 +89,9 @@ function _cargarCiudad() {
             dinero: 50000, agua: 0, electricidad: 0, alimento: 0, felicidad: 0,
         };
 
+        const historicoRecursos = datos.historicoRecursos ?? [];
+        console.log("recursosPorCiudadano cargado:", datos.recursosPorCiudadano);
+
         Estado.ciudad = new Ciudad(
             datos.nombre      || "Mi Ciudad",
             datos.alcalde     || "Alcalde",
@@ -97,7 +100,9 @@ function _cargarCiudad() {
             datos.tiempoTurno ?? 30000,
             terreno,
             [],
-            estadoRecursos
+            estadoRecursos,
+            historicoRecursos,
+            datos.recursosPorCiudadano
         );
 
         if (datos.genero) Estado.ciudad.genero = datos.genero;
@@ -115,6 +120,24 @@ function _cargarCiudad() {
             : new Date().toISOString().split("T")[0];
 
         Recursos.setCiudad(Estado.ciudad);
+        const catalogo = datos.catalogo;
+        catalogo.forEach((edificio)=>{
+            const recursosPorEdificio = edificio.catalogoInfo;
+            Object.entries(recursosPorEdificio).forEach(([recurso, valor]) => {
+                Edificios.modificarRecursoEdificio(edificio.id, recurso, valor);
+
+                console.log(
+                    "Modificando",
+                    edificio.id,
+                    "recurso:",
+                    recurso,
+                    "nuevo valor:",
+                    valor
+                );
+            });
+        });
+        
+        //function modificarRecursoEdificio(id,recurso,valor)
 
     } catch (e) {
         console.error("tablero.js: error al cargar:", e);
@@ -187,6 +210,7 @@ function setDuracionTurno(segundos) {
 }
 
 function guardarPartida() {
+    console.log("Guardando partida desde tablero...")
     try {
         if (!Estado.ciudad) return;
         /* Crear objeto para guardar que incluya turno */
@@ -195,6 +219,14 @@ function guardarPartida() {
         datosCompletos.fecha = (typeof Estado.ciudad.fecha === "string" && Estado.ciudad.fecha.trim())
             ? Estado.ciudad.fecha
             : new Date().toISOString().split("T")[0];
+
+        let recursosEdificio = Edificios.todos();
+        const catalogoSerializado = recursosEdificio.map(e => ({
+            id: e.id,
+            catalogoInfo: e.clase.catalogoInfo
+        }));
+        console.log("Catalogo: ", catalogoSerializado);
+        datosCompletos.catalogo = catalogoSerializado;
         CiudadStorage.guardar(datosCompletos);
 
         /* Agregar ciudad actual al ranking permanente */
