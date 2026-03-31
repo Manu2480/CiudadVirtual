@@ -405,26 +405,13 @@ function _repintarRuta() {
 HELPERS
 ================================================ */
 
+/**
+ * Normaliza un ID de instancia a su ID de catálogo
+ * Usa IdNormalizador centralizado para evitar duplicación
+ * Ej: "casa3" → "casa", "luz1" → "planta-electrica"
+ */
 function _idCatalogo(idInstancia) {
-    var mapa = {
-        "casa":            "casa",
-        "apartamento":     "apartamento",
-        "tienda":          "tienda",
-        "centrocomercial": "centro-comercial",
-        "fabrica":         "fabrica",
-        "granja":          "granja",
-        "hospital":        "hospital",
-        "bombero":         "bombero",
-        "policia":         "policia",
-        "parque":          "parque",
-        "luz":             "planta-electrica",
-        "agua":            "planta-hidraulica"
-    };
-    var lower = (idInstancia || "").toLowerCase();
-    for (var prefijo in mapa) {
-        if (lower.startsWith(prefijo)) return mapa[prefijo];
-    }
-    return idInstancia;
+    return IdNormalizador.normalizar(idInstancia);
 }
 
 

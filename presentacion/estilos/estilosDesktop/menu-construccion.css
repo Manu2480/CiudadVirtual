@@ -9,6 +9,8 @@ Menú de construcción
     display: flex;
     flex-direction: column;
     gap: 8px;
+    width: 100%;
+    min-width: 0;
 }
 
 .menu-construccion--destacado {
@@ -17,6 +19,7 @@ Menú de construcción
 
 .construccion-categoria {
     margin-bottom: 12px;
+    min-width: 0;
 }
 
 .construccion-categoria__titulo {
@@ -32,6 +35,8 @@ Menú de construcción
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 8px;
+    width: 100%;
+    min-width: 0;
 }
 
 .construccion-item {
@@ -44,6 +49,8 @@ Menú de construcción
     border-radius: var(--radio-s, 6px);
     cursor: pointer;
     transition: all var(--transicion-rapida);
+    min-width: 0;
+    box-sizing: border-box;
 }
 
 .construccion-item:hover {
@@ -75,9 +82,18 @@ Menú de construcción
     font-weight: 500;
     color: var(--color-texto, #2c2c2c);
     text-align: center;
+    max-width: 100%;
+    overflow-wrap: anywhere;
+    word-break: break-word;
 }
 
 .construccion-item__costo {
     font-size: 10px;
     color: var(--color-dinero, #27ae60);
+}
+
+.edificio-categoria {
+    font-size: 7px;
+    padding: 2px 2px;
+    margin-bottom: 4px;
 }

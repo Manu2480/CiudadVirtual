@@ -40,28 +40,13 @@ NORMALIZAR ID
 Los modelos generan ids únicos con contador (via1, casa2…).
 Los normaliza al id del catálogo para que Edificios.obtener()
 los encuentre correctamente al recargar desde localStorage.
+
+Usa IdNormalizador centralizado para evitar duplicación.
 ================================================ */
 function _normalizarId(id) {
-    if (!id) return "edificio";
-    if (Edificios.obtener(id)) return id;
-
-    const _prefijos = {
-        "via":             "via",
-        "casa":            "casa",
-        "apartamento":     "apartamento",
-        "tienda":          "tienda",
-        "centrocomercial": "centro-comercial",
-        "fabrica":         "fabrica",
-        "granja":          "granja",
-        "hospital":        "hospital",
-        "bombero":         "bombero",
-        "policia":         "policia",
-        "parque":          "parque",
-        "luz":             "planta-electrica",
-        "agua":            "planta-hidraulica",
-    };
-    const prefijo = id.replace(/\d+$/, "").toLowerCase();
-    return _prefijos[prefijo] || id;
+    const normalizado = IdNormalizador.normalizar(id);
+    if (Edificios.obtener(normalizado)) return normalizado;
+    return normalizado;
 }
 
 
