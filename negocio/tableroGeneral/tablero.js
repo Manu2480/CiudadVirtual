@@ -50,95 +50,18 @@ document.addEventListener("DOMContentLoaded", () => {
 
 function _cargarCiudad() {
     try {
-        const raw = CiudadStorage.cargar();
-        if (!raw) { console.warn("tablero.js: no hay partida guardada."); return; }
+        const estadoCargado = ControladorStorage.cargarEstadoTablero();
+        if (!estadoCargado) { console.warn("tablero.js: no hay partida guardada."); return; }
 
-        const datos = JSON.parse(raw);
-
-        const filasRaw = datos.terreno?.vias;
-        const vias = (Array.isArray(filasRaw) && filasRaw.length > 0)
-            ? filasRaw
-            : Array.from({ length: 15 }, () => Array(15).fill(0));
-
-        const terreno = new Terreno(vias, []);
-
-        /* Rehidratar edificios usando Edificaciones._crearInstancia —
-           el mismo mecanismo que usa construir() para crear instancias reales.
-           Necesario para que instanceof EdificioResidencial etc. funcione
-           al ejecutar turnos (viviendasDisponibles, empleosDisponibles). */
-        (datos.terreno?.edificios ?? []).forEach(ed => {
-            if (!ed?.ubicacion) return;
-            const idCatalogo = _normalizarIdEdificio(ed.id);
-            const def        = Edificios.obtener(idCatalogo);
-            if (!def) { console.warn("tablero.js: sin definición para", ed.id); return; }
-            const instancia  = Edificaciones._crearInstancia
-                ? Edificaciones._crearInstancia(idCatalogo, ed.ubicacion.fila, ed.ubicacion.columna, def)
-                : null;
-            if (!instancia) return;
-            /* Restaurar estado guardado */
-            if (Array.isArray(ed.ciudadanos))  instancia.ciudadanos       = ed.ciudadanos;
-            if (ed.recursosEdificio)           instancia.recursosEdificio = ed.recursosEdificio;
-            terreno.edificios.push(instancia);
-            /* Marcar vía en la matriz si corresponde */
-            if (def.categoria === "pavimentaria") {
-                terreno.vias[ed.ubicacion.fila][ed.ubicacion.columna] = 1;
-            }
-        });
-
-        const estadoRecursos = datos.estadoRecursos ?? {
-            dinero: 50000, agua: 0, electricidad: 0, alimento: 0, felicidad: 0,
-        };
-
-        const historicoRecursos = datos.historicoRecursos ?? [];
-        console.log("recursosPorCiudadano cargado:", datos.recursosPorCiudadano);
-
-        Estado.ciudad = new Ciudad(
-            datos.nombre      || "Mi Ciudad",
-            datos.alcalde     || "Alcalde",
-            datos.latitud     ?? 0,
-            datos.longitud    ?? 0,
-            datos.tiempoTurno ?? 30000,
-            terreno,
-            [],
-            estadoRecursos,
-            historicoRecursos,
-            datos.recursosPorCiudadano
-        );
-
-        if (datos.genero) Estado.ciudad.genero = datos.genero;
-        if (Array.isArray(datos.ciudadanos)) {
-            datos.ciudadanos.forEach(c => Estado.ciudad.crearCiudadano(c));
-        }
-
-        const _vias      = Estado.ciudad.terreno.vias;
-        Estado.filas     = _vias?.length       || 15;
-        Estado.columnas  = _vias?.[0]?.length  || 15;
-        Estado.turno     = datos.turno ?? 0;   /* Restaurar contador de turnos */
-        /* Restaurar fecha: si no existe en el JSON guardado, usar la fecha actual */
-        Estado.ciudad.fecha = (typeof datos.fecha === "string" && datos.fecha.trim())
-            ? datos.fecha
-            : new Date().toISOString().split("T")[0];
-
+        Estado.ciudad   = estadoCargado.ciudad;
+        Estado.filas    = estadoCargado.filas;
+        Estado.columnas = estadoCargado.columnas;
+        Estado.turno    = estadoCargado.turno;
         Recursos.setCiudad(Estado.ciudad);
-        const catalogo = Array.isArray(datos.catalogo) ? datos.catalogo : [];
-        catalogo.forEach((edificio) => {
-            if (!edificio?.id || typeof edificio.catalogoInfo !== "object" || !edificio.catalogoInfo) return;
-            Object.entries(edificio.catalogoInfo).forEach(([recurso, valor]) => {
-                Edificios.modificarRecursoEdificio(edificio.id, recurso, valor);
-            });
-        });
-        
-        //function modificarRecursoEdificio(id,recurso,valor)
 
     } catch (e) {
         console.error("tablero.js: error al cargar:", e);
     }
-}
-
-/* Traduce el id de instancia guardado (ej: "casa3") al id del catálogo (ej: "casa")
-   usando IdNormalizador centralizado para evitar duplicación */
-function _normalizarIdEdificio(id) {
-    return IdNormalizador.normalizar(id);
 }
 
 function _actualizarNombre() {
@@ -181,21 +104,7 @@ function guardarPartida() {
     console.log("Guardando partida desde tablero...")
     try {
         if (!Estado.ciudad) return;
-        /* Crear objeto para guardar que incluya turno */
-        const datosCompletos = JSON.parse(JSON.stringify(Estado.ciudad));
-        datosCompletos.turno = Estado.turno;
-        datosCompletos.fecha = (typeof Estado.ciudad.fecha === "string" && Estado.ciudad.fecha.trim())
-            ? Estado.ciudad.fecha
-            : new Date().toISOString().split("T")[0];
-
-        let recursosEdificio = Edificios.todos();
-        const catalogoSerializado = recursosEdificio.map(e => ({
-            id: e.id,
-            catalogoInfo: e.clase.catalogoInfo
-        }));
-        console.log("Catalogo: ", catalogoSerializado);
-        datosCompletos.catalogo = catalogoSerializado;
-        CiudadStorage.guardar(datosCompletos);
+        ControladorStorage.guardarEstadoTablero(Estado.ciudad, Estado.turno);
 
         /* Agregar ciudad actual al ranking permanente */
         if (typeof RankingStorage !== "undefined") {

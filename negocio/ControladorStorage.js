@@ -1,4 +1,99 @@
 class ControladorStorage{
+    static cargarEstadoTablero(){
+        const raw = CiudadStorage.cargar();
+        if (!raw) return null;
+
+        const datos = JSON.parse(raw);
+
+        const filasRaw = datos.terreno?.vias;
+        const vias = (Array.isArray(filasRaw) && filasRaw.length > 0)
+            ? filasRaw
+            : Array.from({ length: 15 }, () => Array(15).fill(0));
+
+        const terreno = new Terreno(vias, []);
+
+        (datos.terreno?.edificios ?? []).forEach(ed => {
+            if (!ed?.ubicacion) return;
+            const idCatalogo = IdNormalizador.normalizar(ed.id);
+            const def        = Edificios.obtener(idCatalogo);
+            if (!def) { console.warn("ControladorStorage: sin definición para", ed.id); return; }
+
+            const instancia = Edificaciones._crearInstancia
+                ? Edificaciones._crearInstancia(idCatalogo, ed.ubicacion.fila, ed.ubicacion.columna, def)
+                : null;
+            if (!instancia) return;
+
+            if (Array.isArray(ed.ciudadanos)) instancia.ciudadanos = ed.ciudadanos;
+            if (ed.recursosEdificio) instancia.recursosEdificio = ed.recursosEdificio;
+            terreno.edificios.push(instancia);
+
+            if (def.categoria === "pavimentaria") {
+                terreno.vias[ed.ubicacion.fila][ed.ubicacion.columna] = 1;
+            }
+        });
+
+        const estadoRecursos = datos.estadoRecursos ?? {
+            dinero: 50000, agua: 0, electricidad: 0, alimento: 0, felicidad: 0,
+        };
+
+        const historicoRecursos = datos.historicoRecursos ?? [];
+        const ciudad = new Ciudad(
+            datos.nombre      || "Mi Ciudad",
+            datos.alcalde     || "Alcalde",
+            datos.latitud     ?? 0,
+            datos.longitud    ?? 0,
+            datos.tiempoTurno ?? 30000,
+            terreno,
+            [],
+            estadoRecursos,
+            historicoRecursos,
+            datos.recursosPorCiudadano
+        );
+
+        if (datos.genero) ciudad.genero = datos.genero;
+        if (Array.isArray(datos.ciudadanos)) {
+            datos.ciudadanos.forEach(c => ciudad.crearCiudadano(c));
+        }
+
+        ciudad.fecha = (typeof datos.fecha === "string" && datos.fecha.trim())
+            ? datos.fecha
+            : new Date().toISOString().split("T")[0];
+
+        const catalogo = Array.isArray(datos.catalogo) ? datos.catalogo : [];
+        catalogo.forEach((edificio) => {
+            if (!edificio?.id || typeof edificio.catalogoInfo !== "object" || !edificio.catalogoInfo) return;
+            Object.entries(edificio.catalogoInfo).forEach(([recurso, valor]) => {
+                Edificios.modificarRecursoEdificio(edificio.id, recurso, valor);
+            });
+        });
+
+        return {
+            ciudad,
+            filas: ciudad.terreno?.vias?.length || 15,
+            columnas: ciudad.terreno?.vias?.[0]?.length || 15,
+            turno: datos.turno ?? 0,
+        };
+    }
+
+    static guardarEstadoTablero(ciudad, turno){
+        if (!ciudad) return;
+        const datosCompletos = JSON.parse(JSON.stringify(ciudad));
+        datosCompletos.turno = turno ?? 0;
+        datosCompletos.fecha = (typeof ciudad.fecha === "string" && ciudad.fecha.trim())
+            ? ciudad.fecha
+            : new Date().toISOString().split("T")[0];
+
+        const recursosEdificio = Edificios.todos();
+        const catalogoSerializado = recursosEdificio.map(e => ({
+            id: e.id,
+            catalogoInfo: e.clase.catalogoInfo,
+        }));
+
+        datosCompletos.catalogo = catalogoSerializado;
+        CiudadStorage.guardar(datosCompletos);
+        return datosCompletos;
+    }
+
     static guardarCiudad(ciudad){
         // Creee una copia para no modificar el objeto original
         const ciudadCopia = JSON.parse(JSON.stringify(ciudad));
