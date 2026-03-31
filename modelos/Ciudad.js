@@ -112,10 +112,6 @@ class Ciudad {
         }
         this.tiempoTurno = nuevoTiempo;
     }
-    calcularProduccionNeta(){
-
-    }
-
     // El método asignarFelicidadInicial se encarga de aumentar la felicidad del ciudadano creado en función de la infraestructura presente en el terreno.
     // y llama el metodo calcularFelicidad de ciudadano para actualizar su nivel de felicidad individualmente. 
     asignarFelicidadInicial(idCiudadano) {

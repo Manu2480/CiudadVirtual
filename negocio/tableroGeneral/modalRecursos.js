@@ -248,6 +248,7 @@ const ModalRecursos = (() => {
 
                 input.value = "";
                 Tablero.guardarPartida();
+                document.dispatchEvent(new CustomEvent("recursosModificados"));
             });
         });
 

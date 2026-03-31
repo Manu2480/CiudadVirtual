@@ -2,6 +2,10 @@
 PANEL DE RECURSOS
 Barra de indicadores de dinero, población, etc.
 ================================================ */
+.recurso__valor {color:black;}
+.recurso__valor.verde { color: green; }
+.recurso__valor.amarillo { color: orange; }
+.recurso__valor.rojo { color: red; }
 
 .panel-recursos {
     display: flex;
@@ -25,7 +29,6 @@ Barra de indicadores de dinero, población, etc.
     align-items: center;
 }
 
-.recurso--dinero    .recurso__valor { color: var(--color-dinero); }
 .recurso--poblacion .recurso__valor { color: #ffffff; }
 .recurso--felicidad .recurso__valor { color: var(--color-felicidad); }
 .recurso--energia   .recurso__valor { color: var(--color-energia); }
