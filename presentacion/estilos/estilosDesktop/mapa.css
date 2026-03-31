@@ -31,6 +31,10 @@ MAPA.CSS
     cursor: grabbing;
 }
 
+.area-mapa.area-mapa--arrastrando {
+    cursor: grabbing;
+}
+
 /* =========================
    GRID DEL MAPA - ZOOM ESTÁTICO
    El zoom se aplica cambiando --tamano-celda

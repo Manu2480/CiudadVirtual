@@ -51,14 +51,14 @@ function inicializar() {
                 ? `${Math.round(valor)}${unidad}%`
                 : `${Math.round(valor)}${unidad}`;
 
-            let color = "var(--color-texto)";
-
+            // Determinar clase CSS según estado del recurso
+            let claseColor = "";
             if (key === "dinero") {
-                if (valor > 10000) color = "green";
-                else if (valor < 1000) color = "red";
-                else if (valor < 5000) color = "orange";
+                if (valor > 10000) claseColor = "recurso-item__valor--dinero-alto";
+                else if (valor < 1000) claseColor = "recurso-item__valor--dinero-bajo";
+                else if (valor < 5000) claseColor = "recurso-item__valor--dinero-medio";
             } else if (valor < 0) {
-                color = "var(--color-energia)";
+                claseColor = "recurso-item__valor--negativo";
             }
 
             //producción data
@@ -73,7 +73,7 @@ function inicializar() {
                 <div class="recurso-item ${!esFelicidad ? "hover" : ""}">
                     <i class="fi ${icono} recurso-item__icono"></i>
                     <span class="recurso-item__label">${_nombres[key]}</span>
-                    <span class="recurso-item__valor" style="color:${color}">
+                    <span class="recurso-item__valor ${claseColor}">
                         ${formatted}
                     </span>
 

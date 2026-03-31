@@ -27,6 +27,11 @@ Widget de clima
     color: var(--color-texto-s, #666666);
 }
 
+.clima-humedad{
+    font-size: 12px; 
+    color: #666; 
+    margin-top: 8px;
+}
 /* Contenedor principal del viento */
 .clima-viento {
     background: rgba(255, 255, 255, 0.1);

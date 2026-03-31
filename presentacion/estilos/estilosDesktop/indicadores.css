@@ -26,3 +26,7 @@ Indicadores y elementos de estado
 .indicador-modo--demolicion {
     background: var(--color-energia, #e74c3c);
 }
+
+.indicador-modo--oculto {
+    display: none;
+}

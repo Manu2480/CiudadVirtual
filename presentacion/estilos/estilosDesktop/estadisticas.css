@@ -61,3 +61,12 @@ Panel de estadísticas y puntuación
     font-weight: 700;
     color: var(--color-primario);
 }
+
+/* Variantes de color según signo del valor */
+.stats-item__valor--positivo {
+    color: var(--color-dinero, #27ae60);
+}
+
+.stats-item__valor--negativo {
+    color: var(--color-energia, #e74c3c);
+}

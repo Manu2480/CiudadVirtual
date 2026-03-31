@@ -11,6 +11,10 @@ Menú de construcción
     gap: 8px;
 }
 
+.menu-construccion--destacado {
+    box-shadow: 0 0 20px rgba(26, 115, 232, 0.5);
+}
+
 .construccion-categoria {
     margin-bottom: 12px;
 }
