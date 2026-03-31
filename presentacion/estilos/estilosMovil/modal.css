@@ -214,3 +214,21 @@ MODAL ESTADÍSTICAS
     font-weight: 700;
     font-size: var(--fuente-tam-m);
 }
+.tooltip {
+    position: fixed;
+    display: none;
+    background: rgba(0,0,0,0.9);
+    padding: 8px 10px;
+    border-radius: 6px;
+    font-size: 12px;
+    white-space: nowrap;
+    z-index: 2000; /* más alto que el modal */
+}
+
+.hover-activo .tooltip {
+    display: block !important;
+}
+
+.tooltip-prod { color: #4caf50; }
+.tooltip-cons { color: #f44336; }
+.tooltip-neto { color: #ffffff; }

@@ -34,6 +34,9 @@ Barra superior con logo, nombre de ciudad y recursos.
     text-overflow: ellipsis;
     flex: 1;
 }
+.btn-sidebar-tablet{
+    display: none;
+}
 
 
 /* Botón de noticias en el header — oculto por defecto, visible en móvil */

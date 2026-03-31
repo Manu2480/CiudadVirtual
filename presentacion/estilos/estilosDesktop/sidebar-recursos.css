@@ -46,3 +46,28 @@ Panel de recursos en sidebar izquierdo
     margin-left: 10px;
     font-size: 0.85rem;
 }
+.tooltip {
+    position: fixed;
+    display: none;
+    background: rgba(0,0,0,0.9);
+    padding: 8px 10px;
+    border-radius: 6px;
+    font-size: 12px;
+    white-space: nowrap;
+    z-index: 999;
+}
+
+.hover-activo .tooltip {
+    display: block !important;
+}
+
+/* Desktop hover */
+@media (hover: hover) {
+    .hover:hover .tooltip {
+        display: block;
+    }
+}
+
+.tooltip-prod { color: #4caf50; }
+.tooltip-cons { color: #f44336; }
+.tooltip-neto { color: #ffffff; }

@@ -2,12 +2,7 @@ const construccionTabletVertical = document.getElementById("catalogo-edificios-t
 const construccionTabletHorizontal = document.getElementById("catalogo-edificios-tablet-horizontal");
 let edificioSeleccionado = null;
 function inicializar(){
-    // Crear catálogo de edificios
-    const catalogo = Edificios.todos();
-    for (const edificio of catalogo){
-        construccionTabletVertical.insertAdjacentHTML("beforeend", _htmlCatalogo(edificio));
-        construccionTabletHorizontal.insertAdjacentHTML("beforeend", _htmlCatalogo(edificio));
-    }
+    _renderizarCatalogo();
 }
 construccionTabletVertical.addEventListener("click", manejarClickTarjeta);
 construccionTabletHorizontal.addEventListener("click", manejarClickTarjeta);
@@ -86,4 +81,16 @@ function _detallesHtml(edificio) {
         .filter(Boolean)
         .join("");
 }
+function _renderizarCatalogo(){
+    // Crear catálogo de edificios
+    edificioSeleccionado = null;
+    construccionTabletHorizontal.innerHTML = "";
+    construccionTabletVertical.innerHTML = "";
+    const catalogo = Edificios.todos();
+    for (const edificio of catalogo){
+        construccionTabletVertical.insertAdjacentHTML("beforeend", _htmlCatalogo(edificio));
+        construccionTabletHorizontal.insertAdjacentHTML("beforeend", _htmlCatalogo(edificio));
+    }
+}
+document.addEventListener("catalogoModificado", _renderizarCatalogo);
 window.ConstruccionTablet = {inicializar}

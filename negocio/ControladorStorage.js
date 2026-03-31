@@ -11,8 +11,17 @@ class ControladorStorage{
                 edificio: JSON.parse(JSON.stringify(obj))
             };
         });
+        let recursosEdificio = Edificios.todos();
         // Asignamos la lista serializada a los edificios de la copia de ciudad
         ciudadCopia.terreno.edificios = edificios;
+        //Serializamos tambien el catalogo para los constructores
+        const catalogoSerializado = recursosEdificio.map(e => ({
+            id: e.id,
+            catalogoInfo: e.clase.catalogoInfo
+        }));
+        ciudadCopia.catalogo = catalogoSerializado;
+        console.log("Iniciando el guardado de la copia de la ciudad");
+        console.log(ciudadCopia);
         CiudadStorage.guardar(ciudadCopia);
     }
 
@@ -36,7 +45,8 @@ class ControladorStorage{
 
     //Método encargado de la reconstrucción de la ciudad.
     static cargarCiudad(){
-        //Llamaddo de métodos
+        console.log("Cargando ciudad desde ControladorStorage")
+        //Llamado de métodos
         const datos = JSON.parse(CiudadStorage.cargar());
         let ciudadanos = this.obtenerCiudadanos(datos)
         let edificios = this.obtenerEdificios(datos);
@@ -50,7 +60,9 @@ class ControladorStorage{
             datos.tiempoTurno,
             terreno,
             ciudadanos,
-            datos.estadoRecursos
+            datos.estadoRecursos,
+            datos.historicoRecursos,
+            datos.recursosPorCiudadano
         )
         //Se realiza la rehidratación de los ciudadanos
         this.rehidratarCiudadanos(ciudad);
@@ -86,5 +98,9 @@ class ControladorStorage{
                 return objetoCiudadano;
             })
         )
+    }
+
+    static cargarCatalogo(){
+        
     }
 }

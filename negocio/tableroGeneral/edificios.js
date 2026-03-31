@@ -7,7 +7,7 @@ de cada clase modelo mediante su propiedad estática `catalogoInfo`,
 evitando duplicación y garantizando una única fuente de verdad.
 */
 
-const _catalogo = [
+let _catalogo = [
 
     /* Pavimentaria */
     {
@@ -16,6 +16,7 @@ const _catalogo = [
         categoria:   "pavimentaria",
         imagen:      "../../media/edificios/via.png",
         descripcion: "Sendero necesario para conectar edificios.",
+        clase: Via,
         ...Via.catalogoInfo,
     },
 
@@ -26,6 +27,7 @@ const _catalogo = [
         categoria:   "residencial",
         imagen:      "../../media/edificios/casa.png",
         descripcion: "Hogar para familias. Aumenta la población.",
+        clase: Casa,
         ...Casa.catalogoInfo,
     },
     {
@@ -34,6 +36,7 @@ const _catalogo = [
         categoria:   "residencial",
         imagen:      "../../media/edificios/departamentos.png",
         descripcion: "Edificio multifamiliar. Alta densidad de población.",
+        clase: Apartamento,
         ...Apartamento.catalogoInfo,
     },
 
@@ -45,6 +48,7 @@ const _catalogo = [
         imagen:      "../../media/edificios/tienda.png",
         descripcion: "Genera ingresos.",
         empleos:     Tienda.catalogoInfo.capacidad,
+        clase: Tienda,
         ...Tienda.catalogoInfo,
     },
     {
@@ -54,6 +58,7 @@ const _catalogo = [
         imagen:      "../../media/edificios/centro-comercial.png",
         descripcion: "Gran centro comercial que genera muchos ingresos.",
         empleos:     CentroComercial.catalogoInfo.capacidad,
+        clase: CentroComercial,
         ...CentroComercial.catalogoInfo,
     },
 
@@ -65,6 +70,7 @@ const _catalogo = [
         imagen:      "../../media/edificios/fabrica.png",
         descripcion: "Produce bienes.",
         empleos:     Fabrica.catalogoInfo.capacidad,
+        clase: Fabrica,
         ...Fabrica.catalogoInfo,
     },
     {
@@ -74,6 +80,7 @@ const _catalogo = [
         imagen:      "../../media/edificios/granja.png",
         descripcion: "Provee alimento para la ciudad.",
         empleos:     Granja.catalogoInfo.capacidad,
+        clase: Granja,
         ...Granja.catalogoInfo,
     },
 
@@ -84,6 +91,7 @@ const _catalogo = [
         categoria:   "servicios",
         imagen:      "../../media/edificios/hospital.png",
         descripcion: "Mejora la salud y la felicidad de la población.",
+        clase: Hospital,
         ...Hospital.catalogoInfo,
     },
     {
@@ -92,6 +100,7 @@ const _catalogo = [
         categoria:   "servicios",
         imagen:      "../../media/edificios/bombero.png",
         descripcion: "Reduce desastres y aumenta la seguridad del barrio.",
+        clase: EstacionBombero,
         ...EstacionBombero.catalogoInfo,
     },
     {
@@ -100,6 +109,7 @@ const _catalogo = [
         categoria:   "servicios",
         imagen:      "../../media/edificios/policia.png",
         descripcion: "Mantiene el orden y mejora la felicidad ciudadana.",
+        clase: EstacionPolicia,
         ...EstacionPolicia.catalogoInfo,
     },
     {
@@ -108,6 +118,7 @@ const _catalogo = [
         categoria:   "servicios",
         imagen:      "../../media/edificios/parque.png",
         descripcion: "Espacio verde que mejora la felicidad del área.",
+        clase: Parque,
         ...Parque.catalogoInfo,
     },
 
@@ -118,6 +129,7 @@ const _catalogo = [
         categoria:   "infraestructura",
         imagen:      "../../media/edificios/electrica.png",
         descripcion: "Genera energía para toda la ciudad.",
+        clase: PlantaElectrica,
         ...PlantaElectrica.catalogoInfo,
     },
     {
@@ -126,6 +138,7 @@ const _catalogo = [
         categoria:   "infraestructura",
         imagen:      "../../media/edificios/agua.png",
         descripcion: "Provee agua para la ciudad.",
+        clase: PlantaHidraulica,
         ...PlantaHidraulica.catalogoInfo,
     },
 ];
@@ -162,4 +175,17 @@ function tooltip(edificioOId) {
     return lineas.join("\n");
 }
 
-window.Edificios = { obtener, porCategoria, categorias, todos, tooltip };
+function modificarRecursoEdificio(id,recurso,valor){
+    const edificio = _catalogo.find(e => e.id == id);
+    if (!edificio || !edificio.clase) {
+    console.warn("Edificio no encontrado:", id);
+    return;
+    }
+    if (edificio.id == id){
+        edificio.clase.catalogoInfo[recurso] = valor;
+        edificio[recurso] = valor; 
+    }
+    console.log(edificio.clase.catalogoInfo);
+}
+
+window.Edificios = { obtener, porCategoria, categorias, todos, tooltip, modificarRecursoEdificio };

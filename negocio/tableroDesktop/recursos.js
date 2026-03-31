@@ -44,20 +44,50 @@ function inicializar() {
         contenido.innerHTML = Object.entries(_iconos).map(([key, icono]) => {
             const valor = ciudad.getRecurso(key);
             const unidad = _unidades[key];
+
             const formatted = key === "dinero"
                 ? `${unidad}${Math.round(valor).toLocaleString()}`
                 : key === "felicidad"
                 ? `${Math.round(valor)}${unidad}%`
                 : `${Math.round(valor)}${unidad}`;
-            const color = valor < 0 ? "var(--color-energia)" : "var(--color-texto)";
+
+            let color = "var(--color-texto)";
+
+            if (key === "dinero") {
+                if (valor > 10000) color = "green";
+                else if (valor < 1000) color = "red";
+                else if (valor < 5000) color = "orange";
+            } else if (valor < 0) {
+                color = "var(--color-energia)";
+            }
+
+            //producción data
+            const prodData = ciudad.calcularProduccionNeta?.() ?? {};
+            const prod = prodData.produccion?.[key] ?? 0;
+            const cons = prodData.consumo?.[key] ?? 0;
+            const neto = prodData.neto?.[key] ?? 0;
+
+            const esFelicidad = key === "felicidad";
+
             return `
-                <div class="recurso-item">
+                <div class="recurso-item ${!esFelicidad ? "hover" : ""}">
                     <i class="fi ${icono} recurso-item__icono"></i>
                     <span class="recurso-item__label">${_nombres[key]}</span>
-                    <span class="recurso-item__valor">${formatted}</span>
+                    <span class="recurso-item__valor" style="color:${color}">
+                        ${formatted}
+                    </span>
+
+                    ${!esFelicidad ? `
+                    <div class="tooltip">
+                        <div class="tooltip-prod">Producción: +${Math.round(prod)}</div>
+                        <div class="tooltip-cons">Consumo: ${Math.round(cons)}</div>
+                        <div class="tooltip-neto">Neto: ${Math.round(neto)}</div>
+                    </div>
+                    ` : ""}
                 </div>
             `;
         }).join("");
+        contenido.innerHTML += `<button class="abrirModalRecursos" onclick="ModalRecursos.mostrar()">Menú recursos</button>`;
         panel.appendChild(contenido);
     }, 500);
 }

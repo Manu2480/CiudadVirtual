@@ -1,6 +1,7 @@
 function inicializar(){
     llamarRecursos();
 }
+
 function llamarRecursos() {
     let recursos = {};
     try {
@@ -9,42 +10,130 @@ function llamarRecursos() {
     } catch (e) {
         recursos = window.Tablero?.Estado?.ciudad?.estadoRecursos ?? {};
     }
+
+    // producción / consumo / neto
+    const ciudad = window.Tablero?.Estado?.ciudad;
+    const produccionData = ciudad?.calcularProduccionNeta?.() ?? {
+        produccion: {},
+        consumo: {},
+        neto: {}
+    };
+
     const panelTabletVertical = document.getElementById("panel-recursos-tablet-vertical");
     const panelTabletHorizontal = document.getElementById("panel-recursos-tablet-horizontal");
-    renderizarRecursos(recursos,panelTabletVertical);
-    renderizarRecursos(recursos,panelTabletHorizontal);
+
+    renderizarRecursos(recursos, panelTabletVertical, produccionData);
+    renderizarRecursos(recursos, panelTabletHorizontal, produccionData);
+
+    //activar hover táctil
+    activarHoverTouch(panelTabletVertical);
+    activarHoverTouch(panelTabletHorizontal);
+
+    const botonesRecursos = document.querySelectorAll(".abrirModalRecursos");
+    botonesRecursos.forEach((boton) => {
+        boton.addEventListener("click", ModalRecursos.mostrar);
+    });
 }
-function renderizarRecursos(recursos,panel){
+
+function renderizarRecursos(recursos, panel, produccionData){
 
     if (!panel || !recursos){
-        console.log("No se encontró el panel de recursos")
+        console.log("No se encontró el panel de recursos");
         return;
     }
-    panel.innerHTML = "";
-    panel.innerHTML= '<h2 class="panel__titulo">Recursos</h2>';
+
+    panel.innerHTML = '<h2 class="panel__titulo">Recursos</h2>';
 
     const indicadores = [
         { clave: "dinero",       icono: "fi-br-coins",     label: "Dinero",       fmt: v => `$${Math.round(v).toLocaleString()}` },
         { clave: "agua",         icono: "fi-br-raindrops", label: "Agua",         fmt: v => `${Math.round(v)} L`  },
         { clave: "electricidad", icono: "fi-br-bolt",      label: "Electricidad", fmt: v => `${Math.round(v)} kW` },
         { clave: "alimento",     icono: "fi-br-wheat",     label: "Alimento",     fmt: v => `${Math.round(v)} kg` },
-        { clave: "felicidad",    icono: "fi fi-br-smile-beam",     label: "Felicidad",    fmt: v => `${Math.round(v)}%`    },
+        { clave: "felicidad",    icono: "fi fi-br-smile-beam", label: "Felicidad", fmt: v => `${Math.round(v)}%` },
     ];
 
     panel.innerHTML += indicadores.map(({ clave, icono, label, fmt }) => {
+
         const valor = recursos[clave] ?? 0;
-        const colorVal = valor < 0 ? "var(--color-energia)" : "inherit";
+        const prod = produccionData?.produccion?.[clave] ?? 0;
+        const cons = produccionData?.consumo?.[clave] ?? 0;
+        const neto = produccionData?.neto?.[clave] ?? 0;
+        const esFelicidad = clave === "felicidad"; 
+
+        // Color condicional solo para dinero
+        let valorClass = "";
+        if (clave === "dinero") {
+            if (valor > 10000) valorClass = "verde";
+            else if (valor < 1000) valorClass = "rojo";
+            else if (valor < 5000) valorClass = "amarillo";
+        }
+
         return `
-            <div class="recurso recurso--${clave}">
+            <div class="recurso recurso--${clave} ${!esFelicidad ? "hover" : ""}">
                 <i class="fi ${icono} recurso__icono"></i>
                 <span class="recurso__label">${label}:</span>
-                <span class="recurso__valor" style="color:${colorVal}">
+                <span class="recurso__valor ${valorClass}">
                     ${fmt(valor)}
                 </span>
+
+                ${!esFelicidad ? `
+                <div class="tooltip">
+                    <div class="tooltip-prod">Producción: +${Math.round(prod)}</div>
+                    <div class="tooltip-cons">Consumo: -${Math.round(cons)}</div>
+                    <div class="tooltip-neto">Neto: ${Math.round(neto)}</div>
+                </div>
+                ` : ""}
             </div>
         `;
     }).join("");
 
+    panel.innerHTML += `<button class="abrirModalRecursos">Menú recursos</button>`;
 }
 
-window.RecursosTablet = {inicializar, renderizarRecursos};
+/* =========================================
+   HOVER TÁCTIL (igual al de tu sidebar)
+========================================= */
+function activarHoverTouch(contenedor) {
+    if (!contenedor) return;
+
+    const elementosHover = contenedor.querySelectorAll(".hover");
+
+    elementosHover.forEach((elemento) => {
+
+        elemento.addEventListener("touchstart", () => {
+            const tooltip = elemento.querySelector(".tooltip");
+            if (!tooltip) return;
+
+            const rect = elemento.getBoundingClientRect();
+            const padding = 10;
+
+            elemento.classList.add("hover-activo");
+
+            let left = rect.left + rect.width / 2;
+            let top = rect.top;
+
+            const tooltipRect = tooltip.getBoundingClientRect();
+
+            let finalLeft = left - tooltipRect.width / 2;
+
+            if (finalLeft < padding) {
+                finalLeft = padding;
+            }
+
+            if (finalLeft + tooltipRect.width > window.innerWidth - padding) {
+                finalLeft = window.innerWidth - tooltipRect.width - padding;
+            }
+
+            tooltip.style.left = finalLeft + "px";
+            tooltip.style.top = top + "px";
+        });
+
+        elemento.addEventListener("touchend", () => {
+            elemento.classList.remove("hover-activo");
+        });
+    });
+}
+
+document.addEventListener("recursosModificados", llamarRecursos);
+
+window.RecursosTablet = { inicializar };

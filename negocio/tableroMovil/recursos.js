@@ -110,37 +110,94 @@ function _renderizarRecursos() {
         alimento:     " kg",
         felicidad:    "%",
     };
+    const ciudad = window.Tablero?.Estado?.ciudad;
+    const prodData = ciudad?.calcularProduccionNeta?.() ?? {
+        produccion: {},
+        consumo: {},
+        neto: {}
+    };
 
     panel.innerHTML = `
         <h2 style="font-size: var(--fuente-tam-l); font-weight: 700;
-                   color: var(--color-texto); margin-bottom: var(--espacio-s);
-                   padding-bottom: var(--espacio-s);
-                   border-bottom: 1px solid var(--color-borde);">
+                color: var(--color-texto); margin-bottom: var(--espacio-s);
+                padding-bottom: var(--espacio-s);
+                border-bottom: 1px solid var(--color-borde);">
             Recursos
         </h2>
+
         ${Object.entries(_iconos).map(([key, icono]) => {
+
             const valor = recursos[key] ?? 0;
             const unidad = _unidades[key];
+
             const formatted = key === "dinero"
                 ? `$${Math.round(valor).toLocaleString()}`
                 : `${Math.round(valor)}${unidad}`;
-            const color = valor < 0 ? "var(--color-energia)" : "var(--color-texto)";
+
+            let color = "var(--color-texto)";
+
+            if (key === "dinero") {
+                if (valor > 10000) color = "green";
+                else if (valor < 1000) color = "red";
+                else if (valor < 5000) color = "orange";
+            }
+
+            const prod = prodData.produccion?.[key] ?? 0;
+            const cons = prodData.consumo?.[key] ?? 0;
+            const neto = prodData.neto?.[key] ?? 0;
+
+            const esFelicidad = key === "felicidad";
+
             return `
-                <div style="display:flex; align-items:center; gap: var(--espacio-m);
+                <div class="recurso-movil ${!esFelicidad ? "hover" : ""}"
+                    style="display:flex; align-items:center; gap: var(--espacio-m);
                             padding: var(--espacio-s) var(--espacio-m);
                             background: var(--color-fondo);
-                            border-radius: var(--radio-s);">
-                    <i class="fi ${icono}" style="font-size:20px; color: var(--color-primario); flex-shrink:0;"></i>
+                            border-radius: var(--radio-s);
+                            position: relative;">
+
+                    <i class="fi ${icono}" 
+                    style="font-size:20px; color: var(--color-primario); flex-shrink:0;"></i>
+
                     <span style="flex:1; font-weight:600; color: var(--color-texto);">
                         ${_nombres[key]}
                     </span>
+
                     <span style="font-weight:700; font-size: var(--fuente-tam-l); color:${color};">
                         ${formatted}
                     </span>
+
+                    ${!esFelicidad ? `
+                    <div class="tooltip">
+                        <div class="tooltip-prod">Producción: +${Math.round(prod)}</div>
+                        <div class="tooltip-cons">Consumo: ${Math.round(cons)}</div>
+                        <div class="tooltip-neto">Neto: ${Math.round(neto)}</div>
+                    </div>
+                    ` : ""}
                 </div>
             `;
         }).join("")}
-    `;
+        <button class="abrirModalRecursos" onclick="ModalRecursos.mostrar()">Menú recursos</button>
+        `;
+        activarHoverTouch(panel);
+}
+function activarHoverTouch(contenedor) {
+    if (!contenedor) return;
+
+    const elementosHover = contenedor.querySelectorAll(".hover");
+
+    elementosHover.forEach((elemento) => {
+
+        elemento.addEventListener("touchstart", () => {
+            const tooltip = elemento.querySelector(".tooltip");
+            if (!tooltip) return;
+            elemento.classList.add("hover-activo");
+        });
+
+        elemento.addEventListener("touchend", () => {
+            elemento.classList.remove("hover-activo");
+        });
+    });
 }
 
 
