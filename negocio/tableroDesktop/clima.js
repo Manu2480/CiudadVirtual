@@ -15,7 +15,7 @@ function cargarClima(widget, ciudad) {
                     </div>
                     <div class="clima-temperatura">${Math.round(datos.temperatura)}°C</div>
                     <div class="clima-descripcion">${datos.condicion}</div>
-                    <div style="font-size: 12px; color: #666; margin-top: 8px;">
+                    <div class="clima-humedad">
                         Humedad: ${datos.humedad}%
                     </div>
                     <div class="clima-viento">

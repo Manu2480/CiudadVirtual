@@ -46,6 +46,24 @@ Panel de recursos en sidebar izquierdo
     margin-left: 10px;
     font-size: 0.85rem;
 }
+
+/* Estados de color para recursos - Dinero */
+.recurso-item__valor--dinero-alto {
+    color: #27ae60;  /* Verde - Dinero abundante */
+}
+
+.recurso-item__valor--dinero-medio {
+    color: #f39c12;  /* Naranja/Ámbar - Dinero moderado */
+}
+
+.recurso-item__valor--dinero-bajo {
+    color: #e74c3c;  /* Rojo - Dinero bajo/crítico */
+}
+
+/* Estados de color para otros recursos */
+.recurso-item__valor--negativo {
+    color: #e74c3c;  /* Rojo - Valor negativo */
+}
 .tooltip {
     position: fixed;
     display: none;

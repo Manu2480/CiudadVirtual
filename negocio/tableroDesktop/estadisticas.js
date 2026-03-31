@@ -22,11 +22,13 @@ function inicializar() {
 
         // Función auxiliar para crear filas de estadísticas
         const fila = (icono, label, valor, color) => {
-            const c = color || (valor >= 0 ? "var(--color-dinero)" : "var(--color-energia)");
+            // Determinar clase CSS según el valor (positivo/negativo)
+            // color puede ser undefined, lo que activa el condicional de signo
+            const clase = color ? "" : (valor >= 0 ? "stats-item__valor--positivo" : "stats-item__valor--negativo");
             return `<div class="stats-item">
                 <i class="fi ${icono}"></i>
                 <span class="stats-item__label">${label}</span>
-                <span class="stats-item__valor" style="color:${c}">${valor > 0 ? "+" : ""}${valor.toLocaleString()}</span>
+                <span class="stats-item__valor ${clase}">${valor > 0 ? "+" : ""}${valor.toLocaleString()}</span>
             </div>`;
         };
 

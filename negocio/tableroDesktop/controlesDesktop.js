@@ -162,7 +162,7 @@ function _inicializarArrastre() {
         inicioY = e.clientY;
         scrollInicioX = _desktopState.areaMapa.scrollLeft;
         scrollInicioY = _desktopState.areaMapa.scrollTop;
-        _desktopState.areaMapa.style.cursor = "grabbing";
+        _desktopState.areaMapa.classList.add("area-mapa--arrastrando");
     });
 
     document.addEventListener("mousemove", (e) => {
@@ -178,7 +178,7 @@ function _inicializarArrastre() {
     document.addEventListener("mouseup", () => {
         if (arrastrando) {
             arrastrando = false;
-            _desktopState.areaMapa.style.cursor = "grab";
+            _desktopState.areaMapa.classList.remove("area-mapa--arrastrando");
         }
     });
 }
@@ -393,9 +393,9 @@ function _abrirMenuConstruccion() {
         panelConstruccion.scrollIntoView({ behavior: "smooth" });
 
         // Animar highlight
-        panelConstruccion.style.boxShadow = "0 0 20px rgba(26, 115, 232, 0.5)";
+        panelConstruccion.classList.add("menu-construccion--destacado");
         setTimeout(() => {
-            panelConstruccion.style.boxShadow = "";
+            panelConstruccion.classList.remove("menu-construccion--destacado");
         }, 1500);
     }
 
@@ -472,8 +472,7 @@ function _crearIndicadorModo() {
     // Crear elemento
     _desktopState.indicadorModo = document.createElement("div");
     _desktopState.indicadorModo.id = "indicador-modo";
-    _desktopState.indicadorModo.className = "indicador-modo";
-    _desktopState.indicadorModo.style.display = "none";
+    _desktopState.indicadorModo.className = "indicador-modo indicador-modo--oculto";
 
     // Insertar en el DOM
     document.body.appendChild(_desktopState.indicadorModo);
@@ -485,13 +484,13 @@ function _actualizarIndicadorModo(tipo, mensaje) {
 
     _desktopState.indicadorModo.textContent = mensaje;
     _desktopState.indicadorModo.className = `indicador-modo${tipo === "demolicion" ? " indicador-modo--demolicion" : ""}`;
-    _desktopState.indicadorModo.style.display = "block";
+    _desktopState.indicadorModo.classList.remove("indicador-modo--oculto");
 }
 
 
 function _ocultarIndicadorModo() {
     if (!_desktopState.indicadorModo) return;
-    _desktopState.indicadorModo.style.display = "none";
+    _desktopState.indicadorModo.classList.add("indicador-modo--oculto");
 }
 
 
