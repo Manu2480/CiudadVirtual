@@ -120,20 +120,11 @@ function _cargarCiudad() {
             : new Date().toISOString().split("T")[0];
 
         Recursos.setCiudad(Estado.ciudad);
-        const catalogo = datos.catalogo;
-        catalogo.forEach((edificio)=>{
-            const recursosPorEdificio = edificio.catalogoInfo;
-            Object.entries(recursosPorEdificio).forEach(([recurso, valor]) => {
+        const catalogo = Array.isArray(datos.catalogo) ? datos.catalogo : [];
+        catalogo.forEach((edificio) => {
+            if (!edificio?.id || typeof edificio.catalogoInfo !== "object" || !edificio.catalogoInfo) return;
+            Object.entries(edificio.catalogoInfo).forEach(([recurso, valor]) => {
                 Edificios.modificarRecursoEdificio(edificio.id, recurso, valor);
-
-                console.log(
-                    "Modificando",
-                    edificio.id,
-                    "recurso:",
-                    recurso,
-                    "nuevo valor:",
-                    valor
-                );
             });
         });
         
@@ -145,32 +136,9 @@ function _cargarCiudad() {
 }
 
 /* Traduce el id de instancia guardado (ej: "casa3") al id del catálogo (ej: "casa")
-   usando el mismo mapa que mapa.js y ruta.js */
+   usando IdNormalizador centralizado para evitar duplicación */
 function _normalizarIdEdificio(id) {
-    return Mapa.getGrid ? (() => {
-        /* Reutilizar _normalizarId de mapa.js si está expuesto */
-        if (window.Mapa?._normalizarId) return window.Mapa._normalizarId(id);
-    })() || _normalizarIdLocal(id) : _normalizarIdLocal(id);
-}
-
-function _normalizarIdLocal(id) {
-    const prefijos = {
-        "via":             "via",
-        "casa":            "casa",
-        "apartamento":     "apartamento",
-        "tienda":          "tienda",
-        "centrocomercial": "centro-comercial",
-        "fabrica":         "fabrica",
-        "granja":          "granja",
-        "hospital":        "hospital",
-        "bombero":         "bombero",
-        "policia":         "policia",
-        "parque":          "parque",
-        "luz":             "planta-electrica",
-        "agua":            "planta-hidraulica",
-    };
-    const lower = (id || "").toLowerCase().replace(/\d+$/, "");
-    return prefijos[lower] || id;
+    return IdNormalizador.normalizar(id);
 }
 
 function _actualizarNombre() {
