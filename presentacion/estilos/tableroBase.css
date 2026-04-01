@@ -19,3 +19,5 @@ Cada parcial tiene una única responsabilidad.
 @import "estilosBase/tabs.css";
 @import "estilosBase/utilidades.css";
 @import "estilosBase/modalRecursos.css";
+/*estilos del modal de Game Over*/
+@import "estilosBase/modalGameOver.css";

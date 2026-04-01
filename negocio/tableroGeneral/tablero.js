@@ -163,6 +163,8 @@ function avanzarTurno() {
         Notificaciones.mostrar("Game Over: recursos negativos.", "error");
         Estado.ciudad.detenerSimulacion();
         _detenerCicloTurnos();
+        /* Mostramos el modal de Game Over */
+        ModalGameOver.mostrar(); 
         return;
     }
     /* Incrementar turno */
