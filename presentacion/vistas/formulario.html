@@ -40,8 +40,12 @@
 
     <!--lógica de creación de instancias-->
     <script src="../../negocio/tableroGeneral/edificaciones.js" defer></script>
-    <!-- Lógica del formulario — al final porque usa todo lo anterior -->
-    <script src="../../negocio/formulario.js" defer></script>
+
+    <!-- Lógica del formulario — módulos cargados de forma explícita para evitar problemas de rutas/orden. -->
+    <script src="../../negocio/formulario/controladorVista.js" defer></script>
+    <script src="../../negocio/formulario/validadorFormulario.js" defer></script>
+    <script src="../../negocio/formulario/creadorCiudad.js" defer></script>
+
 </head>
 <body>
 
