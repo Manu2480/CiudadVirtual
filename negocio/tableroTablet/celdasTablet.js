@@ -1,4 +1,4 @@
-/* ================================================
+﻿/* ================================================
 CELDA ADAPTABLE TABLET
 Calcula el tamaño de celda para que el grid quepa
 exactamente en el ancho del área del mapa sin scroll horizontal.
@@ -13,8 +13,7 @@ function inicializar() {
     document.dispatchEvent(new Event("mapa:renderizado"));
     fotoPerfil();
 }
-let distanciaInicial = null;
-let zoomInicial = 1;
+
 const areaMapa = document.getElementById("area-mapa");
 document.getElementById("arriba").addEventListener("click", () => moverViewport("arriba", 1));
 document.getElementById("abajo").addEventListener("click", () => moverViewport("abajo", 1));
@@ -24,6 +23,7 @@ function moverViewport(direccion) {
     const gridEstado = window.Mapa.getGrid();
     const filasMax = gridEstado.length;
     const colsMax  = gridEstado[0]?.length || 0;
+    calcularCeldasVisibles();
 
     switch (direccion) {
         case "arriba":
@@ -40,15 +40,19 @@ function moverViewport(direccion) {
                 viewport.colInicio - (viewport.columnasVisibles - 2));
             break;
 
-        case "derecha":
-            viewport.colInicio = Math.min(colsMax - viewport.columnasVisibles,
-                viewport.colInicio + (viewport.columnasVisibles - 2));
+        case "derecha": {
+            const salto = viewport.columnasVisibles - 2;
+            const limiteMax = colsMax - viewport.columnasVisibles;
+            const intento = viewport.colInicio + salto;
+            const resultado = Math.min(limiteMax, intento);
+            viewport.colInicio = resultado;
             break;
+        }
     }
 
     // Re-renderizar el viewport
-    renderizarViewport();
-    mostrarIndices();
+    _clampViewport();
+    rerender();
     document.dispatchEvent(new Event("mapa:renderizado"));
 }
 window.addEventListener("resize", () =>{
@@ -64,40 +68,13 @@ const viewport = {
     filasVisibles: 0,
     columnasVisibles: 0
 };
-areaMapa.addEventListener("touchstart", (e) => {
-    if (e.touches.length === 2) {
-        const dx = e.touches[0].clientX - e.touches[1].clientX;
-        const dy = e.touches[0].clientY - e.touches[1].clientY;
-
-        distanciaInicial = Math.sqrt(dx * dx + dy * dy);
-        zoomInicial = window.Mapa.getZoom();
-    }
-});
-areaMapa.addEventListener("touchmove", (e) => {
-    if (e.touches.length === 2) {
-        e.preventDefault();
-
-        const dx = e.touches[0].clientX - e.touches[1].clientX;
-        const dy = e.touches[0].clientY - e.touches[1].clientY;
-
-        const distanciaActual = Math.sqrt(dx * dx + dy * dy);
-
-        if (!distanciaInicial) return;
-
-        const factor = distanciaActual / distanciaInicial;
-
-        const nuevoZoom = zoomInicial * factor;
-
-        window.Mapa.setZoom(nuevoZoom);
-    }
-}, { passive: false });
-areaMapa.addEventListener("touchend", () => {
-    distanciaInicial = null;
-});
 function _ajustar() {
-    const columnas = window.Tablero?.Estado?.columnas;
-    if (!columnas) {
-        /* Tablero aún no está listo, reintenta */
+    const columnas = window.Tablero?.Estado?.columnas +2;
+    const filas    = window.Tablero?.Estado?.filas +2;//Agregar el +2 porque es el tamaño que ocuparian los indices y las flechas
+    const TAM_DEFAULT = 55;
+
+
+    if (!columnas || !filas) {
         setTimeout(_ajustar, 100);
         return;
     }
@@ -105,20 +82,25 @@ function _ajustar() {
     const areaMapa = document.getElementById("area-mapa");
     if (!areaMapa) return;
 
-    const anchoDisponible = areaMapa.getBoundingClientRect().width || areaMapa.offsetWidth;
+    const rect = areaMapa.getBoundingClientRect();
+    const anchoDisponible = rect.width;
+    const altoDisponible  = rect.height;
 
-    // Tamaño de celda acotado entre 50 y 60px
-    const tamCelda = Math.min(60, Math.max(50, Math.floor(anchoDisponible / columnas)));
+    //calcular tamaño mínimo para que todo el mapa quepa
+    const tamX = anchoDisponible / columnas;
+    const tamY = altoDisponible / filas;
+
+    const tamMinimo = Math.floor(Math.max(tamX, tamY));
+    const tamCelda = Math.max(TAM_DEFAULT, tamMinimo);
 
     document.documentElement.style.setProperty("--tamano-celda", `${tamCelda}px`);
-    console.log(`CeldaTablet: ${columnas} columnas, ancho ${anchoDisponible}px → celda ${tamCelda}px`);
 
-    // Guardar para recalcular al rotar
-    // Nota: _mapaState puede no existir si el módulo del mapa no lo expone globalmente.
-    // Usamos un contenedor propio para evitar errores.
+    // guardar para usarlo como límite de zoom
     window._celdasTabletState = window._celdasTabletState || {};
-    window._celdasTabletState.columnasTablet = columnas;
-} 
+    window._celdasTabletState.tamMinimo = tamMinimo;
+
+    console.log(`Celda dinámica: ${columnas}x${filas} → ${tamCelda}px`);
+}
 function mostrarIndices() {
     calcularCeldasVisibles()
 
@@ -143,7 +125,8 @@ function mostrarIndices() {
     }
 }
 function calcularCeldasVisibles() {
-    const mapa = document.getElementById("viewport-mapa");
+    const mapa = document.getElementById("area-mapa");
+
     if (!mapa){
         requestAnimationFrame(calcularCeldasVisibles);
         return;
@@ -158,8 +141,8 @@ function calcularCeldasVisibles() {
         .getPropertyValue("--tamano-celda")
     ) || 44;
 
-    viewport.columnasVisibles = Math.floor(ancho / tamCelda);
-    viewport.filasVisibles = Math.floor(alto / tamCelda);
+    viewport.columnasVisibles = Math.floor(ancho / tamCelda -2);
+    viewport.filasVisibles = Math.floor(alto / tamCelda -2);
 }
 function renderizarViewport() {
     const gridEl = document.getElementById("mapa-grid");
@@ -207,8 +190,31 @@ function fotoPerfil(){
     }
 }
 
+function rerender() {
+    calcularCeldasVisibles();
+    _clampViewport();
+    renderizarViewport();
+    mostrarIndices();
+}
+function _clampViewport() {
+    const gridEstado = window.Mapa.getGrid();
+    const filasMax = gridEstado.length;
+    const colsMax  = gridEstado[0]?.length || 0;
+
+    viewport.filaInicio = Math.max(
+        0,
+        Math.min(viewport.filaInicio, filasMax - viewport.filasVisibles)
+    );
+
+    viewport.colInicio = Math.max(
+        0,
+        Math.min(viewport.colInicio, colsMax - viewport.columnasVisibles)
+    );
+}
+
 window.CeldasTablet = {
     inicializar,
     mostrarIndices,
-    renderizarViewport
+    renderizarViewport,
+    rerender
 };

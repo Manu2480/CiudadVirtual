@@ -17,8 +17,22 @@ const Estado = {
     pausado:              false,
     turno:                0,      /* contador de turnos */
     intervaloTurnos:      null,   /* ID del interval para el ciclo automático */
-};
+};  
+const btnPausarGeneral = document.getElementById("btn-turnos-general-pausar");
+const btnReanudarGeneral = document.getElementById("btn-turnos-general-reanudar");
 
+
+btnPausarGeneral?.addEventListener("click", () => {
+    if (!Estado.pausado) {
+        togglePausa();
+    }
+});
+
+btnReanudarGeneral?.addEventListener("click", () => {
+    if (Estado.pausado) {
+        togglePausa();
+    }
+});
 document.addEventListener("DOMContentLoaded", () => {
     _cargarCiudad();
     _actualizarNombre();
@@ -47,6 +61,7 @@ document.addEventListener("DOMContentLoaded", () => {
     _iniciarCicloTurnos();
     console.log("tablero.js: ciclo de turnos iniciado automáticamente al cargar el DOM");
 });
+
 
 function _cargarCiudad() {
     try {

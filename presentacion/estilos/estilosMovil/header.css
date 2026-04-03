@@ -40,6 +40,10 @@ Responsabilidad:
     justify-content: flex-start;
 }
 
+#menu-turnos-general{
+    display: none;
+}
+
 /* Botón hamburguesa visible solo en móvil */
 .btn-recursos-movil {
     display: flex;

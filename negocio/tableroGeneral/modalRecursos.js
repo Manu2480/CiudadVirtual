@@ -286,6 +286,7 @@ const ModalRecursos = (() => {
             input.value = "";
             Tablero.guardarPartida();
             document.dispatchEvent(new CustomEvent("catalogoModificado"));
+            
         });
         // MODIFICAR CONSUMO POR CIUDADANO
         document.querySelectorAll("#consumoCiudadanos .grid-recursos")
@@ -343,6 +344,22 @@ const ModalRecursos = (() => {
                         data: historial.map(h => h[r.clave])
                     }]
                 }
+            });
+        });
+        document.querySelectorAll(".tarjeta-edificio").forEach(el => {
+            el.addEventListener("click", () => {
+                const id = el.dataset.id;
+                const edificio = _edificios().find(e => e.id == id);
+
+                // quitar selección anterior
+                document.querySelectorAll(".tarjeta-edificio.seleccionado")
+                    .forEach(card => card.classList.remove("seleccionado"));
+
+                // marcar actual
+                el.classList.add("seleccionado");
+
+                const contenedor = document.getElementById("panel-edificio-contenido");
+                contenedor.innerHTML = _generarModificadoresEdificio(edificio);
             });
         });
     }

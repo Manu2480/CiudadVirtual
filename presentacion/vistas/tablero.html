@@ -161,11 +161,17 @@
             <button class="menu-partida__opcion" id="btn-exportar-json">
                 <i class="fi fi-br-download"></i> Exportar como JSON
             </button>
-            <div class="menu-partida__seccion">
+            <div class="menu-partida__seccion" id="menu-turnos-general">
                 <label class="menu-partida__label" for="input-duracion-turno">Duración turno (segundos)</label>
                 <div class="menu-partida__input-group">
                     <input id="input-duracion-turno" type="number" min="1" step="1" value="30" />
                     <button id="btn-aplicar-duracion-turno" class="menu-partida__opcion">Aplicar</button>
+                    <button class="menu-partida__opcion" id="btn-turnos-general-pausar">
+                        <i class="fi fi-br-pause"></i> Pausar turno
+                    </button>
+                    <button class="menu-partida__opcion" id="btn-turnos-general-reanudar">
+                        <i class="fi fi-br-play"></i> Reanudar turno
+                    </button>
                 </div>
             </div>
             <button class="menu-partida__opcion" id="btn-ver-ranking">
