@@ -50,7 +50,7 @@ function inicializar() {
                 <div class="stats-seccion">
                     <h3 class="stats-seccion__titulo">Puntos Base</h3>
                     ${fila("fi-br-users",     `Población (${m.poblacion} hab × 10)`,         d.ptsPoblacion)}
-                    ${fila("fi-br-smile",     `Felicidad (${Math.round(m.felicidad)} × 5)`,   d.ptsFelicidad)}
+                    ${fila("fi-br-smile-beam",     `Felicidad (${Math.round(m.felicidad)} × 5)`,   d.ptsFelicidad)}
                     ${fila("fi-br-coins",     `Dinero ($${m.dinero.toLocaleString()} ÷ 100)`, d.ptsDinero)}
                     ${fila("fi-br-home",      `Edificios (${m.numEdificios} × 50)`,           d.ptsEdificios)}
                     ${fila("fi-br-bolt",      `Electricidad (${m.electricidad} kW × 2)`,      d.ptsElectricidad)}
@@ -61,7 +61,7 @@ function inicializar() {
                 <div class="stats-seccion">
                     <h3 class="stats-seccion__titulo stats-seccion__titulo--bono">Bonificaciones</h3>
                     ${b.todosEmpleados    ? fila("fi-br-briefcase", "Todos empleados",        b.todosEmpleados)    : ""}
-                    ${b.felicidadAlta     ? fila("fi-br-smile",     "Felicidad > 80",         b.felicidadAlta)     : ""}
+                    ${b.felicidadAlta     ? fila("fi-br-smile-beam",     "Felicidad > 80",         b.felicidadAlta)     : ""}
                     ${b.recursosPositivos ? fila("fi-br-leaf",      "Recursos positivos",     b.recursosPositivos) : ""}
                     ${b.granCiudad        ? fila("fi-br-home",      "Ciudad > 1000 hab",      b.granCiudad)        : ""}
                     ${b.total === 0 ? `<div class="stats-item stats-item--empty">
@@ -76,7 +76,7 @@ function inicializar() {
                     ${p.dineroNeg       ? fila("fi-br-coins",     "Dinero negativo",       p.dineroNeg)       : ""}
                     ${p.electricidadNeg ? fila("fi-br-bolt",      "Electricidad negativa", p.electricidadNeg) : ""}
                     ${p.aguaNeg         ? fila("fi-br-raindrops", "Agua negativa",         p.aguaNeg)         : ""}
-                    ${p.felicidadBaja   ? fila("fi-br-sad",       "Felicidad < 40",        p.felicidadBaja)   : ""}
+                    ${p.felicidadBaja   ? fila("fi-br-sad-tear",       "Felicidad < 40",        p.felicidadBaja)   : ""}
                     ${p.desempleados    ? fila("fi-br-user-slash", `${m.desempleados} desempleados × -10`, p.desempleados) : ""}
                     ${p.sinVivienda     ? fila("fi-br-home",     `${m.sinVivienda} sin vivienda × -10`, p.sinVivienda)     : ""}
                     ${p.total === 0 ? `<div class="stats-item stats-item--empty">

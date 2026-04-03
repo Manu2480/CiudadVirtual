@@ -62,9 +62,9 @@ function mostrarEdificio(edificio, fila, col) {
         const color = promedio >= 70 ? "var(--color-dinero)"
                     : promedio >= 40 ? "var(--color-aviso, orange)"
                     : "var(--color-energia)";
-        const icono = promedio >= 70 ? "fi-br-smile" 
+        const icono = promedio >= 70 ? "fi-br-smile-beam" 
                     : promedio >= 40 ? "fi-br-meh" 
-                    : "fi-br-sad";
+                    : "fi-br-sad-tear";
         felicidadPromedioHtml = `
             <li>
                 <i class="fi ${icono}" style="color:${color}"></i>
@@ -97,7 +97,7 @@ function mostrarEdificio(edificio, fila, col) {
                 ${ocupacionHtml}
                 ${felicidadPromedioHtml}
                 ${edificio.empleos      ? `<li><i class="fi fi-br-briefcase"></i> Empleos: <strong>${edificio.empleos}</strong></li>` : ""}
-                ${edificio.felicidad    ? `<li><i class="fi fi-br-smile"></i> Felicidad: <strong>${edificio.felicidad > 0 ? "+" : ""}${edificio.felicidad}</strong></li>` : ""}
+                ${edificio.felicidad    ? `<li><i class="<fi fi-br-smile-beam>"></i> Felicidad: <strong>${edificio.felicidad > 0 ? "+" : ""}${edificio.felicidad}</strong></li>` : ""}
                 ${edificio.electricidad !== undefined ? `<li><i class="fi fi-br-bolt"></i> Electricidad: <strong>${edificio.electricidad > 0 ? "+" : ""}${edificio.electricidad} kW</strong></li>` : ""}
                 ${edificio.agua         !== undefined ? `<li><i class="fi fi-br-raindrops"></i> Agua: <strong>${edificio.agua > 0 ? "+" : ""}${edificio.agua} L</strong></li>` : ""}
                 ${edificio.dinero       ? `<li><i class="fi fi-br-coins"></i> Ingresos: <strong>+$${edificio.dinero.toLocaleString()}/turno</strong></li>` : ""}
@@ -157,7 +157,7 @@ function mostrarEstadisticas() {
             <p class="modal-stats__seccion">Puntos base</p>
             <ul class="modal-stats__lista">
                 ${fila("fi-br-users",     `Población (${m.poblacion} hab × 10)`,         d.ptsPoblacion,    "var(--color-primario)")}
-                ${fila("fi-br-smile",     `Felicidad (${Math.round(m.felicidad)} × 5)`,   d.ptsFelicidad,    "var(--color-primario)")}
+                ${fila("fi-br-smile-beam",     `Felicidad (${Math.round(m.felicidad)} × 5)`,   d.ptsFelicidad,    "var(--color-primario)")}
                 ${fila("fi-br-coins",     `Dinero ($${m.dinero.toLocaleString()} ÷ 100)`, d.ptsDinero,       "var(--color-primario)")}
                 ${fila("fi-br-home",      `Edificios (${m.numEdificios} × 50)`,           d.ptsEdificios,    "var(--color-primario)")}
                 ${fila("fi-br-bolt",      `Electricidad (${m.electricidad} kW × 2)`,      d.ptsElectricidad, "var(--color-primario)")}
@@ -178,7 +178,7 @@ function mostrarEstadisticas() {
             <p class="modal-stats__seccion modal-stats__seccion--bono">Bonificaciones</p>
             <ul class="modal-stats__lista">
                 ${b.todosEmpleados    ? fila("fi-br-briefcase", "Todos empleados",        b.todosEmpleados)    : ""}
-                ${b.felicidadAlta     ? fila("fi-br-smile",     "Felicidad > 80",         b.felicidadAlta)     : ""}
+                ${b.felicidadAlta     ? fila("fi-br-smile-beam",     "Felicidad > 80",         b.felicidadAlta)     : ""}
                 ${b.recursosPositivos ? fila("fi-br-leaf",      "Recursos positivos",     b.recursosPositivos) : ""}
                 ${b.granCiudad        ? fila("fi-br-home",      "Ciudad > 1000 hab",      b.granCiudad)        : ""}
                 ${b.total === 0 ? `<li style="color:var(--color-texto-s)"><i class="fi fi-br-info"></i> <span>Sin bonificaciones aún</span></li>` : ""}
@@ -189,7 +189,7 @@ function mostrarEstadisticas() {
                 ${p.dineroNeg       ? fila("fi-br-coins",      "Dinero negativo",       p.dineroNeg)       : ""}
                 ${p.electricidadNeg ? fila("fi-br-bolt",       "Electricidad negativa", p.electricidadNeg) : ""}
                 ${p.aguaNeg         ? fila("fi-br-raindrops",  "Agua negativa",         p.aguaNeg)         : ""}
-                ${p.felicidadBaja   ? fila("fi-br-sad",        "Felicidad < 40",        p.felicidadBaja)   : ""}
+                ${p.felicidadBaja   ? fila("fi-br-sad-tear",        "Felicidad < 40",        p.felicidadBaja)   : ""}
                 ${p.desempleados    ? fila("fi-br-user-slash", `${m.desempleados} desempleados × -10`, p.desempleados) : ""}
                 ${p.total === 0 ? `<li style="color:var(--color-texto-s)"><i class="fi fi-br-check"></i> <span>Sin penalizaciones</span></li>` : ""}
             </ul>
@@ -237,7 +237,7 @@ function _mostrarConfirmacionDemoler(fila, col, edificio, instancia) {
             Se pierden <strong>${edificio.alimento} kg</strong> de alimento/turno
         </li>`);
     if (edificio.felicidad) afectaciones.push(`
-        <li><i class="fi fi-br-smile"></i> 
+        <li><i class="fi fi-br-smile-beam"></i> 
             Se pierden <strong>${edificio.felicidad} puntos</strong> de felicidad
         </li>`);
 

@@ -195,6 +195,7 @@ function rerender() {
     _clampViewport();
     renderizarViewport();
     mostrarIndices();
+    document.dispatchEvent(new Event("mapa:renderizado"));
 }
 function _clampViewport() {
     const gridEstado = window.Mapa.getGrid();

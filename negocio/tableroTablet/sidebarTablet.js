@@ -38,6 +38,9 @@ function inicializar() {
             mapa.classList.toggle("full");
             panel.classList.remove("abierto");
             panelActivo = null;
+            requestAnimationFrame(() => {
+                window.CeldasTablet?.rerender();
+            });
             return;
         }
 
@@ -46,11 +49,17 @@ function inicializar() {
         sidebar.classList.toggle("cerrada");
         mapa.classList.toggle("full");
         panelActivo = panelKey;
+        requestAnimationFrame(() => {
+            window.CeldasTablet?.rerender();
+        });
     }
     function togglePanelHorizontal(panelKey){
         const panel = panelesHorizontal[panelKey];
         panel.classList.toggle("abierta");
         mapa.classList.toggle(panelKey);
+                requestAnimationFrame(() => {
+            window.CeldasTablet?.rerender();
+        });
     }
 
     // Asignar eventos a botones
