@@ -168,6 +168,11 @@
     text-align: center;
 }
 
+.tarjeta-edificio.seleccionado {
+    outline: 3px solid var(--color-primario);
+    border-radius: 8px;
+}
+
 /* =========================================
    GRÁFICAS
 ========================================= */
@@ -275,9 +280,9 @@ TABLET
         flex-wrap: wrap;
         gap: 15px;
     }
-
-    .modal-recursos section {
-        flex: 1 1 45%;
+        .modal-recursos section {
+        width: 100%;
+        margin: 0 auto;  
     }
 }
 

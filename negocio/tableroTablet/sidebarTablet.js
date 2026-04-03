@@ -32,7 +32,6 @@ function inicializar() {
     function togglePanelVertical(panelKey) {
         const panel = panelesVertical[panelKey];
         const sidebarAbierta = !sidebar.classList.contains("cerrada");
-        console.log("Se clickeo el panel")
 
         if (panelActivo === panelKey && sidebarAbierta) {
             sidebar.classList.toggle("cerrada");
@@ -52,9 +51,6 @@ function inicializar() {
         const panel = panelesHorizontal[panelKey];
         panel.classList.toggle("abierta");
         mapa.classList.toggle(panelKey);
-        CeldasTablet.renderizarViewport();
-        CeldasTablet.mostrarIndices();
-
     }
 
     // Asignar eventos a botones
