@@ -63,7 +63,7 @@ function mostrarEdificio(edificio, fila, col) {
                     : promedio >= 40 ? "var(--color-aviso, orange)"
                     : "var(--color-energia)";
         const icono = promedio >= 70 ? "fi-br-smile-beam" 
-                    : promedio >= 40 ? "fi-br-meh" 
+                    : promedio >= 40 ? "fi-br-meh-rolling-eyes" 
                     : "fi-br-sad-tear";
         felicidadPromedioHtml = `
             <li>

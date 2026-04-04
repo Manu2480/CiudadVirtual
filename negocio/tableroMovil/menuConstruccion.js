@@ -152,7 +152,7 @@ function _detallesHtml(edificio) {
         { key: "agua",         icono: "fi-br-raindrops",  fmt: v => `${v > 0 ? "+" : ""}${v} L`          },
         { key: "alimento",     icono: "fi-br-wheat",      fmt: v => `+${v} kg`                            },
         { key: "dinero",       icono: "fi-br-coins",      fmt: v => `+$${v.toLocaleString()}/turno`       },
-        { key: "felicidad",    icono: "fi-br-smile",      fmt: v => `${v > 0 ? "+" : ""}${v}`             },
+        { key: "felicidad",    icono: "fi-br-smile-beam",      fmt: v => `${v > 0 ? "+" : ""}${v}`             },
         { key: "capacidad",    icono: "fi-br-users",      fmt: v => `+${v} hab`                           },
         { key: "empleos",      icono: "fi-br-briefcase",  fmt: v => `+${v} empleos`                       },
     ];
