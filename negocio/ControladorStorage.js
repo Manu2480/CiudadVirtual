@@ -49,6 +49,7 @@ class ControladorStorage{
             historicoRecursos,
             datos.recursosPorCiudadano
         );
+        ciudad.ciudadanosPorTurno = datos.ciudadanosPorTurno;
 
         if (datos.genero) ciudad.genero = datos.genero;
         if (Array.isArray(datos.ciudadanos)) {
@@ -118,6 +119,7 @@ class ControladorStorage{
             catalogoInfo: e.clase.catalogoInfo
         }));
         ciudadCopia.catalogo = catalogoSerializado;
+        ciudadCopia.ciudadanosPorTurno = ciudad.ciudadanosPorTurno;
         console.log("Iniciando el guardado de la copia de la ciudad");
         console.log(ciudadCopia);
         CiudadStorage.guardar(ciudadCopia);
@@ -162,6 +164,7 @@ class ControladorStorage{
             datos.historicoRecursos,
             datos.recursosPorCiudadano
         )
+        ciudad.ciudadanosPorTurno = datos.ciudadanosPorTurno;
         //Se realiza la rehidratación de los ciudadanos
         this.rehidratarCiudadanos(ciudad);
         return ciudad;

@@ -255,12 +255,15 @@ BOTONES (IMÁGENES)
 TOOLTIP (PENSAMIENTO DEL BOTÓN)
 ========================================= */
 
-.boton-wrapper {
+.boton-wrapper.activo {
     position: relative;
     display: inline-flex;
     flex-direction: column;
     align-items: center;
     /* reserva espacio arriba para el tooltip en móvil */
+}
+.boton-wrapper{
+    display: none;
 }
 
 .tooltip {

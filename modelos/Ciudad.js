@@ -4,8 +4,9 @@ class Ciudad {
         dinero: 0,
         electricidad: -1,
         agua: -1,
-        alimento: -5
+        alimento: -1
     }
+    ciudadanosPorTurno = 3;
 
     constructor(nombre, alcalde, latitud, longitud, tiempoTurno, terreno, ciudadanos, estadoRecursos, historicoRecursos, recursosPorCiudadano) {
 
@@ -51,59 +52,107 @@ class Ciudad {
     }
 
     calcularProduccionNeta() {
-    const resultado = {
-        produccion: {},
-        consumo: {},
-        neto: {}
-    };
+        const resultado = {
+            produccion: {
+                total: {},
+                porEdificio: {
+                    comercial: {},
+                    industrial: {},
+                    servicio: {},
+                    residencial: {}
+                }
+            },
+            consumo: {
+                total: {},
+                porEdificio: {
+                    comercial: {},
+                    industrial: {},
+                    servicio: {},
+                    residencial: {}
+                },
+                porCiudadano: {}
+            },
+            neto: {}
+        };
 
-    // Inicializar recursos dinámicamente según estadoRecursos
-    for (const recurso in this.estadoRecursos) {
-        resultado.produccion[recurso] = 0;
-        resultado.consumo[recurso] = 0;
-        resultado.neto[recurso] = 0;
-    }
+        // 1. Inicializar todos los recursos
+        for (const recurso in this.estadoRecursos) {
+            resultado.produccion.total[recurso] = 0;
+            resultado.consumo.total[recurso] = 0;
+            resultado.consumo.porCiudadano[recurso] = 0;
 
-    // 1. PRODUCCIÓN / CONSUMO DE EDIFICIOS
-    this.terreno.edificios.forEach(edificio => {
-        const recursos = edificio.recursosEdificio;
-
-        for (const recurso in recursos) {
-            const valor = recursos[recurso];
-
-            if (valor > 0) {
-                resultado.produccion[recurso] += valor;
-            } else {
-                resultado.consumo[recurso] += valor;
+            for (const tipo in resultado.produccion.porEdificio) {
+                resultado.produccion.porEdificio[tipo][recurso] = 0;
+                resultado.consumo.porEdificio[tipo][recurso] = 0;
             }
+
+            resultado.neto[recurso] = 0;
         }
-    });
 
-    // 2. CONSUMO DE CIUDADANOS
-    this.ciudadanos.forEach(ciudadano => {
-        const consumo = ciudadano.consumoCiudadano;
+        // 2. EDIFICIOS
+        this.terreno.edificios.forEach(edificio => {
+            const recursos = edificio.recursosEdificio || {};
 
-        for (const recurso in consumo) {
-            resultado.consumo[recurso] += consumo[recurso];
+            let tipo = null;
+            if (edificio instanceof EdificioComercial) tipo = "comercial";
+            else if (edificio instanceof EdificioIndustrial) tipo = "industrial";
+            else if (edificio instanceof EdificioServicio) tipo = "servicio";
+            else if (edificio instanceof EdificioResidencial) tipo = "residencial";
+
+            for (const recurso in recursos) {
+                const valor = recursos[recurso] ?? 0;
+
+                if (valor > 0) {
+                    // PRODUCCIÓN
+                    resultado.produccion.total[recurso] += valor;
+
+                    if (tipo) {
+                        resultado.produccion.porEdificio[tipo][recurso] += valor;
+                    }
+
+                } else if (valor < 0) {
+                    // CONSUMO
+                    resultado.consumo.total[recurso] += valor;
+
+                    if (tipo) {
+                        resultado.consumo.porEdificio[tipo][recurso] += valor;
+                    }
+                }
+            }
+        });
+
+        // 3. CIUDADANOS
+        this.ciudadanos.forEach(ciudadano => {
+            const consumo = ciudadano.consumoCiudadano || {};
+
+            for (const recurso in consumo) {
+                const valor = consumo[recurso] ?? 0;
+
+                resultado.consumo.total[recurso] += valor;
+                resultado.consumo.porCiudadano[recurso] += valor;
+            }
+        });
+
+        // 4. COSTO DE MANTENIMIENTO (dinero)
+        const edificios = this.terreno.edificios || [];
+
+        const costoTotal = edificios
+            .filter(e => !String(e.id || "").toLowerCase().startsWith("via"))
+            .reduce((total, e) => total + (e.costo || 0) * 0.01, 0);
+
+        resultado.consumo.total["dinero"] -= costoTotal;
+
+        resultado.consumo.porEdificio.servicio["dinero"] -= costoTotal;
+
+        // 5. NETO
+        for (const recurso in resultado.neto) {
+            resultado.neto[recurso] =
+                resultado.produccion.total[recurso] +
+                resultado.consumo.total[recurso];
         }
-    });
 
-    // 3. COSTO DE MANTENIMIENTO (dinero)
-    const edificios = this.terreno.edificios || [];
-    const costoTotal = edificios
-        .filter(e => !String(e.id || "").toLowerCase().startsWith("via"))
-        .reduce((total, e) => total + (e.costo || 0) * 0.01, 0);
-
-    resultado.consumo["dinero"] -= costoTotal;
-
-    // 4. NETO = producción + consumo (consumo ya es negativo)
-    for (const recurso in resultado.neto) {
-        resultado.neto[recurso] =
-            resultado.produccion[recurso] + resultado.consumo[recurso];
+        return resultado;
     }
-
-    return resultado;
-}
 
     //Modificar tiempo del turno nuevoTiempo debe estar en milisegundos
     modificarTiempoTurno(nuevoTiempo) {
@@ -471,7 +520,7 @@ class Ciudad {
         // 6. Intentar crear nuevos ciudadanos
         console.log("\n--- Intento de creación de ciudadanos ---");
         let contador = 1;
-        while (this.aumentarPoblacion() && contador <= 3) {
+        while (this.aumentarPoblacion() && contador <= this.ciudadanosPorTurno) {
             this.crearCiudadano(-1, -2, -3);
             contador++; 
         }

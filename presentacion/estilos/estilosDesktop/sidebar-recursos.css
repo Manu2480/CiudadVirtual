@@ -74,6 +74,9 @@ Panel de recursos en sidebar izquierdo
     white-space: nowrap;
     z-index: 999;
 }
+.tooltip-sub{
+    color: lightgray;
+}
 
 .hover-activo .tooltip {
     display: block !important;

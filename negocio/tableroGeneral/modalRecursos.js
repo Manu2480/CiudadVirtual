@@ -93,13 +93,20 @@ const ModalRecursos = (() => {
                                     data-clave="${r.clave}"
                                     placeholder="Nuevo consumo">
 
-                                <button class="btn-consumo"
+                                <button class="btn-consumo aceptar"
                                         data-clave="${r.clave}">
                                     Aceptar
                                 </button>
                             </div>
                         `).join("")}
                 </div>
+                <div class="recurso-modal">
+                    <h2>Modificar creacion de ciudadanos por turno<h2>
+                    <p>Si hay empleos y viviendas disponibles, y además la felicidad promedio de la ciudad es mayor a 60%, se crearán ${ciudad.ciudadanosPorTurno} ciudadanos cada turno.
+                    <input type="number" id="ciudadanosPorTurno" placeholder="Nueva cantidad de ciudadanos por turno">
+                    <button id="aceptarCantidadCiudadanos" class="aceptar">Aceptar</button>
+                </div>
+
             </section>
         `;
     }
@@ -201,6 +208,7 @@ const ModalRecursos = (() => {
     function _activarEventos() {
         document.addEventListener("recursosModificados", () =>{
             const seccionRecursosGlobales = document.getElementById("recursosGlobales");
+            const seccionRecursosCiudadano = document.getElementById("consumoCiudadanos");
             const graficasRecursos = document.getElementById("graficas");
             if (seccionRecursosGlobales){
                 seccionRecursosGlobales.innerHTML = _generarModificadoresGlobales();
@@ -208,7 +216,9 @@ const ModalRecursos = (() => {
             if (graficasRecursos){
                 graficasRecursos.innerHTML = _generarGraficas();
                 _renderGraficas();
-
+            }
+            if (seccionRecursosCiudadano){
+                seccionRecursosCiudadano.innerHTML = _generarModificadoresCiudadano();
             }
 
         });
@@ -322,6 +332,22 @@ const ModalRecursos = (() => {
             Tablero.guardarPartida();
             document.dispatchEvent(new CustomEvent("recursosModificados"));
         });
+    });
+    //Modificar creación ciudadanos por turno
+    const inputCantidadCiudadanos = document.getElementById("ciudadanosPorTurno");
+    const aceptarCantidadCiudadanos = document.getElementById("aceptarCantidadCiudadanos");
+    aceptarCantidadCiudadanos.addEventListener("click", ()=>{
+        const nuevaCantidad = parseInt(inputCantidadCiudadanos.value);
+        const ciudad = _ciudad();
+        if (nuevaCantidad){
+            if (nuevaCantidad >= 0){
+                console.log(`aceptada nueva cantidad ${nuevaCantidad}`)
+                ciudad.ciudadanosPorTurno = nuevaCantidad;
+            }
+        }
+        document.dispatchEvent(new CustomEvent("recursosModificados"));
+        Tablero.guardarPartida();
+        
     });
     }
 
