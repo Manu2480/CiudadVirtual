@@ -578,7 +578,7 @@ function _cargarModuloNoticias() {
 
 function _cargarModuloMenuConstruccion() {
     const script = document.createElement("script");
-    script.src = "../../negocio/tableroDesktop/menuConstruccion.js";
+    script.src = "../../negocio/tableroGeneral/menuConstruccion.js"; /* usamos el archivo unificado */
     script.onload = () => {
         if (window.MenuConstruccionDesktop) {
             window.MenuConstruccionDesktop.inicializar();

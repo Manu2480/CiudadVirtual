@@ -23,7 +23,6 @@ const _MODULOS = [
     "stats.js",
     "zoom.js",        
     "joystick.js",
-    "menuConstruccion.js",
     "turnos.js",
     "clima.js",
     "noticias.js",
@@ -32,6 +31,7 @@ const _MODULOS = [
 /* Módulos de tableroGeneral también usados en móviL*/
 const _MODULOS_GENERAL = [
     "../../negocio/tableroGeneral/ruta.js",
+    "../../negocio/tableroGeneral/menuConstruccion.js",
 ];
 
 /* Carga los scripts en orden y llama al callback cuando el último termina */

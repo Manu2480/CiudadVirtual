@@ -8,7 +8,6 @@
 /* Paneles y Contenedores */
 @import url('estilosDesktop/paneles.css');
 @import url('estilosDesktop/sidebar-recursos.css');
-@import url('estilosDesktop/menu-construccion.css');
 
 /* Área Central del Mapa */
 @import url('estilosDesktop/mapa.css');

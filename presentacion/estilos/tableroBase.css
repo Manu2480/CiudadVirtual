@@ -21,3 +21,6 @@ Cada parcial tiene una única responsabilidad.
 @import "estilosBase/modalRecursos.css";
 /*estilos del modal de Game Over*/
 @import "estilosBase/modalGameOver.css";
+
+/* unificamos los archivos css del catalogo de contrucción*/
+@import "estilosBase/menuConstruccion.css";
