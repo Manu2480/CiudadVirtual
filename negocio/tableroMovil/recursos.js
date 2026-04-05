@@ -118,10 +118,7 @@ function _renderizarRecursos() {
     };
 
     panel.innerHTML = `
-        <h2 style="font-size: var(--fuente-tam-l); font-weight: 700;
-                color: var(--color-texto); margin-bottom: var(--espacio-s);
-                padding-bottom: var(--espacio-s);
-                border-bottom: 1px solid var(--color-borde);">
+        <h2 class="recurso-movil__titulo">
             Recursos
         </h2>
 
@@ -134,12 +131,12 @@ function _renderizarRecursos() {
                 ? `$${Math.round(valor).toLocaleString()}`
                 : `${Math.round(valor)}${unidad}`;
 
-            let color = "var(--color-texto)";
+            let claseColor = "recurso-movil__valor--neutro";
 
             if (key === "dinero") {
-                if (valor > 10000) color = "green";
-                else if (valor < 1000) color = "red";
-                else if (valor < 5000) color = "orange";
+                if (valor > 10000) claseColor = "recurso-movil__valor--positivo";
+                else if (valor < 1000) claseColor = "recurso-movil__valor--negativo";
+                else if (valor < 5000) claseColor = "recurso-movil__valor--advertencia";
             }
 
             const prod = prodData.produccion?.[key] ?? 0;
@@ -149,21 +146,15 @@ function _renderizarRecursos() {
             const esFelicidad = key === "felicidad";
 
             return `
-                <div class="recurso-movil ${!esFelicidad ? "hover" : ""}"
-                    style="display:flex; align-items:center; gap: var(--espacio-m);
-                            padding: var(--espacio-s) var(--espacio-m);
-                            background: var(--color-fondo);
-                            border-radius: var(--radio-s);
-                            position: relative;">
+                <div class="recurso-movil ${!esFelicidad ? "hover" : ""}">
 
-                    <i class="fi ${icono}" 
-                    style="font-size:20px; color: var(--color-primario); flex-shrink:0;"></i>
+                    <i class="fi ${icono} recurso-movil__icono"></i>
 
-                    <span style="flex:1; font-weight:600; color: var(--color-texto);">
+                    <span class="recurso-movil__nombre">
                         ${_nombres[key]}
                     </span>
 
-                    <span style="font-weight:700; font-size: var(--fuente-tam-l); color:${color};">
+                    <span class="recurso-movil__valor ${claseColor}">
                         ${formatted}
                     </span>
 

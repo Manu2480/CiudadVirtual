@@ -54,7 +54,7 @@ function inicializar() {
                     ${fila("fi-br-coins",     `Dinero ($${m.dinero.toLocaleString()} ÷ 100)`, d.ptsDinero)}
                     <div class="stats-item modal-stats__fila-clicable" id="btn-detalle-edificios">
                         <i class="fi fi-br-home"></i>
-                        <span class="stats-item__label">Edificios (${m.numEdificios} × 50) <small style="color:var(--color-texto-s)">— ver detalle</small></span>
+                        <span class="stats-item__label">Edificios (${m.numEdificios} × 50) <small class="stats-item__detalle">— ver detalle</small></span>
                         <span class="stats-item__valor stats-item__valor--positivo">+${d.ptsEdificios.toLocaleString()}</span>
                     </div>
                     ${fila("fi-br-bolt",      `Electricidad (${m.electricidad} kW × 2)`,      d.ptsElectricidad)}

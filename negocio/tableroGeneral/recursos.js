@@ -56,12 +56,12 @@ function _renderizarIndicadores() {
 
     panel.innerHTML = indicadores.map(({ clave, icono, label, fmt }) => {
         const valor = r[clave] ?? 0;
-        const colorVal = valor < 0 ? "var(--color-energia)" : "inherit";
+        const claseColor = valor < 0 ? "recurso__valor--negativo" : "";
         return `
             <div class="recurso recurso--${clave}">
                 <i class="fi ${icono} recurso__icono"></i>
                 <span class="recurso__label">${label}:</span>
-                <span class="recurso__valor" style="color:${colorVal}">
+                <span class="recurso__valor ${claseColor}">
                     ${fmt(valor)}
                 </span>
             </div>

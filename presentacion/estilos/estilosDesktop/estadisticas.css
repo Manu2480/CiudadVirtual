@@ -56,6 +56,10 @@ Panel de estadísticas y puntuación
     font-weight: 500;
 }
 
+.stats-item__detalle {
+    color: var(--color-texto-s);
+}
+
 .stats-item__valor {
     font-size: 14px;
     font-weight: 700;

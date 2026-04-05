@@ -334,6 +334,10 @@ Fuentes requeridas en el <head> del HTML:
     font-weight: 700;
 }
 
+.go-ranking-table th.go-th-pos {
+    width: 36px;
+}
+
 .go-ranking-table td {
     padding: 3px 5px;
     border-bottom: 0.5px solid rgba(26, 18, 9, 0.2);

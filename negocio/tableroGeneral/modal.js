@@ -59,17 +59,17 @@ function mostrarEdificio(edificio, fila, col) {
     if (esResidencial && ocupados > 0) {
         const totalFelicidad = instancia.ciudadanos.reduce((sum, c) => sum + (c.felicidad ?? 0), 0);
         const promedio = Math.round(totalFelicidad / ocupados);
-        const color = promedio >= 70 ? "var(--color-dinero)"
-                    : promedio >= 40 ? "var(--color-aviso, orange)"
-                    : "var(--color-energia)";
+        const claseColor = promedio >= 70 ? "modal-edificio__felicidad--alta"
+                         : promedio >= 40 ? "modal-edificio__felicidad--media"
+                         : "modal-edificio__felicidad--baja";
         const icono = promedio >= 70 ? "fi-br-smile-beam" 
                     : promedio >= 40 ? "fi-br-meh-rolling-eyes" 
                     : "fi-br-sad-tear";
         felicidadPromedioHtml = `
             <li>
-                <i class="fi ${icono}" style="color:${color}"></i>
+                <i class="fi ${icono} modal-edificio__felicidad-icono ${claseColor}"></i>
                 Felicidad promedio residentes: 
-                <strong style="color:${color}">${promedio}/100</strong>
+                <strong class="modal-edificio__felicidad-valor ${claseColor}">${promedio}/100</strong>
             </li>`;
     }
 
@@ -131,11 +131,11 @@ function mostrarEstadisticas() {
     const m = resultado.meta;
 
     const fila = (icono, label, valor, color) => {
-        const c = color || (valor >= 0 ? "var(--color-dinero)" : "var(--color-energia)");
+        const claseColor = valor >= 0 ? "modal-stats__valor--positivo" : "modal-stats__valor--negativo";
         return `<li>
             <i class="fi ${icono}"></i>
             <span>${label}</span>
-            <strong style="color:${c}">${valor > 0 ? "+" : ""}${valor.toLocaleString()}</strong>
+            <strong class="${claseColor}">${valor > 0 ? "+" : ""}${valor.toLocaleString()}</strong>
         </li>`;
     };
 
@@ -161,8 +161,8 @@ function mostrarEstadisticas() {
                 ${fila("fi-br-coins",     `Dinero ($${m.dinero.toLocaleString()} ÷ 100)`, d.ptsDinero,       "var(--color-primario)")}
                 <li class="modal-stats__fila-clicable" id="btn-detalle-edificios">
                     <i class="fi fi-br-home"></i>
-                    <span>Edificios (${m.numEdificios} × 50) <small style="color:var(--color-texto-s)">— ver detalle</small></span>
-                    <strong style="color:var(--color-primario)">+${d.ptsEdificios.toLocaleString()}</strong>
+                    <span>Edificios (${m.numEdificios} × 50) <small class="modal-stats__detalle">— ver detalle</small></span>
+                    <strong class="modal-stats__valor--neutro">+${d.ptsEdificios.toLocaleString()}</strong>
                 </li>
                 ${fila("fi-br-bolt",      `Electricidad (${m.electricidad} kW × 2)`,      d.ptsElectricidad, "var(--color-primario)")}
                 ${fila("fi-br-raindrops", `Agua (${m.agua} L × 2)`,                       d.ptsAgua,         "var(--color-primario)")}
@@ -185,7 +185,7 @@ function mostrarEstadisticas() {
                 ${b.felicidadAlta     ? fila("fi-br-smile-beam",     "Felicidad > 80",         b.felicidadAlta)     : ""}
                 ${b.recursosPositivos ? fila("fi-br-leaf",      "Recursos positivos",     b.recursosPositivos) : ""}
                 ${b.granCiudad        ? fila("fi-br-home",      "Ciudad > 1000 hab",      b.granCiudad)        : ""}
-                ${b.total === 0 ? `<li style="color:var(--color-texto-s)"><i class="fi fi-br-info"></i> <span>Sin bonificaciones aún</span></li>` : ""}
+                ${b.total === 0 ? `<li class="modal-stats__sin-items"><i class="fi fi-br-info"></i> <span>Sin bonificaciones aún</span></li>` : ""}
             </ul>
 
             <p class="modal-stats__seccion modal-stats__seccion--pena">Penalizaciones</p>
@@ -195,7 +195,7 @@ function mostrarEstadisticas() {
                 ${p.aguaNeg         ? fila("fi-br-raindrops",  "Agua negativa",         p.aguaNeg)         : ""}
                 ${p.felicidadBaja   ? fila("fi-br-sad-tear",        "Felicidad < 40",        p.felicidadBaja)   : ""}
                 ${p.desempleados    ? fila("fi-br-user-slash", `${m.desempleados} desempleados × -10`, p.desempleados) : ""}
-                ${p.total === 0 ? `<li style="color:var(--color-texto-s)"><i class="fi fi-br-check"></i> <span>Sin penalizaciones</span></li>` : ""}
+                ${p.total === 0 ? `<li class="modal-stats__sin-items"><i class="fi fi-br-check"></i> <span>Sin penalizaciones</span></li>` : ""}
             </ul>
         </div>
     `;
@@ -355,10 +355,10 @@ function mostrarDetalleEdificios() {
             .join("");
 
         seccionesHtml += `
-            <div class="modal-edificios__categoria">
+            <div class="modal-edificios__categoria modal-edificios__categoria--${cat}">
                 <div class="modal-edificios__cat-header">
-                    <i class="fi ${icono}" style="color:${color}"></i>
-                    <span class="modal-edificios__cat-nombre" style="color:${color}">${cat.charAt(0).toUpperCase() + cat.slice(1)}</span>
+                    <i class="fi ${icono} modal-edificios__cat-icono"></i>
+                    <span class="modal-edificios__cat-nombre">${cat.charAt(0).toUpperCase() + cat.slice(1)}</span>
                     <strong class="modal-edificios__cat-total">${subtotal}</strong>
                 </div>
                 <ul class="modal-edificios__lista-tipos">${filasHtml}</ul>

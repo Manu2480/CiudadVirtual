@@ -1,0 +1,57 @@
+/* ================================================
+RECURSOS MÓVIL
+Panel de recursos en vista móvil
+================================================ */
+
+.recurso-movil {
+    display: flex;
+    align-items: center;
+    gap: var(--espacio-m);
+    padding: var(--espacio-s) var(--espacio-m);
+    background: var(--color-fondo);
+    border-radius: var(--radio-s);
+    position: relative;
+}
+
+.recurso-movil__titulo {
+    font-size: var(--fuente-tam-l);
+    font-weight: 700;
+    color: var(--color-texto);
+    margin-bottom: var(--espacio-s);
+    padding-bottom: var(--espacio-s);
+    border-bottom: 1px solid var(--color-borde);
+}
+
+.recurso-movil__icono {
+    font-size: 20px;
+    color: var(--color-primario);
+    flex-shrink: 0;
+}
+
+.recurso-movil__nombre {
+    flex: 1;
+    font-weight: 600;
+    color: var(--color-texto);
+}
+
+.recurso-movil__valor {
+    font-weight: 700;
+    font-size: var(--fuente-tam-l);
+}
+
+/* Colores dinámicos para valores */
+.recurso-movil__valor--positivo {
+    color: green;
+}
+
+.recurso-movil__valor--neutro {
+    color: var(--color-texto);
+}
+
+.recurso-movil__valor--advertencia {
+    color: orange;
+}
+
+.recurso-movil__valor--negativo {
+    color: red;
+}

@@ -86,6 +86,10 @@ PANEL FIJO DE ESTADO DE RUTA
     flex-shrink: 0;
 }
 
+.ruta-paso__img--oculto {
+    display: none;
+}
+
 .ruta-paso__info {
     display: flex;
     flex-direction: column;

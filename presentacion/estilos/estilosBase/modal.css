@@ -198,6 +198,60 @@ MODAL ESTADÍSTICAS
     border-radius: var(--radio-s);
 }
 
+.modal-stats__lista li i {
+    color: var(--color-primario);
+    flex-shrink: 0;
+}
+
+.modal-stats__lista li strong {
+    font-weight: 700;
+}
+
+/* Colores dinámicos para valores */
+.modal-stats__valor--positivo {
+    color: var(--color-dinero);
+}
+
+.modal-stats__valor--negativo {
+    color: var(--color-energia);
+}
+
+.modal-stats__valor--neutro {
+    color: var(--color-primario);
+}
+
+/* Felicidad promedio en modal edificio */
+.modal-edificio__felicidad-icono {
+    flex-shrink: 0;
+}
+
+.modal-edificio__felicidad-valor {
+    font-weight: 700;
+}
+
+/* Colores para felicidad */
+.modal-edificio__felicidad--alta {
+    color: var(--color-dinero);
+}
+
+.modal-edificio__felicidad--media {
+    color: var(--color-aviso, orange);
+}
+
+.modal-edificio__felicidad--baja {
+    color: var(--color-energia);
+}
+
+/* Texto detalle en estadísticas */
+.modal-stats__detalle {
+    color: var(--color-texto-s);
+}
+
+/* Elementos sin items (bonificaciones/penalizaciones) */
+.modal-stats__sin-items {
+    color: var(--color-texto-s);
+}
+
 .modal-stats__lista li span {
     flex: 1;
     color: var(--color-texto);
@@ -381,6 +435,41 @@ MODAL ESTADÍSTICAS
     background: var(--color-fondo);
     font-weight: 600;
     font-size: 13px;
+}
+
+.modal-edificios__cat-icono {
+    flex-shrink: 0;
+}
+
+/* Colores por categoría de edificio */
+.modal-edificios__categoria--residencial .modal-edificios__cat-icono,
+.modal-edificios__categoria--residencial .modal-edificios__cat-nombre {
+    color: #1565c0;
+}
+
+.modal-edificios__categoria--comercial .modal-edificios__cat-icono,
+.modal-edificios__categoria--comercial .modal-edificios__cat-nombre {
+    color: #f57f17;
+}
+
+.modal-edificios__categoria--industrial .modal-edificios__cat-icono,
+.modal-edificios__categoria--industrial .modal-edificios__cat-nombre {
+    color: #880e4f;
+}
+
+.modal-edificios__categoria--servicios .modal-edificios__cat-icono,
+.modal-edificios__categoria--servicios .modal-edificios__cat-nombre {
+    color: #2e7d32;
+}
+
+.modal-edificios__categoria--infraestructura .modal-edificios__cat-icono,
+.modal-edificios__categoria--infraestructura .modal-edificios__cat-nombre {
+    color: #6a1b9a;
+}
+
+.modal-edificios__categoria--pavimentaria .modal-edificios__cat-icono,
+.modal-edificios__categoria--pavimentaria .modal-edificios__cat-nombre {
+    color: #37474f;
 }
 .modal-edificios__cat-nombre {
     flex: 1;

@@ -335,7 +335,7 @@ const ModalGameOver = (() => {
                 <table class="go-ranking-table">
                     <thead>
                         <tr>
-                            <th style="width:36px;">Pos.</th>
+                            <th class="go-th-pos">Pos.</th>
                             <th>Ciudad</th>
                             <th>Alcalde</th>
                             <th class="go-td-right">Puntaje</th>
