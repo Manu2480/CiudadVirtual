@@ -30,6 +30,7 @@ Responsabilidad:
 #menu-construccion .construccion-lista {
     height: 100%;
     overflow-x: auto;
+    overflow-y: hidden;
     -webkit-overflow-scrolling: touch;
     touch-action: pan-x;
     padding: var(--espacio-s) var(--espacio-m);
@@ -37,15 +38,20 @@ Responsabilidad:
 
 .construccion-lista {
     display: flex;
+    flex-wrap: nowrap;
     gap: var(--espacio-m);
     padding: var(--espacio-s) 0;
+    justify-content: flex-start;
+    align-items: stretch;
+    height: 100%;
 }
 
 /* Tarjeta de edificio */
 .construccion-item {
     width: 140px;
-    flex: 0 0 140px;   /* ancho fijo, nunca crece ni encoge */
+    flex: 0 0 140px;
     min-height: var(--btn-tap-min);
+    height: auto;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -55,6 +61,7 @@ Responsabilidad:
     border-radius: var(--radio-s);
     padding: var(--espacio-s);
     cursor: pointer;
+    overflow-y: auto;
 }
 
 .construccion-item:active {
@@ -79,16 +86,17 @@ Responsabilidad:
     color: var(--color-texto-s);
 }
 
+.construccion-item__mantenimiento {
+    font-size: var(--fuente-tam-s);
+    color: var(--color-energia);
+}
+
 .construccion-item__desc {
     font-size: var(--fuente-tam-s);
     color: var(--color-texto-s);
     text-align: center;
-    white-space: normal;      /* permite saltos de línea */
-    word-break: break-word;   /* parte palabras largas si es necesario */
-    overflow: hidden;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;    /* máximo 2 renglones */
-    -webkit-box-orient: vertical;
+    white-space: normal;
+    word-break: break-word;
 }
 
 .construccion-item__detalles {
@@ -108,4 +116,5 @@ Responsabilidad:
     gap: 4px;
     white-space: normal;
     word-break: break-word;
+    width: 100%;
 }
