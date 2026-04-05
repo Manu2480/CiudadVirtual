@@ -47,13 +47,23 @@ function llamarRecursos() {
     contenido.innerHTML = Object.entries(_iconos).map(([key, icono]) => {
         const valor = ciudad.getRecurso(key);
         const unidad = _unidades[key];
+        //producción data
+        const prodData = ciudad.calcularProduccionNeta?.() ?? {};
+        const prod = prodData.produccion?.total?.[key] ?? 0;
+        const cons = prodData.consumo?.total?.[key] ?? 0;
+        const neto = prodData?.neto?.[key] ?? 0;
 
-        const formatted = key === "dinero"
-            ? `${unidad}${Math.round(valor).toLocaleString()}`
-            : key === "felicidad"
-            ? `${Math.round(valor)}${unidad}%`
-            : `${Math.round(valor)}${unidad}`;
+        let formatted;
 
+        if (key === "agua" || key === "electricidad") {
+            formatted = `${Math.round(prod)} / ${Math.round(cons)}`;
+        } else if (key === "dinero") {
+            formatted = `${unidad}${Math.round(valor).toLocaleString()}`;
+        } else if (key === "felicidad") {
+            formatted = `${Math.round(valor)}${unidad}%`;
+        } else {
+            formatted = `${Math.round(valor)}${unidad}`;
+        }
         // Determinar clase CSS según estado del recurso
         let claseColor = "";
         if (key === "dinero") {
@@ -64,11 +74,6 @@ function llamarRecursos() {
             claseColor = "recurso-item__valor--negativo";
         }
 
-        //producción data
-        const prodData = ciudad.calcularProduccionNeta?.() ?? {};
-        const prod = prodData.produccion?.[key] ?? 0;
-        const cons = prodData.consumo?.[key] ?? 0;
-        const neto = prodData.neto?.[key] ?? 0;
 
         const esFelicidad = key === "felicidad";
 
@@ -82,9 +87,48 @@ function llamarRecursos() {
 
                 ${!esFelicidad ? `
                 <div class="tooltip">
-                    <div class="tooltip-prod">Producción: +${Math.round(prod)}</div>
-                    <div class="tooltip-cons">Consumo: ${Math.round(cons)}</div>
-                    <div class="tooltip-neto">Neto: ${Math.round(neto)}</div>
+
+                    <div class="tooltip-prod">
+                        Producción: +${Math.round(prod)}
+                    </div>
+
+                    <div class="tooltip-sub">
+                        Industrial: +${Math.round(prodData.produccion?.porEdificio?.industrial?.[key] ?? 0)}
+                    </div>
+                    <div class="tooltip-sub">
+                        Comercial: +${Math.round(prodData.produccion?.porEdificio?.comercial?.[key] ?? 0)}
+                    </div>
+                    <div class="tooltip-sub">
+                        Servicio: +${Math.round(prodData.produccion?.porEdificio?.servicio?.[key] ?? 0)}
+                    </div>
+                    <div class="tooltip-sub">
+                        Residencial: +${Math.round(prodData.produccion?.porEdificio?.residencial?.[key] ?? 0)}
+                    </div>
+
+                    <div class="tooltip-cons">
+                        Consumo: ${Math.round(cons)}
+                    </div>
+
+                    <div class="tooltip-sub">
+                        Industrial: ${Math.round(prodData.consumo?.porEdificio?.industrial?.[key] ?? 0)}
+                    </div>
+                    <div class="tooltip-sub">
+                        Comercial: ${Math.round(prodData.consumo?.porEdificio?.comercial?.[key] ?? 0)}
+                    </div>
+                    <div class="tooltip-sub">
+                        Servicio: ${Math.round(prodData.consumo?.porEdificio?.servicio?.[key] ?? 0)}
+                    </div>
+                    <div class="tooltip-sub">
+                        Residencial: ${Math.round(prodData.consumo?.porEdificio?.residencial?.[key] ?? 0)}
+                    </div>
+                    <div class="tooltip-sub">
+                        Ciudadanos: ${Math.round(prodData.consumo?.porCiudadano?.[key] ?? 0)}
+                    </div>
+
+                    <div class="tooltip-neto">
+                        Neto: ${Math.round(neto)}
+                    </div>
+
                 </div>
                 ` : ""}
             </div>

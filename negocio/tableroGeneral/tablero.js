@@ -141,6 +141,15 @@ function exportarJSON() {
     const datosCompletos = JSON.parse(JSON.stringify(Estado.ciudad));
     datosCompletos.turno = Estado.turno;
     datosCompletos.fecha = fecha;
+    let recursosEdificio = Edificios.todos();
+
+    //Serializamos tambien el catalogo para los constructores
+    const catalogoSerializado = recursosEdificio.map(e => ({
+        id: e.id,
+        catalogoInfo: e.clase.catalogoInfo
+    }));
+    datosCompletos.catalogo = catalogoSerializado;
+    datosCompletos.ciudadanosPorTurno = Estado.ciudad.ciudadanosPorTurno;
     const blob   = new Blob([JSON.stringify(datosCompletos, null, 2)], { type: "application/json" });
     const url    = URL.createObjectURL(blob);
     const a      = document.createElement("a");

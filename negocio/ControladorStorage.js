@@ -61,6 +61,8 @@ class ControladorStorage{
         ciudad.fecha = (typeof datos.fecha === "string" && datos.fecha.trim())
             ? datos.fecha
             : new Date().toISOString().split("T")[0];
+        
+        ciudad.ciudadanosPorTurno = datos.ciudadanosPorTurno;
 
         const catalogo = Array.isArray(datos.catalogo) ? datos.catalogo : [];
         catalogo.forEach((edificio) => {
@@ -109,15 +111,17 @@ class ControladorStorage{
                 edificio: JSON.parse(JSON.stringify(obj))
             };
         });
-        let recursosEdificio = Edificios.todos();
         // Asignamos la lista serializada a los edificios de la copia de ciudad
         ciudadCopia.terreno.edificios = edificios;
+        let recursosEdificio = Edificios.todos();
+
         //Serializamos tambien el catalogo para los constructores
         const catalogoSerializado = recursosEdificio.map(e => ({
             id: e.id,
             catalogoInfo: e.clase.catalogoInfo
         }));
         ciudadCopia.catalogo = catalogoSerializado;
+        ciudadCopia.ciudadanosPorTurno = ciudad.ciudadanosPorTurno;
         console.log("Iniciando el guardado de la copia de la ciudad");
         console.log(ciudadCopia);
         CiudadStorage.guardar(ciudadCopia);
@@ -162,6 +166,7 @@ class ControladorStorage{
             datos.historicoRecursos,
             datos.recursosPorCiudadano
         )
+        ciudad.ciudadanosPorTurno = datos.ciudadanosPorTurno;
         //Se realiza la rehidratación de los ciudadanos
         this.rehidratarCiudadanos(ciudad);
         return ciudad;

@@ -64,7 +64,7 @@ function _crearPanelSiNoExiste() {
         width: 90vw;
         max-height: 70vh;
         background: rgba(255,255,255,0.98);
-        overflow-y: auto;
+        overflow-y: display;
         z-index: 1300;
         padding: var(--espacio-m);
         border-radius: var(--radio-m, 12px);
@@ -126,11 +126,19 @@ function _renderizarRecursos() {
 
             const valor = recursos[key] ?? 0;
             const unidad = _unidades[key];
+            const prod = prodData.produccion?.total?.[key] ?? 0;
+            const cons = prodData.consumo?.total?.[key] ?? 0;
+            const neto = prodData.neto?.[key] ?? 0;
 
-            const formatted = key === "dinero"
-                ? `$${Math.round(valor).toLocaleString()}`
-                : `${Math.round(valor)}${unidad}`;
-
+            let formatted
+            //Formatos específicos para electricidad, agua y dinero
+            if (key === "electricidad" || key === "agua") {
+                formatted = `${Math.round(prod)} / ${Math.round(cons)}`;
+            } else {
+                formatted = key === "dinero"
+                    ? `$${Math.round(valor).toLocaleString()}`
+                    : `${Math.round(valor)}${unidad}`;
+            }
             let claseColor = "recurso-movil__valor--neutro";
 
             if (key === "dinero") {
@@ -138,10 +146,6 @@ function _renderizarRecursos() {
                 else if (valor < 1000) claseColor = "recurso-movil__valor--negativo";
                 else if (valor < 5000) claseColor = "recurso-movil__valor--advertencia";
             }
-
-            const prod = prodData.produccion?.[key] ?? 0;
-            const cons = prodData.consumo?.[key] ?? 0;
-            const neto = prodData.neto?.[key] ?? 0;
 
             const esFelicidad = key === "felicidad";
 
@@ -160,9 +164,48 @@ function _renderizarRecursos() {
 
                     ${!esFelicidad ? `
                     <div class="tooltip">
-                        <div class="tooltip-prod">Producción: +${Math.round(prod)}</div>
-                        <div class="tooltip-cons">Consumo: ${Math.round(cons)}</div>
-                        <div class="tooltip-neto">Neto: ${Math.round(neto)}</div>
+
+                        <div class="tooltip-prod">
+                            Producción: +${Math.round(prod)}
+                        </div>
+
+                        <div class="tooltip-sub">
+                            Industrial: +${Math.round(prodData.produccion?.porEdificio?.industrial?.[key] ?? 0)}
+                        </div>
+                        <div class="tooltip-sub">
+                            Comercial: +${Math.round(prodData.produccion?.porEdificio?.comercial?.[key] ?? 0)}
+                        </div>
+                        <div class="tooltip-sub">
+                            Servicio: +${Math.round(prodData.produccion?.porEdificio?.servicio?.[key] ?? 0)}
+                        </div>
+                        <div class="tooltip-sub">
+                            Residencial: +${Math.round(prodData.produccion?.porEdificio?.residencial?.[key] ?? 0)}
+                        </div>
+
+                        <div class="tooltip-cons">
+                            Consumo total: ${Math.round(cons)}
+                        </div>
+
+                        <div class="tooltip-sub">
+                            Industrial: ${Math.round(prodData.consumo?.porEdificio?.industrial?.[key] ?? 0)}
+                        </div>
+                        <div class="tooltip-sub">
+                            Comercial: ${Math.round(prodData.consumo?.porEdificio?.comercial?.[key] ?? 0)}
+                        </div>
+                        <div class="tooltip-sub">
+                            Servicio: ${Math.round(prodData.consumo?.porEdificio?.servicio?.[key] ?? 0)}
+                        </div>
+                        <div class="tooltip-sub">
+                            Residencial: ${Math.round(prodData.consumo?.porEdificio?.residencial?.[key] ?? 0)}
+                        </div>
+                        <div class="tooltip-sub">
+                            Ciudadanos: ${Math.round(prodData.consumo?.porCiudadano?.[key] ?? 0)}
+                        </div>
+
+                        <div class="tooltip-neto">
+                            Neto: ${Math.round(neto)}
+                        </div>
+
                     </div>
                     ` : ""}
                 </div>

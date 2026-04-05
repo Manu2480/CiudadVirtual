@@ -13,7 +13,7 @@ function llamarRecursos() {
 
     // producción / consumo / neto
     const ciudad = window.Tablero?.Estado?.ciudad;
-    const produccionData = ciudad?.calcularProduccionNeta?.() ?? {
+    const prodData = ciudad?.calcularProduccionNeta?.() ?? {
         produccion: {},
         consumo: {},
         neto: {}
@@ -22,8 +22,8 @@ function llamarRecursos() {
     const panelTabletVertical = document.getElementById("panel-recursos-tablet-vertical");
     const panelTabletHorizontal = document.getElementById("panel-recursos-tablet-horizontal");
 
-    renderizarRecursos(recursos, panelTabletVertical, produccionData);
-    renderizarRecursos(recursos, panelTabletHorizontal, produccionData);
+    renderizarRecursos(recursos, panelTabletVertical, prodData);
+    renderizarRecursos(recursos, panelTabletHorizontal, prodData);
 
     //activar hover táctil
     activarHoverTouch(panelTabletVertical);
@@ -35,7 +35,7 @@ function llamarRecursos() {
     });
 }
 
-function renderizarRecursos(recursos, panel, produccionData){
+function renderizarRecursos(recursos, panel, prodData){
 
     if (!panel || !recursos){
         console.log("No se encontró el panel de recursos");
@@ -55,9 +55,9 @@ function renderizarRecursos(recursos, panel, produccionData){
     panel.innerHTML += indicadores.map(({ clave, icono, label, fmt }) => {
 
         const valor = recursos[clave] ?? 0;
-        const prod = produccionData?.produccion?.[clave] ?? 0;
-        const cons = produccionData?.consumo?.[clave] ?? 0;
-        const neto = produccionData?.neto?.[clave] ?? 0;
+        const prod = prodData.produccion?.total?.[clave] ?? 0;
+        const cons = prodData.consumo?.total?.[clave] ?? 0;
+        const neto = prodData?.neto?.[clave] ?? 0;
         const esFelicidad = clave === "felicidad"; 
 
         // Color condicional solo para dinero
@@ -73,14 +73,57 @@ function renderizarRecursos(recursos, panel, produccionData){
                 <i class="fi ${icono} recurso__icono"></i>
                 <span class="recurso__label">${label}:</span>
                 <span class="recurso__valor ${valorClass}">
-                    ${fmt(valor)}
+                    ${
+                        (clave === "agua" || clave === "electricidad")
+                            ? `${Math.round(prod)} / ${Math.round(cons)}`
+                            : fmt(valor)
+                    }
                 </span>
 
                 ${!esFelicidad ? `
                 <div class="tooltip">
-                    <div class="tooltip-prod">Producción: +${Math.round(prod)}</div>
-                    <div class="tooltip-cons">Consumo: -${Math.round(cons)}</div>
-                    <div class="tooltip-neto">Neto: ${Math.round(neto)}</div>
+
+                    <div class="tooltip-prod">
+                        Producción: +${Math.round(prod)}
+                    </div>
+
+                    <div class="tooltip-sub">
+                        Industrial: +${Math.round(prodData.produccion?.porEdificio?.industrial?.[clave] ?? 0)}
+                    </div>
+                    <div class="tooltip-sub">
+                        Comercial: +${Math.round(prodData.produccion?.porEdificio?.comercial?.[clave] ?? 0)}
+                    </div>
+                    <div class="tooltip-sub">
+                        Servicio: +${Math.round(prodData.produccion?.porEdificio?.servicio?.[clave] ?? 0)}
+                    </div>
+                    <div class="tooltip-sub">
+                        Residencial: +${Math.round(prodData.produccion?.porEdificio?.residencial?.[clave] ?? 0)}
+                    </div>
+
+                    <div class="tooltip-cons">
+                        Consumo: ${Math.round(cons)}
+                    </div>
+
+                    <div class="tooltip-sub">
+                        Industrial: ${Math.round(prodData.consumo?.porEdificio?.industrial?.[clave] ?? 0)}
+                    </div>
+                    <div class="tooltip-sub">
+                        Comercial: ${Math.round(prodData.consumo?.porEdificio?.comercial?.[clave] ?? 0)}
+                    </div>
+                    <div class="tooltip-sub">
+                        Servicio: ${Math.round(prodData.consumo?.porEdificio?.servicio?.[clave] ?? 0)}
+                    </div>
+                    <div class="tooltip-sub">
+                        Residencial: ${Math.round(prodData.consumo?.porEdificio?.residencial?.[clave] ?? 0)}
+                    </div>
+                    <div class="tooltip-sub">
+                        Ciudadanos: ${Math.round(prodData.consumo?.porCiudadano?.[clave] ?? 0)}
+                    </div>
+
+                    <div class="tooltip-neto">
+                        Neto: ${Math.round(neto)}
+                    </div>
+
                 </div>
                 ` : ""}
             </div>

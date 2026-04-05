@@ -187,6 +187,8 @@ function validarYNormalizarCiudad(data){
         },
         ciudadanos: Array.isArray(data.ciudadanos) ? data.ciudadanos : [],
         estadoRecursos,
+        catalogo: Array.isArray(data.catalogo) ? data.catalogo : [],
+        ciudadanosPorTurno: data.ciudadanosPorTurno || {}
     };
 }
 
