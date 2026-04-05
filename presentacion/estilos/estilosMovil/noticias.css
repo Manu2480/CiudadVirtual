@@ -176,3 +176,9 @@ NOTICIAS — Modal carrusel
     background: var(--color-primario);
     transform: scale(1.3);
 }
+
+.noticias-modal__fecha {
+    font-size: 11px;
+    color: var(--color-texto-s);
+    margin: 2px 0 6px 0;
+}

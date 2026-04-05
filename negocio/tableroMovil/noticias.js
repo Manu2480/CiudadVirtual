@@ -109,12 +109,14 @@ function _renderizarNoticia() {
                 src="${art.urlToImage}" alt="${art.title}">` : ""}
         <div class="noticias-modal__contenido">
             <p class="noticias-modal__fuente">${art.source?.name || ""}</p>
+            ${art.publishedAt ? `
+                <p class="noticias-modal__fecha">${new Date(art.publishedAt).toLocaleDateString("es-ES", { day: "numeric", month: "long", year: "numeric" })}</p>` : ""}
             <h4 class="noticias-modal__noticia-titulo">${art.title}</h4>
             ${art.description ? `
                 <p class="noticias-modal__descripcion">${art.description}</p>` : ""}
             ${art.url ? `
                 <a class="noticias-modal__leer-mas"
-                   href="${art.url}" target="_blank" rel="noopener">
+                href="${art.url}" target="_blank" rel="noopener">
                     Leer artículo completo
                 </a>` : ""}
         </div>
