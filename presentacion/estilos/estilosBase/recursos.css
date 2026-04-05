@@ -2,10 +2,11 @@
 PANEL DE RECURSOS
 Barra de indicadores de dinero, población, etc.
 ================================================ */
-.recurso__valor {color:black;}
-.recurso__valor.verde { color: green; }
+
+.recurso__valor { color: black; }
+.recurso__valor.verde    { color: green; }
 .recurso__valor.amarillo { color: orange; }
-.recurso__valor.rojo { color: red; }
+.recurso__valor.rojo     { color: red; }
 
 .panel-recursos {
     display: flex;
@@ -47,5 +48,5 @@ Barra de indicadores de dinero, población, etc.
 }
 
 .btn-recursos-movil:hover {
-    background: rgba(255,255,255,0.15);
+    background: rgba(255, 255, 255, 0.15);
 }
