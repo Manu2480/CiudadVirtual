@@ -344,3 +344,74 @@ MODAL ESTADÍSTICAS
 .modal-demoler__acciones #btn-confirmar-demoler:hover {
     background: color-mix(in srgb, var(--color-energia) 85%, black);
 }
+
+/* estilo para definir cantidad por edificio*/
+.modal-stats__fila-clicable {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 0;
+    border-radius: 6px;
+    transition: background 0.15s;
+}
+.modal-stats__fila-clicable:hover {
+    background: var(--color-celda-selec);
+}
+
+.modal-edificios h2 {
+    margin-bottom: 8px;
+}
+.modal-edificios__total {
+    font-size: 13px;
+    color: var(--color-texto-s);
+    margin-bottom: 12px;
+}
+.modal-edificios__categoria {
+    margin-bottom: 12px;
+    border: 0.5px solid var(--color-borde);
+    border-radius: 8px;
+    overflow: hidden;
+}
+.modal-edificios__cat-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 10px;
+    background: var(--color-fondo);
+    font-weight: 600;
+    font-size: 13px;
+}
+.modal-edificios__cat-nombre {
+    flex: 1;
+}
+.modal-edificios__cat-total {
+    font-size: 13px;
+}
+.modal-edificios__lista-tipos {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+.modal-edificios__fila-tipo {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 14px;
+    font-size: 12px;
+    border-top: 0.5px solid var(--color-borde);
+    color: var(--color-texto);
+}
+.modal-edificios__tipo-cant {
+    color: var(--color-texto);
+}
+.modal-edificios__volver {
+    margin-top: 16px;
+    width: 100%;
+}
+
+/* el primer h2 dentro de cualquier modal
+   nunca se pisa con el botón cerrar */
+.modal-contenido > #modal-cuerpo > * > h2:first-child {
+    padding-right: calc(var(--btn-tap-min) + var(--espacio-s));
+}

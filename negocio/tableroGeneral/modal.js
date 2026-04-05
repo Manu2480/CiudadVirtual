@@ -159,7 +159,11 @@ function mostrarEstadisticas() {
                 ${fila("fi-br-users",     `Población (${m.poblacion} hab × 10)`,         d.ptsPoblacion,    "var(--color-primario)")}
                 ${fila("fi-br-smile-beam",     `Felicidad (${Math.round(m.felicidad)} × 5)`,   d.ptsFelicidad,    "var(--color-primario)")}
                 ${fila("fi-br-coins",     `Dinero ($${m.dinero.toLocaleString()} ÷ 100)`, d.ptsDinero,       "var(--color-primario)")}
-                ${fila("fi-br-home",      `Edificios (${m.numEdificios} × 50)`,           d.ptsEdificios,    "var(--color-primario)")}
+                <li class="modal-stats__fila-clicable" id="btn-detalle-edificios">
+                    <i class="fi fi-br-home"></i>
+                    <span>Edificios (${m.numEdificios} × 50) <small style="color:var(--color-texto-s)">— ver detalle</small></span>
+                    <strong style="color:var(--color-primario)">+${d.ptsEdificios.toLocaleString()}</strong>
+                </li>
                 ${fila("fi-br-bolt",      `Electricidad (${m.electricidad} kW × 2)`,      d.ptsElectricidad, "var(--color-primario)")}
                 ${fila("fi-br-raindrops", `Agua (${m.agua} L × 2)`,                       d.ptsAgua,         "var(--color-primario)")}
             </ul>
@@ -197,6 +201,7 @@ function mostrarEstadisticas() {
     `;
 
     abrir(html);
+    document.getElementById("btn-detalle-edificios")?.addEventListener("click", mostrarDetalleEdificios);
 }
 
 /*Confirmación para demoler*/
@@ -277,4 +282,104 @@ function _mostrarConfirmacionDemoler(fila, col, edificio, instancia) {
     });
 }
 
-window.Modal = { abrir, cerrar, mostrarEdificio, mostrarEstadisticas, mostrarConfirmacionDemoler: _mostrarConfirmacionDemoler };
+function mostrarDetalleEdificios() {
+    const ciudad   = Tablero.Estado.ciudad;
+    const edificios = ciudad?.terreno?.edificios || [];
+
+    /* Agrupar por categoría y luego por nombre */
+    const grupos = {};
+
+    /* Mapa de ids de clase → id del catálogo */
+    const idMap = {
+        "fabrica":          "fabrica",
+        "granja":           "granja",
+        "agua":             "planta-hidraulica",
+        "luz":              "planta-electrica",
+        "hospital":         "hospital",
+        "bombero":          "bombero",
+        "policia":          "policia",
+        "parque":           "parque",
+        "centrocomercial":  "centro-comercial",
+        "tienda":           "tienda",
+        "casa":             "casa",
+        "apartamento":      "apartamento",
+        "via":              "via",
+    };
+
+    edificios.forEach(e => {
+        if (String(e.id || "").toLowerCase().startsWith("via")) return;
+        const idBase    = e.id.replace(/\d+$/, "").toLowerCase();
+        const idCatalog = idMap[idBase] || idBase;
+        const def       = Edificios.todos().find(x => x.id === idCatalog);
+        if (!def) return;
+        const cat    = def.categoria || "otros";
+        const nombre = def.nombre    || idBase;
+        if (!grupos[cat]) grupos[cat] = {};
+        grupos[cat][nombre] = (grupos[cat][nombre] || 0) + 1;
+    });
+
+    const iconoCategoria = {
+        residencial:     "fi-br-home",
+        comercial:       "fi-br-shop",
+        industrial:      "fi-br-industry-windows",
+        servicios:       "fi-br-heart",
+        infraestructura: "fi-br-bolt",
+        pavimentaria:    "fi-br-road",
+    };
+
+    const colorCategoria = {
+        residencial:     "#1565c0",
+        comercial:       "#f57f17",
+        industrial:      "#880e4f",
+        servicios:       "#2e7d32",
+        infraestructura: "#6a1b9a",
+        pavimentaria:    "#37474f",
+    };
+
+    let seccionesHtml = "";
+    let totalGeneral  = 0;
+
+    Object.entries(grupos).forEach(([cat, tipos]) => {
+        const subtotal = Object.values(tipos).reduce((a, b) => a + b, 0);
+        totalGeneral  += subtotal;
+        const icono    = iconoCategoria[cat] || "fi-br-building";
+        const color    = colorCategoria[cat] || "var(--color-texto)";
+
+        const filasHtml = Object.entries(tipos)
+            .sort((a, b) => b[1] - a[1])
+            .map(([nombre, cant]) => `
+                <li class="modal-edificios__fila-tipo">
+                    <span class="modal-edificios__tipo-nombre">${nombre}</span>
+                    <strong class="modal-edificios__tipo-cant">${cant}</strong>
+                </li>`)
+            .join("");
+
+        seccionesHtml += `
+            <div class="modal-edificios__categoria">
+                <div class="modal-edificios__cat-header">
+                    <i class="fi ${icono}" style="color:${color}"></i>
+                    <span class="modal-edificios__cat-nombre" style="color:${color}">${cat.charAt(0).toUpperCase() + cat.slice(1)}</span>
+                    <strong class="modal-edificios__cat-total">${subtotal}</strong>
+                </div>
+                <ul class="modal-edificios__lista-tipos">${filasHtml}</ul>
+            </div>`;
+    });
+
+    const html = `
+        <div class="modal-edificios">
+            <h2><i class="fi fi-br-home"></i> Desglose de edificios</h2>
+            <div class="modal-edificios__total">
+                Total: <strong>${totalGeneral} edificios</strong>
+            </div>
+            ${seccionesHtml}
+            <button class="btn-secundario modal-edificios__volver" id="btn-volver-stats">
+                <i class="fi fi-br-angle-left"></i> Volver a estadísticas
+            </button>
+        </div>
+    `;
+
+    abrir(html);
+    document.getElementById("btn-volver-stats")?.addEventListener("click", mostrarEstadisticas);
+}
+
+window.Modal = { abrir, cerrar, mostrarEdificio, mostrarEstadisticas, mostrarDetalleEdificios, mostrarConfirmacionDemoler: _mostrarConfirmacionDemoler };

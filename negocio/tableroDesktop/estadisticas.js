@@ -52,7 +52,11 @@ function inicializar() {
                     ${fila("fi-br-users",     `Población (${m.poblacion} hab × 10)`,         d.ptsPoblacion)}
                     ${fila("fi-br-smile-beam",     `Felicidad (${Math.round(m.felicidad)} × 5)`,   d.ptsFelicidad)}
                     ${fila("fi-br-coins",     `Dinero ($${m.dinero.toLocaleString()} ÷ 100)`, d.ptsDinero)}
-                    ${fila("fi-br-home",      `Edificios (${m.numEdificios} × 50)`,           d.ptsEdificios)}
+                    <div class="stats-item modal-stats__fila-clicable" id="btn-detalle-edificios">
+                        <i class="fi fi-br-home"></i>
+                        <span class="stats-item__label">Edificios (${m.numEdificios} × 50) <small style="color:var(--color-texto-s)">— ver detalle</small></span>
+                        <span class="stats-item__valor stats-item__valor--positivo">+${d.ptsEdificios.toLocaleString()}</span>
+                    </div>
                     ${fila("fi-br-bolt",      `Electricidad (${m.electricidad} kW × 2)`,      d.ptsElectricidad)}
                     ${fila("fi-br-raindrops", `Agua (${m.agua} L × 2)`,                       d.ptsAgua)}
                 </div>
@@ -86,6 +90,9 @@ function inicializar() {
                 </div>
             </div>
         `;
+
+        document.getElementById("btn-detalle-edificios")
+            ?.addEventListener("click", () => window.Modal?.mostrarDetalleEdificios?.());
     }, 500);
 }
 
