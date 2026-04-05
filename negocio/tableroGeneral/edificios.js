@@ -143,6 +143,11 @@ let _catalogo = [
     },
 ];
 
+_catalogo = _catalogo.map(e => ({
+    ...e,
+    mantenimiento: Math.round(e.costo * 0.01),
+}));
+
 function obtener(id)             { return _catalogo.find(e => e.id === id) || null; }
 function porCategoria(categoria) { return _catalogo.filter(e => e.categoria === categoria); }
 function categorias()            { return [...new Set(_catalogo.map(e => e.categoria))]; }
@@ -159,6 +164,7 @@ function tooltip(edificioOId) {
         `${edificio.nombre}`,
         `Categoria: ${edificio.categoria}`,
         `Costo: $${(edificio.costo || 0).toLocaleString()}`,
+        `Mantenimiento: $${Math.round((edificio.costo || 0) * 0.01).toLocaleString()}/turno`,
     ];
 
     if (edificio.descripcion)  lineas.push(edificio.descripcion);
