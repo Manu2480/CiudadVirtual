@@ -55,6 +55,9 @@ class ControladorStorage{
             datos.ciudadanos.forEach(c => ciudad.crearCiudadano(c));
         }
 
+        // Reasigna en los edificios las mismas instancias de ciudadanos que viven en ciudad.ciudadanos.
+        this.rehidratarCiudadano(ciudad);
+
         ciudad.fecha = (typeof datos.fecha === "string" && datos.fecha.trim())
             ? datos.fecha
             : new Date().toISOString().split("T")[0];
@@ -183,16 +186,31 @@ class ControladorStorage{
     }
 
     //Se encarga de guardar los ciudadanos de ciudad en cada uno de sus respectivos edificios
-    static rehidratarCiudadanos(ciudad){
+    static rehidratarCiudadano(ciudad){
+        if (!ciudad || !Array.isArray(ciudad.ciudadanos) || !ciudad.terreno || !Array.isArray(ciudad.terreno.edificios)) {
+            return;
+        }
+
         //Se genera un mapa de ciudadanos con pares clave, valor
-        const MapaCiudadanos = new Map(ciudad.ciudadanos.map(c => [c.id, c]))
+        const MapaCiudadanos = new Map(ciudad.ciudadanos.map(c => [c.id, c]));
+
         //Por cada edificio lee la lista de ciudadanos y compara el id para volver a asignar las instancias
-        ciudad.terreno.edificios.forEach(e => 
-            e.ciudadanos = e.ciudadanos.map(id => {
-                const objetoCiudadano = MapaCiudadanos.get(id.id);
-                return objetoCiudadano;
-            })
-        )
+        ciudad.terreno.edificios.forEach(e => {
+            if (!Array.isArray(e.ciudadanos)) return;
+
+            e.ciudadanos = e.ciudadanos.map(refCiudadano => {
+                const id = (refCiudadano && typeof refCiudadano === "object")
+                    ? refCiudadano.id
+                    : refCiudadano;
+
+                return MapaCiudadanos.get(id) || refCiudadano;
+            });
+        });
+    }
+
+    //Compatibilidad hacia atrás con llamadas existentes
+    static rehidratarCiudadanos(ciudad){
+        this.rehidratarCiudadano(ciudad);
     }
 
     static cargarCatalogo(){

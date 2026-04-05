@@ -344,10 +344,8 @@ function _inicializarAtajos() {
 
             case "s":
                 // Guardar partida (solo con Ctrl)
-                if (e.ctrlKey || e.metaKey) {
-                    e.preventDefault();
-                    Tablero.guardarPartida();
-                }
+                e.preventDefault();
+                Tablero.exportarJSON();
                 break;
 
             // Atajos de zoom con +/- y números
