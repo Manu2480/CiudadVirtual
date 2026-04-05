@@ -170,6 +170,7 @@
         gap: 5px;
     }
 }
+
 /* ── Sidebar tablet landscape ── */
 @media (orientation: landscape) {
     :root[data-vista="tablet"] .btn-sidebar-tablet.horizontal {
@@ -183,15 +184,35 @@
         grid-column: 3;
         grid-template-rows: 35% 40% 1fr;
     }
+
+    /* Sidebar izquierdo: recursos toma su altura natural,
+       construcción ocupa el resto y scrollea internamente */
     :root[data-vista="tablet"] #sidebar-izquierdo-tablet.abierta {
         display: grid !important;
         grid-column: 1;
-        grid-template-rows: 30% 70%;
+        grid-template-rows: auto 1fr;
+        overflow: hidden;
+        height: 100%;
     }
+    :root[data-vista="tablet"] #menu-construccion-tablet-horizontal {
+        overflow-y: auto;
+        min-height: 0;
+    }
+
     :root[data-vista="tablet"] .sidebar--tablet {
         display: none;
     }
     :root[data-vista="tablet"] #panel-recursos-tablet-horizontal {
         grid-row: 1;
+    }
+    :root[data-vista="tablet"] #sidebar-izquierdo-tablet.abierta {
+        display: grid !important;
+        grid-column: 1;
+        grid-template-rows: auto 1fr;
+        overflow: hidden;
+        height: 100%;
+        padding: 8px;
+        gap: 8px;
+        box-sizing: border-box;
     }
 }

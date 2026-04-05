@@ -10,7 +10,6 @@ Cada parcial tiene una única responsabilidad.
 @import "estilosMovil/layout.css";
 @import "estilosMovil/header.css";
 @import "estilosMovil/tabs.css";
-@import "estilosMovil/menuConstruccion.css";
 @import "estilosMovil/modal.css";
 @import "estilosMovil/zoom.css";
 @import "estilosMovil/joystick.css";

@@ -5,22 +5,21 @@ Como jugador en tablet
 Quiero una interfaz optimizada para pantalla mediana
 Para aprovechar el espacio disponible
 Criterios de Aceptación:
-• [x] En resoluciones 768px - 1024px:
+- [x] En resoluciones 768px - 1024px:
 o Layout en dos columnas: mapa (70%) + sidebar (30%)
 o El mapa muestra grid completo sin scroll horizontal
 o Panel de recursos en sidebar superior
 o Menú de construcción en sidebar central
 o Estadísticas en sidebar inferior
 o Widget de clima y noticias en tabs laterales
-• [x] Soporte para orientación vertical y horizontal
-• [x] En horizontal: layout optimizado con sidebars izquierdo y derecho
-• [x] En vertical: similar a móvil pero con más espacio
-• [x] Tooltips más grandes al hacer hover
-• [x] Modales ocupan 60% de la pantalla
-• [x] Botones de tamaño medium (adecuados para touch)
+- [x] Soporte para orientación vertical y horizontal
+- [x] En horizontal: layout optimizado con sidebars izquierdo y derecho
+- [x] En vertical: similar a móvil pero con más espacio
+- [x] Tooltips más grandes al hacer hover
+- [x] Modales ocupan 60% de la pantalla
+- [x] Botones de tamaño medium (adecuados para touch)
 Prioridad: Media
 Dependencias: HU-023
-
 */
 /* ================================================
 CONTROLES TABLET — COORDINADOR
@@ -41,27 +40,39 @@ console.log("controlesTablet: cargado (readyState=", document.readyState, ")");
 const _BASE = "../../negocio/tableroTablet/";
 
 const _MODULOS = [
-    "celdasTablet.js",   /* primero: ajusta celda antes de que el mapa se pinte */
+    "celdasTablet.js",
     "clima.js",
     "noticias.js",
     "sidebarTablet.js",
-    "construccion.js",
     "recursos.js",
     "estadisticas.js"
 ];
 
-/* Carga los scripts en orden y llama al callback cuando el último termina */
+/* Módulo unificado de construcción compartido con móvil */
+const _MODULOS_GENERAL = [
+    "../../negocio/tableroGeneral/menuConstruccion.js",
+];
+
+/* Carga scripts con ruta relativa a _BASE */
 function _cargarModulos(modulos, onCompleto) {
     if (modulos.length === 0) { onCompleto(); return; }
-    /*El caso base es que cuando el array de modulos está vacío, se avisa que ya cargaron todos los scripts y se sale con return*/
     const [primero, ...resto] = modulos;
-    /*Primero toma el primer módulo del array, resto es el resto de los módulos */
     const script = document.createElement("script");
     script.src = _BASE + primero;
-    script.onload = () => _cargarModulos(resto, onCompleto);
-    /*Cuando el script carga, hace la siguiente llamada recursiva*/
+    script.onload  = () => _cargarModulos(resto, onCompleto);
     script.onerror = () => console.error("controlesTablet: error al cargar", script.src);
-    document.head.appendChild(script);/*agrega el script al head del html*/
+    document.head.appendChild(script);
+}
+
+/* Carga scripts con ruta absoluta (módulos compartidos) */
+function _cargarModulosAbsolutos(modulos, onCompleto) {
+    if (modulos.length === 0) { onCompleto(); return; }
+    const [primero, ...resto] = modulos;
+    const script = document.createElement("script");
+    script.src = primero;
+    script.onload  = () => _cargarModulosAbsolutos(resto, onCompleto);
+    script.onerror = () => console.error("controlesTablet: error al cargar", script.src);
+    document.head.appendChild(script);
 }
 
 function _inicializarControlesTablet() {
@@ -76,7 +87,6 @@ function _inicializarControlesTablet() {
         ConstruccionTablet.inicializar();
         _inicializarBotonRuta();
 
-
         console.log("controlesTablet: inicialización completa");
     } catch (err) {
         console.error("controlesTablet: error durante inicialización", err);
@@ -84,7 +94,7 @@ function _inicializarControlesTablet() {
 }
 
 function _inicializarBotonRuta() {
-    botonRuta = document.getElementById("btn-ruta")
+    botonRuta = document.getElementById("btn-ruta");
     if (!botonRuta) return;
 
     botonRuta.addEventListener("click", () => {
@@ -108,9 +118,12 @@ function _inicializarBotonRuta() {
 
 if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", () => {
-        _cargarModulos(_MODULOS, _inicializarControlesTablet);
+        _cargarModulos(_MODULOS, function () {
+            _cargarModulosAbsolutos(_MODULOS_GENERAL, _inicializarControlesTablet);
+        });
     });
 } else {
-    // El DOM ya está listo o casi listo
-    _cargarModulos(_MODULOS, _inicializarControlesTablet);
+    _cargarModulos(_MODULOS, function () {
+        _cargarModulosAbsolutos(_MODULOS_GENERAL, _inicializarControlesTablet);
+    });
 }
