@@ -1,5 +1,5 @@
 /* ================================================
-   RECURSOS DESKTOP
+   RECURSOS PANEL
    Módulo responsable de mostrar recursos en
    la vista desktop y tablet (dinero, agua, electricidad,
    alimento, felicidad).
@@ -80,7 +80,10 @@ function insertarPanel(contenido){
         if (key === "agua" || key === "electricidad") {
             formatted = `${Math.round(prod)} / ${Math.round(cons)}`;
         } else if (key === "dinero") {
-            formatted = `${unidad}${Math.round(valor).toLocaleString()}`;
+            const v = Math.round(valor);
+            formatted = v >= 100_000_000
+                ? `${unidad}100M`
+                : `${unidad}${v.toLocaleString()}`;
         } else if (key === "felicidad") {
             formatted = `${Math.round(valor)}${unidad}%`;
         } else {
