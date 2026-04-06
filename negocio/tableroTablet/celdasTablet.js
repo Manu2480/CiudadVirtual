@@ -5,20 +5,22 @@ exactamente en el ancho del área del mapa sin scroll horizontal.
 
 Dependencias: Tablero.Estado.columnas
 ================================================ */
-let divFoto;
-let ciudad;
-let genero;
-let areaMapa;
+const divFoto = document.getElementById("foto-perfil");;
+const ciudad =  Tablero.Estado.ciudad;
+const genero = ciudad.genero;
+const areaMapa = document.getElementById("area-mapa");
 function inicializar() {
-    divFoto = document.getElementById("foto-perfil");
-    ciudad =  Tablero.Estado.ciudad;
-    genero = ciudad.genero;
-    areaMapa = document.getElementById("area-mapa");
+    if (!window.Tablero?.Estado?.ciudad) {
+        setTimeout(inicializar, 30);
+        return;
+    }
     _ajustar();
     calcularCeldasVisibles(); 
     renderizarViewport();
     mostrarIndices();
+
     document.dispatchEvent(new Event("mapa:renderizado"));
+
     fotoPerfil();
 }
 document.getElementById("arriba").addEventListener("click", () => moverViewport("arriba", 1));
