@@ -20,7 +20,7 @@ Flujo:
   6. Click en tab Ruta (icono reiniciar) → limpiarTodo() + activar()
 ================================================ */
 
-var API_RUTA = "http://127.0.0.1:5000/api/calculate-route";
+var API_RUTA = ApiRuta;
 
 var _estado     = "inactivo";   /* "inactivo" | "eligiendo" | "resultado" */
 var _puntoA     = null;         /* { fila, col, celdaEl } */
@@ -256,17 +256,10 @@ function _calcular() {
     mapa[_puntoA.fila][_puntoA.col] = 1;
     mapa[_puntoB.fila][_puntoB.col] = 1;
 
-    fetch(API_RUTA, {
-        method:  "POST",
-        headers: { "Content-Type": "application/json" },
-        body:    JSON.stringify({
-            map:   mapa,
-            start: [_puntoA.fila, _puntoA.col],
-            end:   [_puntoB.fila, _puntoB.col]
-        })
-    })
-    .then(function(res) {
-        return res.json().then(function(data) { return { ok: res.ok, data: data }; });
+    ApiRuta.calcularRuta({
+        mapa: mapa,
+        inicio: [_puntoA.fila, _puntoA.col],
+        fin: [_puntoB.fila, _puntoB.col]
     })
     .then(function(result) {
         var MIN_MS   = 1000;//tiempo mínimo que debe durar la pantalla de carga antes de mostrar la ruta

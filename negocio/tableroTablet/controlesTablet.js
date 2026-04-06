@@ -107,13 +107,9 @@ function _inicializarBotonRuta() {
             window.RutaMovil.limpiarTodo();
         }
         window.RutaMovil.activar();
-        _actualizarIndicadorModo("ruta", "Modo ruta: selecciona origen y destino (ESC para cancelar)");
         Notificaciones.mostrar("Selecciona dos edificios para calcular la ruta.", "aviso");
     });
 
-    document.addEventListener("ruta:completada", () => {
-        _ocultarIndicadorModo();
-    });
 }
 
 if (document.readyState === "loading") {
