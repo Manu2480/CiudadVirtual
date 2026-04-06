@@ -20,7 +20,6 @@ const _BASE = "../../negocio/tableroMovil/";
 const _MODULOS = [
     "tabs.js",
     "recursos.js",
-    "stats.js",
     "zoom.js",        
     "joystick.js",
     "turnos.js",
@@ -32,6 +31,7 @@ const _MODULOS = [
 const _MODULOS_GENERAL = [
     "../../negocio/tableroGeneral/ruta.js",
     "../../negocio/tableroGeneral/menuConstruccion.js",
+    "../../negocio/tableroGeneral/estadisticas.js",
 ];
 
 /* Carga los scripts en orden y llama al callback cuando el último termina */

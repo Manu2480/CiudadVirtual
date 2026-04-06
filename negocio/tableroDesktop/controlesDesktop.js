@@ -588,7 +588,7 @@ function _cargarModuloMenuConstruccion() {
 
 function _cargarModuloEstadisticas() {
     const script = document.createElement("script");
-    script.src = "../../negocio/tableroDesktop/estadisticas.js";
+    script.src = "../../negocio/tableroGeneral/estadisticas.js";
     script.onload = () => {
         if (window.EstadisticasDesktop) {
             window.EstadisticasDesktop.inicializar();
