@@ -57,28 +57,6 @@
     border-radius: 8px; 
     width: 100%;
 }
-.stats-item {
-    display: flex;
-    align-items: center;
-    gap: clamp(4px, 1vw, 10px);
-
-    font-size: clamp(10px, 2.2vw, 20px);
-}
-
-.stats-item i {
-    font-size: 1.2em;
-}
-
-.stats-item__texto {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    font-weight: 600;
-}
-
-.stats-item span:last-child {
-    margin-left: auto;
-}
 .btn-ruta{
     display: flex !important;
     align-items: center;
@@ -166,7 +144,7 @@
     }
     :root[data-vista="tablet"] #recConEst-tablet {
         display: grid !important; 
-        grid-template-rows: 25% 50% 25%;
+        grid-template-rows: 35% 50% 15%;
         gap: 5px;
     }
 }

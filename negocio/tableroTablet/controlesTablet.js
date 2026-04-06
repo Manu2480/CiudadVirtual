@@ -44,13 +44,13 @@ const _MODULOS = [
     "clima.js",
     "noticias.js",
     "sidebarTablet.js",
-    "estadisticas.js"
 ];
 
 /* Módulo unificado de construcción compartido con móvil */
 const _MODULOS_GENERAL = [
     "../../negocio/tableroGeneral/menuConstruccion.js",
     "../../negocio/tableroGeneral/panelRecursos.js",
+    "../../negocio/tableroGeneral/estadisticas.js"
 ];
 
 /* Carga scripts con ruta relativa a _BASE */

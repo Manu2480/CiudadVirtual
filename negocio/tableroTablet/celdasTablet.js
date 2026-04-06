@@ -5,7 +5,15 @@ exactamente en el ancho del área del mapa sin scroll horizontal.
 
 Dependencias: Tablero.Estado.columnas
 ================================================ */
+let divFoto;
+let ciudad;
+let genero;
+let areaMapa;
 function inicializar() {
+    divFoto = document.getElementById("foto-perfil");
+    ciudad =  Tablero.Estado.ciudad;
+    genero = ciudad.genero;
+    areaMapa = document.getElementById("area-mapa");
     _ajustar();
     calcularCeldasVisibles(); 
     renderizarViewport();
@@ -13,8 +21,6 @@ function inicializar() {
     document.dispatchEvent(new Event("mapa:renderizado"));
     fotoPerfil();
 }
-
-const areaMapa = document.getElementById("area-mapa");
 document.getElementById("arriba").addEventListener("click", () => moverViewport("arriba", 1));
 document.getElementById("abajo").addEventListener("click", () => moverViewport("abajo", 1));
 document.getElementById("izquierda").addEventListener("click", () => moverViewport("izquierda", 1));
@@ -177,9 +183,6 @@ function renderizarViewport() {
         }
     }
 }
-const divFoto = document.getElementById("foto-perfil");
-const ciudad =  Tablero.Estado.ciudad;
-const genero = ciudad.genero;
 function fotoPerfil(){
     console.log(genero)
     if (genero === "hombre"){
