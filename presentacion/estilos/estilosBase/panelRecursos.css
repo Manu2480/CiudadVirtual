@@ -1,0 +1,90 @@
+/* ================================================
+PANEL RECURSOS — BASE
+Estilos para el panel de recursos en todas las vistas.
+================================================ */
+
+.recurso-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 15px;
+    border-bottom: 1px solid var(--color-borde);
+    transition: background-color 0.2s;
+}
+
+.recurso-item:hover {
+    background-color: var(--color-superficie-hover, #f9f9f9);
+}
+
+.recurso-item__icono {
+    color: var(--color-primario);
+    margin-right: 12px;
+    font-size: 1.1rem;
+    flex-shrink: 0;
+}
+
+.recurso-item__label {
+    color: var(--color-texto);
+    font-weight: 500;
+    margin-right: auto;
+    font-size: 0.85rem;
+}
+
+.recurso-item__valor {
+    color: var(--color-texto-secundario);
+    font-family: 'Courier New', monospace;
+    font-weight: 600;
+    text-align: right;
+    margin-left: 10px;
+    font-size: 0.85rem;
+}
+
+/* Estados de color para recursos - Dinero */
+.recurso-item__valor--dinero-alto {
+    color: var(--color-dinero);  /* Verde - Dinero abundante */
+}
+
+.recurso-item__valor--dinero-medio {
+    color: var(--color-felicidad);  /* Naranja/Ámbar - Dinero moderado */
+}
+
+.recurso-item__valor--dinero-bajo {
+    color: var(--color-energia);  /* Rojo - Dinero bajo/crítico */
+}
+
+/* Estados de color para otros recursos */
+.recurso-item__valor--negativo {
+    color: var(--color-energia);  /* Rojo - Valor negativo */
+}
+
+.tooltip {
+    position: fixed;
+    display: none;
+    background: rgba(0,0,0,0.9);
+    color: white;
+    padding: 8px 10px;
+    border-radius: 6px;
+    font-size: 12px;
+    white-space: nowrap;
+    z-index: 999;
+    box-shadow: var(--sombra-m);
+}
+
+.tooltip-sub {
+    color: lightgray;
+}
+
+.hover-activo .tooltip {
+    display: block !important;
+}
+
+/* Desktop hover */
+@media (hover: hover) {
+    .hover:hover .tooltip {
+        display: block;
+    }
+}
+
+.tooltip-prod { color: var(--color-dinero); }
+.tooltip-cons { color: var(--color-energia); }
+.tooltip-neto { color: white; }
