@@ -22,6 +22,10 @@ Fuentes requeridas en el <head> del HTML:
     to   { opacity: 1; transform: translateY(0)     scale(1);   }
 }
 
+.modal-overlay.modal-sin-cerrar .modal-cerrar {
+    display: none;
+}
+
 /* ---- Papel de periódico ---- */
 .go-paper {
     background: #f5f0e8;

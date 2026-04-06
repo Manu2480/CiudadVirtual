@@ -39,9 +39,9 @@ function mostrar(mensaje, tipo = "aviso", duracion = 3500) {
     const panelRuta = document.getElementById("ruta-panel-estado");
     if (panelRuta) {
         const altoPanelRuta = panelRuta.offsetHeight;
-        _zona.style.top = `calc(var(--alto-encabezado) + ${altoPanelRuta}px + var(--espacio-s))`;
+        document.documentElement.style.setProperty("--alto-panel-ruta", `${altoPanelRuta}px`);
     } else {
-        _zona.style.top = "";
+        document.documentElement.style.removeProperty("--alto-panel-ruta");
     }
 
     const el = document.createElement("div");
@@ -67,8 +67,7 @@ function mostrar(mensaje, tipo = "aviso", duracion = 3500) {
 
     /* Auto-cierre */
     setTimeout(() => {
-        el.style.opacity    = "0";
-        el.style.transition = "opacity 0.3s ease";
+        el.classList.add("notificacion--cerrando");
         setTimeout(() => el.remove(), 350);
     }, duracion);
 }

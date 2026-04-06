@@ -18,22 +18,22 @@ function inicializar() {
     /* El panel del header (btn-recursos-movil) se oculta en móvil
        porque usamos la tab en su lugar */
     const btnHeader = document.getElementById("btn-recursos-movil");
-    if (btnHeader) btnHeader.style.display = "none";
+    if (btnHeader) btnHeader.classList.add("oculto");
 }
 
 function abrirPanel() {
     _crearPanelSiNoExiste();
     _renderizarRecursos();
 
-    document.getElementById(_ID_OVERLAY).style.display = "block";
-    document.getElementById(_ID_PANEL).style.display   = "flex";
+    document.getElementById(_ID_OVERLAY)?.classList.add("activo");
+    document.getElementById(_ID_PANEL)?.classList.add("activo");
 }
 
 function cerrarPanel() {
     const overlay = document.getElementById(_ID_OVERLAY);
     const panel   = document.getElementById(_ID_PANEL);
-    if (overlay) overlay.style.display = "none";
-    if (panel)   panel.style.display   = "none";
+    if (overlay) overlay.classList.remove("activo");
+    if (panel)   panel.classList.remove("activo");
 }
 
 function _crearPanelSiNoExiste() {
@@ -42,35 +42,14 @@ function _crearPanelSiNoExiste() {
     /* Overlay oscuro */
     const overlay = document.createElement("div");
     overlay.id = _ID_OVERLAY;
-    overlay.style.cssText = `
-        position: fixed; inset: 0;
-        background: rgba(0,0,0,0.45);
-        z-index: 1299;
-        display: none;
-    `;
+    overlay.className = "recursos-overlay";
     overlay.addEventListener("click", cerrarPanel);
     document.body.appendChild(overlay);
 
     /* Panel modal */
     const panel = document.createElement("div");
     panel.id = _ID_PANEL;
-    panel.style.cssText = `
-        display: none;
-        flex-direction: column;
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        width: 90vw;
-        max-height: 70vh;
-        background: rgba(255,255,255,0.98);
-        overflow-y: display;
-        z-index: 1300;
-        padding: var(--espacio-m);
-        border-radius: var(--radio-m, 12px);
-        box-shadow: 0 8px 32px rgba(0,0,0,0.25);
-        gap: var(--espacio-s);
-    `;
+    panel.className = "recursos-panel-modal";
     document.body.appendChild(panel);
 }
 

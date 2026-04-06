@@ -48,8 +48,7 @@ function _inicializarMovil() {
     const sidebar = menu.closest(".sidebar--izquierdo");
     if (sidebar) document.body.appendChild(menu);
 
-    const titulo = menu.querySelector(".panel__titulo");
-    if (titulo) titulo.style.display = "none";
+    menu.classList.add("menu-construccion--sin-titulo");
 
     if (menu.querySelector(".construccion-lista")) return;
 
@@ -181,47 +180,25 @@ function abrirCatalogo(fila, col, grid, gridEl) {
     if (!overlay) {
         overlay = document.createElement("div");
         overlay.id = "catalogo-overlay";
-        overlay.style.cssText = `
-            position: fixed; inset: 0;
-            background: rgba(0,0,0,0.45);
-            z-index: 1299;
-        `;
+        overlay.className = "catalogo-overlay";
         overlay.addEventListener("click", cerrarCatalogo);
         document.body.appendChild(overlay);
     }
-    overlay.style.display = "block";
+    overlay.classList.add("activo");
 
     const menu = document.getElementById("menu-construccion");
     if (!menu) return;
 
-    menu.style.cssText = `
-        display: flex;
-        flex-direction: column;
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        width: 90vw;
-        max-height: 75vh;
-        background: rgba(255,255,255,0.98);
-        overflow: hidden;
-        z-index: 1300;
-        padding: var(--espacio-m);
-        border-radius: var(--radio-m, 12px);
-        box-shadow: 0 8px 32px rgba(0,0,0,0.25);
-        animation: slideUp 0.22s ease;
-    `;
-    menu.classList.add("abierto");
+    menu.classList.add("catalogo-abierto");
 }
 
 function cerrarCatalogo() {
     const menu = document.getElementById("menu-construccion");
     if (menu) {
-        menu.style.cssText = "";
-        menu.classList.remove("abierto");
+        menu.classList.remove("catalogo-abierto");
     }
     const overlay = document.getElementById("catalogo-overlay");
-    if (overlay) overlay.style.display = "none";
+    if (overlay) overlay.classList.remove("activo");
 }
 
 /* ================================================

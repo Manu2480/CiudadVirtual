@@ -185,6 +185,23 @@ tiene z-index y el contexto de apilamiento lo permite.
     from { background: rgba(241, 196, 15, 0.60); outline: 2px solid #c9a800; outline-offset: -2px; }
     to   { background: rgba(243, 156, 18, 0.82); outline: 2px solid #c07d00; outline-offset: -2px; }
 }
+
+.ruta-paso__img {
+    display: none;
+    width: 32px;
+    height: 32px;
+    object-fit: cover;
+    border-radius: 6px;
+}
+
+.ruta-paso__img--oculto {
+    display: none;
+}
+
+.ruta-paso__img:not(.ruta-paso__img--oculto) {
+    display: block;
+}
+
 /* ================================================
 OVERLAY DE CARGA DE RUTA
 ================================================ */

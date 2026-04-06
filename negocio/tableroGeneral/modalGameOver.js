@@ -422,8 +422,7 @@ const ModalGameOver = (() => {
             }, true);
 
             /* Ocultar botón X del modal si existe */
-            const btnCerrar = document.getElementById("modal-cerrar");
-            if (btnCerrar) btnCerrar.style.display = "none";
+            if (overlay) overlay.classList.add("modal-sin-cerrar");
         }
 
         /* Botones de navegación — rutas relativas al HTML en presentacion/vistas/ */

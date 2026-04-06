@@ -59,3 +59,38 @@ Panel de recursos en vista móvil
 .recurso-movil__valor--negativo {
     color: red;
 }
+
+/* Overlay y panel de recursos móviles */
+#recursos-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.45);
+    z-index: 1299;
+    display: none;
+}
+
+#recursos-overlay.activo {
+    display: block;
+}
+
+#recursos-panel-modal {
+    display: none;
+    flex-direction: column;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90vw;
+    max-height: 70vh;
+    background: rgba(255,255,255,0.98);
+    overflow-y: auto;
+    z-index: 1300;
+    padding: var(--espacio-m);
+    border-radius: var(--radio-m, 12px);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+    gap: var(--espacio-s);
+}
+
+#recursos-panel-modal.activo {
+    display: flex;
+}

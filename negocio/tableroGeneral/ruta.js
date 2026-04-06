@@ -139,8 +139,8 @@ function _actualizarPanelA(nombre, imagen) {
 
     if (nombreEl) nombreEl.textContent = nombre;
     if (imgEl && imagen) {
-        imgEl.src           = imagen;
-        imgEl.style.display = "block";
+        imgEl.src = imagen;
+        imgEl.classList.remove("ruta-paso__img--oculto");
     }
     if (pasoA) pasoA.classList.remove("ruta-paso--activo");
     if (pasoB) pasoB.classList.add("ruta-paso--activo");
@@ -153,8 +153,8 @@ function _actualizarPanelB(nombre, imagen) {
 
     if (nombreEl) nombreEl.textContent = nombre;
     if (imgEl && imagen) {
-        imgEl.src           = imagen;
-        imgEl.style.display = "block";
+        imgEl.src = imagen;
+        imgEl.classList.remove("ruta-paso__img--oculto");
     }
     if (pasoB) {
         pasoB.classList.remove("ruta-paso--activo");
@@ -211,7 +211,7 @@ function _onCeldaRuta(e) {
         var pasoA     = document.getElementById("ruta-paso-a");
         var pasoB     = document.getElementById("ruta-paso-b");
         if (nombreAEl) nombreAEl.textContent = "Toca un punto";
-        if (imgAEl)  { imgAEl.style.display  = "none"; imgAEl.src = ""; }
+        if (imgAEl)  { imgAEl.classList.add("ruta-paso__img--oculto"); imgAEl.src = ""; }
         if (pasoA)     pasoA.classList.add("ruta-paso--activo");
         if (pasoB)     pasoB.classList.remove("ruta-paso--activo");
         return;
@@ -280,7 +280,7 @@ function _calcular() {
                 var ib = document.getElementById("ruta-paso-b-img");
                 if (pb) { pb.classList.remove("ruta-paso--calculando"); pb.classList.add("ruta-paso--activo"); }
                 if (nb) nb.textContent = "Pendiente";
-                if (ib) { ib.style.display = "none"; ib.src = ""; }
+                if (ib) { ib.classList.add("ruta-paso__img--oculto"); ib.src = ""; }
                 return;
             }
 

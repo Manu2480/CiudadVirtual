@@ -5,7 +5,7 @@ Siempre en la parte superior de la pantalla.
 
 .zona-notificaciones {
     position: fixed;
-    top: calc(var(--alto-encabezado) + var(--espacio-s));
+    top: calc(var(--alto-encabezado) + var(--alto-panel-ruta, 0px) + var(--espacio-s));
     left: 50%;
     transform: translateX(-50%);
     display: flex;
@@ -29,6 +29,11 @@ Siempre en la parte superior de la pantalla.
     display: flex;
     align-items: center;
     gap: var(--espacio-s);
+    transition: opacity 0.3s ease;
+}
+
+.notificacion--cerrando {
+    opacity: 0;
 }
 
 .notificacion i {

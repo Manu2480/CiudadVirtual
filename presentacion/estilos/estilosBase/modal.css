@@ -216,8 +216,12 @@ MODAL ESTADÍSTICAS
     color: var(--color-energia);
 }
 
-.modal-stats__valor--neutro {
+.modal-stats__valor--primario {
     color: var(--color-primario);
+}
+
+.modal-stats__valor--neutro {
+    color: var(--color-texto);
 }
 
 /* Felicidad promedio en modal edificio */
@@ -229,7 +233,12 @@ MODAL ESTADÍSTICAS
     font-weight: 700;
 }
 
-/* Colores para felicidad */
+.modal-edificio__stat-negativo,
+.modal-edificio__felicidad--baja {
+    color: var(--color-energia);
+}
+
+.modal-edificio__stat-positivo,
 .modal-edificio__felicidad--alta {
     color: var(--color-dinero);
 }
