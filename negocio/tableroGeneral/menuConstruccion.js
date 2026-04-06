@@ -12,6 +12,8 @@ Dependencias: edificios.js, tablero.js, edificaciones.js,
 
 /* Celda pendiente donde se construirá al elegir edificio (móvil) */
 let _celdaPendiente = null;
+/* el que indicará si el modo demolición está activado o no en tablet */
+let _modoDemolicionActivo = false;
 
 /* Escucha el evento que dispara mapa.js al tocar una celda vacía
    en modo construcción sin edificio seleccionado (móvil) */
@@ -64,7 +66,9 @@ function _inicializarTablet() {
 
     contenedores.forEach(contenedor => {
         if (!contenedor || contenedor.querySelector(".construccion-lista")) return;
-        const lista = _crearLista("tablet");
+        let lista = _crearLista("tablet");
+        _agregarBotonDemolicion(lista);
+
         contenedor.appendChild(lista);
     });
 }
@@ -254,6 +258,41 @@ function _detallesHtml(edificio) {
         .filter(Boolean)
         .join("");
 }
+
+function _agregarBotonDemolicion(contenido){
+    const btnDemo = document.createElement("button");
+    btnDemo.type = "button";
+    btnDemo.className = "construccion-item construccion-item--demolicion";
+    btnDemo.setAttribute("aria-label", "Modo demolición");
+    btnDemo.title = "Demoler edificio";
+
+    btnDemo.innerHTML = `
+        <div class="construccion-item__info">
+            <span class="edificio-categoria edificio-categoria--demolicion">Acción</span>
+            <span class="construccion-item__nombre">Demoler</span>
+            <div class="construccion-item__costo">Eliminar edificio existente</div>
+            <p class="construccion-item__desc">Activa el modo demolición para eliminar construcciones del mapa.</p>
+        </div>
+    `;
+    btnDemo.addEventListener("click", () => {
+
+        _modoDemolicionActivo = !_modoDemolicionActivo;
+
+        document.querySelectorAll(
+            "#catalogo-edificios-tablet-horizontal .construccion-item, #catalogo-edificios-tablet-vertical .construccion-item"
+        ).forEach(b => b.classList.remove("construccion-item--seleccionado"));
+
+        if (_modoDemolicionActivo) {
+            Tablero.activarModo?.("demolicion");
+            btnDemo.classList.add("construccion-item--seleccionado");
+        } else {
+            Tablero.cancelarModo?.();
+        }
+    });
+
+    contenido.appendChild(btnDemo);
+}
+
 
 /* Rerenderiza si el catálogo cambia (ej: modificarRecursoEdificio) */
 document.addEventListener("catalogoModificado", () => {

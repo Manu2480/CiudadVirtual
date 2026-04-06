@@ -29,7 +29,7 @@ Overlay, tarjeta centrada y contenido de info de edificio.
     box-shadow: var(--sombra-m);
     position: relative;
     max-height: 90dvh;
-    overflow-y: visible;
+    overflow-y: auto;
     padding: var(--espacio-l);
 }
 
