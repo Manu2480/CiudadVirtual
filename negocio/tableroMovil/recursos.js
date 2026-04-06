@@ -199,6 +199,9 @@ function _renderizarRecursos() {
                             Residencial: ${Math.round(prodData.consumo?.porEdificio?.residencial?.[key] ?? 0)}
                         </div>
                         <div class="tooltip-sub">
+                            Vias: ${Math.round(prodData.consumo?.porEdificio?.via?.[key] ?? 0)}
+                        </div>
+                        <div class="tooltip-sub">
                             Ciudadanos: ${Math.round(prodData.consumo?.porCiudadano?.[key] ?? 0)}
                         </div>
 
