@@ -47,7 +47,11 @@ function _renderizarIndicadores() {
     const r = _ciudad.estadoRecursos;
 
     const indicadores = [
-        { clave: "dinero",       icono: "fi-br-coins",     label: "Dinero",       fmt: v => `$${Math.round(v).toLocaleString()}` },
+        { clave: "dinero",       icono: "fi-br-coins",     label: "Dinero",       fmt: v => {
+                                                                                        const valor = Math.round(v);
+                                                                                        if (valor >= 100_000_000) return "$100M";
+                                                                                        return `$${valor.toLocaleString()}`;
+                                                                                    } },
         { clave: "agua",         icono: "fi-br-raindrops", label: "Agua",         fmt: v => `${Math.round(v)} L`  },
         { clave: "electricidad", icono: "fi-br-bolt",      label: "Electricidad", fmt: v => `${Math.round(v)} kW` },
         { clave: "alimento",     icono: "fi-br-wheat",     label: "Alimento",     fmt: v => `${Math.round(v)} kg` },
