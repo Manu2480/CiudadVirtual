@@ -129,9 +129,6 @@ class Ciudad {
             if (tipo) {
                 resultado.consumo.total["dinero"] -= edificio.costo * this.valorMantenimiento;
                 resultado.consumo.porEdificio[tipo]["dinero"] -= edificio.costo * this.valorMantenimiento;
-                if (tipo == "via"){
-                    console.log(`calculando mantenimiento via ${resultado.consumo.porEdificio[tipo]["dinero"]}`);
-                }
             }
         });
 
@@ -257,7 +254,6 @@ class Ciudad {
             .reduce((total, e) => total + (e.costo || 0) * this.valorMantenimiento, 0);
  
         if (costoTotal > 0) {
-            console.log(`Aplicando costo de mantenimiento: $${costoTotal.toFixed(2)}`);
             this.modificarRecurso("dinero", -costoTotal);
         }
     }
