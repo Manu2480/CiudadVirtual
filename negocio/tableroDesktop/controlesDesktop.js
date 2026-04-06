@@ -600,7 +600,7 @@ function _cargarModuloEstadisticas() {
 
 function _cargarModuloRecursos() {
     const script = document.createElement("script");
-    script.src = "../../negocio/tableroDesktop/recursos.js";
+    script.src = "../../negocio/tableroGeneral/panelRecursos.js";
     script.onload = () => {
         if (window.RecursosDesktop) {
             window.RecursosDesktop.inicializar();
