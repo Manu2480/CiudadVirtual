@@ -7,6 +7,7 @@ class Ciudad {
         alimento: -1
     }
     ciudadanosPorTurno = 3;
+    valorMantenimiento = 0.01;
 
     constructor(nombre, alcalde, latitud, longitud, tiempoTurno, terreno, ciudadanos, estadoRecursos, historicoRecursos, recursosPorCiudadano) {
 
@@ -52,6 +53,7 @@ class Ciudad {
     }
 
     calcularProduccionNeta() {
+        console.log("calculando produccion neta")
         const resultado = {
             produccion: {
                 total: {},
@@ -59,7 +61,8 @@ class Ciudad {
                     comercial: {},
                     industrial: {},
                     servicio: {},
-                    residencial: {}
+                    residencial: {},
+                    via: {},
                 }
             },
             consumo: {
@@ -68,7 +71,8 @@ class Ciudad {
                     comercial: {},
                     industrial: {},
                     servicio: {},
-                    residencial: {}
+                    residencial: {},
+                    via: {},
                 },
                 porCiudadano: {}
             },
@@ -98,6 +102,8 @@ class Ciudad {
             else if (edificio instanceof EdificioIndustrial) tipo = "industrial";
             else if (edificio instanceof EdificioServicio) tipo = "servicio";
             else if (edificio instanceof EdificioResidencial) tipo = "residencial";
+            else if (edificio instanceof Via) tipo = "via";
+         
 
             for (const recurso in recursos) {
                 const valor = recursos[recurso] ?? 0;
@@ -119,6 +125,14 @@ class Ciudad {
                     }
                 }
             }
+            //aplicar costo mantenimiento
+            if (tipo) {
+                resultado.consumo.total["dinero"] -= edificio.costo * this.valorMantenimiento;
+                resultado.consumo.porEdificio[tipo]["dinero"] -= edificio.costo * this.valorMantenimiento;
+                if (tipo == "via"){
+                    console.log(`calculando mantenimiento via ${resultado.consumo.porEdificio[tipo]["dinero"]}`);
+                }
+            }
         });
 
         // 3. CIUDADANOS
@@ -132,17 +146,6 @@ class Ciudad {
                 resultado.consumo.porCiudadano[recurso] += valor;
             }
         });
-
-        // 4. COSTO DE MANTENIMIENTO (dinero)
-        const edificios = this.terreno.edificios || [];
-
-        const costoTotal = edificios
-            .filter(e => !String(e.id || "").toLowerCase().startsWith("via"))
-            .reduce((total, e) => total + (e.costo || 0) * 0.01, 0);
-
-        resultado.consumo.total["dinero"] -= costoTotal;
-
-        resultado.consumo.porEdificio.servicio["dinero"] -= costoTotal;
 
         // 5. NETO
         for (const recurso in resultado.neto) {
@@ -251,8 +254,7 @@ class Ciudad {
         const edificios = this.terreno.edificios || [];
  
         const costoTotal = edificios
-            .filter(e => !String(e.id || "").toLowerCase().startsWith("via"))
-            .reduce((total, e) => total + (e.costo || 0) * 0.01, 0);
+            .reduce((total, e) => total + (e.costo || 0) * this.valorMantenimiento, 0);
  
         if (costoTotal > 0) {
             console.log(`Aplicando costo de mantenimiento: $${costoTotal.toFixed(2)}`);
