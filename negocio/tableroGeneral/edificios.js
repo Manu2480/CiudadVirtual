@@ -168,7 +168,9 @@ function tooltip(edificioOId) {
     ];
 
     if (edificio.descripcion)  lineas.push(edificio.descripcion);
-    if (edificio.capacidad)    lineas.push(`Capacidad: +${edificio.capacidad} habitantes`);
+    if (edificio.categoria !== "industrial" && edificio.categoria !== "comercial" && edificio.capacidad) {
+        lineas.push(`Capacidad: +${edificio.capacidad} habitantes`);
+    }
     if (edificio.empleos)      lineas.push(`Empleos: +${edificio.empleos}`);
     if (edificio.dinero)       lineas.push(`Dinero por turno: +$${edificio.dinero.toLocaleString()}`);
     if (edificio.electricidad) {

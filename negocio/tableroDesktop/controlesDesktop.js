@@ -7,7 +7,6 @@ Responsabilidades:
   - Atajos de teclado (B, R, D, ESC, Space, S)
   - Sistema de arrastre del mapa (drag)
   - Indicador visual de modo activo
-  - Tooltips dinámicos en edificios
   - Guardado de partida
 
 El zoom es ESTÁTICO respecto al movimiento del mapa:
@@ -65,7 +64,6 @@ function _init() {
     _inicializarAtajos();
     _crearIndicadorModo();
     _inicializarBotonRuta();
-    _inicializarTooltipsEdificios();
 
     // Cargar módulos adicionales
     _cargarModuloClima();
@@ -491,64 +489,6 @@ function _ocultarIndicadorModo() {
     _desktopState.indicadorModo.classList.add("indicador-modo--oculto");
 }
 
-
-/* ================================================
-   TOOLTIPS DINÁMICOS EN EDIFICIOS
-   Añade el atributo data-nombre a las celdas
-   con edificios para mostrar tooltips.
-================================================ */
-function _inicializarTooltipsEdificios() {
-    // Observar cambios en el grid para añadir tooltips a nuevos edificios
-    const observer = new MutationObserver((mutations) => {
-        mutations.forEach((mutation) => {
-            mutation.addedNodes.forEach((node) => {
-                if (node.classList && node.classList.contains("celda--construida")) {
-                    _añadirTooltipEdificio(node);
-                }
-            });
-        });
-    });
-
-    if (_desktopState.gridMapa) {
-        observer.observe(_desktopState.gridMapa, {
-            childList: true,
-            subtree: true
-        });
-    }
-
-    // Añadir tooltips a edificios existentes
-    setTimeout(() => {
-        const celdasConstruidas = document.querySelectorAll(".celda--construida");
-        celdasConstruidas.forEach(celda => _añadirTooltipEdificio(celda));
-    }, 500);
-}
-
-
-function _añadirTooltipEdificio(celda) {
-    // Obtener el tipo de edificio del estado del mapa
-    const fila = parseInt(celda.dataset.fila);
-    const col = parseInt(celda.dataset.col);
-
-    // Intentar obtener el nombre del edificio
-    const img = celda.querySelector(".celda__edificio");
-    if (img && img.alt) {
-        celda.setAttribute("data-nombre", img.alt);
-    } else {
-        // Fallback: buscar en Edificios
-        const estado = window.Tablero?.Estado;
-        if (estado?.ciudad?.terreno?.edificios) {
-            const edificio = estado.ciudad.terreno.edificios.find(ed => 
-                ed.ubicacion.fila === fila && ed.ubicacion.columna === col
-            );
-            if (edificio && window.Edificios) {
-                const def = window.Edificios.obtener(edificio.id);
-                if (def) {
-                    celda.setAttribute("data-nombre", def.nombre);
-                }
-            }
-        }
-    }
-}
 
 function _cargarModuloClima() {
     const script = document.createElement("script");

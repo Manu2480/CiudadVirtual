@@ -46,6 +46,7 @@ function llamarRecursos() {
         const contenido = document.createElement("div");
         contenido.className = "recursos-lista";
         panel.appendChild(insertarPanel(contenido));
+        activarHoverMouseDerecha(panel);
     }
     else if (vistaActual == "tablet"){
         const panelTabletVertical = document.getElementById("panel-recursos-tablet-vertical");
@@ -208,6 +209,41 @@ function activarHoverTouch(contenedor) {
             elemento.classList.remove("hover-activo");
         });
     });
+}
+
+/* =========================================
+   HOVER MOUSE (TOOLTIP A LA DERECHA)
+========================================= */
+function activarHoverMouseDerecha(contenedor) {
+    if (!contenedor) return;
+
+    const elementosHover = contenedor.querySelectorAll(".hover");
+
+    elementosHover.forEach((elemento) => {
+        elemento.addEventListener("mouseenter", (e) => {
+            const tooltip = elemento.querySelector(".tooltip");
+            if (!tooltip) return;
+
+            elemento.classList.add("hover-activo");
+            posicionarTooltipDerechaMouse(tooltip, e.clientX, e.clientY);
+        });
+
+        elemento.addEventListener("mousemove", (e) => {
+            const tooltip = elemento.querySelector(".tooltip");
+            if (!tooltip) return;
+
+            posicionarTooltipDerechaMouse(tooltip, e.clientX, e.clientY);
+        });
+
+        elemento.addEventListener("mouseleave", () => {
+            elemento.classList.remove("hover-activo");
+        });
+    });
+}
+
+function posicionarTooltipDerechaMouse(tooltip, mouseX, mouseY) {
+    tooltip.style.left = `${Math.round(mouseX)}px`;
+    tooltip.style.top = `${Math.round(mouseY - 60)}px`;
 }
 
 /* ================================================
