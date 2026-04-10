@@ -20,6 +20,7 @@ Cada parcial tiene una única responsabilidad.
 @import "estilosBase/utilidades.css";
 @import "estilosBase/modalRecursos.css";
 @import "estilosBase/panelRecursos.css";
+@import "estilosBase/clima.css";
 /*estilos del modal de Game Over*/
 @import "estilosBase/modalGameOver.css";
 
