@@ -41,7 +41,6 @@ const _BASE = "../../negocio/tableroTablet/";
 
 const _MODULOS = [
     "celdasTablet.js",
-    "clima.js",
     "noticias.js",
     "sidebarTablet.js",
 ];
@@ -50,7 +49,8 @@ const _MODULOS = [
 const _MODULOS_GENERAL = [
     "../../negocio/tableroGeneral/menuConstruccion.js",
     "../../negocio/tableroGeneral/panelRecursos.js",
-    "../../negocio/tableroGeneral/estadisticas.js"
+    "../../negocio/tableroGeneral/estadisticas.js",
+    "../../negocio/tableroGeneral/panelClima.js",
 ];
 
 /* Carga scripts con ruta relativa a _BASE */
@@ -79,7 +79,7 @@ function _inicializarControlesTablet() {
     console.log("controlesTablet: inicialización (readyState=", document.readyState, ")");
     try {
         CeldasTablet.inicializar();
-        ClimaTablet.inicializar();
+        panelClima.inicializar();
         NoticiasTablet.inicializar();
         SidebarTablet.inicializar();
         RecursosTablet.inicializar();

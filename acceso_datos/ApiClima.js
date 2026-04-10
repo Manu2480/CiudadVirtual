@@ -19,9 +19,9 @@ class ApiClima{
     }
 
     crearViento(diccionario){
-        const velocidadViento = diccionario.speed;
-        const gradosViento = diccionario.deg;
-        const rafagaViento = diccionario.gust;
+        const velocidadViento = diccionario.speed ?? null;
+        const gradosViento = diccionario.deg ?? null;
+        const rafagaViento = diccionario.gust ?? null;
         return new Viento(velocidadViento,gradosViento,rafagaViento);
     }
 
@@ -30,7 +30,7 @@ class ApiClima{
         const viento = this.crearViento(datosViento)
         const temperatura = diccionario.main.temp;
         const condicion = diccionario.weather[0].description;
-        const humedad = datos.main.humidity;
+        const humedad = diccionario.main.humidity;
         return new Clima(temperatura,condicion,humedad,viento);
     }
 

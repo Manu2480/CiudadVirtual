@@ -492,10 +492,10 @@ function _ocultarIndicadorModo() {
 
 function _cargarModuloClima() {
     const script = document.createElement("script");
-    script.src = "../../negocio/tableroDesktop/clima.js";
+    script.src = "../../negocio/tableroGeneral/panelClima.js";
     script.onload = () => {
-        if (window.ClimaDesktop) {
-            window.ClimaDesktop.inicializar();
+        if (window.panelClima) {
+            window.panelClima.inicializar();
         }
     };
     document.head.appendChild(script);

@@ -353,7 +353,7 @@ class Ciudad {
             // sincronizar contador para evitar colisiones futuras (si el id numérico es mayor)
             if (!Number.isNaN(n) && n > Ciudad.contador) Ciudad.contador = n;
 
-            console.log(`[OK] ${nuevoCiudadano.id} cargado - Felicidad: ${nuevoCiudadano.felicidad}, Vivienda: ${nuevoCiudadano.vivienda}, Empleo: ${nuevoCiudadano.empleo}`);
+            //console.log(`[OK] ${nuevoCiudadano.id} cargado - Felicidad: ${nuevoCiudadano.felicidad}, Vivienda: ${nuevoCiudadano.vivienda}, Empleo: ${nuevoCiudadano.empleo}`);
             nuevoCiudadano.consumoCiudadano = this.recursosPorCiudadano;
             return nuevoCiudadano;
         }
