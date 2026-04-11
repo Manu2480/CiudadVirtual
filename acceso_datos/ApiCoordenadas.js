@@ -15,15 +15,4 @@ class ApiCoordenadas{
                 return res.json();
             });
     }
-    async obtenerCoordenadas(ciudad,departamento){
-        const json = await this.obtenerJsonCoordenadas(ciudad,departamento);
-        console.log(json);
-        if (json.length == 0){
-            throw new Error("No se encontraron los datos para el municipio seleccionado");
-        }
-        return {
-            "longitud":json[0].lon,
-            "latitud":json[0].lat
-        };
-    }
 }
