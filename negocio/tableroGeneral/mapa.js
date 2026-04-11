@@ -15,7 +15,7 @@ Dependencias: tablero.js, edificios.js, edificaciones.js,
 ================================================ */
 
 
-/* ================================================
+/* ================================================ 
 ESTADO INTERNO
 ================================================ */
 const _mapaState = {
@@ -65,8 +65,8 @@ function inicializar(filas, columnas, edificiosGuardados) {
     filas    = (filas    && filas    > 0) ? filas    : 15;
     columnas = (columnas && columnas > 0) ? columnas : 15;
 
-    _gridEl.style.gridTemplateColumns = `repeat(${columnas}, var(--tamano-celda))`;
-    _gridEl.style.gridTemplateRows    = `repeat(${filas}, var(--tamano-celda))`;
+    document.documentElement.style.setProperty("--columnas", `${columnas}`);
+    document.documentElement.style.setProperty("--filas",`${filas}`);
     _gridEl.innerHTML = "";
 
     _mapaState.grid = Array.from({ length: filas }, () =>
@@ -281,8 +281,7 @@ function setZoom(nivel) {
         Math.max(_mapaState.zoomMin, nivel)
     );
     if (_gridEl) {
-        _gridEl.style.transform       = `scale(${_mapaState.nivelZoom})`;
-        _gridEl.style.transformOrigin = "top left";
+        document.documentElement.style.setProperty("--zoom", _mapaState.nivelZoom);
     }
 }
 

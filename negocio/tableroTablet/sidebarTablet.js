@@ -95,8 +95,8 @@ function inicializar() {
         }
 
         // Aplicar posición final
-        tooltip.style.left = finalLeft + "px";
-        tooltip.style.top = top + "px";
+        document.documentElement.style.setProperty("--tooltip-left", finalLeft + "px");
+        document.documentElement.style.setProperty("--tooltip-top", top + "px");
 
     });
 

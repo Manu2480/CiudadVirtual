@@ -19,7 +19,6 @@ const _BASE = "../../negocio/tableroMovil/";
 
 const _MODULOS = [
     "tabs.js",
-    "recursos.js",
     "zoom.js",        
     "joystick.js",
     "turnos.js",

@@ -6,6 +6,8 @@
 #area-mapa {
     touch-action: none;
     overflow: hidden; /* era auto — bloquea scroll que compite con pinch */
+    transform: var(--escala-mapa);
+    transform-origin: top left; 
 }
 
 /* Forzar que el transform del JS no sea sobreescrito */
