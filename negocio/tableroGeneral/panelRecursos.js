@@ -31,56 +31,6 @@ const _unidades = {
     alimento:     " kg",
     felicidad:    " ",
 };
-/*            if (idPanel === "panel-recursos") {
-                if (tabActivo === btn) {
-                    btn.classList.remove("tab--activo");
-                    tabActivo = null;
-                    window.RecursosMovil?.cerrarPanel();
-                    return;
-                }
-                botones.forEach(t => t.classList.remove("tab--activo"));
-                btn.classList.add("tab--activo");
-                tabActivo = btn;
-                _cerrarPanel(panelActivo);
-                panelActivo = null;
-                window.NoticiasMovil?.ocultarCarrusel();
-                window.Tablero?.cancelarModo();
-                window.RecursosMovil?.abrirPanel();
-                return;
-            }
-
-    function abrirPanel() {
-    _crearPanelSiNoExiste();
-    _renderizarRecursos();
-
-    document.getElementById(_ID_OVERLAY)?.classList.add("activo");
-    document.getElementById(_ID_PANEL)?.classList.add("activo");
-}
-
-function cerrarPanel() {
-    const overlay = document.getElementById(_ID_OVERLAY);
-    const panel   = document.getElementById(_ID_PANEL);
-    if (overlay) overlay.classList.remove("activo");
-    if (panel)   panel.classList.remove("activo");
-}
-
-function _crearPanelSiNoExiste() {
-    if (document.getElementById(_ID_PANEL)) return;
-
-    /* Overlay oscuro */
-/*    const overlay = document.createElement("div");
-    overlay.id = _ID_OVERLAY;
-    overlay.className = "recursos-overlay";
-    overlay.addEventListener("click", cerrarPanel);
-    document.body.appendChild(overlay);
-
-    /* Panel modal */
- /*   const panel = document.createElement("div");
-    panel.id = _ID_PANEL;
-    panel.className = "recursos-panel-modal";
-    document.body.appendChild(panel);
-}
-*/
 function inicializar() {
     ciudadPanelRecursos = window.Tablero.Estado.ciudad;
     const vistaActual = document.documentElement.getAttribute("data-vista");
@@ -332,7 +282,7 @@ function activarHoverMouseDerecha(contenedor) {
     });
 }
 
-function posicionarTooltipDerechaMouse(tooltip, mouseX, mouseY) {
+function posicionarTooltipDerechaMouse(mouseX, mouseY) {
     document.documentElement.style.setProperty("--tooltip-left",`${Math.round(mouseX)}px`);
     document.documentElement.style.setProperty("--tooltip-top",`${Math.round(mouseY - 60)}px`);
 }

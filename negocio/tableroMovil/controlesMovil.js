@@ -30,11 +30,7 @@ const _MODULOS_GENERAL = [
     "../../negocio/tableroGeneral/ruta.js",
     "../../negocio/tableroGeneral/menuConstruccion.js",
     "../../negocio/tableroGeneral/estadisticas.js",
-<<<<<<< HEAD
-    "../../negocio/tableroGeneral/panelRecursos.js",
-=======
     "../../negocio/tableroGeneral/panelClima.js",
->>>>>>> 73a3c3d3b1d83bf35d1f97c3695e2be83628f05c
 ];
 
 /* Carga los scripts en orden y llama al callback cuando el último termina */
