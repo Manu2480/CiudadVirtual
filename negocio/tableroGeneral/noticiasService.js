@@ -6,7 +6,7 @@
     }
 
     function obtenerNoticias({ limite = 5 } = {}) {
-        return apiNoticias.getNoticiasAPI().then(respuesta => {
+        return apiNoticias.getNoticias().then(respuesta => {
             const articulos = respuesta?.articles || [];
             return articulos
                 .filter(_esArticuloValido)
