@@ -1,9 +1,11 @@
 class Clima{
-    constructor(temperatura,condicion,humedad,viento){
+    constructor(temperatura,condicion,humedad,velocidadViento,gradosViento,rafagaViento){
         this.temperatura = temperatura;
         this.condicion = condicion;
         this.humedad = humedad;
-        this.viento = viento;
+        this.velocidadViento = velocidadViento;
+        this.gradosViento = gradosViento;
+        this.rafagaViento = rafagaViento;
         
     }
 }

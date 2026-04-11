@@ -5,7 +5,22 @@
         }
 
         const api = new ApiClima();
-        return api.getDatosClima(ciudad.longitud, ciudad.latitud);
+        return api.getJsonClima(ciudad.longitud, ciudad.latitud).then(datos => {
+            const temperatura = datos?.main?.temp ?? null;
+            const condicion = datos?.weather?.[0]?.description ?? "";
+            const humedad = datos?.main?.humidity ?? null;
+            const velocidadViento = datos?.wind?.speed ?? null;
+            const gradosViento = datos?.wind?.deg ?? null;
+            const rafagaViento = datos?.wind?.gust ?? null;
+            return new Clima(
+                temperatura,
+                condicion,
+                humedad,
+                velocidadViento,
+                gradosViento,
+                rafagaViento,
+            );
+        });
     }
 
     function iconoCondicion(condicion = "") {

@@ -49,9 +49,9 @@ function htmlClima(clima){
                 </div>
                 <div class="clima-viento">
                     <div class="clima_div"><i class="fi fi-br-wind"></i> Viento</div>
-                    <div class="clima_div"><i>Velocidad:</i> ${clima.viento.velocidad} m/s</div>
-                    <div class="clima_div"><i>Dirección:</i> ${clima.viento.grados}°</div>
-                    <div class="clima_div"><i>Ráfaga:</i> ${clima.viento.rafaga} m/s</div>
+                    <div class="clima_div"><i>Velocidad:</i> ${clima.velocidadViento} m/s</div>
+                    <div class="clima_div"><i>Dirección:</i> ${clima.gradosViento}°</div>
+                    <div class="clima_div"><i>Ráfaga:</i> ${clima.rafagaViento} m/s</div>
                 </div>
             </div>
         `);
