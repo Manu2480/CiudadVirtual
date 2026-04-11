@@ -5,6 +5,8 @@
    alimento, felicidad).
 ================================================ */
 let ciudadPanelRecursos;
+const _ID_OVERLAY_MOVIL = "recursos-overlay";
+const _ID_PANEL_RECURSOS_MOVIL  = "recursos-panel-modal";
 
 const _iconos = {
     dinero:       "fi-br-coins",
@@ -29,22 +31,113 @@ const _unidades = {
     alimento:     " kg",
     felicidad:    " ",
 };
+/*            if (idPanel === "panel-recursos") {
+                if (tabActivo === btn) {
+                    btn.classList.remove("tab--activo");
+                    tabActivo = null;
+                    window.RecursosMovil?.cerrarPanel();
+                    return;
+                }
+                botones.forEach(t => t.classList.remove("tab--activo"));
+                btn.classList.add("tab--activo");
+                tabActivo = btn;
+                _cerrarPanel(panelActivo);
+                panelActivo = null;
+                window.NoticiasMovil?.ocultarCarrusel();
+                window.Tablero?.cancelarModo();
+                window.RecursosMovil?.abrirPanel();
+                return;
+            }
 
+    function abrirPanel() {
+    _crearPanelSiNoExiste();
+    _renderizarRecursos();
+
+    document.getElementById(_ID_OVERLAY)?.classList.add("activo");
+    document.getElementById(_ID_PANEL)?.classList.add("activo");
+}
+
+function cerrarPanel() {
+    const overlay = document.getElementById(_ID_OVERLAY);
+    const panel   = document.getElementById(_ID_PANEL);
+    if (overlay) overlay.classList.remove("activo");
+    if (panel)   panel.classList.remove("activo");
+}
+
+function _crearPanelSiNoExiste() {
+    if (document.getElementById(_ID_PANEL)) return;
+
+    /* Overlay oscuro */
+/*    const overlay = document.createElement("div");
+    overlay.id = _ID_OVERLAY;
+    overlay.className = "recursos-overlay";
+    overlay.addEventListener("click", cerrarPanel);
+    document.body.appendChild(overlay);
+
+    /* Panel modal */
+ /*   const panel = document.createElement("div");
+    panel.id = _ID_PANEL;
+    panel.className = "recursos-panel-modal";
+    document.body.appendChild(panel);
+}
+*/
 function inicializar() {
     ciudadPanelRecursos = window.Tablero.Estado.ciudad;
+    const vistaActual = document.documentElement.getAttribute("data-vista");
+    if (vistaActual == "movil"){
+        /* El panel del header (btn-recursos-movil) se oculta en móvil
+        porque usamos la tab en su lugar */
+        const btnHeader = document.getElementById("btn-recursos-movil");
+        if (btnHeader) btnHeader.classList.add("oculto");
+        const btnTabRecursos = document.getElementById("panel-recursos")
+    }
     llamarRecursos();
+    
+}
+
+function abrirPanel() {
+    _crearPanelSiNoExiste();
+
+    document.getElementById(_ID_OVERLAY_MOVIL)?.classList.add("activo");
+    document.getElementById(_ID_PANEL_RECURSOS_MOVIL)?.classList.add("activo");
+}
+function _crearPanelSiNoExiste() {
+    if (document.getElementById(_ID_PANEL_RECURSOS_MOVIL)) return;
+
+    /* Overlay oscuro */
+    const overlay = document.createElement("div");
+    overlay.id = _ID_OVERLAY_MOVIL;
+    overlay.className = "recursos-overlay";
+    overlay.addEventListener("click", cerrarPanel);
+    document.body.appendChild(overlay);
+
+    /* Panel modal */
+    const panel = document.createElement("div");
+    panel.id = _ID_PANEL_RECURSOS_MOVIL;
+    panel.className = "recursos-panel-modal";
+    document.body.appendChild(panel);
+    insertarPanel(panel);
+    activarHoverTouch(panel);
+}
+function cerrarPanel() {
+    const overlay = document.getElementById(_ID_OVERLAY_MOVIL);
+    const panel   = document.getElementById(_ID_PANEL_RECURSOS_MOVIL);
+    if (overlay) overlay.classList.remove("activo");
+    if (panel)   panel.classList.remove("activo");
 }
 
 function llamarRecursos() {
     if (!window.Tablero?.Estado?.ciudad) return;
+    //Creamos una base sobre la que se insertará el html
+    const contenido = document.createElement("div");
+    contenido.className = "recursos-lista";
+
     const vistaActual = document.documentElement.getAttribute("data-vista");
     if (vistaActual == "desktop"){
         const panel = document.getElementById("panel-recursos-side");
         if (!panel) return;
 
         panel.innerHTML = `<div class="modulo-header"><h2 class="panel__titulo">Recursos</h2></div>`;
-        const contenido = document.createElement("div");
-        contenido.className = "recursos-lista";
         panel.appendChild(insertarPanel(contenido));
         activarHoverMouseDerecha(panel);
     }
@@ -55,11 +148,9 @@ function llamarRecursos() {
 
         panelTabletHorizontal.innerHTML = `<div class="modulo-header"><h2 class="panel__titulo">Recursos</h2></div>`;
         panelTabletVertical.innerHTML = `<div class="modulo-header"><h2 class="panel__titulo">Recursos</h2></div>`;
-        const contenido = document.createElement("div");
-        contenido.className = "recursos-lista";
         panelTabletHorizontal.appendChild(insertarPanel(contenido));
         //se copia el nodo para poderlo insertar en los dos lados
-        contenidoCopia = contenido.cloneNode(true);
+        const contenidoCopia = contenido.cloneNode(true);
         panelTabletVertical.appendChild(insertarPanel(contenidoCopia));
         activarHoverTouch(panelTabletVertical);
         activarHoverTouch(panelTabletHorizontal);
@@ -201,8 +292,8 @@ function activarHoverTouch(contenedor) {
                 finalLeft = window.innerWidth - tooltipRect.width - padding;
             }
 
-            tooltip.style.left = finalLeft + "px";
-            tooltip.style.top = top + "px";
+            document.documentElement.style.setProperty("--tooltip-left", finalLeft + "px");
+            document.documentElement.style.setProperty("--tooltip-top", top + "px");
         });
 
         elemento.addEventListener("touchend", () => {
@@ -242,8 +333,8 @@ function activarHoverMouseDerecha(contenedor) {
 }
 
 function posicionarTooltipDerechaMouse(tooltip, mouseX, mouseY) {
-    tooltip.style.left = `${Math.round(mouseX)}px`;
-    tooltip.style.top = `${Math.round(mouseY - 60)}px`;
+    document.documentElement.style.setProperty("--tooltip-left",`${Math.round(mouseX)}px`);
+    document.documentElement.style.setProperty("--tooltip-top",`${Math.round(mouseY - 60)}px`);
 }
 
 /* ================================================
@@ -253,4 +344,4 @@ document.addEventListener("recursosModificados", llamarRecursos);
 
 window.RecursosDesktop = { inicializar };
 window.RecursosTablet = { inicializar };
-
+window.RecursosMovil = { inicializar, abrirPanel, cerrarPanel };

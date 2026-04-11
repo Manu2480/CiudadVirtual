@@ -15,6 +15,7 @@ function inicializar() {
     vista = document.documentElement.getAttribute("data-vista");
     actualizarPaneles();
     document.addEventListener("turno:ejecutado",actualizarPaneles);
+    document.addEventListener("recursosModificados",actualizarPaneles);
 
     btnEstadisticasCelular.addEventListener("click", () => {
         abrirModal(htmlEstadisticas());
@@ -32,6 +33,7 @@ document.addEventListener("click", e => {
     }
 });
 function actualizarPaneles(){
+    vista = document.documentElement.getAttribute("data-vista");
     let paneles = [];
     if (vista == "desktop"){
         paneles.push(document.getElementById("panel-estadisticas"));  

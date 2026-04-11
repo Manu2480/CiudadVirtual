@@ -28,7 +28,8 @@ Dependencias: HU-023
 .tooltip {
     font-size: 1.2rem;
     padding: 0.5rem;
-    max-width: 200px;
+    left: var(--tooltip-left);
+    top: var(--tooltip-top);   
 }
 
 /* Botones de tamaño medium para touch */

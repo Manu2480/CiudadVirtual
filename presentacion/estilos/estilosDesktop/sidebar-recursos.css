@@ -73,6 +73,8 @@ Panel de recursos en sidebar izquierdo
     font-size: 12px;
     white-space: nowrap;
     z-index: 999;
+    top: var(--tooltip-top);
+    left: var(--tooltip-left);
 }
 .tooltip-sub{
     color: lightgray;
