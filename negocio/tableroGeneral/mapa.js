@@ -15,7 +15,7 @@ Dependencias: tablero.js, edificios.js, edificaciones.js,
 ================================================ */
 
 
-/* ================================================
+/* ================================================ 
 ESTADO INTERNO
 ================================================ */
 const _mapaState = {
@@ -67,6 +67,7 @@ function inicializar(filas, columnas, edificiosGuardados) {
 
     document.documentElement.style.setProperty("--columnas", `${columnas}`);
     document.documentElement.style.setProperty("--filas",`${filas}`);
+    _gridEl.innerHTML = "";
 
     _mapaState.grid = Array.from({ length: filas }, () =>
         Array.from({ length: columnas }, () => ({ tipo: "vacio" }))
