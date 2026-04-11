@@ -22,7 +22,6 @@ const _MODULOS = [
     "zoom.js",        
     "joystick.js",
     "turnos.js",
-    "clima.js",
     "noticias.js",
 ];
 
@@ -31,7 +30,11 @@ const _MODULOS_GENERAL = [
     "../../negocio/tableroGeneral/ruta.js",
     "../../negocio/tableroGeneral/menuConstruccion.js",
     "../../negocio/tableroGeneral/estadisticas.js",
+<<<<<<< HEAD
     "../../negocio/tableroGeneral/panelRecursos.js",
+=======
+    "../../negocio/tableroGeneral/panelClima.js",
+>>>>>>> 73a3c3d3b1d83bf35d1f97c3695e2be83628f05c
 ];
 
 /* Carga los scripts en orden y llama al callback cuando el último termina */
@@ -69,7 +72,7 @@ function _inicializarControlesMovil() {
         console.log("JoystickMovil disponible?", !!window.JoystickMovil);
         console.log("MenuConstruccionMovil disponible?", !!window.MenuConstruccionMovil);
         console.log("TurnosMovil disponible?", !!window.TurnosMovil);
-        console.log("ClimaMovil disponible?", !!window.ClimaMovil);
+        console.log("ClimaMovil disponible?", !!window.panelClima);
         console.log("NoticiasMovil disponible?", !!window.NoticiasMovil);
         
         if (window.TabsMovil) {
@@ -85,7 +88,7 @@ function _inicializarControlesMovil() {
         if (window.JoystickMovil) window.JoystickMovil.inicializar();
         if (window.MenuConstruccionMovil) window.MenuConstruccionMovil.inicializar();
         if (window.TurnosMovil) window.TurnosMovil.inicializar();
-        if (window.ClimaMovil) window.ClimaMovil.inicializar();
+        if (window.panelClima) window.panelClima.inicializar();
         if (window.NoticiasMovil) window.NoticiasMovil.inicializar();
 
         console.log("controlesMovil: inicialización completa");

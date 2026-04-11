@@ -100,7 +100,7 @@
 }
 .panel-tablet.abierto{
     grid-row: 1 / -1;
-    background-color: var(--color-texto-s);
+    background-color: white;
     visibility: visible !important;
 }
 .panel__titulo{

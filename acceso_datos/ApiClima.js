@@ -12,17 +12,26 @@ class ApiClima{
             return res.json();
         });       
     }
+
     async getDatosClima(longitud,latitud){
         const datos = await this.getJsonClima(longitud,latitud);
-        return{
-            "temperatura":datos.main.temp,
-            "condicion":datos.weather[0].description,
-            "humedad":datos.main.humidity,
-            "viento":{"velocidad": datos.wind.speed,
-                "grados": datos.wind.deg,
-                "rafaga": datos.wind.gust
-            }
-        };
+        return this.crearClima(datos);
+    }
+
+    crearViento(diccionario){
+        const velocidadViento = diccionario.speed ?? null;
+        const gradosViento = diccionario.deg ?? null;
+        const rafagaViento = diccionario.gust ?? null;
+        return new Viento(velocidadViento,gradosViento,rafagaViento);
+    }
+
+    crearClima(diccionario){
+        const datosViento = diccionario.wind;
+        const viento = this.crearViento(datosViento)
+        const temperatura = diccionario.main.temp;
+        const condicion = diccionario.weather[0].description;
+        const humedad = diccionario.main.humidity;
+        return new Clima(temperatura,condicion,humedad,viento);
     }
 
 }
