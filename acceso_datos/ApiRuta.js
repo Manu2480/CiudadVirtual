@@ -11,16 +11,15 @@ const ApiRuta = (() => {
                 end: fin
             })
         })
-        .then(res => res.json().then(data => ({
-            ok: res.ok,
-            data
-        })))
-        .catch(err => {
-            return {
-                ok: false,
-                networkError: true,
-                error: err.message
-            };
+        .then(res => {
+            return res.json().then(data => {
+                if (!res.ok) {
+                    const error = new Error(data?.error || `Error HTTP: ${res.status}`);
+                    error.responseData = data;
+                    throw error;
+                }
+                return data;
+            });
         });
     }
 

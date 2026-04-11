@@ -3,9 +3,6 @@
 document.addEventListener("DOMContentLoaded", function(){
 
     // ===== VARIABLES GLOBALES =====
-    window.api = new ApiColombia();
-    window.coordenadas = new ApiCoordenadas();
-
     const pasos = document.querySelectorAll(".paso");
     const selectDepartamento = document.getElementById("departamento");
     const selectCiudad = document.getElementById("ciudad");
@@ -60,7 +57,7 @@ document.addEventListener("DOMContentLoaded", function(){
 
     // ===== DEPARTAMENTOS =====
     function cargarDepartamentos(){
-        window.api.getDepartamentos().then(deps => {
+        ColombiaService.obtenerDepartamentos().then(deps => {
 
             selectDepartamento.innerHTML = '<option value="">Seleccione...</option>';
 
@@ -75,7 +72,7 @@ document.addEventListener("DOMContentLoaded", function(){
     }
 
     function cargarCiudades(id){
-        window.api.getCiudadesDepartamento(id).then(ciudades => {
+        ColombiaService.obtenerCiudadesDepartamento(id).then(ciudades => {
 
             selectCiudad.innerHTML = '<option value="">Seleccione...</option>';
 
@@ -105,7 +102,7 @@ document.addEventListener("DOMContentLoaded", function(){
         window.nombreCiudad = this.value;
 
         if (window.nombreCiudad){
-            window.coordenadas.obtenerCoordenadas(
+            CoordenadasService.obtenerCoordenadas(
                 window.nombreCiudad,
                 window.nombreDepartamento
             ).then(coord => {

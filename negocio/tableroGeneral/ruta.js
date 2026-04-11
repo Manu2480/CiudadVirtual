@@ -20,7 +20,7 @@ Flujo:
   6. Click en tab Ruta (icono reiniciar) → limpiarTodo() + activar()
 ================================================ */
 
-var API_RUTA = ApiRuta;
+var API_RUTA = RutaService;
 
 var _estado     = "inactivo";   /* "inactivo" | "eligiendo" | "resultado" */
 var _puntoA     = null;         /* { fila, col, celdaEl } */
@@ -256,7 +256,7 @@ function _calcular() {
     mapa[_puntoA.fila][_puntoA.col] = 1;
     mapa[_puntoB.fila][_puntoB.col] = 1;
 
-    ApiRuta.calcularRuta({
+    API_RUTA.calcularRuta({
         mapa: mapa,
         inicio: [_puntoA.fila, _puntoA.col],
         fin: [_puntoB.fila, _puntoB.col]
@@ -271,7 +271,7 @@ function _calcular() {
 
             if (!result.ok) {
                 Notificaciones.mostrar(
-                    result.data.error || "No hay ruta posible entre esos edificios.", "error"
+                    result.error || "No hay ruta posible entre esos edificios.", "error"
                 );
                 _puntoB.celdaEl.classList.remove("celda--ruta-b");
                 _puntoB = null;
@@ -286,13 +286,13 @@ function _calcular() {
 
             /* Éxito: pintar ruta, dejar A y B amarillos, cerrar panel,
                salir del modo "eligiendo" pero mantener amarillos */
-            _pintarRuta(result.data.route);
+            _pintarRuta(result.route);
             _eliminarPanel();
             _desactivarModo();
             _estado = "resultado";
 
             Notificaciones.mostrar(
-                "Ruta: " + result.data.route.length + " pasos.", "exito"
+                "Ruta: " + result.route.length + " pasos.", "exito"
             );
         }, restante);
     })
