@@ -17,6 +17,14 @@ Contenedor scrollable, grid de celdas y controles de zoom.
     transition: transform var(--trans-normal);
 }
 
+#mapa-grid {
+    display: grid;
+    grid-template-columns: repeat(var(--columnas), var(--tamano-celda));
+    grid-template-rows: repeat(var(--filas), var(--tamano-celda));
+    transform: scale(var(--zoom, 1));
+    transform-origin: top left;
+}
+
 /* Celda individual */
 .celda {
     width: var(--tamano-celda);

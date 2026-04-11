@@ -121,14 +121,14 @@ function mostrarIndices() {
     for (let f = 0; f < viewport.filasVisibles; f++) {
         const div = document.createElement("div");
         div.className = "indice-fila";
-        div.textContent = viewport.filaInicio + f + 1;
+        div.textContent = viewport.filaInicio + f;
         filasEl.appendChild(div);
     }
 
     for (let c = 0; c < viewport.columnasVisibles; c++) {
         const div = document.createElement("div");
         div.className = "indice-columna";
-        div.textContent = viewport.colInicio + c +1;
+        div.textContent = viewport.colInicio + c;
         colsEl.appendChild(div);
     }
 }
@@ -167,8 +167,8 @@ function renderizarViewport() {
     viewport.columnasVisibles = Math.floor(ancho / tamCelda) + 1;
     viewport.filasVisibles    = Math.floor(alto / tamCelda) + 1;
 
-    gridEl.style.gridTemplateColumns = `repeat(${viewport.columnasVisibles}, ${tamCelda}px)`;
-    gridEl.style.gridTemplateRows    = `repeat(${viewport.filasVisibles}, ${tamCelda}px)`;
+    document.documentElement.style.setProperty("--columnas", `${viewport.columnasVisibles}`);
+    document.documentElement.style.setProperty("--filas",`${viewport.filasVisibles}`);
 
     const gridEstado = window.Mapa.getGrid();
 

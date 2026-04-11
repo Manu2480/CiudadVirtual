@@ -91,13 +91,15 @@ function inicializar() {
         const factor = dist > RADIO ? RADIO / dist : 1;
         const cx = px * factor;
         const cy = py * factor;
-        knob.style.transform = `translate(calc(-50% + ${cx}px), calc(-50% + ${cy}px))`;
+        document.documentElement.style.setProperty("--knob-x", `${cx}px`);
+        document.documentElement.style.setProperty("--knob-y", `${cy}px`);
         dx = cx / RADIO;
         dy = cy / RADIO;
     }
 
     function _resetKnob() {
-        knob.style.transform = "translate(-50%, -50%)";
+        document.documentElement.style.setProperty("--knob-x", "0px")
+        document.documentElement.style.setProperty("--knob-y", "0px")
         dx = 0;
         dy = 0;
     }
