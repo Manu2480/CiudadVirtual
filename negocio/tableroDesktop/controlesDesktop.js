@@ -504,10 +504,10 @@ function _cargarModuloClima() {
 
 function _cargarModuloNoticias() {
     const script = document.createElement("script");
-    script.src = "../../negocio/tableroDesktop/noticias.js";
+    script.src = "../../negocio/tableroGeneral/panelNoticias.js";
     script.onload = () => {
-        if (window.NoticiasDesktop) {
-            window.NoticiasDesktop.inicializar();
+        if (window.PanelNoticias) {
+            window.PanelNoticias.inicializar();
         }
     };
     document.head.appendChild(script);

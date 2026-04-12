@@ -22,7 +22,6 @@ const _MODULOS = [
     "zoom.js",        
     "joystick.js",
     "turnos.js",
-    "noticias.js",
 ];
 
 /* Módulos de tableroGeneral también usados en móviL*/
@@ -31,6 +30,7 @@ const _MODULOS_GENERAL = [
     "../../negocio/tableroGeneral/menuConstruccion.js",
     "../../negocio/tableroGeneral/estadisticas.js",
     "../../negocio/tableroGeneral/panelClima.js",
+    "../../negocio/tableroGeneral/panelNoticias.js",
 ];
 
 /* Carga los scripts en orden y llama al callback cuando el último termina */
@@ -68,8 +68,8 @@ function _inicializarControlesMovil() {
         console.log("JoystickMovil disponible?", !!window.JoystickMovil);
         console.log("MenuConstruccionMovil disponible?", !!window.MenuConstruccionMovil);
         console.log("TurnosMovil disponible?", !!window.TurnosMovil);
-        console.log("ClimaMovil disponible?", !!window.panelClima);
-        console.log("NoticiasMovil disponible?", !!window.NoticiasMovil);
+        console.log("PanelClima disponible?", !!window.panelClima);
+        console.log("PanelNoticias disponible?", !!window.PanelNoticias);
         
         if (window.TabsMovil) {
             window.TabsMovil.inicializar();
@@ -85,7 +85,7 @@ function _inicializarControlesMovil() {
         if (window.MenuConstruccionMovil) window.MenuConstruccionMovil.inicializar();
         if (window.TurnosMovil) window.TurnosMovil.inicializar();
         if (window.panelClima) window.panelClima.inicializar();
-        if (window.NoticiasMovil) window.NoticiasMovil.inicializar();
+        if (window.PanelNoticias) window.PanelNoticias.inicializar();
 
         console.log("controlesMovil: inicialización completa");
     } catch (err) {
