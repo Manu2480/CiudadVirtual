@@ -33,13 +33,13 @@ function inicializar() {
         return;
     }
 
-    _inicializarMovil();
-    _inicializarTablet();
-    _inicializarDesktop();
+    _inicializarCatalogoMovil();
+    _inicializarCatalogoTablet();
+    _inicializarCatalogoDesktop();
 }
 
 /* ---------- MÓVIL ---------- */
-function _inicializarMovil() {
+function _inicializarCatalogoMovil() {
     if (window.innerWidth >= 768) return;  /* no es móvil */
 
     const menu = document.getElementById("menu-construccion");
@@ -57,11 +57,14 @@ function _inicializarMovil() {
 }
 
 /* ---------- TABLET ---------- */
-function _inicializarTablet() {
+function _inicializarCatalogoTablet() {
     const contenedores = [
         document.getElementById("catalogo-edificios-tablet-horizontal"),
         document.getElementById("catalogo-edificios-tablet-vertical"),
     ];
+    contenedores.forEach((c, i) => {
+    console.log("contenedor", i, c);
+});
 
     contenedores.forEach(contenedor => {
         if (!contenedor || contenedor.querySelector(".construccion-lista")) return;
@@ -70,6 +73,7 @@ function _inicializarTablet() {
 
         contenedor.appendChild(lista);
     });
+    console.log("Catalogo insertado en tablet");
 }
 
 /* ---------- DESKTOP ---------- */

@@ -12,34 +12,64 @@ Dependencias: ApiNoticias.js
 
 let _articulos    = [];
 let _indiceActual = 0;
-
+let _paneles = [];
+let btnNoticiasMovil;
 /* ── Inicialización ── */
 
 function inicializar() {
+    const vistaActual = document.documentElement.getAttribute("data-vista");
+
+    if (vistaActual == "movil"){
+        _inicializarNoticiasMovil();
+    }
+    else if (vistaActual == "tablet"){
+        _inicializarNoticiasTablet();
+    }
+    else if (vistaActual == "desktop"){
+        _inicializarNoticiasDesktop();
+    }
     ActualizacionesPeriodicas.iniciarTrabajoPeriodico({
-        id: "noticias:movil",
+        id: "noticias",
         accion: _consultarNoticias,
         intervaloMs: ActualizacionesPeriodicas.INTERVALOS_MS.INTERVALO_NOTICIAS,
         ejecutarAhora: true,
     });
-
-    function _conectarBtn() {
-        const btn = document.getElementById("btn-noticias");
-        if (btn) btn.addEventListener("click", () => abrirCarrusel(0));
-        else setTimeout(_conectarBtn, 200);
-    }
+}
+function _inicializarNoticiasMovil(){
     _conectarBtn();
 }
-
+function _inicializarNoticiasTablet(){
+    let panelNoticiasVertical = document.getElementById("panel-noticias-tablet-vertical");
+    let panelNoticiasHorizontal = document.getElementById("panel-noticias-tablet-horizontal");
+    _paneles.push(panelNoticiasHorizontal);
+    _paneles.push(panelNoticiasVertical)
+}
+function _inicializarNoticiasDesktop(){
+    const panelDesktop = document.getElementById("panel-noticias");
+    _paneles.push(panelDesktop);
+}
+function _actualizarContenidoPaneles(){
+    if (_paneles.length > 0){
+        _paneles.forEach(panel => {
+            _renderizarPanelNoticias(panel);
+        });
+    }
+}
+function _conectarBtn() {
+    btnNoticiasMovil = document.getElementById("btn-noticias");
+    if (btnNoticiasMovil) btnNoticiasMovil.addEventListener("click", () => abrirCarrusel(0));
+    else setTimeout(_conectarBtn, 200);
+}
 /* ── Consulta API ── */
 
 function _consultarNoticias() {
     NoticiasService.obtenerNoticias({ limite: 5 })
         .then(articulos => {
             _articulos = articulos;
+            _actualizarContenidoPaneles();
         })
         .catch(err => {
-            console.error("Error al cargar noticias móvil:", err);
+            console.error("Error al cargar noticias:", err);
         });
 }
 
@@ -97,30 +127,13 @@ function _construirModal() {
 
 /* ── Renderizado de la noticia actual ── */
 
-function _renderizarNoticia() {
+function _renderizarNoticiaMovil() {
     const art    = _articulos[_indiceActual];
     const cuerpo = document.getElementById("noticias-cuerpo");
     const dots   = document.getElementById("noticias-dots");
     if (!art || !cuerpo) return;
 
-    cuerpo.innerHTML = `
-        ${art.urlToImage ? `
-            <img class="noticias-modal__imagen" id="noticias-img"
-                src="${art.urlToImage}" alt="${art.title}">` : ""}
-        <div class="noticias-modal__contenido">
-            <p class="noticias-modal__fuente">${art.source?.name || ""}</p>
-            ${art.publishedAt ? `
-                <p class="noticias-modal__fecha">${new Date(art.publishedAt).toLocaleDateString("es-ES", { day: "numeric", month: "long", year: "numeric" })}</p>` : ""}
-            <h4 class="noticias-modal__noticia-titulo">${art.title}</h4>
-            ${art.description ? `
-                <p class="noticias-modal__descripcion">${art.description}</p>` : ""}
-            ${art.url ? `
-                <a class="noticias-modal__leer-mas"
-                href="${art.url}" target="_blank" rel="noopener">
-                    Leer artículo completo
-                </a>` : ""}
-        </div>
-    `;
+    cuerpo.innerHTML = _htmlNoticia(art);
             
     //para evitar imágenes rotas, oculta la imagen si no carga correctamente
     const img = cuerpo.querySelector(".noticias-modal__imagen");
@@ -134,12 +147,45 @@ function _renderizarNoticia() {
     /* Vuelve al inicio del cuerpo al cambiar noticia */
     cuerpo.scrollTop = 0;
 }
+function _renderizarPanelNoticias(panel){
+    panel.innerHTML = '<h2 class="panel__titulo">Noticias</h2>';
+    panel.innerHTML += '<div class="seccion-noticias">'
+    _articulos.forEach(articulo => {
+        panel.insertAdjacentHTML("beforeend", _htmlNoticia(articulo));
+    });
+    panel.innerHTML += "</div>";
+    if (_articulos.length == 0){
+        panel.insertAdjacentHTML("beforeend", `<p>Sin noticias</p>`);
+    }
+
+}
+
+function _htmlNoticia(articulo){
+    return(`
+        ${articulo.urlToImage ? `
+            <img class="noticias-modal__imagen"
+                src="${articulo.urlToImage}" alt="${articulo.title}">` : ""}
+        <div class="noticias-modal__contenido">
+            <p class="noticias-modal__fuente">${articulo.source?.name || ""}</p>
+            ${articulo.publishedAt ? `
+                <p class="noticias-modal__fecha">${new Date(articulo.publishedAt).toLocaleDateString("es-ES", { day: "numeric", month: "long", year: "numeric" })}</p>` : ""}
+            <h4 class="noticias-modal__noticia-titulo">${articulo.title}</h4>
+            ${articulo.description ? `
+                <p class="noticias-modal__descripcion">${articulo.description}</p>` : ""}
+            ${articulo.url ? `
+                <a class="noticias-modal__leer-mas"
+                href="${articulo.url}" target="_blank" rel="noopener">
+                    Leer artículo completo
+                </a>` : ""}
+        </div>
+    `);
+}
 
 /* ── Navegación ── */
 
 function _navegar(delta) {
     _indiceActual = (_indiceActual + delta + _articulos.length) % _articulos.length;
-    _renderizarNoticia();
+    _renderizarNoticiaMovil();
 }
 
 /* ── API pública ── */
@@ -151,7 +197,7 @@ function abrirCarrusel(indice = 0) {
     }
     _construirModal();
     _indiceActual = indice;
-    _renderizarNoticia();
+    _renderizarNoticiaMovil();
     document.getElementById("noticias-overlay").classList.add("abierto");
 }
 
@@ -162,7 +208,7 @@ function cerrarCarrusel() {
 /* ================================================
 EXPOSICIÓN GLOBAL
 ================================================ */
-window.NoticiasMovil = {
+window.PanelNoticias = {
     inicializar,
     abrirCarrusel,
     cerrarCarrusel,
