@@ -12,22 +12,22 @@ class Edificio{
         this.id = id;
         this.costo = costo;
         this.ubicacion = ubicacion;
-        this.capacidad = capacidad;
+        this.capacidad = capacidad || new CapacidadNula();
 
         this.recursosEdificio = {}; // Los recursos seran definidos en las clases hijas mas concretas
         this.ciudadanos = []; // inicialmente vacío, se llenará con objetos Ciudadano
     }
 
     //Metodo para agregar ciudadano al edificio, se implementará en las clases hijas
-    agregarPersona(persona) {
+    agregarPersona(persona, rol) {
         if (!(persona instanceof Ciudadano)) {
             console.log("El objeto proporcionado no es una instancia de Ciudadano.");
             return;
         }
-        if (this.ciudadanos.length < this.capacidad) {
-            this.ciudadanos.push(persona);
+        if (this.capacidad.puedeAgregar(rol, this.ciudadanos)) {
+            this.ciudadanos.push({ ciudadano: persona, rol });
         } else {
-            console.log("No se puede agregar más ciudadanos, capacidad máxima alcanzada.");
+            console.log("No se puede agregar más personas con rol:", rol);
         }
     }
 

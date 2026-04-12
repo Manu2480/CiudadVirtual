@@ -47,7 +47,6 @@ let _catalogo = [
         categoria:   "comercial",
         imagen:      "../../media/edificios/tienda.png",
         descripcion: "Genera ingresos.",
-        empleos:     Tienda.catalogoInfo.capacidad,
         clase: Tienda,
         ...Tienda.catalogoInfo,
     },
@@ -57,7 +56,6 @@ let _catalogo = [
         categoria:   "comercial",
         imagen:      "../../media/edificios/centro-comercial.png",
         descripcion: "Gran centro comercial que genera muchos ingresos.",
-        empleos:     CentroComercial.catalogoInfo.capacidad,
         clase: CentroComercial,
         ...CentroComercial.catalogoInfo,
     },
@@ -69,7 +67,6 @@ let _catalogo = [
         categoria:   "industrial",
         imagen:      "../../media/edificios/fabrica.png",
         descripcion: "Produce bienes.",
-        empleos:     Fabrica.catalogoInfo.capacidad,
         clase: Fabrica,
         ...Fabrica.catalogoInfo,
     },
@@ -79,7 +76,6 @@ let _catalogo = [
         categoria:   "industrial",
         imagen:      "../../media/edificios/granja.png",
         descripcion: "Provee alimento para la ciudad.",
-        empleos:     Granja.catalogoInfo.capacidad,
         clase: Granja,
         ...Granja.catalogoInfo,
     },
@@ -168,10 +164,10 @@ function tooltip(edificioOId) {
     ];
 
     if (edificio.descripcion)  lineas.push(edificio.descripcion);
-    if (edificio.categoria !== "industrial" && edificio.categoria !== "comercial" && edificio.capacidad) {
-        lineas.push(`Capacidad: +${edificio.capacidad} habitantes`);
+    if (edificio.capacidad?.residencial) {
+        lineas.push(`Capacidad: +${edificio.capacidad.residencial} habitantes`);
     }
-    if (edificio.empleos)      lineas.push(`Empleos: +${edificio.empleos}`);
+    if (edificio.capacidad?.laboral)      lineas.push(`Empleos: +${edificio.capacidad.laboral}`);
     if (edificio.dinero)       lineas.push(`Dinero por turno: +$${edificio.dinero.toLocaleString()}`);
     if (edificio.electricidad) {
         lineas.push(`Electricidad: ${edificio.electricidad > 0 ? "+" : ""}${edificio.electricidad}`);

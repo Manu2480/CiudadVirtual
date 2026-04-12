@@ -4,7 +4,6 @@ class EstacionPolicia extends EdificioServicio {
 
     static catalogoInfo = {
         costo:        4000,
-        capacidad:    0,
         felicidad:    10,
         electricidad: -15,
     };
@@ -12,7 +11,8 @@ class EstacionPolicia extends EdificioServicio {
     constructor(ubicacion) {
         EstacionPolicia.contador += 1;
         const idEstacionPolicia = "Policia" + EstacionPolicia.contador;
-        super(idEstacionPolicia, EstacionPolicia.catalogoInfo.costo, ubicacion, EstacionPolicia.catalogoInfo.capacidad);
+        const capacidad = new CapacidadNula();
+        super(idEstacionPolicia, EstacionPolicia.catalogoInfo.costo, ubicacion, capacidad);
         this.recursosEdificio["electricidad"] = EstacionPolicia.catalogoInfo.electricidad;
     }
 
@@ -25,6 +25,7 @@ class EstacionPolicia extends EdificioServicio {
         }
         const instance = Object.create(EstacionPolicia.prototype);
         Object.assign(instance, obj);
+        instance.capacidad = new CapacidadNula();
         return instance;
     }
 }

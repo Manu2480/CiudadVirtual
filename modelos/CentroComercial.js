@@ -4,7 +4,9 @@ class CentroComercial extends EdificioComercial {
 
     static catalogoInfo = {
         costo:        8000,
-        capacidad:    20,
+        capacidad:    {
+            laboral: 20,
+        },
         dinero:       2000,
         electricidad: -25,
     };
@@ -12,7 +14,8 @@ class CentroComercial extends EdificioComercial {
     constructor(ubicacion) {
         CentroComercial.contador += 1;
         const idCentroComercial = "centroComercial" + CentroComercial.contador;
-        super(idCentroComercial, CentroComercial.catalogoInfo.costo, ubicacion, CentroComercial.catalogoInfo.capacidad);
+        const capacidad = new CapacidadLaboral(CentroComercial.catalogoInfo.capacidad.laboral)
+        super(idCentroComercial, CentroComercial.catalogoInfo.costo, ubicacion, capacidad);
         this.recursosEdificio["dinero"]       = CentroComercial.catalogoInfo.dinero;
         this.recursosEdificio["electricidad"] = CentroComercial.catalogoInfo.electricidad;
     }
@@ -26,6 +29,7 @@ class CentroComercial extends EdificioComercial {
         }
         const instance = Object.create(CentroComercial.prototype);
         Object.assign(instance, obj);
+        instance.capacidad = new CapacidadLaboral(CentroComercial.catalogoInfo.capacidad.empleado);
         return instance;
     }
 }

@@ -4,7 +4,6 @@ class EstacionBombero extends EdificioServicio {
 
     static catalogoInfo = {
         costo:        4000,
-        capacidad:    0,
         felicidad:    10,
         electricidad: -15,
     };
@@ -12,7 +11,8 @@ class EstacionBombero extends EdificioServicio {
     constructor(ubicacion) {
         EstacionBombero.contador += 1;
         const idEstacionBomberos = "Bombero" + EstacionBombero.contador;
-        super(idEstacionBomberos, EstacionBombero.catalogoInfo.costo, ubicacion, EstacionBombero.catalogoInfo.capacidad);
+        const capacidad = new CapacidadNula();
+        super(idEstacionBomberos, EstacionBombero.catalogoInfo.costo, ubicacion, capacidad);
         this.recursosEdificio["electricidad"] = EstacionBombero.catalogoInfo.electricidad;
     }
 
@@ -25,6 +25,7 @@ class EstacionBombero extends EdificioServicio {
         }
         const instance = Object.create(EstacionBombero.prototype);
         Object.assign(instance, obj);
+        instance.capacidad = new CapacidadNula();
         return instance;
     }
 }

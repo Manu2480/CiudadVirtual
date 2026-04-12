@@ -48,16 +48,19 @@ function mostrarEdificio(edificio, fila, col) {
 
     const instancia = Tablero.Estado.ciudad?.terreno?.ubicacionInfraestructura(fila, col);
     const ocupados  = instancia?.ciudadanos?.length ?? 0;
-    const capacidad = instancia?.capacidad ?? 0;
     const afectados = ocupados > 0;
 
-    const esResidencial = edificio.capacidad && !edificio.empleos;
-    const esComercial   = edificio.empleos;
+    const capacidadResidencial = edificio.capacidad?.getCapacidad?.("residente") ?? 0;
+    const capacidadLaboral = edificio.capacidad?.getCapacidad?.("empleado") ?? 0;
+
+    const esResidencial = capacidadResidencial > 0;
+    const esComercial   = capacidadLaboral > 0;
+    const capacidad = capacidadResidencial + capacidadLaboral;
 
     // Felicidad promedio de los residentes por edificio residencial casa/apartamento
     let felicidadPromedioHtml = "";
     if (esResidencial && ocupados > 0) {
-        const totalFelicidad = instancia.ciudadanos.reduce((sum, c) => sum + (c.felicidad ?? 0), 0);
+        const totalFelicidad = instancia.ciudadanos.reduce((sum, c) => sum + (c.ciudadano?.felicidad ?? 0), 0);
         const promedio = Math.round(totalFelicidad / ocupados);
         const icono = promedio >= 70 ? "fi-br-smile-beam" 
                     : promedio >= 40 ? "fi-br-meh-rolling-eyes" 
@@ -127,8 +130,11 @@ function mostrarEdificio(edificio, fila, col) {
 function _mostrarConfirmacionDemoler(fila, col, edificio, instancia) {
     const reembolso = Math.round(edificio.costo * 0.5);
     const ocupados  = instancia?.ciudadanos?.length ?? 0;
-    const esResidencial = edificio.capacidad && !edificio.empleos;
-    const esComercial   = edificio.empleos;
+    const capacidadResidencial = edificio.capacidad?.getCapacidad?.("residente") ?? 0;
+    const capacidadLaboral = edificio.capacidad?.getCapacidad?.("empleado") ?? 0;
+
+    const esResidencial = capacidadResidencial > 0;
+    const esComercial   = capacidadLaboral > 0;
 
     // Calcular afectaciones
     const afectaciones = [];

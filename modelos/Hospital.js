@@ -4,7 +4,6 @@ class Hospital extends EdificioServicio {
 
     static catalogoInfo = {
         costo:        6000,
-        capacidad:    0,
         felicidad:    10,
         electricidad: -20,
         agua:         -10,
@@ -13,7 +12,8 @@ class Hospital extends EdificioServicio {
     constructor(ubicacion) {
         Hospital.contador += 1;
         const idHospital = "Hospital" + Hospital.contador;
-        super(idHospital, Hospital.catalogoInfo.costo, ubicacion, Hospital.catalogoInfo.capacidad);
+        const capacidad = new CapacidadNula();
+        super(idHospital, Hospital.catalogoInfo.costo, ubicacion, capacidad);
         this.recursosEdificio["electricidad"] = Hospital.catalogoInfo.electricidad;
         this.recursosEdificio["agua"]         = Hospital.catalogoInfo.agua;
     }
@@ -27,6 +27,7 @@ class Hospital extends EdificioServicio {
         }
         const instance = Object.create(Hospital.prototype);
         Object.assign(instance, obj);
+        instance.capacidad = new CapacidadNula();
         return instance;
     }
 }

@@ -162,33 +162,27 @@ class Terreno{
                 this.vias[fila][columna] = 0;
                 console.log(`Via eliminada de (${fila}, ${columna}) - Reembolso: ${reembolso}`);
             }
-            else if (edificio instanceof EdificioResidencial){
-                edificio.ciudadanos.forEach(ciudadano => {
-                    ciudadano.vivienda = false; //Actualizamos el estado de vivienda
-                    console.log(`${ciudadano.id} perdio su vivienda`);
+
+            if (edificio.capacidad.getCapacidad("residente")){
+                edificio.ciudadanos.forEach(o => {
+                    if (o.rol === "residente") {
+                        o.ciudadano.vivienda = false;//Actualizamos el estado de vivienda
+                        console.log(`${o.ciudadano.id} perdio su vivienda`);
+                    }
                 });
-                edificio.ciudadanos = []; // Limpiar lista para que puedan ser reasignados
                 console.log(`${edificio.id} demolido - Reembolso: ${reembolso}`);
             }
-            else if (edificio instanceof EdificioComercial){
-                edificio.ciudadanos.forEach(ciudadano => {
-                    ciudadano.empleo = false; //Actualizamos el estado de empleo
-                    console.log(`${ciudadano.id} perdio su empleo`);
+
+            if (edificio.capacidad.getCapacidad("empleado")){
+                edificio.ciudadanos.forEach(o => {
+                    if (o.rol === "empleado") {
+                        o.ciudadano.empleo = false;//Actualizamos el estado de empleo
+                        console.log(`${ciudadano.id} perdio su empleo`);
+                    }
                 });
-                edificio.ciudadanos = []; // Limpiar lista para que puedan ser reasignados
-                console.log(`${edificio.id} demolido - Reembolso: ${reembolso}`);
             }
-            else if (edificio instanceof EdificioIndustrial){
-                edificio.ciudadanos.forEach(ciudadano => {
-                    ciudadano.empleo = false; //Actualizamos el estado de empleo
-                    console.log(`${ciudadano.id} perdio su empleo`);
-                });
-                edificio.ciudadanos = []; // Limpiar lista para que puedan ser reasignados
-                console.log(`${edificio.id} demolido - Reembolso: ${reembolso}`);
-            }
-            else {
-                console.log(`${edificio.id} demolido - Reembolso: ${reembolso}`);
-            }
+            edificio.ciudadanos = [] //Se limpia el atributo
+            console.log(`${edificio.id} demolido - Reembolso: ${reembolso}`);
             // eliminar de la lista general
             this.edificios = this.edificios.filter(construcciones => construcciones !== edificio);
             return { exito: true, reembolso: reembolso, mensaje: `Infraestructura demolida - Reembolso: ${reembolso}`, edificio: edificio };
@@ -201,9 +195,8 @@ class Terreno{
     capacidadTotalEmpleos(){
         let contador = 0;
         this.edificios.forEach(edificio => {
-            if (edificio instanceof EdificioComercial){ //Valida que el edificio contenga empleados para agregar su capacidad al contador
-                contador += edificio.capacidad;
-            }
+            //Valida que el edificio contenga empleados para agregar su capacidad al contador
+            contador += edificio.capacidad.getCapacidad("empleado");
         });
         return contador;
     }
@@ -211,9 +204,8 @@ class Terreno{
     capacidadTotalViviendas(){
         let contador = 0;
         this.edificios.forEach(edificio => {
-            if (edificio instanceof EdificioResidencial){//Valida que el edificio contenga inquilinos para agregar al contador su capacidad
-                contador += edificio.capacidad;
-            }
+            //Valida que el edificio contenga inquilinos para agregar al contador su capacidad
+                contador += edificio.capacidad.getCapacidad("residente");
         });
         return contador;
     }
@@ -224,16 +216,11 @@ class Terreno{
         let edificiosConDisponibilidad = [];//edificios donde hay empleos disponibles
 
         this.edificios.forEach(edificio => {//recorro la lista de edificios
-            // ahora revisamos edificios comerciales o industriales, no residenciales
-            if (edificio instanceof EdificioComercial || edificio instanceof EdificioIndustrial) {
-
-                const disponibles = edificio.capacidad - edificio.ciudadanos.length;//calculo la disponibilidad de empleo restandole a la capacidad el numero de ciudadanos que ya estan en el array de ese edificio
-
+                const disponibles = edificio.capacidad.getDisponibles("empleado", edificio.ciudadanos);
                 if (disponibles > 0) { //si hay empleos disponibles, las sumo al contador total y agrego el edificio a la lista
                     contador += disponibles;
                     edificiosConDisponibilidad.push(edificio);
                 }
-            }
         });
 
         //retorno un objeto con la cantidad total de empleos disponibles y la lista de edificios con disponibilidad
@@ -248,12 +235,10 @@ class Terreno{
         let edificiosConDisponibilidad = [];//edificios donde hay viviendas disponibles
 
         this.edificios.forEach(edificio => {//recorro la lista de edificios
-            if (edificio instanceof EdificioResidencial) {//valido que sean de tipo residencial
-                let disponibles = edificio.capacidad - edificio.ciudadanos.length;//conto la cantidad de viviendas disponibles restando la capacidad total de viviendas del edificio con la cantidad de ciudadanos que ya viven en ese edificio
-                if (disponibles > 0) { //si hay viviendas disponibles, las sumo al contador total de viviendas disponibles y agrego el edificio a la lista de edificios con disponibilidad para crear ciudadanos
-                    contador += disponibles;
-                    edificiosConDisponibilidad.push(edificio);
-                }
+            let disponibles = edificio.capacidad.getDisponibles("residente",edificio.ciudadanos);
+            if (disponibles > 0) { //si hay viviendas disponibles, las sumo al contador total de viviendas disponibles y agrego el edificio a la lista de edificios con disponibilidad para crear ciudadanos
+                contador += disponibles;
+                edificiosConDisponibilidad.push(edificio);
             }
         });
         //retorno un objeto con la cantidad total de viviendas disponibles y la lista de edificios con disponibilidad para crear ciudadanos porque en js no existen las tuplas simples

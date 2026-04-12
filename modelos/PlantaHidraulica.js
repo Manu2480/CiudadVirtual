@@ -4,7 +4,6 @@ class PlantaHidraulica extends PlantaUtilidad {
 
     static catalogoInfo = {
         costo:        8000,
-        capacidad:    0,
         electricidad: -20,
         agua:         150,
     };
@@ -12,7 +11,8 @@ class PlantaHidraulica extends PlantaUtilidad {
     constructor(ubicacion) {
         PlantaHidraulica.contador += 1;
         const idPlanta = "Agua" + PlantaHidraulica.contador;
-        super(idPlanta, PlantaHidraulica.catalogoInfo.costo, ubicacion, PlantaHidraulica.catalogoInfo.capacidad);
+        const capacidad = new CapacidadNula();
+        super(idPlanta, PlantaHidraulica.catalogoInfo.costo, ubicacion, capacidad);
         this.recursosEdificio["electricidad"] = PlantaHidraulica.catalogoInfo.electricidad;
         this.recursosEdificio["agua"]         = PlantaHidraulica.catalogoInfo.agua;
     }
@@ -26,6 +26,7 @@ class PlantaHidraulica extends PlantaUtilidad {
         }
         const instance = Object.create(PlantaHidraulica.prototype);
         Object.assign(instance, obj);
+        instance.capacidad = new CapacidadNula();
         return instance;
     }
 
