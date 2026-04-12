@@ -34,8 +34,8 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("btn-ver-noticias")?.addEventListener("click", () => {
         menu.classList.remove("abierto");
         menu.setAttribute("aria-hidden", "true");
-        window.NoticiasMovil?._mostrarListaNoticias?.() ||
-        window.NoticiasMovil?.mostrarLista?.();
+        window.PanelNoticias?._mostrarListaNoticias?.() ||
+        window.PanelNoticias?.mostrarLista?.();
     });
 
     /* Guardar en localStorage */

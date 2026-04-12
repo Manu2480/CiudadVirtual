@@ -38,6 +38,9 @@ Estilos para el panel de recursos en todas las vistas.
     margin-left: 10px;
     font-size: 0.85rem;
 }
+.recurso__valor{
+    color: white;
+}
 
 /* Estados de color para recursos - Dinero */
 .recurso-item__valor--dinero-alto {

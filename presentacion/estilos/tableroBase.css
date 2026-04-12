@@ -21,6 +21,7 @@ Cada parcial tiene una única responsabilidad.
 @import "estilosBase/modalRecursos.css";
 @import "estilosBase/panelRecursos.css";
 @import "estilosBase/clima.css";
+@import "estilosBase/noticias.css";
 /*estilos del modal de Game Over*/
 @import "estilosBase/modalGameOver.css";
 

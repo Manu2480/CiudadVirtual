@@ -45,7 +45,7 @@ function inicializar() {
     
 }
 
-function abrirPanel() {
+function abrirPanelRecursos() {
     _crearPanelSiNoExiste();
 
     document.getElementById(_ID_OVERLAY_MOVIL)?.classList.add("activo");
@@ -294,4 +294,4 @@ document.addEventListener("recursosModificados", llamarRecursos);
 
 window.RecursosDesktop = { inicializar };
 window.RecursosTablet = { inicializar };
-window.RecursosMovil = { inicializar, abrirPanel, cerrarPanel };
+window.RecursosMovil = { inicializar, abrirPanelRecursos, cerrarPanel };

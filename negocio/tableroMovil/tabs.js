@@ -63,7 +63,7 @@ function inicializar() {
                 tabActivo = btn;
                 _cerrarPanel(panelActivo);
                 panelActivo = null;
-                window.NoticiasMovil?.ocultarCarrusel();
+                window.PanelNoticias?.ocultarCarrusel();
                 window.RutaMovil?.limpiarTodo();
                 window.Tablero?.activarModo("construccion");
                 return;
@@ -84,7 +84,7 @@ function inicializar() {
                 tabActivo = btn;
                 _cerrarPanel(panelActivo);
                 panelActivo = null;
-                window.NoticiasMovil?.ocultarCarrusel();
+                window.PanelNoticias?.ocultarCarrusel();
                 window.RutaMovil?.limpiarTodo();
                 window.Tablero?.cancelarModo();
                 return;
@@ -95,7 +95,7 @@ function inicializar() {
                 if (tabActivo === btn) {
                     btn.classList.remove("tab--activo");
                     tabActivo = null;
-                    window.NoticiasMovil?.ocultarCarrusel();
+                    window.PanelNoticias?.ocultarCarrusel();
                     return;
                 }
                 botones.forEach(t => t.classList.remove("tab--activo"));
@@ -104,7 +104,7 @@ function inicializar() {
                 _cerrarPanel(panelActivo);
                 panelActivo = null;
                 window.Tablero?.cancelarModo();
-                window.NoticiasMovil?.mostrarCarrusel();
+                window.PanelNoticias?.mostrarCarrusel();
                 return;
             }
 
@@ -128,7 +128,7 @@ function inicializar() {
                 tabActivo = btn;
                 _cerrarPanel(panelActivo);
                 panelActivo = null;
-                window.NoticiasMovil?.ocultarCarrusel();
+                window.PanelNoticias?.ocultarCarrusel();
                 window.RutaMovil?.activar();
                 return;
             }
@@ -146,9 +146,9 @@ function inicializar() {
                 tabActivo = btn;
                 _cerrarPanel(panelActivo);
                 panelActivo = null;
-                window.NoticiasMovil?.ocultarCarrusel();
+                window.PanelNoticias?.ocultarCarrusel();
                 window.Tablero?.cancelarModo();
-                window.RecursosMovil?.abrirPanel();
+                window.RecursosMovil?.abrirPanelRecursos();
                 return;
             }
 
@@ -174,7 +174,7 @@ function inicializar() {
             _cerrarPanel(panelActivo);
             panelActivo = panel;
             _abrirPanel(panel);
-            window.NoticiasMovil?.ocultarCarrusel();
+            window.PanelNoticias.ocultarCarrusel();
             window.Tablero?.cancelarModo();
         });
     });
