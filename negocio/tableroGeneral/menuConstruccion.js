@@ -77,7 +77,7 @@ function _inicializarCatalogoTablet() {
 }
 
 /* ---------- DESKTOP ---------- */
-function _inicializarDesktop() {
+function _inicializarCatalogoDesktop() {
     if (window.innerWidth < 1024) return;  /* no es desktop */
 
     const menu = document.getElementById("menu-construccion");
