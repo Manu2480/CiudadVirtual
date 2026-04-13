@@ -212,6 +212,7 @@ const ModalRecursos = (() => {
             const graficasRecursos = document.getElementById("graficas");
             if (seccionRecursosGlobales){
                 seccionRecursosGlobales.innerHTML = _generarModificadoresGlobales();
+                _eventosGridRecursos();
             }
             if (graficasRecursos){
                 graficasRecursos.innerHTML = _generarGraficas();
@@ -219,6 +220,7 @@ const ModalRecursos = (() => {
             }
             if (seccionRecursosCiudadano){
                 seccionRecursosCiudadano.innerHTML = _generarModificadoresCiudadano();
+                _eventosRecursosPorCiudadano();
             }
 
         });
@@ -232,35 +234,7 @@ const ModalRecursos = (() => {
             });
         });
 
-        const gridsRecursos = document.querySelectorAll(".grid-recursos");
-
-        gridsRecursos.forEach(grid => {
-            grid.addEventListener("click", (e) => {
-
-                if (!e.target.classList.contains("btn-aceptar")) return;
-
-                const clave = e.target.dataset.clave;
-
-                const contenedor = e.target.closest(".recurso-modal");
-                const input = contenedor.querySelector("input");
-
-                const valor = Number(input.value);
-
-                console.log("Recurso:", clave);
-                console.log("Nuevo valor:", valor);
-
-                const ciudad = _ciudad();
-                if (ciudad) {
-                    ciudad.estadoRecursos[clave] = valor;
-                }
-                const spanValor = contenedor.querySelectorAll("span")[1];
-                spanValor.textContent = INDICADORES.find(r => r.clave === clave).fmt(valor);
-
-                input.value = "";
-                Tablero.guardarPartida();
-                document.dispatchEvent(new CustomEvent("recursosModificados"));
-            });
-        });
+        _eventosGridRecursos();
 
         const panel = document.getElementById("panel-edificio-contenido");
 
@@ -299,40 +273,7 @@ const ModalRecursos = (() => {
             
         });
         // MODIFICAR CONSUMO POR CIUDADANO
-        document.querySelectorAll("#consumoCiudadanos .grid-recursos")
-        .forEach(grid => {
-
-        grid.addEventListener("click", (e) => {
-
-            if (!e.target.classList.contains("btn-consumo")) return;
-
-            const clave = e.target.dataset.clave;
-
-            const contenedor = e.target.closest(".recurso-modal");
-            const input = contenedor.querySelector("input");
-
-            const valor = Number(input.value);
-
-            const ciudad = _ciudad();
-            if (!ciudad) return;
-
-            console.log("Consumo ciudadano:", clave, valor);
-
-            //actualizar valor base
-            ciudad.cambiarConsumoCiudadanos(clave,valor);
-
-            // actualizar UI
-            const spanValor = contenedor.querySelectorAll("span")[1];
-            spanValor.textContent = INDICADORES
-                .find(r => r.clave === clave)
-                .fmt(valor);
-
-            input.value = "";
-
-            Tablero.guardarPartida();
-            document.dispatchEvent(new CustomEvent("recursosModificados"));
-        });
-    });
+        _eventosRecursosPorCiudadano();
     //Modificar creación ciudadanos por turno
     const inputCantidadCiudadanos = document.getElementById("ciudadanosPorTurno");
     const aceptarCantidadCiudadanos = document.getElementById("aceptarCantidadCiudadanos");
@@ -388,6 +329,77 @@ const ModalRecursos = (() => {
                 contenedor.innerHTML = _generarModificadoresEdificio(edificio);
             });
         });
+    }
+
+    function _eventosGridRecursos(){
+        const gridsRecursos = document.querySelectorAll(".grid-recursos");
+
+        gridsRecursos.forEach(grid => {
+            grid.addEventListener("click", (e) => {
+
+                if (!e.target.classList.contains("btn-aceptar")) return;
+
+                const clave = e.target.dataset.clave;
+
+                const contenedor = e.target.closest(".recurso-modal");
+                const input = contenedor.querySelector("input");
+
+                const valor = Number(input.value);
+
+                console.log("Recurso:", clave);
+                console.log("Nuevo valor:", valor);
+
+                const ciudad = _ciudad();
+                if (ciudad) {
+                    ciudad.estadoRecursos[clave] = valor;
+                }
+                const spanValor = contenedor.querySelectorAll("span")[1];
+                spanValor.textContent = INDICADORES.find(r => r.clave === clave).fmt(valor);
+
+                input.value = "";
+                Tablero.guardarPartida();
+                document.dispatchEvent(new CustomEvent("recursosModificados"));
+            });
+        });
+
+    }
+
+    function _eventosRecursosPorCiudadano(){
+        document.querySelectorAll("#consumoCiudadanos .grid-recursos")
+        .forEach(grid => {
+
+            grid.addEventListener("click", (e) => {
+
+                if (!e.target.classList.contains("btn-consumo")) return;
+
+                const clave = e.target.dataset.clave;
+
+                const contenedor = e.target.closest(".recurso-modal");
+                const input = contenedor.querySelector("input");
+
+                const valor = Number(input.value);
+
+                const ciudad = _ciudad();
+                if (!ciudad) return;
+
+                console.log("Consumo ciudadano:", clave, valor);
+
+                //actualizar valor base
+                ciudad.cambiarConsumoCiudadanos(clave,valor);
+
+                // actualizar UI
+                const spanValor = contenedor.querySelectorAll("span")[1];
+                spanValor.textContent = INDICADORES
+                    .find(r => r.clave === clave)
+                    .fmt(valor);
+
+                input.value = "";
+
+                Tablero.guardarPartida();
+                document.dispatchEvent(new CustomEvent("recursosModificados"));
+            });
+        });
+        
     }
 
     /* =========================
