@@ -249,6 +249,4 @@ function htmlEdificios() {
 /* ================================================
    EXPOSICIÓN GLOBAL
 ================================================ */
-window.EstadisticasDesktop = { inicializar };
-window.EstadisticasTablet = { inicializar };
-window.StatsMovil = { inicializar };
+window.Estadisticas = {inicializar};

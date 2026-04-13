@@ -82,9 +82,9 @@ function _inicializarControlesTablet() {
         panelClima.inicializar();
         PanelNoticias.inicializar();
         SidebarTablet.inicializar();
-        RecursosTablet.inicializar();
-        EstadisticasTablet.inicializar();
-        ConstruccionTablet.inicializar();
+        PanelRecursos.inicializar();
+        Estadisticas.inicializar();
+        MenuConstruccion.inicializar();
         _inicializarBotonRuta();
 
         console.log("controlesTablet: inicialización completa");

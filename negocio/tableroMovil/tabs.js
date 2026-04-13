@@ -46,7 +46,7 @@ function inicializar() {
                 const yaEnConstruir = tabActivo === btn;
 
                 if (catalogoAbierto) {
-                    window.MenuConstruccionMovil?.cerrarCatalogo();
+                    window.MenuConstruccion?.cerrarCatalogo();
                     return;
                 }
 
@@ -138,7 +138,7 @@ function inicializar() {
                 if (tabActivo === btn) {
                     btn.classList.remove("tab--activo");
                     tabActivo = null;
-                    window.RecursosMovil?.cerrarPanel();
+                    window.PanelRecursos?.cerrarPanel();
                     return;
                 }
                 botones.forEach(t => t.classList.remove("tab--activo"));
@@ -148,7 +148,7 @@ function inicializar() {
                 panelActivo = null;
                 window.PanelNoticias?.ocultarCarrusel();
                 window.Tablero?.cancelarModo();
-                window.RecursosMovil?.abrirPanelRecursos();
+                window.PanelRecursos?.abrirPanelRecursos();
                 return;
             }
 

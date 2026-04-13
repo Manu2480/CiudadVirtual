@@ -305,6 +305,3 @@ document.addEventListener("catalogoModificado", () => {
 EXPOSICIÓN GLOBAL
 ================================================ */
 window.MenuConstruccion      = { inicializar, abrirCatalogo, cerrarCatalogo };
-window.MenuConstruccionMovil = { inicializar, abrirCatalogo, cerrarCatalogo };
-window.MenuConstruccionDesktop = { inicializar };
-window.ConstruccionTablet    = { inicializar };
