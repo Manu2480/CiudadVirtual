@@ -6,8 +6,7 @@ MAPA.CSS
 */
 
 /* =========================
-   ÁREA DEL MAPA CON ZOOM ESTÁTICO
-   El zoom permanece fijo durante el arrastre del mapa
+    ÁREA DEL MAPA CON ZOOM ESTÁTICO
 ========================= */
 .area-mapa {
     position: relative;
@@ -28,10 +27,6 @@ MAPA.CSS
 }
 
 .area-mapa:active {
-    cursor: grabbing;
-}
-
-.area-mapa.area-mapa--arrastrando {
     cursor: grabbing;
 }
 
