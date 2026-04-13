@@ -4,14 +4,14 @@ class Parque extends Edificio {
 
     static catalogoInfo = {
         costo:     1500,
-        capacidad: 0,
         felicidad: 5,
     };
 
     constructor(ubicacion) {
         Parque.contador += 1;
         const idParque = "Parque" + Parque.contador;
-        super(idParque, Parque.catalogoInfo.costo, ubicacion, Parque.catalogoInfo.capacidad);
+        const capacidad = new CapacidadNula();
+        super(idParque, Parque.catalogoInfo.costo, ubicacion, capacidad);
         this.recursosEdificio = { felicidad: Parque.catalogoInfo.felicidad };
         this.ciudadanos = [];
     }
@@ -25,6 +25,7 @@ class Parque extends Edificio {
         }
         const instance = Object.create(Parque.prototype);
         Object.assign(instance, obj);
+        instance.capacidad = new CapacidadNula();
         return instance;
     }
 }

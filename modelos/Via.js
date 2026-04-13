@@ -4,13 +4,13 @@ class Via extends Edificio {
 
     static catalogoInfo = {
         costo:     100,
-        capacidad: 0,
     };
 
     constructor(ubicacion) {
         Via.contador += 1;
         const idVia = "via" + Via.contador;
-        super(idVia, Via.catalogoInfo.costo, ubicacion, Via.catalogoInfo.capacidad);
+        const capacidad = new CapacidadNula();
+        super(idVia, Via.catalogoInfo.costo, ubicacion, capacidad);
         this.recursosEdificio = {};
         this.ciudadanos = [];
     }
@@ -24,6 +24,7 @@ class Via extends Edificio {
         }
         const instance = Object.create(Via.prototype);
         Object.assign(instance, obj);
+        capacidad = new CapacidadNula();
         return instance;
     }
 }

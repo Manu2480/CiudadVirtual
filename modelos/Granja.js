@@ -4,7 +4,9 @@ class Granja extends EdificioIndustrial {
 
     static catalogoInfo = {
         costo:    3000,
-        capacidad: 8,
+        capacidad: {
+            laboral: 8,
+        },
         alimento: 50,
         agua:     -10,
     };
@@ -12,7 +14,8 @@ class Granja extends EdificioIndustrial {
     constructor(ubicacion) {
         Granja.contador += 1;
         const idGranja = "Granja" + Granja.contador;
-        super(idGranja, Granja.catalogoInfo.costo, ubicacion, Granja.catalogoInfo.capacidad);
+        const capacidad = new CapacidadLaboral(Granja.catalogoInfo.capacidad.laboral);
+        super(idGranja, Granja.catalogoInfo.costo, ubicacion, capacidad);
         this.recursosEdificio["alimento"] = Granja.catalogoInfo.alimento;
         this.recursosEdificio["agua"]     = Granja.catalogoInfo.agua;
     }
@@ -26,6 +29,7 @@ class Granja extends EdificioIndustrial {
         }
         const instance = Object.create(Granja.prototype);
         Object.assign(instance, obj);
+        instance.capacidad = new new CapacidadLaboral(Granja.catalogoInfo.capacidad.laboral);
         return instance;
     }
 }

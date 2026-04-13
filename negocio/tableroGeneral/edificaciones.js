@@ -222,7 +222,7 @@ function _crearInstancia(idEdificio, fila, col, edificioDef) {
         id:        idEdificio,
         costo:     edificioDef.costo,
         ubicacion,
-        capacidad: edificioDef.capacidad || 0,
+        capacidad: new CapacidadNula(),
         ciudadanos: [],
         recursosEdificio: {
             dinero:       edificioDef.dinero       || 0,
@@ -260,8 +260,8 @@ para mostrarlo en la notificación de éxito.
 function _mensajeConstruccion(def) {
     const partes = [];
 
-    if (def.capacidad)    partes.push(`+${def.capacidad} habitantes`);
-    if (def.empleos)      partes.push(`+${def.empleos} empleos`);
+    if (def.capacidad?.residencial)    partes.push(`+${def.capacidad.residencial} habitantes`);
+    if (def.capacidad?.laboral)      partes.push(`+${def.capacidad.laboral} empleos`);
     if (def.dinero)       partes.push(`+$${def.dinero.toLocaleString()}/turno`);
     if (def.alimento)     partes.push(`+${def.alimento} alimento/turno`);
     if (def.felicidad)    partes.push(`+${def.felicidad} felicidad`);

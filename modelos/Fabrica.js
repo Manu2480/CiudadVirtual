@@ -4,7 +4,9 @@ class Fabrica extends EdificioIndustrial {
 
     static catalogoInfo = {
         costo:        5000,
-        capacidad:    15,
+        capacidad:    {
+            laboral: 15,
+        },
         dinero:       800,
         electricidad: -20,
         agua:         -15,
@@ -13,7 +15,8 @@ class Fabrica extends EdificioIndustrial {
     constructor(ubicacion) {
         Fabrica.contador += 1;
         const idFabrica = "Fabrica" + Fabrica.contador;
-        super(idFabrica, Fabrica.catalogoInfo.costo, ubicacion, Fabrica.catalogoInfo.capacidad);
+        const capacidad = new CapacidadLaboral(Fabrica.catalogoInfo.capacidad.laboral);
+        super(idFabrica, Fabrica.catalogoInfo.costo, ubicacion, capacidad);
         this.recursosEdificio["dinero"]       = Fabrica.catalogoInfo.dinero;
         this.recursosEdificio["electricidad"] = Fabrica.catalogoInfo.electricidad;
         this.recursosEdificio["agua"]         = Fabrica.catalogoInfo.agua;
@@ -28,6 +31,7 @@ class Fabrica extends EdificioIndustrial {
         }
         const instance = Object.create(Fabrica.prototype);
         Object.assign(instance, obj);
+        instance.capacidad = new CapacidadLaboral(Fabrica.catalogoInfo.capacidad.laboral); 
         return instance;
     }
 }

@@ -58,12 +58,16 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    min-width: 0;
     gap: 6px;
 
     padding: 10px;
     border-radius: 8px;
 
     background: rgba(0,0,0,0.15);
+}
+.recurso-modal .input{
+    min-width: 0;
 }
 
 .recurso-modal i {

@@ -182,3 +182,101 @@ NOTICIAS — Modal carrusel
     color: var(--color-texto-s);
     margin: 2px 0 6px 0;
 }
+@media (min-width: 768px){
+    /*
+=================================================================
+NOTICIAS MODAL / PANEL
+Adaptado a noticias-modal__*
+=================================================================
+*/
+#noticias-tablet-vertical, #noticias-tablet-horizontal, #panel-noticias-tablet-horizontal{
+    overflow-y: auto;
+}
+
+/* Contenedor del contenido de la noticia */
+.noticias-modal__contenido {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    border: 1px solid #f0f0f0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.noticias-modal__contenido:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+}
+
+/* Imagen */
+.noticias-modal__imagen {
+    width: 100%;
+    height: 140px;
+    object-fit: cover;
+    border-radius: 8px;
+    background-color: #eee;
+}
+
+/* Fuente */
+.noticias-modal__fuente {
+    font-size: 0.75rem;
+    color: #777;
+    font-weight: 600;
+}
+
+/* Fecha */
+.noticias-modal__fecha {
+    font-size: 0.75rem;
+    color: #999;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-top: 1px solid #eee;
+    padding-top: 6px;
+}
+
+/* Título */
+.noticias-modal__noticia-titulo {
+    font-family: 'Segoe UI', Roboto, sans-serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #1a1a1a;
+    line-height: 1.3;
+    margin: 0;
+}
+
+/* Descripción */
+.noticias-modal__descripcion {
+    font-size: 0.9rem;
+    color: #555;
+    line-height: 1.5;
+    margin: 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* Link */
+.noticias-modal__leer-mas {
+    font-size: 0.8rem;
+    color: white;
+    text-decoration: none;
+    font-weight: 600;
+    word-break: break-all;
+    transition: color 0.2s;
+}
+
+.noticias-modal__leer-mas:hover {
+    color: #0056b3;
+    text-decoration: underline;
+}
+
+/* Imagen oculta (error de carga) */
+.noticias-modal__imagen.oculta {
+    display: none;
+}
+}

@@ -27,6 +27,7 @@ const _MODULOS = [
 /* Módulos de tableroGeneral también usados en móviL*/
 const _MODULOS_GENERAL = [
     "../../negocio/tableroGeneral/ruta.js",
+    "../../negocio/tableroGeneral/panelRecursos.js",
     "../../negocio/tableroGeneral/menuConstruccion.js",
     "../../negocio/tableroGeneral/estadisticas.js",
     "../../negocio/tableroGeneral/panelClima.js",

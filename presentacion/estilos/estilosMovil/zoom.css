@@ -6,7 +6,7 @@
 #area-mapa {
     touch-action: none;
     overflow: hidden; /* era auto — bloquea scroll que compite con pinch */
-    transform: var(--escala-mapa);
+    transform: var(--escala-mapa, scale(1));
     transform-origin: top left; 
 }
 

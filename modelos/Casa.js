@@ -4,7 +4,9 @@ class Casa extends EdificioResidencial {
 
     static catalogoInfo = {
         costo:        1000,
-        capacidad:    4,
+        capacidad:    {
+            residencial: 4,
+        },
         electricidad: -5,
         agua:         -3,
     };
@@ -12,7 +14,8 @@ class Casa extends EdificioResidencial {
     constructor(ubicacion) {
         Casa.contador += 1;
         const idCasa = "casa" + Casa.contador;
-        super(idCasa, Casa.catalogoInfo.costo, ubicacion, Casa.catalogoInfo.capacidad);
+        const capacidad = new CapacidadResidencial(Casa.catalogoInfo.capacidad.residencial);
+        super(idCasa, Casa.catalogoInfo.costo, ubicacion, capacidad);
         this.recursosEdificio["electricidad"] = Casa.catalogoInfo.electricidad;
         this.recursosEdificio["agua"]         = Casa.catalogoInfo.agua;
     }
@@ -26,6 +29,7 @@ class Casa extends EdificioResidencial {
         }
         const instance = Object.create(Casa.prototype);
         Object.assign(instance, obj);
+        instance.capacidad = new CapacidadResidencial(Casa.catalogoInfo.capacidad.residencial);
         return instance;
     }
 }

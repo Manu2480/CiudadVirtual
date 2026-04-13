@@ -148,7 +148,7 @@ function _renderizarNoticiaMovil() {
     cuerpo.scrollTop = 0;
 }
 function _renderizarPanelNoticias(panel){
-    panel.innerHTML = '<h2 class="panel__titulo">Noticias</h2>';
+    panel.innerHTML = '<h2 class="panel__titulo modulo-header">Noticias</h2>';
     panel.innerHTML += '<div class="seccion-noticias">'
     _articulos.forEach(articulo => {
         panel.insertAdjacentHTML("beforeend", _htmlNoticia(articulo));

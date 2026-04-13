@@ -4,14 +4,14 @@ class PlantaElectrica extends PlantaUtilidad {
 
     static catalogoInfo = {
         costo:        10000,
-        capacidad:    0,
         electricidad: 200,
     };
 
     constructor(ubicacion) {
         PlantaElectrica.contador += 1;
         const idPlanta = "Luz" + PlantaElectrica.contador;
-        super(idPlanta, PlantaElectrica.catalogoInfo.costo, ubicacion, PlantaElectrica.catalogoInfo.capacidad);
+        const capacidad = new CapacidadNula()
+        super(idPlanta, PlantaElectrica.catalogoInfo.costo, ubicacion, capacidad);
         this.recursosEdificio["electricidad"] = PlantaElectrica.catalogoInfo.electricidad;
     }
 
@@ -24,6 +24,7 @@ class PlantaElectrica extends PlantaUtilidad {
         }
         const instance = Object.create(PlantaElectrica.prototype);
         Object.assign(instance, obj);
+        instance.capacidad = new CapacidadNula();
         return instance;
     }
 }

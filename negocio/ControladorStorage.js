@@ -204,11 +204,11 @@ class ControladorStorage{
             if (!Array.isArray(e.ciudadanos)) return;
 
             e.ciudadanos = e.ciudadanos.map(refCiudadano => {
-                const id = (refCiudadano && typeof refCiudadano === "object")
-                    ? refCiudadano.id
-                    : refCiudadano;
-
-                return MapaCiudadanos.get(id) || refCiudadano;
+                const id = refCiudadano?.ciudadano?.id;
+                return {
+                    ciudadano: MapaCiudadanos.get(id) || refCiudadano.ciudadano,
+                    rol: refCiudadano.rol
+                };
             });
         });
     }
