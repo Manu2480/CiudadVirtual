@@ -294,6 +294,4 @@ function posicionarTooltipDerechaMouse(mouseX, mouseY) {
 ================================================ */
 document.addEventListener("recursosModificados", llamarRecursos);
 
-window.RecursosDesktop = { inicializar };
-window.RecursosTablet = { inicializar };
-window.RecursosMovil = { inicializar, abrirPanelRecursos, cerrarPanel };
+window.PanelRecursos = {inicializar, abrirPanelRecursos, cerrarPanel};

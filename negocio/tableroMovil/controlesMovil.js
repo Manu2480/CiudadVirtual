@@ -63,11 +63,11 @@ function _inicializarControlesMovil() {
     try {
         // Log de verificación de objetos cargados
         console.log("TabsMovil disponible?", !!window.TabsMovil);
-        console.log("RecursosMovil disponible?", !!window.RecursosMovil);
-        console.log("StatsMovil disponible?", !!window.StatsMovil);
+        console.log("RecursosMovil disponible?", !!window.PanelRecursos);
+        console.log("Estadisticas disponible?", !!window.Estadisticas);
         console.log("ZoomMovil disponible?", !!window.ZoomMovil);
         console.log("JoystickMovil disponible?", !!window.JoystickMovil);
-        console.log("MenuConstruccionMovil disponible?", !!window.MenuConstruccionMovil);
+        console.log("MenuConstruccionMovil disponible?", !!window.MenuConstruccion);
         console.log("TurnosMovil disponible?", !!window.TurnosMovil);
         console.log("PanelClima disponible?", !!window.panelClima);
         console.log("PanelNoticias disponible?", !!window.PanelNoticias);
@@ -79,11 +79,11 @@ function _inicializarControlesMovil() {
             console.error("TabsMovil NO CARGADO");
         }
         
-        if (window.RecursosMovil) window.RecursosMovil.inicializar();
-        if (window.StatsMovil) window.StatsMovil.inicializar();
+        if (window.PanelRecursos) window.PanelRecursos.inicializar();
+        if (window.Estadisticas) window.Estadisticas.inicializar();
         if (window.ZoomMovil) window.ZoomMovil.inicializar();
         if (window.JoystickMovil) window.JoystickMovil.inicializar();
-        if (window.MenuConstruccionMovil) window.MenuConstruccionMovil.inicializar();
+        if (window.MenuConstruccion) window.MenuConstruccion.inicializar();
         if (window.TurnosMovil) window.TurnosMovil.inicializar();
         if (window.panelClima) window.panelClima.inicializar();
         if (window.PanelNoticias) window.PanelNoticias.inicializar();
