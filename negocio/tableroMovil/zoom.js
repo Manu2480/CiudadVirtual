@@ -27,7 +27,7 @@
     function _aplicarZoom() {
         const gridEl = document.getElementById("mapa-grid");
         if (!gridEl) return;
-        document.documentElement.style.setProperty("--escala-mapa",`${_zoomState.nivel}`)
+        document.documentElement.style.setProperty("--escala-mapa", `scale(${_zoomState.nivel})`);
 
     }
 
