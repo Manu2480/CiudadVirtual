@@ -15,6 +15,8 @@ let _celdaPendiente = null;
 /* el que indicará si el modo demolición está activado o no en tablet */
 let _modoDemolicionActivo = false;
 
+let _panelesConstruccion = [];
+
 /* Escucha el evento que dispara mapa.js al tocar una celda vacía
    en modo construcción sin edificio seleccionado (móvil) */
 document.addEventListener("mapa:celdaParaConstruir", (e) => {
@@ -28,19 +30,36 @@ Renderiza el catálogo en todos los contenedores
 disponibles según la vista activa.
 ================================================ */
 function inicializar() {
+    console.log("Re ingreso a la inicializacion");
     if (!window.Edificios || !window.Tablero) {
         requestAnimationFrame(inicializar);
         return;
     }
+    const vistaActual = document.documentElement.getAttribute("data-vista");
+    if (vistaActual === "movil"){
+        _inicializarCatalogoMovil();
+    }
+    else if (vistaActual === "tablet"){
+        _inicializarCatalogoTablet();
+    }
+    else if (vistaActual === "desktop"){
+        _inicializarCatalogoDesktop();
+    }
+}
+function renderizarPaneles(){
+    const vistaActual = document.documentElement.getAttribute("data-vista");
+    _panelesConstruccion.forEach(panel => {
+        let lista = _crearLista(vistaActual);
+        if (vistaActual === "tablet"){
+            _agregarBotonDemolicion(lista);
+        }
+        panel.appendChild(lista);
 
-    _inicializarCatalogoMovil();
-    _inicializarCatalogoTablet();
-    _inicializarCatalogoDesktop();
+    });
 }
 
 /* ---------- MÓVIL ---------- */
 function _inicializarCatalogoMovil() {
-    if (window.innerWidth >= 768) return;  /* no es móvil */
 
     const menu = document.getElementById("menu-construccion");
     if (!menu) return;
@@ -58,15 +77,14 @@ function _inicializarCatalogoMovil() {
 
 /* ---------- TABLET ---------- */
 function _inicializarCatalogoTablet() {
+    console.log("Se re inicializa")
     const contenedores = [
         document.getElementById("catalogo-edificios-tablet-horizontal"),
         document.getElementById("catalogo-edificios-tablet-vertical"),
     ];
-    contenedores.forEach((c, i) => {
-    console.log("contenedor", i, c);
-});
 
     contenedores.forEach(contenedor => {
+        _panelesConstruccion.push(contenedor);
         if (!contenedor || contenedor.querySelector(".construccion-lista")) return;
         let lista = _crearLista("tablet");
         _agregarBotonDemolicion(lista);
@@ -81,6 +99,7 @@ function _inicializarCatalogoDesktop() {
     if (window.innerWidth < 1024) return;  /* no es desktop */
 
     const menu = document.getElementById("menu-construccion");
+    _panelesConstruccion.push(menu);
     if (!menu) return;
     if (menu.querySelector(".construccion-lista")) return;
 
@@ -211,26 +230,23 @@ Indicadores de recursos del edificio.
 - capacidad (hab) solo en edificios SIN empleos (residencial)
 - empleos solo en edificios CON empleos (comercial/industrial)
 ================================================ */
+function _getValor(obj, path) { //Ayudará a buscar un valor anidado. Es un ayudante para datos tipo capacidad.laboral
+    return path.split(".").reduce((acc, key) => acc?.[key], obj);
+}
 function _detallesHtml(edificio) {
     const indicadores = [
-        { key: "electricidad", icono: "fi-br-bolt",       fmt: v => `${v > 0 ? "+" : ""}${v} kW`   },
-        { key: "agua",         icono: "fi-br-raindrops",  fmt: v => `${v > 0 ? "+" : ""}${v} L`    },
-        { key: "alimento",     icono: "fi-br-wheat",      fmt: v => `+${v} kg`                      },
-        { key: "dinero",       icono: "fi-br-coins",      fmt: v => `+$${v.toLocaleString()}/turno` },
-        { key: "felicidad",    icono: "fi-br-smile-beam", fmt: v => `${v > 0 ? "+" : ""}${v}`       },
-        { key: "empleos",      icono: "fi-br-briefcase",  fmt: v => `+${v} empleos`                 },
+        { key: "electricidad",          icono: "fi-br-bolt",       fmt: v => `${v > 0 ? "+" : ""}${v} kW`   },
+        { key: "agua",                  icono: "fi-br-raindrops",  fmt: v => `${v > 0 ? "+" : ""}${v} L`    },
+        { key: "alimento",              icono: "fi-br-wheat",      fmt: v => `+${v} kg`                      },
+        { key: "dinero",                icono: "fi-br-coins",      fmt: v => `+$${v.toLocaleString()}/turno` },
+        { key: "felicidad",             icono: "fi-br-smile-beam", fmt: v => `${v > 0 ? "+" : ""}${v}`       },
+        { key: "capacidad.laboral",     icono: "fi-br-briefcase",  fmt: v => `+${v} empleos`                 },
+        { key: "capacidad.residencial", icono: "fi-br-users",      fmt: v => `+${v} hab`                     },
     ];
-
-    /* Habitantes solo para edificios residenciales (sin empleos) */
-    if (!edificio.empleos) {
-        indicadores.push(
-            { key: "capacidad", icono: "fi-br-users", fmt: v => `+${v} hab` }
-        );
-    }
 
     return indicadores
         .map(({ key, icono, fmt }) => {
-            const valor = edificio[key];
+            const valor = _getValor(edificio, key)
             if (valor === null || valor === undefined || valor === 0) return "";
             return `<span class="construccion-item__atributo">
                         <i class="fi ${icono}"></i> ${fmt(valor)}
@@ -277,14 +293,12 @@ function _agregarBotonDemolicion(contenido){
 
 /* Rerenderiza si el catálogo cambia (ej: modificarRecursoEdificio) */
 document.addEventListener("catalogoModificado", () => {
-    ["catalogo-edificios-tablet-horizontal", "catalogo-edificios-tablet-vertical", "menu-construccion"].forEach(id => {
-        const el = document.getElementById(id);
-        if (el) {
-            const lista = el.querySelector(".construccion-lista");
-            if (lista) lista.remove();
-        }
+    console.log("Se escuchó el evento");
+    let listas = document.querySelectorAll(".construccion-lista");
+    listas.forEach(lista => {
+        lista.remove();
     });
-    inicializar();
+    renderizarPaneles();
 });
 
 /* ================================================

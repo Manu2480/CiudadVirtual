@@ -74,6 +74,8 @@ function cerrarPanel() {
     const panel   = document.getElementById(_ID_PANEL_RECURSOS_MOVIL);
     if (overlay) overlay.classList.remove("activo");
     if (panel)   panel.classList.remove("activo");
+    overlay.remove();
+    panel.remove();
 }
 
 function llamarRecursos() {

@@ -164,10 +164,10 @@ function tooltip(edificioOId) {
     ];
 
     if (edificio.descripcion)  lineas.push(edificio.descripcion);
-    if (edificio.capacidad?.residencial) {
-        lineas.push(`Capacidad: +${edificio.capacidad.residencial} habitantes`);
+    if (edificio.clase.catalogoInfo.capacidad?.residencial) {
+        lineas.push(`Capacidad: +${edificio.clase.catalogoInfo.capacidad.residencial} habitantes`);
     }
-    if (edificio.capacidad?.laboral)      lineas.push(`Empleos: +${edificio.capacidad.laboral}`);
+    if (edificio.clase.catalogoInfo.capacidad?.laboral)      lineas.push(`Empleos: +${edificio.clase.catalogoInfo.capacidad.laboral}`);
     if (edificio.dinero)       lineas.push(`Dinero por turno: +$${edificio.dinero.toLocaleString()}`);
     if (edificio.electricidad) {
         lineas.push(`Electricidad: ${edificio.electricidad > 0 ? "+" : ""}${edificio.electricidad}`);
