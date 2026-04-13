@@ -165,7 +165,7 @@ class Terreno{
 
             if (edificio.capacidad.getCapacidad("residente")){
                 edificio.ciudadanos.forEach(o => {
-                    if (o.rol === "residente") {
+                    if (o?.rol === "residente" && o?.ciudadano) {
                         o.ciudadano.vivienda = false;//Actualizamos el estado de vivienda
                         console.log(`${o.ciudadano.id} perdio su vivienda`);
                     }
@@ -175,9 +175,9 @@ class Terreno{
 
             if (edificio.capacidad.getCapacidad("empleado")){
                 edificio.ciudadanos.forEach(o => {
-                    if (o.rol === "empleado") {
+                    if (o?.rol === "empleado" && o?.ciudadano) {
                         o.ciudadano.empleo = false;//Actualizamos el estado de empleo
-                        console.log(`${ciudadano.id} perdio su empleo`);
+                        console.log(`${o.ciudadano.id} perdio su empleo`);
                     }
                 });
             }

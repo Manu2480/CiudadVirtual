@@ -434,7 +434,7 @@ class Ciudad {
         const viviendas = this.terreno.viviendasDisponibles();
         if (viviendas.edificios.length > 0) {
             // Le asignamos la primer vivienda dispo por defecto
-            viviendas.edificios[0].agregarPersona(ciudadano);
+            viviendas.edificios[0].agregarPersona(ciudadano, "residente");
             ciudadano.vivienda = true; // cambiamos el estado del ciudadano
             this.asignarFelicidadInicial(ciudadano.id); //calcula la felicidad del ciudadano
             this.calcularFelicidadPromedio();
@@ -450,7 +450,7 @@ class Ciudad {
     asignarEmpleo(ciudadano) {
         const empleos = this.terreno.empleosDisponibles();
         if (empleos.edificios.length > 0) {
-            empleos.edificios[0].agregarPersona(ciudadano);
+            empleos.edificios[0].agregarPersona(ciudadano, "empleado");
             ciudadano.empleo = true;
             this.asignarFelicidadInicial(ciudadano.id); //calcula la felicidad del ciudadano
             this.calcularFelicidadPromedio();

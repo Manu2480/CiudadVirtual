@@ -50,8 +50,14 @@ function mostrarEdificio(edificio, fila, col) {
     const ocupados  = instancia?.ciudadanos?.length ?? 0;
     const afectados = ocupados > 0;
 
-    const capacidadResidencial = edificio.capacidad?.getCapacidad?.("residente") ?? 0;
-    const capacidadLaboral = edificio.capacidad?.getCapacidad?.("empleado") ?? 0;
+    const capacidadResidencial = instancia?.capacidad?.getCapacidad?.("residente")
+        ?? edificio.capacidad?.getCapacidad?.("residente")
+        ?? edificio.capacidad?.residencial
+        ?? 0;
+    const capacidadLaboral = instancia?.capacidad?.getCapacidad?.("empleado")
+        ?? edificio.capacidad?.getCapacidad?.("empleado")
+        ?? edificio.capacidad?.laboral
+        ?? 0;
 
     const esResidencial = capacidadResidencial > 0;
     const esComercial   = capacidadLaboral > 0;
@@ -130,8 +136,14 @@ function mostrarEdificio(edificio, fila, col) {
 function _mostrarConfirmacionDemoler(fila, col, edificio, instancia) {
     const reembolso = Math.round(edificio.costo * 0.5);
     const ocupados  = instancia?.ciudadanos?.length ?? 0;
-    const capacidadResidencial = edificio.capacidad?.getCapacidad?.("residente") ?? 0;
-    const capacidadLaboral = edificio.capacidad?.getCapacidad?.("empleado") ?? 0;
+    const capacidadResidencial = instancia?.capacidad?.getCapacidad?.("residente")
+        ?? edificio.capacidad?.getCapacidad?.("residente")
+        ?? edificio.capacidad?.residencial
+        ?? 0;
+    const capacidadLaboral = instancia?.capacidad?.getCapacidad?.("empleado")
+        ?? edificio.capacidad?.getCapacidad?.("empleado")
+        ?? edificio.capacidad?.laboral
+        ?? 0;
 
     const esResidencial = capacidadResidencial > 0;
     const esComercial   = capacidadLaboral > 0;
