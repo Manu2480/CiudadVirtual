@@ -30,7 +30,6 @@ Renderiza el catálogo en todos los contenedores
 disponibles según la vista activa.
 ================================================ */
 function inicializar() {
-    console.log("Re ingreso a la inicializacion");
     if (!window.Edificios || !window.Tablero) {
         requestAnimationFrame(inicializar);
         return;
@@ -77,7 +76,6 @@ function _inicializarCatalogoMovil() {
 
 /* ---------- TABLET ---------- */
 function _inicializarCatalogoTablet() {
-    console.log("Se re inicializa")
     const contenedores = [
         document.getElementById("catalogo-edificios-tablet-horizontal"),
         document.getElementById("catalogo-edificios-tablet-vertical"),
@@ -91,7 +89,6 @@ function _inicializarCatalogoTablet() {
 
         contenedor.appendChild(lista);
     });
-    console.log("Catalogo insertado en tablet");
 }
 
 /* ---------- DESKTOP ---------- */
@@ -293,7 +290,6 @@ function _agregarBotonDemolicion(contenido){
 
 /* Rerenderiza si el catálogo cambia (ej: modificarRecursoEdificio) */
 document.addEventListener("catalogoModificado", () => {
-    console.log("Se escuchó el evento");
     let listas = document.querySelectorAll(".construccion-lista");
     listas.forEach(lista => {
         lista.remove();

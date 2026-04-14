@@ -5,7 +5,6 @@ Visualización del widget del clima.
 function cargarClima(widgets, ciudad) {
     ClimaService.obtenerClimaCiudad(ciudad)
         .then(clima => {
-            console.log("Entrando a renderizar chip");
             const vistaActual = document.documentElement.getAttribute("data-vista");
 
             if (vistaActual != "movil"){
@@ -117,9 +116,6 @@ function getId(){
 }
 
 function _renderizarChip(clima) {
-    console.log("Renderizando chip");
-    console.log("btnRec:", document.getElementById("btn-recursos-movil"));
-    console.log("encabezado:", document.querySelector(".encabezado"));
     /* Reutiliza chip si ya existe */
     let chip = document.querySelector(".clima-compacto");
     if (!chip) {

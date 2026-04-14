@@ -1,6 +1,5 @@
 function inicializar() {
     // Intentar obtener todos los elementos
-    console.log("inicializando")
     const sidebar = document.getElementById("sidebar-tablet");
     const botonRecConEst = document.getElementById("btn-recConEst-tablet");
     const botonClima = document.getElementById("btn-clima-tablet");
@@ -21,11 +20,9 @@ function inicializar() {
     // Si algún elemento todavía no existe, reintentar en 50ms
     if (!sidebar || !botonRecConEst || !botonClima || !botonNoticias ||
         !panelesVertical.recConEst || !panelesVertical.clima || !panelesVertical.noticias || !mapa) {
-        console.log("No se cargó bien la sidebar")
         setTimeout(inicializar, 50);
         return;
     }
-    console.log("Se inicializó la sidebar")
     let panelActivo = null;
 
     // Función para mostrar panel

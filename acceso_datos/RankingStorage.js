@@ -37,7 +37,6 @@ const RankingStorage = {
         try {
             const validado = Array.isArray(ranking) ? ranking : [];
             localStorage.setItem(this.clave, JSON.stringify(validado));
-            console.log("RankingStorage: ranking guardado exitosamente");
         } catch (e) {
             console.error("RankingStorage: error al guardar ranking", e);
         }
@@ -87,11 +86,9 @@ const RankingStorage = {
                     turns: entrada.turns,
                     date: entrada.date,
                 };
-                console.log("RankingStorage: entrada actualizada para ciudad existente");
             } else {
                 /* Agregar nueva entrada */
                 ranking.push(entrada);
-                console.log("RankingStorage: nueva entrada agregada");
             }
 
             /* Ordenar por puntuación descendente */
@@ -103,7 +100,6 @@ const RankingStorage = {
             }
 
             this.guardar(ranking);
-            console.log("RankingStorage: ranking ordenado y guardado");
             return true;
         } catch (e) {
             console.error("RankingStorage: error al agregar/actualizar entrada", e);
@@ -115,7 +111,6 @@ const RankingStorage = {
     limpiar() {
         try {
             localStorage.removeItem(this.clave);
-            console.log("RankingStorage: ranking limpiado");
         } catch (e) {
             console.error("RankingStorage: error al limpiar ranking", e);
         }
@@ -221,7 +216,6 @@ const RankingStorage = {
                 return false;
             }
             this.guardar(ranking);
-            console.log("RankingStorage: ranking importado exitosamente");
             return true;
         } catch (e) {
             console.error("RankingStorage: error al importar JSON", e);
@@ -252,7 +246,6 @@ const RankingStorage = {
             };
 
             localStorage.setItem("ciudadActual", JSON.stringify(entrada));
-            console.log("RankingStorage: ciudad actual actualizada en tiempo real");
             return true;
         } catch (e) {
             console.error("RankingStorage: error al actualizar ciudad actual", e);
@@ -276,7 +269,6 @@ const RankingStorage = {
     limpiarCiudadActual() {
         try {
             localStorage.removeItem("ciudadActual");
-            console.log("RankingStorage: ciudad actual limpiada");
         } catch (e) {
             console.error("RankingStorage: error al limpiar ciudad actual", e);
         }

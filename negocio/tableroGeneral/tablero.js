@@ -59,7 +59,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     /* Iniciar automáticamente el ciclo de turnos al cargar la página */
     _iniciarCicloTurnos();
-    console.log("tablero.js: ciclo de turnos iniciado automáticamente al cargar el DOM");
 });
 
 
@@ -92,14 +91,12 @@ function _iniciarCicloTurnos() {
         avanzarTurno();
     }, Estado.ciudad.tiempoTurno);
 
-    console.log(`tablero.js: ciclos de turno iniciados cada ${Estado.ciudad.tiempoTurno / 1000}s`);
 }
 
 function _detenerCicloTurnos() {
     if (!Estado.intervaloTurnos) return;
     clearInterval(Estado.intervaloTurnos);
     Estado.intervaloTurnos = null;
-    console.log("tablero.js: ciclos de turno detenidos");
 }
 
 function _reiniciarCicloTurnos() {
@@ -116,7 +113,6 @@ function setDuracionTurno(segundos) {
 }
 
 function guardarPartida() {
-    console.log("Guardando partida desde tablero...")
     try {
         if (!Estado.ciudad) return;
         ControladorStorage.guardarEstadoTablero(Estado.ciudad, Estado.turno);
@@ -125,7 +121,6 @@ function guardarPartida() {
         if (typeof RankingStorage !== "undefined") {
             const resultado = Puntuacion.calcular(Estado.ciudad);
             Puntuacion.guardarEnRanking(Estado.ciudad, resultado.total, Estado.turno);
-            console.log("tablero.js: Ciudad agregada al ranking permanente");
         }
 
         Notificaciones.mostrar("Partida guardada.", "exito");

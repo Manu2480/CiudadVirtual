@@ -21,13 +21,10 @@ class Edificio{
     //Metodo para agregar ciudadano al edificio, se implementará en las clases hijas
     agregarPersona(persona, rol) {
         if (!(persona instanceof Ciudadano)) {
-            console.log("El objeto proporcionado no es una instancia de Ciudadano.");
             return;
         }
         if (this.capacidad.puedeAgregar(rol, this.ciudadanos)) {
             this.ciudadanos.push({ ciudadano: persona, rol });
-        } else {
-            console.log("No se puede agregar más personas con rol:", rol);
         }
     }
 

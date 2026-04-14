@@ -10,14 +10,12 @@ Vistas:
 
 (function() {
     const w = window.innerWidth;
-    console.log("vista.js: ancho de ventana", w);
     let vista;
     if      (w < 768)   vista = "movil";
     else if (w <= 1024) vista = "tablet";
     else                vista = "desktop";
 
     document.documentElement.setAttribute("data-vista", vista);
-    console.log("vista.js: detectada vista", vista);
 
     /* Carga el CSS específico de la vista */
     const link = document.createElement("link");
@@ -56,7 +54,6 @@ window.addEventListener('resize', function() {
 
     const vistaActual = document.documentElement.getAttribute("data-vista");
     if (nuevaVista !== vistaActual) {
-        console.log("vista.js: cambio de vista detectado, recargando página");
         window.location.reload();
     }
 });

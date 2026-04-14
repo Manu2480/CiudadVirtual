@@ -82,8 +82,6 @@ Responsabilidades:
         if (_initPromise) return _initPromise;
 
         _initPromise = (async () => {
-            console.log("controlesDesktop.js: Inicializando controles desktop...");
-
             await _asegurarModulos();
 
             if (_inicializado) return;
@@ -101,7 +99,6 @@ Responsabilidades:
             _namespace.modules.cargarModuloRecursos();
 
             _inicializado = true;
-            console.log("controlesDesktop.js: Controles desktop inicializados.");
         })().catch((error) => {
             console.error("controlesDesktop.js: error inicializando controles desktop", error);
             throw error;

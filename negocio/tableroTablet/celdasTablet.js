@@ -107,7 +107,6 @@ function _ajustar() {
     window._celdasTabletState = window._celdasTabletState || {};
     window._celdasTabletState.tamMinimo = tamMinimo;
 
-    console.log(`Celda dinámica: ${columnas}x${filas} → ${tamCelda}px`);
 }
 function mostrarIndices() {
     calcularCeldasVisibles()
@@ -186,7 +185,6 @@ function renderizarViewport() {
     }
 }
 function fotoPerfil(){
-    console.log(genero)
     if (genero === "hombre"){
         divFoto.innerHTML = `<img src="../../media/inicio/rey.png">`
     }
