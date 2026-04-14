@@ -122,8 +122,6 @@ class ControladorStorage{
         }));
         ciudadCopia.catalogo = catalogoSerializado;
         ciudadCopia.ciudadanosPorTurno = ciudad.ciudadanosPorTurno;
-        console.log("Iniciando el guardado de la copia de la ciudad");
-        console.log(ciudadCopia);
         CiudadStorage.guardar(ciudadCopia);
     }
 
@@ -147,7 +145,6 @@ class ControladorStorage{
 
     //Método encargado de la reconstrucción de la ciudad.
     static cargarCiudad(){
-        console.log("Cargando ciudad desde ControladorStorage")
         //Llamado de métodos
         const datos = JSON.parse(CiudadStorage.cargar());
         let ciudadanos = this.obtenerCiudadanos(datos)

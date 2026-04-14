@@ -263,10 +263,6 @@ const ModalGameOver = (() => {
         const nombreActual  = (ciudadActual?.nombre  || "").trim().toLowerCase();
         const alcaldeActual = (ciudadActual?.alcalde || "").trim().toLowerCase();
 
-        /* Debug: ver qué hay en el ranking vs ciudad actual */
-        console.log("[GameOver] Ciudad actual:", nombreActual, "/", alcaldeActual);
-        console.log("[GameOver] Ranking cargado:", ranking.map(e => `${e.cityName}/${e.mayor}`));
-
         if (!ranking.length) {
             return `
                 <div class="go-ranking-section">

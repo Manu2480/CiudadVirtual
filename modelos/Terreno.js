@@ -74,23 +74,19 @@ class Terreno{
         */
         
         if (this.ubicacionInfraestructura(fila, columna)){
-            console.log("Espacio no disponible");
             return { exito: false, costo: 0, mensaje: "Espacio ya ocupado", edificio: null };
         }
         
         if (edificio instanceof Via){
             this.vias[fila][columna] = 1; // marca la vía
             this.edificios.push(edificio); // guardamos la vía en la lista general
-            console.log(`Vía creada en (${fila}, ${columna})`);
             return { exito: true, costo: edificio.costo, mensaje: `Vía construida`, edificio: edificio };
         } else {
             //validamos que no se cree un edificio si no tiene via adyacente
             if(this.tieneAdyacente(fila, columna)){
                 this.edificios.push(edificio);
-                console.log(`Edificio ${edificio.id} construido en (${fila}, ${columna}) - Costo: ${edificio.costo}`);
                 return { exito: true, costo: edificio.costo, mensaje: `${edificio.id} construido correctamente`, edificio: edificio };
             } else {
-                console.log("No hay via adyacente");
                 return { exito: false, costo: 0, mensaje: "No hay vía adyacente para construir", edificio: null };
             }
         }
@@ -155,39 +151,32 @@ class Terreno{
             if (this.vias[fila]?.[columna] === 1) {
 
                 if (this.esViaCritica(fila, columna)) {
-                    console.log("No se puede demoler esta via, es la unica conectada a uno o mas edificios.");
                     return { exito: false, reembolso: 0, mensaje: "Via critica: es la unica conectada a uno o mas edificios", edificio: null };
                 }
 
                 this.vias[fila][columna] = 0;
-                console.log(`Via eliminada de (${fila}, ${columna}) - Reembolso: ${reembolso}`);
             }
 
             if (edificio.capacidad.getCapacidad("residente")){
                 edificio.ciudadanos.forEach(o => {
                     if (o?.rol === "residente" && o?.ciudadano) {
                         o.ciudadano.vivienda = false;//Actualizamos el estado de vivienda
-                        console.log(`${o.ciudadano.id} perdio su vivienda`);
                     }
                 });
-                console.log(`${edificio.id} demolido - Reembolso: ${reembolso}`);
             }
 
             if (edificio.capacidad.getCapacidad("empleado")){
                 edificio.ciudadanos.forEach(o => {
                     if (o?.rol === "empleado" && o?.ciudadano) {
                         o.ciudadano.empleo = false;//Actualizamos el estado de empleo
-                        console.log(`${o.ciudadano.id} perdio su empleo`);
                     }
                 });
             }
             edificio.ciudadanos = [] //Se limpia el atributo
-            console.log(`${edificio.id} demolido - Reembolso: ${reembolso}`);
             // eliminar de la lista general
             this.edificios = this.edificios.filter(construcciones => construcciones !== edificio);
             return { exito: true, reembolso: reembolso, mensaje: `Infraestructura demolida - Reembolso: ${reembolso}`, edificio: edificio };
         } else {
-            console.log("No hay construcción en esa posición");
             return { exito: false, reembolso: 0, mensaje: "No hay infraestructura que demoler", edificio: null };
         }
     }

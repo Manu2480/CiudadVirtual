@@ -39,12 +39,7 @@ class Ciudad {
         if (!(tipo in this.estadoRecursos)) {
             throw new Error("Recurso no válido");
         }
-
-        // sólo sumamos una vez; el console.log no debe volver a modificar el valor
         this.estadoRecursos[tipo] += cantidad;
-        console.log(cantidad);
-        console.log(`Se modificó el recurso: ${tipo} -> ${this.estadoRecursos[tipo]}`);
-        console.log("Despachando evento");
         document.dispatchEvent(new CustomEvent("recursosModificados"));
     }   
 
@@ -53,7 +48,6 @@ class Ciudad {
     }
 
     calcularProduccionNeta() {
-        console.log("calculando produccion neta")
         const resultado = {
             produccion: {
                 total: {},
@@ -211,27 +205,11 @@ class Ciudad {
     recursosPorEdificios() {
         this.terreno.edificios.forEach(edificio => {
             //const id = edificio.id.replace(/[0-9]/g, ''); //Elimina los números del id del edificio
-            console.log(edificio.id);
             const recursos = edificio.recursosEdificio;
-            /*let recursos = this.recursosPorEdificioPredeterminado;
-            recursos.forEach((dicEdificio) =>{
-                console.log(edificio.id);
-                console.log(dicEdificio);
-                if (dicEdificio.id.includes(id)){
-                    console.log(id + " está en " + dicEdificio.id);
-                    for (const recurso in dicEdificio.recursos){
-                        console.log(recurso + " cantidad a cambiar: " + dicEdificio.recursos[recurso]);
-                        if (recurso != "felicidad"){
-                            this.modificarRecurso(recurso,dicEdificio.recursos[recurso]);
-                        }
-                    }
-                }
-            });*/
 
             for (const recurso in recursos) {
                 // suma(producción)/resta(consumo) el recurso correspondiente 
                 if (recurso != "felicidad"){
-                    console.log("Modificando " + recurso);
                     this.modificarRecurso(recurso, recursos[recurso]);
                 }
             }
@@ -268,13 +246,11 @@ class Ciudad {
 
         // 1. debe haber al menos una vivienda libre
         if (viviendas.totalDisponibles <= 0) {
-            console.log("No se pueden crear más ciudadanos, no hay viviendas disponibles.");
             return false;
         }
 
         // 2. debe haber al menos un empleo libre
         if (empleos.totalDisponibles <= 0) {
-            console.log("No se pueden crear más ciudadanos, no hay empleos disponibles.");
             return false;
         }
 
@@ -283,7 +259,6 @@ class Ciudad {
         if (this.ciudadanos.length > 0) {
             this.calcularFelicidadPromedio();
             if (this.estadoRecursos.felicidad < 60) {
-                console.log("No se pueden crear más ciudadanos, no son lo suficientemente felices (felicidad < 60). Construye infraestructura que aumente la felicidad.");
                 return false;
             }
         }
@@ -297,15 +272,9 @@ class Ciudad {
         this.ciudadanos.forEach(ciudadano =>{
             if ((ciudadano.vivienda == false) || (ciudadano.vivienda == null)){
                 this.asignarVivienda(ciudadano);
-                console.log(`ciudadano: ${ciudadano.id} - Felicidad: ${ciudadano.felicidad}, Vivienda: ${ciudadano.vivienda}`);
-            } else {
-                console.log("no hay ciudadanos sin hogar")
             }
             if ((ciudadano.empleo == false) || (ciudadano.empleo == null)){
                 this.asignarEmpleo(ciudadano);
-                console.log(`ciudadano: ${ciudadano.id} - Felicidad: ${ciudadano.felicidad}, Empleo: ${ciudadano.empleo}`);
-            } else {
-                console.log("no hay ciudadanos sin empleo")
             }
         });
     }
@@ -335,7 +304,6 @@ class Ciudad {
                 Ciudad.contador += 1;
                 nuevoCiudadano.id = `ciudadano${Ciudad.contador}`;
                 n = Ciudad.contador;
-                console.log(`[WARN] id inválido o ausente en datos; reasignado a ${nuevoCiudadano.id}`);
             }
 
             // Evitar colisiones: si ya existe un ciudadano con el mismo id en esta ciudad, reasignar
@@ -344,7 +312,6 @@ class Ciudad {
                 Ciudad.contador += 1;
                 nuevoCiudadano.id = `ciudadano${Ciudad.contador}`;
                 n = Ciudad.contador;
-                console.log(`[WARN] id duplicado detectado; reasignado a ${nuevoCiudadano.id}`);
             }
 
             // Añadimos la instancia cargada al array de ciudadanos de la ciudad
@@ -353,7 +320,6 @@ class Ciudad {
             // sincronizar contador para evitar colisiones futuras (si el id numérico es mayor)
             if (!Number.isNaN(n) && n > Ciudad.contador) Ciudad.contador = n;
 
-            //console.log(`[OK] ${nuevoCiudadano.id} cargado - Felicidad: ${nuevoCiudadano.felicidad}, Vivienda: ${nuevoCiudadano.vivienda}, Empleo: ${nuevoCiudadano.empleo}`);
             nuevoCiudadano.consumoCiudadano = this.recursosPorCiudadano;
             return nuevoCiudadano;
         }
@@ -375,8 +341,6 @@ class Ciudad {
             electricidad: y,
             alimento: z
         };
-
-        console.log(`[OK] ${nuevoCiudadano.id} creado - Felicidad: ${nuevoCiudadano.felicidad}, Vivienda: ${nuevoCiudadano.vivienda}, Empleo: ${nuevoCiudadano.empleo}`);
         return nuevoCiudadano;
     }
 
@@ -438,10 +402,8 @@ class Ciudad {
             ciudadano.vivienda = true; // cambiamos el estado del ciudadano
             this.asignarFelicidadInicial(ciudadano.id); //calcula la felicidad del ciudadano
             this.calcularFelicidadPromedio();
-            console.log(`[OK] ${ciudadano.id} asignado a vivienda en ${viviendas.edificios[0].id}`);
             return true;
         } else {
-            console.log(`[ERROR] ${ciudadano.id} no pudo ser asignado a vivienda (sin disponibilidad)`);
             return false;
         }
     }
@@ -454,10 +416,8 @@ class Ciudad {
             ciudadano.empleo = true;
             this.asignarFelicidadInicial(ciudadano.id); //calcula la felicidad del ciudadano
             this.calcularFelicidadPromedio();
-            console.log(`[OK] ${ciudadano.id} asignado a empleo en ${empleos.edificios[0].id}`);
             return true;
         } else {
-            console.log(`[ERROR] ${ciudadano.id} no pudo ser asignado a empleo (sin disponibilidad)`);
             return false;
         }
     }
@@ -487,15 +447,12 @@ class Ciudad {
     }
     // Metodo que se encarga de ejecutar todas las acciones necesarias para avanzar un turno en el juego
     ejecutarTurno(){
-        console.log("\n========== EJECUTANDO TURNO ==========");
         
         // 1. Actualizar felicidad inicial según infraestructura (ya se usa en el método calcularFelicidadPromedio).
-        console.log("\n--- Calculando felicidad ---");
         this.ciudadanos.forEach(ciudadano => {
             this.asignarFelicidadInicial(ciudadano.id);
         });
         this.calcularFelicidadPromedio();
-        console.log(`Felicidad promedio de la ciudad: ${this.estadoRecursos.felicidad.toFixed(2)}`);
         
         // 2. Validar si hay ciudadanos sin empleo o vivienda y asignarselos en caso de que se pueda
         this.asignarInfraestructuras();
@@ -505,24 +462,20 @@ class Ciudad {
         this.estadoRecursos.electricidad = 0;
         
         // 4. Consumo de ciudadanos
-        console.log("\n--- Consumo de ciudadanos ---");
         this.consumoCiudadanos();
         
         // 5. Producción/Consumo de edificios
-        console.log("\n--- Producción/Consumo de edificios ---");
         this.recursosPorEdificios();
 
         // 5.b Costo de mantenimiento por edificio (dinero)
         this.aplicarCostoMantenimiento();
         
         // 6. Intentar crear nuevos ciudadanos
-        console.log("\n--- Intento de creación de ciudadanos ---");
         let contador = 1;
         while (this.aumentarPoblacion() && contador <= this.ciudadanosPorTurno) {
             this.crearCiudadano(-1, -2, -3);
             contador++; 
         }
-        console.log("\n========== FIN DEL TURNO ==========");
         document.dispatchEvent(new CustomEvent("recursosModificados"));
 
         // 7. Guardar historial de recursos
@@ -534,7 +487,6 @@ class Ciudad {
     pasarTurno(){
 
         if (this.recursosNegativos().length > 0) {
-            console.log("Game Over. Recursos negativos");
             return false; // Indica que el juego ha terminado
         }else {
             return true; // Indica que podemos pasar al siguiente turno
@@ -544,8 +496,6 @@ class Ciudad {
 
     // Metodo para ejecutar un turno cada x tiempo
     iniciarSimulacion() {
-
-        console.log("entro al metodo iniciarSimulacion")
 
         //Condicional para evitar que se inicie la simulación si ya está corriendo, lo que podría 
         //causar múltiples intervalos ejecutándose al mismo tiempo y generar resultados inesperados.

@@ -5,7 +5,6 @@ const fakeLocalStorage = {};
 global.localStorage = {
     setItem: (key, value) => {
         fakeLocalStorage[key] = value;
-        console.log(`Datos guardados en storage (${(value.length / 1024).toFixed(2)} KB)`);
     },
     getItem: (key) => {
         return fakeLocalStorage[key] || null;
@@ -60,9 +59,6 @@ cargarModelo('./modelos/Ciudad.js');
 cargarModelo('./acceso_datos/CiudadStorage.js');
 cargarModelo('./negocio/ControladorStorage.js');
 
-console.log('='.repeat(60));
-console.log('PRUEBA DE PERSISTENCIA - GUARDADO Y CARGADO DE DATOS JSON');
-console.log('='.repeat(60));
 
 // Función auxiliar para comparar objetos
 function compararObjetos(obj1, obj2, path = '') {
@@ -101,9 +97,6 @@ function compararObjetos(obj1, obj2, path = '') {
     
     return diferencias;
 }
-
-// PASO 1: Crear datos de prueba
-console.log('\n1. CREANDO CIUDAD DE PRUEBA...\n');
 
 const vias = [
     [0, 1, 0, 1],
@@ -153,12 +146,6 @@ const ciudad = new Ciudad(
     ciudadanos,
     estadoRecursos
 );
-
-console.log(`[OK] Ciudad creada: "${ciudad.nombre}" (${ciudad.ciudadanos.length} ciudadanos, ${ciudad.terreno.edificios.length} edificios)`);
-
-// PASO 2: Guardar la ciudad
-console.log('\n2. GUARDANDO CIUDAD EN STORAGE...\n');
-
 // Crear una copia profunda para no modificar la original
 const ciudadAGuardar = JSON.parse(JSON.stringify(ciudad));
 // Necesitamos reconstruir los edificios en la copia
@@ -169,21 +156,12 @@ ciudadAGuardar.terreno.edificios = ciudad.terreno.edificios.map(obj => {
     };
 });
 CiudadStorage.guardar(ciudadAGuardar);
-console.log('[OK] Guardado completado');
 
 // PASO 3: Cargar la ciudad
-console.log('\n3. CARGANDO CIUDAD DESDE STORAGE...\n');
 const ciudadCargada = ControladorStorage.cargarCiudad();
-console.log('[OK] Cargado completado');
 
-// Verificación inicial de edificios cargados
-console.log('\n3.1 VERIFICACIÓN DE EDIFICIOS CARGADOS:\n');
-ciudadCargada.terreno.edificios.forEach((e, i) => {
-    console.log(`  Edificio ${i+1}: ID="${e.id}", Type=${e.constructor.name}, Ubicación=(${e.ubicacion.fila},${e.ubicacion.columna}), Capacidad=${e.capacidad}`);
-});
 
 // PASO 4: Validar datos
-console.log('\n4. VALIDANDO DATOS...\n');
 
 const validaciones = [];
 let todoOk = true;
@@ -215,8 +193,6 @@ if (JSON.stringify(ciudadCargada.estadoRecursos) === JSON.stringify(ciudad.estad
     validaciones.push('[OK] Estado de recursos coincide');
 } else {
     validaciones.push('[ERROR}] Estado de recursos diferente');
-    console.log('  Original:', ciudad.estadoRecursos);
-    console.log('  Cargado:', ciudadCargada.estadoRecursos);
     todoOk = false;
 }
 
@@ -284,22 +260,3 @@ ciudadCargada.terreno.edificios.forEach((e, i) => {
         todoOk = false;
     }
 });
-
-// Mostrar validaciones
-validaciones.forEach(v => console.log(v));
-
-// PASO 5: Resumen
-console.log('\n' + '='.repeat(60));
-if (todoOk) {
-    console.log('[OK}] PRUEBA COMPLETADA EXITOSAMENTE - Todos los datos se conservan correctamente');
-} else {
-    console.log('[ERROR] PRUEBA CON ERRORES - Hay inconsistencias en los datos');
-}
-console.log('='.repeat(60));
-
-// Información adicional
-console.log('\nINFORMACIÓN DE DEPURACIÓN:');
-console.log(`- Ciudadanos en la ciudad: ${ciudadCargada.ciudadanos.length}`);
-console.log(`- Edificios en el terreno: ${ciudadCargada.terreno.edificios.length}`);
-console.log(`- Tamaño del JSON guardado: ${(fakeLocalStorage['ciudad'].length / 1024).toFixed(2)} KB`);
-console.log(`- Tipos de edificios: ${[...new Set(tiposCargados)].join(', ')}`);

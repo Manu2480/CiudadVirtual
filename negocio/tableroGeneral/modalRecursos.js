@@ -253,10 +253,6 @@ const ModalRecursos = (() => {
 
             const valor = Number(input.value);
 
-            console.log("Edificio:", id);
-            console.log("Recurso:", clave);
-            console.log("Nuevo valor:", valor);
-
             Edificios.modificarRecursoEdificio(id,clave,valor);
             const ciudad = _ciudad();
             ciudad.cambiarRecursosEdificio(id,clave,valor);
@@ -282,7 +278,6 @@ const ModalRecursos = (() => {
         const ciudad = _ciudad();
         if (nuevaCantidad){
             if (nuevaCantidad >= 0){
-                console.log(`aceptada nueva cantidad ${nuevaCantidad}`)
                 ciudad.ciudadanosPorTurno = nuevaCantidad;
             }
         }
@@ -346,9 +341,6 @@ const ModalRecursos = (() => {
 
                 const valor = Number(input.value);
 
-                console.log("Recurso:", clave);
-                console.log("Nuevo valor:", valor);
-
                 const ciudad = _ciudad();
                 if (ciudad) {
                     ciudad.estadoRecursos[clave] = valor;
@@ -381,8 +373,6 @@ const ModalRecursos = (() => {
 
                 const ciudad = _ciudad();
                 if (!ciudad) return;
-
-                console.log("Consumo ciudadano:", clave, valor);
 
                 //actualizar valor base
                 ciudad.cambiarConsumoCiudadanos(clave,valor);

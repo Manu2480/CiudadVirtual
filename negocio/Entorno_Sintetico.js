@@ -33,7 +33,5 @@ document.addEventListener("DOMContentLoaded", function () {
     ciudad.asignarEmpleo(ciudadano2);
     ControladorStorage.guardarCiudad(ciudad);
     ciudadnueva = ControladorStorage.cargarCiudad();
-    console.log(ciudadnueva)
-    console.log(ciudadnueva.terreno.edificios[4] instanceof Tienda)
     
 })

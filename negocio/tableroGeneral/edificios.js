@@ -189,7 +189,6 @@ function modificarRecursoEdificio(id,recurso,valor){
         edificio.clase.catalogoInfo[recurso] = valor;
         edificio[recurso] = valor; 
     }
-    //console.log(edificio.clase.catalogoInfo);
 }
 
 window.Edificios = { obtener, porCategoria, categorias, todos, tooltip, modificarRecursoEdificio };

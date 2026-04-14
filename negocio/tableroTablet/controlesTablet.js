@@ -34,8 +34,6 @@ Submódulos (se cargan en este mismo archivo):
   celdasTablet.js, sidebarTablet.js, recursos.js, clima.js, noticias.js
 ================================================ */
 
-console.log("controlesTablet: cargado (readyState=", document.readyState, ")");
-
 /* Ruta base relativa al HTML (presentacion/vistas/) */
 const _BASE = "../../negocio/tableroTablet/";
 
@@ -76,7 +74,6 @@ function _cargarModulosAbsolutos(modulos, onCompleto) {
 }
 
 function _inicializarControlesTablet() {
-    console.log("controlesTablet: inicialización (readyState=", document.readyState, ")");
     try {
         CeldasTablet.inicializar();
         panelClima.inicializar();
@@ -86,8 +83,6 @@ function _inicializarControlesTablet() {
         Estadisticas.inicializar();
         MenuConstruccion.inicializar();
         _inicializarBotonRuta();
-
-        console.log("controlesTablet: inicialización completa");
     } catch (err) {
         console.error("controlesTablet: error durante inicialización", err);
     }

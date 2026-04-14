@@ -41,8 +41,6 @@ function _ajustar() {
     document.documentElement.style.setProperty(
         "--tamano-celda", `${tamCelda}px`
     );
-
-    console.log(`CeldaAdaptable: ${filas} filas, alto ${altoDisponible}px → celda ${tamCelda}px`);
 }
 
 

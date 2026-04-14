@@ -12,7 +12,6 @@ Submódulos (se cargan en este mismo archivo):
   menuConstruccion.js, zoom.js, clima.js, noticias.js
 ================================================ */
 
-console.log("controlesMovil: cargado (readyState=", document.readyState, ")");
 
 /* Ruta base relativa al HTML (presentacion/vistas/) */
 const _BASE = "../../negocio/tableroMovil/";
@@ -59,26 +58,8 @@ function _cargarModulosAbsolutos(modulos, onCompleto) {
 }
 
 function _inicializarControlesMovil() {
-    console.log("controlesMovil: inicialización (readyState=", document.readyState, ")");
-    try {
-        // Log de verificación de objetos cargados
-        console.log("TabsMovil disponible?", !!window.TabsMovil);
-        console.log("RecursosMovil disponible?", !!window.PanelRecursos);
-        console.log("Estadisticas disponible?", !!window.Estadisticas);
-        console.log("ZoomMovil disponible?", !!window.ZoomMovil);
-        console.log("JoystickMovil disponible?", !!window.JoystickMovil);
-        console.log("MenuConstruccionMovil disponible?", !!window.MenuConstruccion);
-        console.log("TurnosMovil disponible?", !!window.TurnosMovil);
-        console.log("PanelClima disponible?", !!window.panelClima);
-        console.log("PanelNoticias disponible?", !!window.PanelNoticias);
-        
-        if (window.TabsMovil) {
-            window.TabsMovil.inicializar();
-            console.log("TabsMovil inicializado");
-        } else {
-            console.error("TabsMovil NO CARGADO");
-        }
-        
+    try {        
+        if (window.TabsMovil) window.TabsMovil.inicializar();
         if (window.PanelRecursos) window.PanelRecursos.inicializar();
         if (window.Estadisticas) window.Estadisticas.inicializar();
         if (window.ZoomMovil) window.ZoomMovil.inicializar();
@@ -87,8 +68,6 @@ function _inicializarControlesMovil() {
         if (window.TurnosMovil) window.TurnosMovil.inicializar();
         if (window.panelClima) window.panelClima.inicializar();
         if (window.PanelNoticias) window.PanelNoticias.inicializar();
-
-        console.log("controlesMovil: inicialización completa");
     } catch (err) {
         console.error("controlesMovil: error durante inicialización", err);
         console.error("Stack:", err.stack);
