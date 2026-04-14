@@ -60,18 +60,6 @@ class Terreno{
     }
 
     crearInfraestructura(fila, columna, edificio){
-        /*
-        // Modo dual: acepta tanto instancias como objetos JSON planos
-        // Si es un objeto plano (JSON), convertirlo a instancia usando fromData
-        if (typeof edificio === 'object' && edificio !== null && !(edificio instanceof Via)) {
-            // Verificar si no es una instancia de clases conocidas
-            if (!edificio.constructor.name.includes('Edificio')) {
-                // Es probablemente un objeto plano del JSON, detectar tipo y cargar
-                const cargado = this.cargarEdificioDesdeJSON(edificio);
-                if (cargado) edificio = cargado;
-            }
-        }
-        */
         
         if (this.ubicacionInfraestructura(fila, columna)){
             console.log("Espacio no disponible");
@@ -96,56 +84,6 @@ class Terreno{
         }
     }
 
-    // Método que detecta el tipo de infraestructura por su id y carga usando fromData
-    // Esto permite cargar edificios desde JSON automáticamente
-    /*
-    cargarEdificioDesdeJSON(obj) {
-        const id = obj.id || '';
-        const idLower = id.toLowerCase(); //toLowerCase() convierte todas las letras mayúsculas de una cadena de texto (string) a minúsculas
-
-        // Detectar tipo por prefijo del id
-        if (idLower.startsWith('via')) { // El método startsWith() verifica si una cadena de texto (string) comienza con los caracteres de otra cadena específica, devolviendo true (verdadero) si es así, o false (falso) en caso contrario
-            return Via.fromData(obj);
-        } else if (idLower.startsWith('casa')) {
-            const Casa = require('./Casa');
-            return Casa.fromData(obj);
-        } else if (idLower.startsWith('apartamento')) {
-            const Apartamento = require('./Apartamento');
-            return Apartamento.fromData(obj);
-        } else if (idLower.startsWith('tienda')) {
-            const Tienda = require('./Tienda');
-            return Tienda.fromData(obj);
-        } else if (idLower.startsWith('centrocomercial')) {
-            const CentroComercial = require('./CentroComercial');
-            return CentroComercial.fromData(obj);
-        } else if (idLower.startsWith('luz')) {
-            const PlantaElectrica = require('./PlantaElectrica');
-            return PlantaElectrica.fromData(obj);
-        } else if (idLower.startsWith('agua')) {
-            const PlantaHidraulica = require('./PlantaHidraulica');
-            return PlantaHidraulica.fromData(obj);
-        } else if (idLower.startsWith('bombero')) {
-            const EstacionBombero = require('./EstacionBombero');
-            return EstacionBombero.fromData(obj);
-        } else if (idLower.startsWith('policia')) {
-            const EstacionPolicia = require('./EstacionPolicia');
-            return EstacionPolicia.fromData(obj);
-        } else if (idLower.startsWith('hospital')) {
-            const Hospital = require('./Hospital');
-            return Hospital.fromData(obj);
-        } else if (idLower.startsWith('parque')) {
-            const Parque = require('./Parque');
-            return Parque.fromData(obj);
-        } else if (idLower.startsWith('fabrica')) {
-            const Fabrica = require('./Fabrica');
-            return Fabrica.fromData(obj);
-        } else if (idLower.startsWith('granja')) {
-            const Granja = require('./Granja');
-            return Granja.fromData(obj);
-        }
-
-        return null; // Tipo desconocido
-    }*/
 
     eliminarInfraestructura(fila, columna){
         let edificio = this.ubicacionInfraestructura(fila, columna);
@@ -252,12 +190,6 @@ class Terreno{
     felicidadPorInfraestructura() {
 
         let felicidadTotal = 0;
-        // importamos las clases abstractas necesarias para instanceof
-        /*
-        const EdificioResidencial = require("./EdificioResidencial");
-        const EdificioComercial = require("./EdificioComercial");
-        const EdificioIndustrial = require("./EdificioIndustrial");
-        */
         for (const edificio of this.edificios) {
             // saltamos los tipos que aportan vivienda o empleo porque
             // su efecto se calcula en cada ciudadano

@@ -11,7 +11,6 @@ class EdificioServicio extends Edificio {
         super(id, costo, ubicacion, capacidad);
 
         // Por enunciado TODOS los edificios de servicio aumentan la felicidad en 10
-        // this.recursosEdificio.felicidad = 10; // en js un diccionario almacena objetos asi que se puede esta sintaxis, para no confundirnos ya que no tenemos la clase recurso usare otra sintaxis
         this.recursosEdificio["felicidad"] = 10; // esta sintaxis es equivalente a la de arriba, pero es mas clara para entender que estamos agregando una propiedad al diccionario recursosEdificio
     }
 

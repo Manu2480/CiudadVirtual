@@ -2,15 +2,6 @@
 MODALGAMEOVER.CSS
 Estilos del modal de Game Over estilo periódico.
 
-Importar en tableroBase.css:
-  @import "estilosBase/modalGameOver.css";
-
-Fuentes requeridas en el <head> del HTML:
-  https://fonts.googleapis.com/css2?family=UnifrakturMaguntia
-    &family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700
-    &family=IM+Fell+English:ital@0;1
-    &family=Libre+Baskerville:ital,wght@0,400;0,700;1,400
-================================================ */
 
 /* ---- Animación de entrada ---- */
 #modal-overlay.activo .go-paper {

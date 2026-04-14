@@ -1,26 +1,4 @@
-/*
-VISTA DE SERGIO
-HU-023: Diseño Responsive - Vista Tablet
-Como jugador en tablet
-Quiero una interfaz optimizada para pantalla mediana
-Para aprovechar el espacio disponible
-Criterios de Aceptación:
-- [x] En resoluciones 768px - 1024px:
-o Layout en dos columnas: mapa (70%) + sidebar (30%)
-o El mapa muestra grid completo sin scroll horizontal
-o Panel de recursos en sidebar superior
-o Menú de construcción en sidebar central
-o Estadísticas en sidebar inferior
-o Widget de clima y noticias en tabs laterales
-- [x] Soporte para orientación vertical y horizontal
-- [x] En horizontal: layout optimizado con sidebars izquierdo y derecho
-- [x] En vertical: similar a móvil pero con más espacio
-- [x] Tooltips más grandes al hacer hover
-- [x] Modales ocupan 60% de la pantalla
-- [x] Botones de tamaño medium (adecuados para touch)
-Prioridad: Media
-Dependencias: HU-023
-*/
+
 /* ================================================
 CONTROLES TABLET — COORDINADOR
 Punto de entrada de la vista tablet (768px - 1024px).
