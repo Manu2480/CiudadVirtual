@@ -344,54 +344,6 @@ class Ciudad {
         return nuevoCiudadano;
     }
 
-    /*
-    // Crea una instancia de Ciudad a partir de un objeto plano (JSON)
-    static fromData(obj) {
-        if (obj instanceof Ciudad) return obj;
-
-        // Cargar terreno: reutilizamos Terreno.crearInfraestructura que acepta objetos JSON
-        const Terreno = require('./Terreno');
-        const vias = obj.terreno?.vias || [];
-        const terreno = new Terreno(vias, []);
-
-        // Construir ciudad con listas vacías; luego cargamos edificios y ciudadanos
-        const nombre = obj.nombre || '';
-        const alcalde = obj.alcalde || '';
-        const latitud = obj.latitud ?? 0;
-        const longitud = obj.longitud ?? 0;
-        const tiempoTurno = obj.tiempoTurno ?? 1000;
-        const estadoRecursos = obj.estadoRecursos || { dinero: 0, agua: 0, electricidad: 0, alimento: 0, felicidad: 0 };
-
-        const ciudad = new Ciudad(nombre, alcalde, latitud, longitud, tiempoTurno, terreno, [], estadoRecursos);
-
-        // Cargar edificios desde JSON (si existen). Cada edificio JSON debe tener ubicacion.fila/columna
-        if (Array.isArray(obj.terreno?.edificios)) {
-            for (const ed of obj.terreno.edificios) {
-                const fila = ed.ubicacion?.fila ?? ed.ubicacion?.row ?? 0;
-                const columna = ed.ubicacion?.columna ?? ed.ubicacion?.col ?? 0;
-                ciudad.terreno.crearInfraestructura(fila, columna, ed);
-            }
-        }
-
-        // Cargar ciudadanos usando crearCiudadano (acepta objetos JSON y sincroniza contadores)
-        if (Array.isArray(obj.ciudadanos)) {
-            for (const c of obj.ciudadanos) {
-                ciudad.crearCiudadano(c);
-            }
-        }
-
-        // Sincronizar contador de Ciudad si viene un valor mayor en los datos
-        if (Array.isArray(obj.ciudadanos) && obj.ciudadanos.length > 0) {
-            const maxN = obj.ciudadanos.reduce((max, it) => {
-                const m = parseInt(String(it.id || '').replace(/^ciudadano/, ''), 10);
-                return Number.isNaN(m) ? max : Math.max(max, m);
-            }, 0);
-            if (maxN > Ciudad.contador) Ciudad.contador = maxN;
-        }
-
-        return ciudad;
-    }*/
-
     // Asigna vivienda disponible a un ciudadano específico (si hay)
     asignarVivienda(ciudadano) {
         // Viviendas tendra 2 atributos: 1totalDisponibles numero de viviendas dispo y 2edificios estructuras donde hay dispo

@@ -284,9 +284,16 @@ function activarHoverMouseDerecha(contenedor) {
     });
 }
 
-function posicionarTooltipDerechaMouse(mouseX, mouseY) {
-    document.documentElement.style.setProperty("--tooltip-left",`${Math.round(mouseX)}px`);
-    document.documentElement.style.setProperty("--tooltip-top",`${Math.round(mouseY - 60)}px`);
+function posicionarTooltipDerechaMouse(tooltip, mouseX, mouseY) {
+    if (!tooltip) return;
+    const offsetX = 14;
+    const offsetY = 60;
+
+    let left = mouseX + offsetX;
+    let top = mouseY - offsetY;
+
+    document.documentElement.style.setProperty("--tooltip-left", `${Math.round(left)}px`);
+    document.documentElement.style.setProperty("--tooltip-top", `${Math.round(top)}px`);
 }
 
 /* ================================================

@@ -135,12 +135,6 @@ PANEL FIJO DE ESTADO DE RUTA
 
 /* ================================================
 CELDAS DEL MAPA — overlay amarillo
-
-La imagen .celda__edificio cubre el 100% de la celda
-(object-fit: cover, sin z-index explícito).
-Solución: el ::after de la celda se posiciona encima
-de la imagen usando z-index: 1, ya que la imagen no
-tiene z-index y el contexto de apilamiento lo permite.
 ================================================ */
 
 /* Asegurar que la imagen quede por debajo del overlay */
