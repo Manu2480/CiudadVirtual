@@ -15,7 +15,6 @@ function inicializar() {
         return;
     }
     ciudad =  Tablero.Estado.ciudad;
-    console.log("ciudad: ", ciudad);
     divFoto = document.getElementById("foto-perfil");;
     genero = ciudad.genero;
     areaMapa = document.getElementById("area-mapa");
